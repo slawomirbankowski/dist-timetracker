@@ -1,0 +1,340 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0001.xml">
+
+    <changeSet id="0001 - common tables for time tracking" author="slawomir.bankowski">
+
+        <createTable tableName="country" remarks="country of account or client" >
+            <column name="country_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="continent_name" type="text"><constraints nullable="false"/></column>
+            <column name="continent_code" type="text"><constraints nullable="false"/></column>
+            <column name="country_name" type="text"><constraints nullable="false"/></column>
+            <column name="country_iso2" type="text"><constraints nullable="false"/></column>
+            <column name="country_iso3" type="text"><constraints nullable="false"/></column>
+            <column name="country_code" type="text"><constraints nullable="false"/></column>
+            <column name="phone_code" type="text"><constraints nullable="false"/></column>
+            <column name="currency_code" type="text"><constraints nullable="false"/></column>
+            <column name="capital_name" type="text"><constraints nullable="false"/></column>
+            <column name="region_name" type="text"><constraints nullable="false"/></column>
+            <column name="subregion_name" type="text"><constraints nullable="false"/></column>
+            <column name="region_code" type="text"><constraints nullable="false"/></column>
+            <column name="latitude" type="text"><constraints nullable="false"/></column>
+            <column name="longitude" type="text"><constraints nullable="false"/></column>
+            <column name="currency_name" type="text"><constraints nullable="false"/></column>
+            <column name="population" type="text"><constraints nullable="false"/></column>
+            <column name="languages" type="text"><constraints nullable="false"/></column>
+            <column name="area" type="text"><constraints nullable="false"/></column>
+            <column name="bar_code" type="text"><constraints nullable="false"/></column>
+            <column name="top_level_domain" type="text"><constraints nullable="false"/></column>
+            <column name="is_focused" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_country_country_name" tableName="country" unique="true"><column name="country_name" /></createIndex>
+        <createIndex indexName="idx_country_country_iso2" tableName="country" unique="true"><column name="country_iso2" /></createIndex>
+        <createIndex indexName="idx_country_country_iso3" tableName="country" unique="true"><column name="country_iso3" /></createIndex>
+
+        <createTable tableName="client" remarks="single client" >
+            <column name="clientId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_name" type="text"><constraints nullable="false"/></column>
+            <column name="client_description" type="text"><constraints nullable="false"/></column>
+            <column name="country_iso2" type="text"><constraints nullable="false"/></column>
+            <column name="start_date" type="timestamp" defaultValueDate="now()"><constraints nullable="false"/></column>
+            <column name="is_internal" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_client_client_name" tableName="client" unique="true"><column name="client_name" /></createIndex>
+
+        <createTable tableName="account_title" remarks="title of the account" >
+            <column name="account_title_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title_name" type="text"><constraints nullable="false"/></column>
+            <column name="created_by" type="text"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of insertion given row to database" />
+            <column name="removed_by" type="text" />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_account_title_title_name" tableName="account_title" unique="true"><column name="title_name" /></createIndex>
+
+        <createTable tableName="account_group" remarks="group of the account" >
+            <column name="account_group_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_group_name" type="text"><constraints nullable="false"/></column>
+            <column name="created_by" type="text"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of insertion given row to database" />
+            <column name="removed_by" type="text" />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_account_group_account_group_name" tableName="account_group" unique="true"><column name="account_group_name" /></createIndex>
+
+        <createTable tableName="account_division" remarks="division of the account" >
+            <column name="account_division_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="division_name" type="text"><constraints nullable="false"/></column>
+            <column name="created_by" type="text"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of deactivating this row" />
+            <column name="removed_by" type="text" />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_account_division_division_name" tableName="account_division" unique="true"><column name="division_name" /></createIndex>
+
+        <createTable tableName="account_instance" remarks="single instance of account" >
+            <column name="account_instance_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="account_name" type="text"><constraints nullable="false"/></column>
+            <column name="display_name" type="text"><constraints nullable="false"/></column>
+            <column name="auth_name" type="text" defaultValue="Internal"><constraints nullable="false"/></column>
+            <column name="title_name" type="text"><constraints nullable="false"/></column>
+            <column name="division_name" type="text"><constraints nullable="false"/></column>
+            <column name="account_group_name" type="text"><constraints nullable="false"/></column>
+            <column name="is_system" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of insertion given row to database" />
+            <column name="removed_by" type="text" />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_account_instance_account_email" tableName="account_instance" unique="true"><column name="account_email" /></createIndex>
+        <createIndex indexName="idx_account_instance_display_name" tableName="account_instance" unique="false"><column name="display_name" /></createIndex>
+        <createIndex indexName="idx_account_instance_title_name" tableName="account_instance" unique="false"><column name="title_name" /></createIndex>
+
+        <createTable tableName="auth_token" remarks="single instance of token created for account" >
+            <column name="auth_token_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token_uid" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="token_seq" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="token_hash" type="text"><constraints nullable="false"/></column>
+            <column name="token_salt" type="text"><constraints nullable="false"/></column>
+            <column name="valid_till_date" type="timestamp" remarks="date and time of validation" />
+            <column name="last_use_date" type="timestamp" remarks="date and time of insertion given row to database" />
+            <column name="is_last" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_auth_token_token_uid" tableName="auth_token" unique="true"><column name="token_uid" /></createIndex>
+        <createIndex indexName="idx_auth_token_account_email" tableName="auth_token" unique="false"><column name="account_email" /></createIndex>
+
+        <createTable tableName="auth_role" remarks="list of roles" >
+            <column name="auth_role_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_name" type="text"><constraints nullable="false"/></column>
+            <column name="role_description" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <column name="access_uris" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <column name="is_project" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_client" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_account_role_role_name" tableName="account_role" unique="false"><column name="role_name" /></createIndex>
+
+        <createTable tableName="auth_permission" remarks="permission assigned to account and role with optional project or client" >
+            <column name="auth_permission_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="permission_uid" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="role_name" type="text"><constraints nullable="false"/></column>
+            <column name="date_from" type="timestamp" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="date_to" type="timestamp" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="project_code" type="text" />
+            <column name="client_name" type="text" />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_auth_permission_permission_uid" tableName="auth_permission" unique="true"><column name="permission_uid" /></createIndex>
+        <createIndex indexName="idx_auth_permission_account_email" tableName="auth_permission" unique="false"><column name="account_email" /></createIndex>
+
+        <createTable tableName="auth_password" remarks="password set by user" >
+            <column name="auth_password_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="password_uid" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="password_hash" type="text"><constraints nullable="false"/></column>
+            <column name="password_salt" type="text"><constraints nullable="false"/></column>
+            <column name="date_from" type="timestamp" remarks="date and time od start password"><constraints nullable="false"/></column>
+            <column name="date_to" type="timestamp" remarks="date and time of validation date of this password"><constraints nullable="false"/></column>
+            <column name="usage_count" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_auth_password_password_uid" tableName="auth_password" unique="true"><column name="password_uid" /></createIndex>
+        <createIndex indexName="idx_auth_password_account_email" tableName="auth_password" unique="false"><column name="account_email" /></createIndex>
+
+        <createTable tableName="auth_password_request" remarks="Request of reset or set new password for user" >
+            <column name="auth_password_request_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="request_uid" type="text"><constraints nullable="false"/></column>
+            <column name="reset_uid" type="text"><constraints nullable="false"/></column>
+            <column name="lock_uid" type="text" />
+            <column name="is_checked" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_used" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="valid_till_date" type="timestamp" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>              <column name="checkDate" type="timestamp" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="check_date" type="timestamp" remarks="date and time of check" />
+            <column name="use_date" type="timestamp" remarks="date and time of " />
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_auth_password_request_account_email" tableName="auth_password_request" unique="false"><column name="account_email" /></createIndex>
+        <createIndex indexName="idx_auth_password_request_request_uid" tableName="auth_password_request" unique="true"><column name="request_uid" /></createIndex>
+
+        <createTable tableName="auth_identity" remarks="possible identity types with configuration" >
+            <column name="auth_identity_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="identity_name" type="text"><constraints nullable="false"/></column>
+            <column name="identity_type" type="text"><constraints nullable="false"/></column>
+            <column name="identity_parameters" type="text"><constraints nullable="false"/></column>
+            <column name="last_status_name" type="text"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_auth_identity_identity_name" tableName="auth_identity" unique="true"><column name="identity_name" /></createIndex>
+
+        <createTable tableName="notification" remarks="notification sent to password requests and info messages to accounts" >
+            <column name="notification_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="notification_uid" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="notification_type" type="text"><constraints nullable="false"/></column>
+            <column name="notification_topic" type="text"><constraints nullable="false"/></column>
+            <column name="notification_content" type="text"><constraints nullable="false"/></column>
+            <column name="sending_status" type="text" defaultValue="created"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_notification_notification_uid" tableName="notification" unique="true"><column name="notification_uid" /></createIndex>
+        <createIndex indexName="idx_notification_account_email" tableName="notification" unique="false"><column name="account_email" /></createIndex>
+
+        <createTable tableName="system_change" remarks="changes to tables" >
+            <column name="system_change_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="notification_uid" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="notification_type" type="text"><constraints nullable="false"/></column>
+            <column name="notification_topic" type="text"><constraints nullable="false"/></column>
+            <column name="notification_content" type="text"><constraints nullable="false"/></column>
+            <column name="sending_status" type="text" defaultValue="created"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+
+        <createTable tableName="system_setting" remarks="global and user settings for system" >
+            <column name="system_setting_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_email" type="text" />
+            <column name="setting_name" type="text"><constraints nullable="false"/></column>
+            <column name="setting_value" type="text"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+
+        <createTable tableName="invoice" remarks="invoices" >
+            <column name="invoice_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="invoice_uid" type="text"><constraints nullable="false"/></column>
+            <column name="period_code" type="text"><constraints nullable="false"/></column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="created_by" type="text"><constraints nullable="false"/></column>
+            <column name="invoice_status" type="text"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_invoice_invoice_uid" tableName="invoice" unique="true"><column name="invoice_uid" /></createIndex>
+        <createIndex indexName="idx_invoice_account_email" tableName="invoice" unique="false"><column name="account_email" /></createIndex>
+
+        <createTable tableName="project_group" remarks="group of projects" >
+            <column name="project_group_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project_group_name" type="text"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+
+        <createTable tableName="project" remarks="project to bill time against" >
+            <column name="project_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project_name" type="text"><constraints nullable="false"/></column>
+            <column name="project_code" type="text"><constraints nullable="false"/></column>
+            <column name="project_group_name" type="text"><constraints nullable="false"/></column>
+            <column name="manager_email" type="text"><constraints nullable="false"/></column>
+            <column name="is_billable" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="start_date" type="timestamp" defaultValueDate="now()" remarks="date and time" />
+            <column name="end_date" type="timestamp" defaultValueDate="now()" remarks="date and time" />
+            <column name="current_billed" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="budget" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_project_project_name" tableName="project" unique="false"><column name="project_name" /></createIndex>
+        <createIndex indexName="idx_project_manager_email" tableName="project" unique="false"><column name="manager_email" /></createIndex>
+
+        <createTable tableName="time_entry" remarks="time entered by account against project" >
+            <column name="time_entry_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_email" type="text"><constraints nullable="false"/></column>
+            <column name="period_code" type="text"><constraints nullable="false"/></column>
+            <column name="entry_uid" type="text"><constraints nullable="false"/></column>
+            <column name="entry_note" type="text"><constraints nullable="false"/></column>
+            <column name="project_code" type="text"><constraints nullable="false"/></column>
+            <column name="invoice_uid" type="text" />
+            <column name="lock_uid" type="text" />
+            <column name="start_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="end_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="entry_minutes" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_approved" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="now()" remarks="date and time of insertion given row to database" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="now()" remarks="date and time of change this row" />
+        </createTable>
+        <createIndex indexName="idx_time_entry_entry_uid" tableName="time_entry" unique="true"><column name="entry_uid" /></createIndex>
+        <createIndex indexName="idx_time_entry_account_email" tableName="time_entry" unique="false"><column name="account_email" /><column name="period_code" /></createIndex>
+        <createIndex indexName="idx_time_entry_project_code" tableName="time_entry" unique="false"><column name="project_code" /></createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>
