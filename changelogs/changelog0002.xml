@@ -24,11 +24,9 @@
         <addForeignKeyConstraint baseTableName="account_group" baseColumnNames="created_by" constraintName="fk_account_group_created_by"
                             referencedTableName="account_instance" referencedColumnNames="account_email" />
 
-
         <addForeignKeyConstraint baseTableName="auth_token" baseColumnNames="account_email" constraintName="fk_auth_token_account_email"
                             referencedTableName="account_instance" referencedColumnNames="account_email" />
 
-auth_permission
 
     </changeSet>
 

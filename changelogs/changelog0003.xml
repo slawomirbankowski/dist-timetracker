@@ -6,6 +6,7 @@
 
     <changeSet id="0003 - dictionaries" author="slawomir.bankowski">
 
+
         <sql splitStatements="false" stripComments="false">
             insert into country(continent_name, continent_code, country_name, country_iso2, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Afghanistan', 'AF', 'AFG', '004', '93', 'AFN', 'Kabul', 'Asia', 'Southern Asia', '142', '33', '65', 'Afghanistan Afghani', '37100000', 'Balochi,Dari,Pashto,Turkmenian,Uzbek', '652000', '-', '.af');
             insert into country(continent_name, continent_code, country_name, country_iso2, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('-', '', 'Aland Islands', 'AX', 'ALA', '248', '-', '-', '-', 'Europe', 'Northern Europe', '150', '-', '-', '-', '-', '-', '-', '-', '.ax');
@@ -256,6 +257,10 @@
             insert into country(continent_name, continent_code, country_name, country_iso2, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Yemen', 'YE', 'YEM', '887', '967', 'YER', 'Sanaa', 'Asia', 'Western Asia', '142', '15', '48', 'Yemeni Rial', '28400000', 'Arabic,Soqutri', '527000', '-', '.ye');
             insert into country(continent_name, continent_code, country_name, country_iso2, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zambia', 'ZM', 'ZMB', '894', '260', 'ZMW', 'Lusaka', 'Africa', 'Sub-Saharan Africa', '002', '-15', '30', 'Zambian Kwacha', '17300000', 'Bemba,Chewa,Lozi,Nsenga,Nyanja,Tongan', '752000', '-', '.zm');
             insert into country(continent_name, continent_code, country_name, country_iso2, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zimbabwe', 'ZW', 'ZWE', '716', '263', 'ZWD', 'Harare', 'Africa', 'Sub-Saharan Africa', '002', '-20', '30', 'Zimbabwe Dollar', '14400000', 'English,Ndebele,Nyanja,Shona', '390000', '-', '.zw');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client(client_name, client_description, country_iso2, is_internal, is_system) values ('system', 'system', '', 1, 1)
         </sql>
 
 
