@@ -12,19 +12,23 @@ class ModelBase:
     def __init__(self, tableName: str, allColumns: list[str]):
         self.tableName = tableName
         self.allColumns = allColumns
-        print("Nothing to be done here")
+        self.columns_list = ','.join(allColumns)
+        self.column_list_qm = ""
 
     def get_key_column_name(self):
         return self.tableName + "_uid"
 
     def get_insert_sql(self):
-        return "insert into " + self.tableName + "() values ()"
+        return "insert into " + self.tableName + "(" + self.columns_list + ") values (?, ?, ?, ?, ?, ?, ?)"
 
-    def get_select_all_limit_sql(self, n: int = 10):
-        return "select * from " + self.tableName + " limit 100" + n
+    def get_select_all_limit_sql(self, n: int = 1000):
+        return "select * from " + self.tableName + " limit " + n
 
-    def get_select_all_latest_sql(self, n: int = 10):
-        return "select * from " + self.tableName + " order by created_date desc limit 100"
+    def get_select_all_latest_sql(self, n: int = 1000):
+        return "select * from " + self.tableName + " order by created_date desc limit " + n
+
+    def get_select_all_keys(self, n: int = 1000):
+        return "select " + self.get_key_column_name() + " from " + self.tableName + " order by " + self.get_key_column_name() + " limit " + n
 
     def get_select_count_all_sql(self):
         return "select count(*) as cnt from " + self.tableName
@@ -32,17 +36,17 @@ class ModelBase:
     def get_select_count_active_sql(self):
         return "select count(*) as cnt from " + self.tableName + " where is_active=1"
 
-    def get_select_by_key(self):
-        return "select * from " + self.tableName + " where " + self.get_key_column_name() + "=? order by created_date desc limit 100"
+    def get_select_by_key(self, n: int = 1000):
+        return "select * from " + self.tableName + " where " + self.get_key_column_name() + "=? order by created_date desc limit " + n
 
     def get_select_by_id(self):
         return "select * from " + self.tableName + " where id=? limit 1"
 
     def get_select_active_only(self):
-        return "select * from " + self.tableName + " where is_active=1 order by created_date desc limit 100"
+        return "select * from " + self.tableName + " where is_active=1 order by created_date desc limit 1000"
 
     def get_select_active_by_any_column(self, column_name: str):
-        return "select * from " + self.tableName + " where is_active=1 and " + column_name + "=? order by created_date desc limit 100"
+        return "select * from " + self.tableName + " where is_active=1 and " + column_name + "=? order by created_date desc limit 1000"
 
 
 # list of all models defined in database to be used by DAOs, Services, Controllers
@@ -79,6 +83,21 @@ system_setting_model = ModelBase('system_setting', ['id', 'system_setting_uid', 
 system_state_model = ModelBase('system_state', ['id', 'system_state_uid', 'system_instance_uid', 'host_name', 'host_ip', 'local_path', 'app_version', 'mode_name', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
 
 
+# base class for write DTO classes
+class BaseWriteDto:
+
+    def __init__(self):
+        print("Nothing to be done here")
+
+    @abstractmethod
+    def get_key(self) -> str:
+        pass
+
+    @abstractmethod
+    def get_model(self) -> ModelBase:
+        pass
+
+
 # base class for DTO classes
 class BaseDto:
     id: int
@@ -104,7 +123,7 @@ class BaseDto:
     def get_last_updated_date(self) -> datetime:
         return self.last_updated_date
 
-    def is_actve(self) -> bool:
+    def is_active(self) -> bool:
         return self.is_active == 1
 
     def is_removed(self) -> bool:
@@ -117,6 +136,52 @@ class BaseDto:
     @abstractmethod
     def get_model(self) -> ModelBase:
         pass
+
+
+# extract key
+def extract_key(dto: BaseDto) -> str:
+    return dto.get_key()
+
+
+# helper class to store list of items
+class BaseDtos:
+    items: list[BaseDto]
+
+    def __init__(self, items: list[BaseDto]):
+        self.items = items
+
+    def get_keys(self):
+        return map(extract_key, self.items)
+
+
+@dataclass(frozen=False)
+class account_instance_write_dto(BaseWriteDto):
+    account_instance_uid: str
+    account_title_uid: str
+    account_division_uid: str
+    account_group_uid: str
+    auth_identity_uid: str
+    account_email: str
+    account_name: str
+    display_name: str
+    is_system: int
+
+    def __init__(self, account_instance_uid: str, account_title_uid: str, account_division_uid: str, account_group_uid: str, auth_identity_uid: str, account_email: str, account_name: str, display_name: str, is_system: int):
+        self.account_instance_uid=account_instance_uid
+        self.account_title_uid=account_title_uid
+        self.account_division_uid=account_division_uid
+        self.account_group_uid=account_group_uid
+        self.auth_identity_uid=auth_identity_uid
+        self.account_email=account_email
+        self.account_name=account_name
+        self.display_name=display_name
+        self.is_system=is_system
+
+    def get_model(self) -> ModelBase:
+        return account_instance_model
+
+    def get_key(self) -> str:
+        return self.account_instance_uid
 
 
 @dataclass(frozen=False)
@@ -152,6 +217,7 @@ class account_division_dto(BaseDto):
 
     def get_model(self) -> ModelBase:
         return account_division_model
+
 
     def get_key(self) -> str:
         return self.account_division_uid
@@ -244,6 +310,8 @@ class account_instance_dto(BaseDto):
     def get_key(self) -> str:
         return self.account_instance_uid
 
+    def to_write(self) -> account_instance_write_dto:
+        return account_instance_write_dto(self.account_instance_uid, self.account_title_uid, self.account_division_uid, self.account_group_uid, self.auth_identity_uid, self.account_email, self.account_name, self.display_name, self.is_system)
 
 @dataclass(frozen=False)
 class account_title_dto(BaseDto):
