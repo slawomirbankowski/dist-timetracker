@@ -1,77 +1,100 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0002.xml">
+-- generate MODEL class
 
-    <changeSet id="0002 - FKs" author="slawomir.bankowski">
 
-        <sql splitStatements="false" stripComments="false">
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('system', 'XX', 'system', 'system', 'System client - default one', now(), 1, 1, 0);
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('test', 'XX', 'test', 'test', 'Test client - just for testing purpose', now(), 1, 1, 1);
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_title(account_title_uid, title_name, title_description) values ('CEO', 'Chief Execution Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CFO', 'Chief Financial Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CIO', 'Chief Information Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CSO', 'Chief Security Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CMO', 'Chief Marketing Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('COO', 'Chief Operating Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CTO', 'Chief Technology Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CCO', 'Chief Communications Officer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('HoE', 'Head of Engineering', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('HoA', 'Head of Analysis', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('HoC', 'Head of Cloud', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('DMgr', 'Delivery Manager', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('DE', 'Data Engineer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('LDE', 'Lead Data Engineer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('CE', 'Cloud Engineer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('LCE', 'Lead Cloud Engineer', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('DA', 'Data Analyst', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('LDA', 'Lead Data Analyst', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('ADM', 'Administrator', '');
-            insert into account_title(account_title_uid, title_name, title_description) values ('DEF', 'Default', '');
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_group(account_group_uid, account_group_name, account_group_description) values ('Default', 'Default', '');
-        </sql>
+-- generate DTO class
+select x.python_definition
+from (
+select table_name, 1000 as ordinal_position, '@dataclass(frozen=False)'  as python_definition
+from information_schema.tables
+where table_schema='public'
+union all
+select *
+from (
+select table_name, 2000 as ordinal_position, concat('class ', table_name, '_dto(BaseDto):')
+from information_schema.tables
+where table_schema='public'
+) x1
+union all
+select *
+from (
+select table_name, 3000+ordinal_position as ordinal_position,  cast(concat('    ', column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime' else 'str' end ) as text)
+from information_schema.columns
+where table_schema='public'
+order by ordinal_position
+) x3
+union all
+select table_name, 3900 as ordinal_position, ''
+from information_schema.tables
+where table_schema='public'
+union all
+select *
+from (
+select table_name, 4000 as ordinal_position, concat('    def __init__(self, ', string_agg(cast(concat(column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime' else 'str' end ) as text), ', ' order by ordinal_position), '):')
+from information_schema.columns
+where table_schema='public'
+group by table_name
+) x2
+union all
+select *
+from (
+	select table_name, 5000+ordinal_position, concat('        self.', column_name, '=', column_name)
+	from information_schema.columns
+	where table_schema='public'
+	order by ordinal_position
+) x4
+union all
+select table_name, 6900 as ordinal_position, ''
+from information_schema.tables
+where table_schema='public'
+union all
+select *
+from (
+	select table_name, 7000, concat('    def get_model(self) -> ModelBase:')
+	from information_schema.tables
+	where table_schema='public'
+) x5
+union all
+select *
+from (
+	select table_name, 8000, concat('        return ', table_name, '_model')
+	from information_schema.tables
+	where table_schema='public'
+) x6
+union all
+select table_name, 8900 as ordinal_position, ''
+from information_schema.tables
+where table_schema='public'
+union all
+select *
+from (
+	select table_name, 9000, concat('    def get_key(self) -> str:')
+	from information_schema.tables
+	where table_schema='public'
+) x7
+union all
+select *
+from (
+	select table_name, 10000, concat('        return self.', table_name, '_uid')
+	from information_schema.tables
+	where table_schema='public'
+) x8
+union all
+select table_name, 98000 as ordinal_position, ''
+from information_schema.tables
+where table_schema='public'
+union all
+select table_name, 99000 as ordinal_position, ''
+from information_schema.tables
+where table_schema='public'
+) x
+order by x.table_name, x.ordinal_position
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_division(account_division_uid, division_name, division_description) values ('Default', 'Default', '');
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('system', 'DEF', 'Default', 'Default', 'Internal', '${system_email}', 'system', 'System', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('test', 'DEF', 'Test', 'Test', 'Internal', '${test_email}', 'test', 'Test', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('administrator', 'ADM', 'Default', 'Default', 'Internal', '${administrator_email}', 'Administrator', 'Administrator', 1);
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
-        </sql>
-
-        <sql splitStatements="false" stripComments="false">
-            insert into auth_identity(auth_identity_uid, identity_name, identity_type) values ('Internal', 'Internal', 'INTERNAL');
-        </sql>
-
-        <sql splitStatements="false" stripComments="false">
-            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain)
-            values ('-', '', 'Xx', 'XX', 'XX', '000', '000', 'XX', 'XX', 'XX', 'XX', '000', '0', '0', 'XX', '0', '', '000000', '-', '.xx');
-            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Afghanistan', 'AF', 'AFG', '004', '93', 'AFN', 'Kabul', 'Asia', 'Southern Asia', '142', '33', '65', 'Afghanistan Afghani', '37100000', 'Balochi,Dari,Pashto,Turkmenian,Uzbek', '652000', '-', '.af');
+;            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Afghanistan', 'AF', 'AFG', '004', '93', 'AFN', 'Kabul', 'Asia', 'Southern Asia', '142', '33', '65', 'Afghanistan Afghani', '37100000', 'Balochi,Dari,Pashto,Turkmenian,Uzbek', '652000', '-', '.af');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('-', '', 'Aland Islands', 'AX', 'ALA', '248', '-', '-', '-', 'Europe', 'Northern Europe', '150', '-', '-', '-', '-', '-', '-', '-', '.ax');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Europe', '', 'Albania', 'AL', 'ALB', '008', '355', 'ALL', 'Tirana', 'Europe', 'Southern Europe', '150', '41', '20', 'Albanian Lek', '2866000', 'Albaniana,Greek,Macedonian', '28000', '530', '.al');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Algeria', 'DZ', 'DZA', '012', '213', 'DZD', 'Alger', 'Africa', 'Northern Africa', '002', '28', '3', 'Algerian Dinar', '42200000', 'Arabic,Berberi', '2381000', '613', '.dz');
@@ -320,8 +343,56 @@
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Yemen', 'YE', 'YEM', '887', '967', 'YER', 'Sanaa', 'Asia', 'Western Asia', '142', '15', '48', 'Yemeni Rial', '28400000', 'Arabic,Soqutri', '527000', '-', '.ye');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zambia', 'ZM', 'ZMB', '894', '260', 'ZMW', 'Lusaka', 'Africa', 'Sub-Saharan Africa', '002', '-15', '30', 'Zambian Kwacha', '17300000', 'Bemba,Chewa,Lozi,Nsenga,Nyanja,Tongan', '752000', '-', '.zm');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zimbabwe', 'ZW', 'ZWE', '716', '263', 'ZWD', 'Harare', 'Africa', 'Sub-Saharan Africa', '002', '-20', '30', 'Zimbabwe Dollar', '14400000', 'English,Ndebele,Nyanja,Shona', '390000', '-', '.zw');
-        </sql>
 
-    </changeSet>
 
-</databaseChangeLog>
+            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('system', 'XX', 'system', 'system', 'System client - default one', now(), 1, 1, 0);
+            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('test', 'XX', 'test', 'test', 'Test client - just for testing purpose', now(), 1, 1, 1);
+
+
+            insert into account_title(account_title_uid, title_name, title_description) values ('CEO', 'Chief Execution Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CFO', 'Chief Financial Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CIO', 'Chief Information Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CSO', 'Chief Security Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CMO', 'Chief Marketing Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('COO', 'Chief Operating Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CTO', 'Chief Technology Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CCO', 'Chief Communications Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoE', 'Head of Engineering', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoA', 'Head of Analysis', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoC', 'Head of Cloud', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DMgr', 'Delivery Manager', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DE', 'Data Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LDE', 'Lead Data Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CE', 'Cloud Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LCE', 'Lead Cloud Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DA', 'Data Analyst', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LDA', 'Lead Data Analyst', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('ADM', 'Administrator', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DEF', 'Default', '');
+
+            insert into account_group(account_group_uid, account_group_name, account_group_description) values ('Default', 'Default', '');
+
+
+
+            insert into account_division(account_division_uid, division_name, division_description) values ('Default', 'Default', '');
+
+
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('system', 'DEF', 'Default', 'Default', 'Internal', '{system_email}', 'system', 'System', 1);
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('test', 'DEF', 'Test', 'Test', 'Internal', '{test_email}', 'test', 'Test', 1);
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('administrator', 'ADM', 'Default', 'Default', 'Internal', '{administrator_email}', 'Administrator', 'Administrator', 1);
+
+                       insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
+
+            insert into auth_identity(auth_identity_uid, identity_name, identity_type) values ('Internal', 'Internal', 'INTERNAL');

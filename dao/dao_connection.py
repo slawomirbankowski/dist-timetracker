@@ -4,7 +4,8 @@ import psycopg2.pool
 from pyliquibase import Pyliquibase
 
 class DaoConnection:
-    db_url = os.environ.get('JDBC_URL')
+    db_url = "jdbc:postgresql://localhost:5432/disttimetracker"
+    # os.environ.get('JDBC_URL')
     print('DaoConnection URL=' + db_url)
     db_user = os.environ.get('JDBC_USER')
     print('DaoConnection User=' + db_user)
@@ -12,7 +13,7 @@ class DaoConnection:
     print('DaoConnection Pass=' + db_pass)
     db_pool = psycopg2.pool.SimpleConnectionPool(
         2, 4, user=db_user, password=db_pass,
-        host='localhost', port='5432', database='cache01')
+        host='localhost', port='5432', database='disttimetracker')
 
     def __init__(self):
         print("Nothing to be done here")
@@ -35,3 +36,7 @@ class DaoConnection:
         return self.db_url;
 
 daoConn = DaoConnection()
+
+
+
+
