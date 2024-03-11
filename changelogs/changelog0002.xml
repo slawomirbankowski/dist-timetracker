@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
         logicalFilePath="conf/changelog0002.xml">
 
-    <changeSet id="0002 - FKs" author="slawomir.bankowski">
+    <changeSet id="0002 - dictionary data" author="slawomir.bankowski">
 
         <sql splitStatements="false" stripComments="false">
             insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)

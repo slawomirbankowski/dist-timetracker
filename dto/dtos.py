@@ -1,1628 +1,271 @@
 import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
+import uuid
+import random
+from random import randrange, uniform, randint
 
 
 # base model class to keep objects representing tables in database
 @dataclass(frozen=False)
-class ModelBase:
-    tableName: str
-    allColumns: list[str]
+class base_model:
+    table_name: str  # name of table in database
+    key_column_name: str  # name of UID column, typically it is table_uid
+    all_columns: list[str]  # list od all column names
+    attr_columns: list[str]  # list of attribute columns
+    insert_columns: list[str]  # list of attribute columns
+    insert_columns_list: str  #
+    insert_columns_question_marks: str  #
+    attr_no_uid_columns: list[str]
+    attr_no_uid_columns_eq: list[str]
+    all_columns_list: str  # all column comma separated list like id,col1,col2,col3,created_date,...
+    attr_columns_list: str  # list of attributes list like col1,col2,col3,...
+    attr_no_uid_columns_list: str  # list of attributes list like col1,col2,col3,...
+    attr_no_uid_columns_eq_list: str
+    all_question_marks: str  # question marks like ?,?,?,?,?
+    attr_question_marks: str  #
+    insert_attrs_sql: str
+    update_attrs_sql: str
+    upsert_columns: list[str]
+    upsert_columns_exclude_list: str
+    upsert_attrs_sql: str
+    select_all_sql: str
 
-    def __init__(self, tableName: str, allColumns: list[str]):
-        self.tableName = tableName
-        self.allColumns = allColumns
-        self.columns_list = ','.join(allColumns)
-        self.column_list_qm = ""
+    def __init__(self, table_name: str, all_columns: list[str], attr_columns: list[str]):
+        print("Initializing model for table: " + table_name)
+        self.table_name = table_name
+        self.key_column_name = self.table_name + "_uid"
+        self.all_columns = all_columns
+        self.attr_columns = attr_columns
+        self.insert_columns = self.attr_columns.copy()
+        self.insert_columns.append("created_by")
+        self.insert_columns.append("last_updated_by")
+        self.insert_columns.append("custom_attributes")
+        self.insert_columns_list = ",".join(self.insert_columns)
+        self.insert_columns_question_marks = ",".join(list(map(lambda x: "%s", self.insert_columns)))
+        self.attr_no_uid_columns = [x for x in self.attr_columns if x != self.key_column_name]
+        self.attr_no_uid_columns_eq = [x+"=%s" for x in self.attr_no_uid_columns]
+        self.all_columns_list = ','.join(all_columns)
+        self.attr_columns_list = ",".join(attr_columns)
+        self.attr_no_uid_columns_list = ",".join(self.attr_no_uid_columns)
+        self.attr_no_uid_columns_eq_list = ",". join(self.attr_no_uid_columns_eq)
+        self.all_question_marks = ",".join(list(map(lambda x: "%s", all_columns)))
+        self.attr_question_marks = ",".join(list(map(lambda x: "%s", attr_columns)))
+        self.insert_attrs_sql = "insert into " + self.table_name + "(" + self.insert_columns_list + ") values (" + self.insert_columns_question_marks + ")"
+        self.update_attrs_sql = "update " + self.table_name + " set " + self.attr_no_uid_columns_eq_list + ", custom_attributes=%s, last_updated_date=now(), row_version=row_version+1, last_updated_by=%s where " + self.key_column_name + "=%s"
+        self.upsert_columns = self.attr_no_uid_columns.copy()
+        self.upsert_columns.append("last_updated_by")
+        self.upsert_columns.append("custom_attributes")
+        self.upsert_columns_exclude_list = ",".join([x+"=excluded."+x for x in self.upsert_columns])
+        self.upsert_attrs_sql = "insert into " + self.table_name + "(" + self.insert_columns_list + ") values (" + self.insert_columns_question_marks + ") on conflict (" + self.table_name + "_uid) do update set " + self.upsert_columns_exclude_list + ", last_updated_date=now()"
+        self.select_all_sql = "select * from " + self.table_name
 
     def get_key_column_name(self):
-        return self.tableName + "_uid"
+        return self.table_name + "_uid"
 
     def get_insert_sql(self):
-        return "insert into " + self.tableName + "(" + self.columns_list + ") values (?, ?, ?, ?, ?, ?, ?)"
+        return self.insert_attrs_sql
 
     def get_select_all_limit_sql(self, n: int = 1000):
-        return "select * from " + self.tableName + " limit " + n
+        return "select * from " + self.table_name + " limit " + str(n)
+    def get_select_active_limit_sql(self, n: int = 1000) -> str:
+        return "select * from " + self.table_name + " where is_active=1 limit " + str(n)
+    def get_select_all_latest_sql(self, n: int = 1000) -> str:
+        return "select * from " + self.table_name + " order by created_date desc limit " + str(n)
+    def get_select_active_latest_sql(self, n: int = 1000) -> str:
+        return "select * from " + self.table_name + " order by created_date desc limit " + str(n)
 
-    def get_select_all_latest_sql(self, n: int = 1000):
-        return "select * from " + self.tableName + " order by created_date desc limit " + n
+    def get_select_write_all_limit_sql(self, n: int = 1000):
+        return "select " + self.attr_columns_list + " from " + self.table_name + " limit " + str(n)
+    def get_select_write_active_limit_sql(self, n: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " where is_active=1 limit " + str(n)
+    def get_select_write_all_latest_sql(self, n: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(n)
+    def get_select_write_active_latest_sql(self, n: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(n)
 
-    def get_select_all_keys(self, n: int = 1000):
-        return "select " + self.get_key_column_name() + " from " + self.tableName + " order by " + self.get_key_column_name() + " limit " + n
+    def get_select_all_keys(self, n: int = 1000) -> str:
+        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(n)
+    def get_select_all_guids(self, n: int = 1000) -> str:
+        return "select row_guid from " + self.table_name + " limit " + str(n)
 
-    def get_select_count_all_sql(self):
-        return "select count(*) as cnt from " + self.tableName
-
-    def get_select_count_active_sql(self):
-        return "select count(*) as cnt from " + self.tableName + " where is_active=1"
-
-    def get_select_by_key(self, n: int = 1000):
-        return "select * from " + self.tableName + " where " + self.get_key_column_name() + "=? order by created_date desc limit " + n
-
-    def get_select_by_id(self):
-        return "select * from " + self.tableName + " where id=? limit 1"
-
-    def get_select_active_only(self):
-        return "select * from " + self.tableName + " where is_active=1 order by created_date desc limit 1000"
-
-    def get_select_active_by_any_column(self, column_name: str):
-        return "select * from " + self.tableName + " where is_active=1 and " + column_name + "=? order by created_date desc limit 1000"
-
-
-# list of all models defined in database to be used by DAOs, Services, Controllers
-account_division_model = ModelBase('account_division', ['id', 'account_division_uid', 'division_name', 'division_description', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-account_group_model = ModelBase('account_group', ['id', 'account_group_uid', 'account_group_name', 'account_group_description', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-account_instance_model = ModelBase('account_instance', ['id', 'account_instance_uid', 'account_title_uid', 'account_division_uid', 'account_group_uid', 'auth_identity_uid', 'account_email', 'account_name', 'display_name', 'is_system', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-account_title_model = ModelBase('account_title', ['id', 'account_title_uid', 'title_name', 'title_description', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_identity_model = ModelBase('auth_identity', ['id', 'auth_identity_uid', 'identity_name', 'identity_type', 'identity_parameters', 'last_status_name', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_password_model = ModelBase('auth_password', ['id', 'auth_password_uid', 'account_instance_uid', 'password_hash', 'password_salt', 'date_from', 'date_to', 'usage_count', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_permission_model = ModelBase('auth_permission', ['id', 'auth_permission_uid', 'account_instance_uid', 'auth_role_uid', 'client_instance_uid', 'project_instance_uid', 'valid_from_date', 'valid_till_date', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_request_model = ModelBase('auth_request', ['id', 'auth_request_uid', 'by_account_instance_uid', 'account_instance_uid', 'reset_guid', 'valid_till_date', 'lock_guid', 'lock_by', 'lock_date', 'is_checked', 'is_used', 'check_date', 'use_date', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_role_model = ModelBase('auth_role', ['id', 'auth_role_uid', 'parent_auth_role_uid', 'role_name', 'role_description', 'access_uris', 'is_project', 'is_client', 'is_custom', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-auth_token_model = ModelBase('auth_token', ['id', 'auth_token_uid', 'account_instance_uid', 'token_seq', 'token_hash', 'token_salt', 'valid_till_date', 'last_use_date', 'is_last', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-client_instance_model = ModelBase('client_instance', ['id', 'client_instance_uid', 'country_uid', 'client_name', 'client_code', 'client_description', 'start_date', 'end_date', 'is_internal', 'is_system', 'is_test', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-country_model = ModelBase('country', ['id', 'country_uid', 'continent_name', 'continent_code', 'country_name', 'country_iso3', 'country_code', 'phone_code', 'currency_code', 'capital_name', 'region_name', 'subregion_name', 'region_code', 'latitude', 'longitude', 'currency_name', 'population', 'languages', 'area', 'bar_code', 'top_level_domain', 'is_focused', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-currency_model = ModelBase('currency', ['id', 'currency_uid', 'currency_name', 'is_focused', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-entry_final_model = ModelBase('entry_final', ['id', 'entry_final_uid', 'account_instance_uid', 'project_instance_uid', 'project_milestone_uid', 'invoice_instance_uid', 'entry_period', 'entry_note', 'lock_uid', 'start_date', 'end_date', 'entry_minutes', 'is_approved', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-entry_save_model = ModelBase('entry_save', ['id', 'entry_save_uid', 'account_instance_uid', 'project_instance_uid', 'project_milestone_uid', 'invoice_instance_uid', 'entry_period', 'entry_note', 'lock_uid', 'start_date', 'end_date', 'entry_minutes', 'is_approved', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-event_channel_model = ModelBase('event_channel', ['id', 'event_channel_uid', 'channel_type', 'channel_name', 'channel_definition', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-event_instance_model = ModelBase('event_instance', ['id', 'event_instance_uid', 'event_type', 'event_object', 'event_method', 'event_parameters', 'event_signature', 'published_count', 'event_date', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-event_subscription_model = ModelBase('event_subscription', ['id', 'event_subscription_uid', 'event_channel_uid', 'subscription_name', 'subscription_filter', 'subscription_topic', 'subscription_template', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-invoice_instance_model = ModelBase('invoice_instance', ['id', 'invoice_instance_uid', 'client_instance_uid', 'account_instance_uid', 'period_code', 'invoice_number', 'invoice_details', 'invoice_status', 'invoice_currency', 'invoice_amount', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-notification_instance_model = ModelBase('notification_instance', ['id', 'notification_instance_uid', 'account_instance_uid', 'notification_type', 'notification_topic', 'notification_format', 'notification_content', 'sending_status', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-project_budget_model = ModelBase('project_budget', ['id', 'project_budget_uid', 'project_instance_uid', 'budget_name', 'budget_currency', 'budget_value', 'is_current', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-project_group_model = ModelBase('project_group', ['id', 'project_group_uid', 'project_group_name', 'project_group_description', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-project_instance_model = ModelBase('project_instance', ['id', 'project_instance_uid', 'client_instance_uid', 'manager_account_instance_uid', 'project_group_uid', 'project_name', 'project_code', 'is_billable', 'start_date', 'end_date', 'current_billed', 'budget', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-project_milestone_model = ModelBase('project_milestone', ['id', 'project_milestone_uid', 'project_instance_uid', 'project_budget_uid', 'milestone_name', 'start_date', 'end_date', 'status_name', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_attribute_model = ModelBase('system_attribute', ['id', 'system_attribute_uid', 'system_object_uid', 'column_name', 'attribute_name', 'attribute_type', 'attribute_label', 'attribute_description', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_change_model = ModelBase('system_change', ['id', 'system_change_uid', 'account_instance_uid', 'change_type', 'change_name', 'change_json', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_exception_model = ModelBase('system_exception', ['id', 'system_exception_uid', 'system_instance_uid', 'exception_class', 'exception_message', 'exception_stacktrace', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_instance_model = ModelBase('system_instance', ['id', 'system_instance_uid', 'host_name', 'host_ip', 'local_path', 'app_version', 'mode_name', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_object_model = ModelBase('system_object', ['id', 'system_object_uid', 'object_name', 'object_type', 'table_name', 'key_name', 'parent_system_object_uid', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_setting_model = ModelBase('system_setting', ['id', 'system_setting_uid', 'account_instance_uid', 'setting_name', 'setting_value', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
-system_state_model = ModelBase('system_state', ['id', 'system_state_uid', 'system_instance_uid', 'host_name', 'host_ip', 'local_path', 'app_version', 'mode_name', 'row_guid', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes'])
+    def get_select_count_all_sql(self) -> str:
+        return "select count(*) as cnt from " + self.table_name
+    def get_select_count_active_sql(self) -> str:
+        return "select count(*) as cnt from " + self.table_name + " where is_active=1"
+    def get_select_count_by_any_column_sql(self, column_name: str) -> str:
+        return "select count(*) as cnt from " + self.table_name + " where is_active=1 and " + column_name + "=%s"
+    def get_select_by_key(self) -> str:
+        return "select * from " + self.table_name + " where " + self.key_column_name + "=%s"
+    def get_select_by_id(self) -> str:
+        return "select * from " + self.table_name + " where id=%s limit 1"
+    def get_select_active_only(self) -> str:
+        return "select * from " + self.table_name + " where is_active=1 order by created_date desc limit 1000"
+    def get_select_active_by_any_column(self, column_name: str, n: int = 1000) -> str:
+        return "select * from " + self.table_name + " where is_active=1 and " + column_name + "=%s order by created_date desc limit " + str(n)
 
 
-# base class for write DTO classes
-class BaseWriteDto:
+# base DTO with nothing
+class base_dto:
+    @classmethod
+    def get_random_uid(cls) -> str:
+        return str(uuid.uuid4())
+    @classmethod
+    def get_random_int(cls) -> int:
+        return str(random.randint(0, 1000000))
+    @classmethod
+    def get_random_float(cls) -> float:
+        return str(random.uniform(0, 1000000))
+    @classmethod
+    def get_random_date(cls) -> int:
+        return str(uuid.uuid4())
 
+
+# base class for DTO with custom_attributes
+class base_custom_dto(base_dto):
+    custom_attributes: str
+    def get_custom_attributes(self) -> str:
+        return self.custom_attributes
+    def get_custom_attributes_as_dict(self):
+        return None
+    def get_custom_attributes_names(self):
+        return None
+
+#
+class base_write_dto(base_custom_dto):
     def __init__(self):
-        print("Nothing to be done here")
-
+        print("Creating new DTO")
     @abstractmethod
     def get_key(self) -> str:
         pass
-
     @abstractmethod
-    def get_model(self) -> ModelBase:
+    def get_uid(self) -> str:
         pass
-
+    @abstractmethod
+    def get_model(self) -> base_model:
+        pass
+    @abstractmethod
+    def get_list_values(self) -> list[any]:
+        pass
+    @abstractmethod
+    def get_list_values_no_custom(self) -> list[any]:
+        pass
+    @abstractmethod
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        pass
+    @abstractmethod
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        pass
+    @abstractmethod
+    def get_nonkey_values(self) -> list[any]:
+        pass
+    @abstractmethod
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        pass
+    # get table name for this write DTO class
+    def get_table_name(self) -> str:
+        return self.get_model().table_name
+    @abstractmethod
+    def to_write_dict(self) -> dict:
+        pass
+    @abstractmethod
+    def clone_write(self):
+        pass
+    @abstractmethod
+    def clone_write_new_uid(self):
+        pass
+    @abstractmethod
+    def clone_with_uid(self, uid: str):
+        pass
+    @abstractmethod
+    def to_json_write(self) -> str:
+        pass
+    @abstractmethod
+    def update_uid(self, uid: str):
+        pass
 
 # base class for DTO classes
-class BaseDto:
+class base_read_dto(base_write_dto):
     id: int
     row_guid: str
+    row_version: int
     is_active: int
-    created_date: datetime
+    created_date: datetime.datetime
     created_by: str
-    last_updated_date: datetime
+    last_updated_date: datetime.datetime
     last_updated_by: str
-    removed_date: datetime
-    removed_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
     custom_attributes: str
-
-    def __init__(self):
-        print("Nothing to be done here")
-
     def get_id(self) -> int:
         return self.id
-
-    def get_created_date(self) -> datetime:
+    def get_created_date(self) -> datetime.datetime:
         return self.created_date
-
-    def get_last_updated_date(self) -> datetime:
+    def get_last_updated_date(self) -> datetime.datetime:
         return self.last_updated_date
-
-    def is_active(self) -> bool:
-        return self.is_active == 1
-
     def is_removed(self) -> bool:
         return self.removed_date is not None
-
     @abstractmethod
-    def get_key(self) -> str:
+    def to_read_dict(self) -> dict:
         pass
-
     @abstractmethod
-    def get_model(self) -> ModelBase:
+    def to_write(self):
         pass
-
+    @abstractmethod
+    def to_thin(self):
+        pass
+    @abstractmethod
+    def touch(self, updated_by: str = "system"):
+        pass
+    @abstractmethod
+    def get_list_all_values(self) -> list[any]:
+        pass
+    @abstractmethod
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        pass
+    @abstractmethod
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        pass
+    @abstractmethod
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        pass
+    @abstractmethod
+    def to_json_read(self) -> str:
+        pass
 
 # extract key
-def extract_key(dto: BaseDto) -> str:
+def extract_key(dto: base_write_dto) -> str:
+    print("Extracting key from DTO: " + str(dto) + ", TYPE=" + str(type(dto)) + ", key=" + str(dto.get_key()))
     return dto.get_key()
 
 
 # helper class to store list of items
-class BaseDtos:
-    items: list[BaseDto]
-
-    def __init__(self, items: list[BaseDto]):
-        self.items = items
-
-    def get_keys(self):
-        return map(extract_key, self.items)
-
-
-@dataclass(frozen=False)
-class account_instance_write_dto(BaseWriteDto):
-    account_instance_uid: str
-    account_title_uid: str
-    account_division_uid: str
-    account_group_uid: str
-    auth_identity_uid: str
-    account_email: str
-    account_name: str
-    display_name: str
-    is_system: int
-
-    def __init__(self, account_instance_uid: str, account_title_uid: str, account_division_uid: str, account_group_uid: str, auth_identity_uid: str, account_email: str, account_name: str, display_name: str, is_system: int):
-        self.account_instance_uid=account_instance_uid
-        self.account_title_uid=account_title_uid
-        self.account_division_uid=account_division_uid
-        self.account_group_uid=account_group_uid
-        self.auth_identity_uid=auth_identity_uid
-        self.account_email=account_email
-        self.account_name=account_name
-        self.display_name=display_name
-        self.is_system=is_system
-
-    def get_model(self) -> ModelBase:
-        return account_instance_model
-
-    def get_key(self) -> str:
-        return self.account_instance_uid
-
-
-@dataclass(frozen=False)
-class account_division_dto(BaseDto):
-    id: int
-    account_division_uid: str
-    division_name: str
-    division_description: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, account_division_uid: str, division_name: str, division_description: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.account_division_uid=account_division_uid
-        self.division_name=division_name
-        self.division_description=division_description
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return account_division_model
-
-
-    def get_key(self) -> str:
-        return self.account_division_uid
-
-
-@dataclass(frozen=False)
-class account_group_dto(BaseDto):
-    id: int
-    account_group_uid: str
-    account_group_name: str
-    account_group_description: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, account_group_uid: str, account_group_name: str, account_group_description: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.account_group_uid=account_group_uid
-        self.account_group_name=account_group_name
-        self.account_group_description=account_group_description
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return account_group_model
-
-    def get_key(self) -> str:
-        return self.account_group_uid
-
-
-@dataclass(frozen=False)
-class account_instance_dto(BaseDto):
-    id: int
-    account_instance_uid: str
-    account_title_uid: str
-    account_division_uid: str
-    account_group_uid: str
-    auth_identity_uid: str
-    account_email: str
-    account_name: str
-    display_name: str
-    is_system: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, account_instance_uid: str, account_title_uid: str, account_division_uid: str, account_group_uid: str, auth_identity_uid: str, account_email: str, account_name: str, display_name: str, is_system: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.account_instance_uid=account_instance_uid
-        self.account_title_uid=account_title_uid
-        self.account_division_uid=account_division_uid
-        self.account_group_uid=account_group_uid
-        self.auth_identity_uid=auth_identity_uid
-        self.account_email=account_email
-        self.account_name=account_name
-        self.display_name=display_name
-        self.is_system=is_system
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return account_instance_model
-
-    def get_key(self) -> str:
-        return self.account_instance_uid
-
-    def to_write(self) -> account_instance_write_dto:
-        return account_instance_write_dto(self.account_instance_uid, self.account_title_uid, self.account_division_uid, self.account_group_uid, self.auth_identity_uid, self.account_email, self.account_name, self.display_name, self.is_system)
-
-@dataclass(frozen=False)
-class account_title_dto(BaseDto):
-    id: int
-    account_title_uid: str
-    title_name: str
-    title_description: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, account_title_uid: str, title_name: str, title_description: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.account_title_uid=account_title_uid
-        self.title_name=title_name
-        self.title_description=title_description
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return account_title_model
-
-    def get_key(self) -> str:
-        return self.account_title_uid
-
-
-@dataclass(frozen=False)
-class auth_identity_dto(BaseDto):
-    id: int
-    auth_identity_uid: str
-    identity_name: str
-    identity_type: str
-    identity_parameters: str
-    last_status_name: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_identity_uid: str, identity_name: str, identity_type: str, identity_parameters: str, last_status_name: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_identity_uid=auth_identity_uid
-        self.identity_name=identity_name
-        self.identity_type=identity_type
-        self.identity_parameters=identity_parameters
-        self.last_status_name=last_status_name
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_identity_model
-
-    def get_key(self) -> str:
-        return self.auth_identity_uid
-
-
-@dataclass(frozen=False)
-class auth_password_dto(BaseDto):
-    id: int
-    auth_password_uid: str
-    account_instance_uid: str
-    password_hash: str
-    password_salt: str
-    date_from: datetime
-    date_to: datetime
-    usage_count: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_password_uid: str, account_instance_uid: str, password_hash: str, password_salt: str, date_from: datetime, date_to: datetime, usage_count: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_password_uid=auth_password_uid
-        self.account_instance_uid=account_instance_uid
-        self.password_hash=password_hash
-        self.password_salt=password_salt
-        self.date_from=date_from
-        self.date_to=date_to
-        self.usage_count=usage_count
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_password_model
-
-    def get_key(self) -> str:
-        return self.auth_password_uid
-
-
-@dataclass(frozen=False)
-class auth_permission_dto(BaseDto):
-    id: int
-    auth_permission_uid: str
-    account_instance_uid: str
-    auth_role_uid: str
-    client_instance_uid: str
-    project_instance_uid: str
-    valid_from_date: datetime
-    valid_till_date: datetime
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_permission_uid: str, account_instance_uid: str, auth_role_uid: str, client_instance_uid: str, project_instance_uid: str, valid_from_date: datetime, valid_till_date: datetime, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_permission_uid=auth_permission_uid
-        self.account_instance_uid=account_instance_uid
-        self.auth_role_uid=auth_role_uid
-        self.client_instance_uid=client_instance_uid
-        self.project_instance_uid=project_instance_uid
-        self.valid_from_date=valid_from_date
-        self.valid_till_date=valid_till_date
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_permission_model
-
-    def get_key(self) -> str:
-        return self.auth_permission_uid
-
-
-@dataclass(frozen=False)
-class auth_request_dto(BaseDto):
-    id: int
-    auth_request_uid: str
-    by_account_instance_uid: str
-    account_instance_uid: str
-    reset_guid: str
-    valid_till_date: datetime
-    lock_guid: str
-    lock_by: str
-    lock_date: datetime
-    is_checked: int
-    is_used: int
-    check_date: datetime
-    use_date: datetime
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_request_uid: str, by_account_instance_uid: str, account_instance_uid: str, reset_guid: str, valid_till_date: datetime, lock_guid: str, lock_by: str, lock_date: datetime, is_checked: int, is_used: int, check_date: datetime, use_date: datetime, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_request_uid=auth_request_uid
-        self.by_account_instance_uid=by_account_instance_uid
-        self.account_instance_uid=account_instance_uid
-        self.reset_guid=reset_guid
-        self.valid_till_date=valid_till_date
-        self.lock_guid=lock_guid
-        self.lock_by=lock_by
-        self.lock_date=lock_date
-        self.is_checked=is_checked
-        self.is_used=is_used
-        self.check_date=check_date
-        self.use_date=use_date
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_request_model
-
-    def get_key(self) -> str:
-        return self.auth_request_uid
-
-
-@dataclass(frozen=False)
-class auth_role_dto(BaseDto):
-    id: int
-    auth_role_uid: str
-    parent_auth_role_uid: str
-    role_name: str
-    role_description: str
-    access_uris: str
-    is_project: int
-    is_client: int
-    is_custom: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_role_uid: str, parent_auth_role_uid: str, role_name: str, role_description: str, access_uris: str, is_project: int, is_client: int, is_custom: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_role_uid=auth_role_uid
-        self.parent_auth_role_uid=parent_auth_role_uid
-        self.role_name=role_name
-        self.role_description=role_description
-        self.access_uris=access_uris
-        self.is_project=is_project
-        self.is_client=is_client
-        self.is_custom=is_custom
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_role_model
-
-    def get_key(self) -> str:
-        return self.auth_role_uid
-
-
-@dataclass(frozen=False)
-class auth_token_dto(BaseDto):
-    id: int
-    auth_token_uid: str
-    account_instance_uid: str
-    token_seq: int
-    token_hash: str
-    token_salt: str
-    valid_till_date: datetime
-    last_use_date: datetime
-    is_last: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, auth_token_uid: str, account_instance_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime, last_use_date: datetime, is_last: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.auth_token_uid=auth_token_uid
-        self.account_instance_uid=account_instance_uid
-        self.token_seq=token_seq
-        self.token_hash=token_hash
-        self.token_salt=token_salt
-        self.valid_till_date=valid_till_date
-        self.last_use_date=last_use_date
-        self.is_last=is_last
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return auth_token_model
-
-    def get_key(self) -> str:
-        return self.auth_token_uid
-
-
-@dataclass(frozen=False)
-class client_instance_dto(BaseDto):
-    id: int
-    client_instance_uid: str
-    country_uid: str
-    client_name: str
-    client_code: str
-    client_description: str
-    start_date: datetime
-    end_date: datetime
-    is_internal: int
-    is_system: int
-    is_test: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, client_instance_uid: str, country_uid: str, client_name: str, client_code: str, client_description: str, start_date: datetime, end_date: datetime, is_internal: int, is_system: int, is_test: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.client_instance_uid=client_instance_uid
-        self.country_uid=country_uid
-        self.client_name=client_name
-        self.client_code=client_code
-        self.client_description=client_description
-        self.start_date=start_date
-        self.end_date=end_date
-        self.is_internal=is_internal
-        self.is_system=is_system
-        self.is_test=is_test
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return client_instance_model
-
-    def get_key(self) -> str:
-        return self.client_instance_uid
-
-
-@dataclass(frozen=False)
-class country_dto(BaseDto):
-    id: int
-    country_uid: str
-    continent_name: str
-    continent_code: str
-    country_name: str
-    country_iso3: str
-    country_code: str
-    phone_code: str
-    currency_code: str
-    capital_name: str
-    region_name: str
-    subregion_name: str
-    region_code: str
-    latitude: str
-    longitude: str
-    currency_name: str
-    population: str
-    languages: str
-    area: str
-    bar_code: str
-    top_level_domain: str
-    is_focused: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, country_uid: str, continent_name: str, continent_code: str, country_name: str, country_iso3: str, country_code: str, phone_code: str, currency_code: str, capital_name: str, region_name: str, subregion_name: str, region_code: str, latitude: str, longitude: str, currency_name: str, population: str, languages: str, area: str, bar_code: str, top_level_domain: str, is_focused: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.country_uid=country_uid
-        self.continent_name=continent_name
-        self.continent_code=continent_code
-        self.country_name=country_name
-        self.country_iso3=country_iso3
-        self.country_code=country_code
-        self.phone_code=phone_code
-        self.currency_code=currency_code
-        self.capital_name=capital_name
-        self.region_name=region_name
-        self.subregion_name=subregion_name
-        self.region_code=region_code
-        self.latitude=latitude
-        self.longitude=longitude
-        self.currency_name=currency_name
-        self.population=population
-        self.languages=languages
-        self.area=area
-        self.bar_code=bar_code
-        self.top_level_domain=top_level_domain
-        self.is_focused=is_focused
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return country_model
-
-    def get_key(self) -> str:
-        return self.country_uid
-
-
-@dataclass(frozen=False)
-class currency_dto(BaseDto):
-    id: int
-    currency_uid: str
-    currency_name: str
-    is_focused: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, currency_uid: str, currency_name: str, is_focused: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.currency_uid=currency_uid
-        self.currency_name=currency_name
-        self.is_focused=is_focused
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return currency_model
-
-    def get_key(self) -> str:
-        return self.currency_uid
-
-
-@dataclass(frozen=False)
-class entry_final_dto(BaseDto):
-    id: int
-    entry_final_uid: str
-    account_instance_uid: str
-    project_instance_uid: str
-    project_milestone_uid: str
-    invoice_instance_uid: str
-    entry_period: str
-    entry_note: str
-    lock_uid: str
-    start_date: datetime
-    end_date: datetime
-    entry_minutes: int
-    is_approved: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, entry_final_uid: str, account_instance_uid: str, project_instance_uid: str, project_milestone_uid: str, invoice_instance_uid: str, entry_period: str, entry_note: str, lock_uid: str, start_date: datetime, end_date: datetime, entry_minutes: int, is_approved: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.entry_final_uid=entry_final_uid
-        self.account_instance_uid=account_instance_uid
-        self.project_instance_uid=project_instance_uid
-        self.project_milestone_uid=project_milestone_uid
-        self.invoice_instance_uid=invoice_instance_uid
-        self.entry_period=entry_period
-        self.entry_note=entry_note
-        self.lock_uid=lock_uid
-        self.start_date=start_date
-        self.end_date=end_date
-        self.entry_minutes=entry_minutes
-        self.is_approved=is_approved
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return entry_final_model
-
-    def get_key(self) -> str:
-        return self.entry_final_uid
-
-
-@dataclass(frozen=False)
-class entry_save_dto(BaseDto):
-    id: int
-    entry_save_uid: str
-    account_instance_uid: str
-    project_instance_uid: str
-    project_milestone_uid: str
-    invoice_instance_uid: str
-    entry_period: str
-    entry_note: str
-    lock_uid: str
-    start_date: datetime
-    end_date: datetime
-    entry_minutes: int
-    is_approved: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, entry_save_uid: str, account_instance_uid: str, project_instance_uid: str, project_milestone_uid: str, invoice_instance_uid: str, entry_period: str, entry_note: str, lock_uid: str, start_date: datetime, end_date: datetime, entry_minutes: int, is_approved: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.entry_save_uid=entry_save_uid
-        self.account_instance_uid=account_instance_uid
-        self.project_instance_uid=project_instance_uid
-        self.project_milestone_uid=project_milestone_uid
-        self.invoice_instance_uid=invoice_instance_uid
-        self.entry_period=entry_period
-        self.entry_note=entry_note
-        self.lock_uid=lock_uid
-        self.start_date=start_date
-        self.end_date=end_date
-        self.entry_minutes=entry_minutes
-        self.is_approved=is_approved
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return entry_save_model
-
-    def get_key(self) -> str:
-        return self.entry_save_uid
-
-
-@dataclass(frozen=False)
-class event_channel_dto(BaseDto):
-    id: int
-    event_channel_uid: str
-    channel_type: str
-    channel_name: str
-    channel_definition: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, event_channel_uid: str, channel_type: str, channel_name: str, channel_definition: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.event_channel_uid=event_channel_uid
-        self.channel_type=channel_type
-        self.channel_name=channel_name
-        self.channel_definition=channel_definition
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return event_channel_model
-
-    def get_key(self) -> str:
-        return self.event_channel_uid
-
-
-@dataclass(frozen=False)
-class event_instance_dto(BaseDto):
-    id: int
-    event_instance_uid: str
-    event_type: str
-    event_object: str
-    event_method: str
-    event_parameters: str
-    event_signature: str
-    published_count: int
-    event_date: datetime
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, event_instance_uid: str, event_type: str, event_object: str, event_method: str, event_parameters: str, event_signature: str, published_count: int, event_date: datetime, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.event_instance_uid=event_instance_uid
-        self.event_type=event_type
-        self.event_object=event_object
-        self.event_method=event_method
-        self.event_parameters=event_parameters
-        self.event_signature=event_signature
-        self.published_count=published_count
-        self.event_date=event_date
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return event_instance_model
-
-    def get_key(self) -> str:
-        return self.event_instance_uid
-
-
-@dataclass(frozen=False)
-class event_subscription_dto(BaseDto):
-    id: int
-    event_subscription_uid: str
-    event_channel_uid: str
-    subscription_name: str
-    subscription_filter: str
-    subscription_topic: str
-    subscription_template: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, event_subscription_uid: str, event_channel_uid: str, subscription_name: str, subscription_filter: str, subscription_topic: str, subscription_template: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.event_subscription_uid=event_subscription_uid
-        self.event_channel_uid=event_channel_uid
-        self.subscription_name=subscription_name
-        self.subscription_filter=subscription_filter
-        self.subscription_topic=subscription_topic
-        self.subscription_template=subscription_template
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return event_subscription_model
-
-    def get_key(self) -> str:
-        return self.event_subscription_uid
-
-
-@dataclass(frozen=False)
-class invoice_instance_dto(BaseDto):
-    id: int
-    invoice_instance_uid: str
-    client_instance_uid: str
-    account_instance_uid: str
-    period_code: str
-    invoice_number: str
-    invoice_details: str
-    invoice_status: str
-    invoice_currency: str
-    invoice_amount: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, invoice_instance_uid: str, client_instance_uid: str, account_instance_uid: str, period_code: str, invoice_number: str, invoice_details: str, invoice_status: str, invoice_currency: str, invoice_amount: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.invoice_instance_uid=invoice_instance_uid
-        self.client_instance_uid=client_instance_uid
-        self.account_instance_uid=account_instance_uid
-        self.period_code=period_code
-        self.invoice_number=invoice_number
-        self.invoice_details=invoice_details
-        self.invoice_status=invoice_status
-        self.invoice_currency=invoice_currency
-        self.invoice_amount=invoice_amount
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return invoice_instance_model
-
-    def get_key(self) -> str:
-        return self.invoice_instance_uid
-
-
-@dataclass(frozen=False)
-class notification_instance_dto(BaseDto):
-    id: int
-    notification_instance_uid: str
-    account_instance_uid: str
-    notification_type: str
-    notification_topic: str
-    notification_format: str
-    notification_content: str
-    sending_status: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, notification_instance_uid: str, account_instance_uid: str, notification_type: str, notification_topic: str, notification_format: str, notification_content: str, sending_status: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.notification_instance_uid=notification_instance_uid
-        self.account_instance_uid=account_instance_uid
-        self.notification_type=notification_type
-        self.notification_topic=notification_topic
-        self.notification_format=notification_format
-        self.notification_content=notification_content
-        self.sending_status=sending_status
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return notification_instance_model
-
-    def get_key(self) -> str:
-        return self.notification_instance_uid
-
-
-@dataclass(frozen=False)
-class project_budget_dto(BaseDto):
-    id: int
-    project_budget_uid: str
-    project_instance_uid: str
-    budget_name: str
-    budget_currency: str
-    budget_value: str
-    is_current: int
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, project_budget_uid: str, project_instance_uid: str, budget_name: str, budget_currency: str, budget_value: str, is_current: int, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.project_budget_uid=project_budget_uid
-        self.project_instance_uid=project_instance_uid
-        self.budget_name=budget_name
-        self.budget_currency=budget_currency
-        self.budget_value=budget_value
-        self.is_current=is_current
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return project_budget_model
-
-    def get_key(self) -> str:
-        return self.project_budget_uid
-
-
-@dataclass(frozen=False)
-class project_group_dto(BaseDto):
-    id: int
-    project_group_uid: str
-    project_group_name: str
-    project_group_description: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, project_group_uid: str, project_group_name: str, project_group_description: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.project_group_uid=project_group_uid
-        self.project_group_name=project_group_name
-        self.project_group_description=project_group_description
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return project_group_model
-
-    def get_key(self) -> str:
-        return self.project_group_uid
-
-
-@dataclass(frozen=False)
-class project_instance_dto(BaseDto):
-    id: int
-    project_instance_uid: str
-    client_instance_uid: str
-    manager_account_instance_uid: str
-    project_group_uid: str
-    project_name: str
-    project_code: str
-    is_billable: int
-    start_date: datetime
-    end_date: datetime
-    current_billed: str
-    budget: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, project_instance_uid: str, client_instance_uid: str, manager_account_instance_uid: str, project_group_uid: str, project_name: str, project_code: str, is_billable: int, start_date: datetime, end_date: datetime, current_billed: str, budget: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.project_instance_uid=project_instance_uid
-        self.client_instance_uid=client_instance_uid
-        self.manager_account_instance_uid=manager_account_instance_uid
-        self.project_group_uid=project_group_uid
-        self.project_name=project_name
-        self.project_code=project_code
-        self.is_billable=is_billable
-        self.start_date=start_date
-        self.end_date=end_date
-        self.current_billed=current_billed
-        self.budget=budget
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return project_instance_model
-
-    def get_key(self) -> str:
-        return self.project_instance_uid
-
-
-@dataclass(frozen=False)
-class project_milestone_dto(BaseDto):
-    id: int
-    project_milestone_uid: str
-    project_instance_uid: str
-    project_budget_uid: str
-    milestone_name: str
-    start_date: datetime
-    end_date: datetime
-    status_name: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, project_milestone_uid: str, project_instance_uid: str, project_budget_uid: str, milestone_name: str, start_date: datetime, end_date: datetime, status_name: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.project_milestone_uid=project_milestone_uid
-        self.project_instance_uid=project_instance_uid
-        self.project_budget_uid=project_budget_uid
-        self.milestone_name=milestone_name
-        self.start_date=start_date
-        self.end_date=end_date
-        self.status_name=status_name
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return project_milestone_model
-
-    def get_key(self) -> str:
-        return self.project_milestone_uid
-
-
-@dataclass(frozen=False)
-class system_attribute_dto(BaseDto):
-    id: int
-    system_attribute_uid: str
-    system_object_uid: str
-    column_name: str
-    attribute_name: str
-    attribute_type: str
-    attribute_label: str
-    attribute_description: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_attribute_uid: str, system_object_uid: str, column_name: str, attribute_name: str, attribute_type: str, attribute_label: str, attribute_description: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_attribute_uid=system_attribute_uid
-        self.system_object_uid=system_object_uid
-        self.column_name=column_name
-        self.attribute_name=attribute_name
-        self.attribute_type=attribute_type
-        self.attribute_label=attribute_label
-        self.attribute_description=attribute_description
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_attribute_model
-
-    def get_key(self) -> str:
-        return self.system_attribute_uid
-
-
-@dataclass(frozen=False)
-class system_change_dto(BaseDto):
-    id: int
-    system_change_uid: str
-    account_instance_uid: str
-    change_type: str
-    change_name: str
-    change_json: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_change_uid: str, account_instance_uid: str, change_type: str, change_name: str, change_json: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_change_uid=system_change_uid
-        self.account_instance_uid=account_instance_uid
-        self.change_type=change_type
-        self.change_name=change_name
-        self.change_json=change_json
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_change_model
-
-    def get_key(self) -> str:
-        return self.system_change_uid
-
-
-@dataclass(frozen=False)
-class system_exception_dto(BaseDto):
-    id: int
-    system_exception_uid: str
-    system_instance_uid: str
-    exception_class: str
-    exception_message: str
-    exception_stacktrace: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_exception_uid: str, system_instance_uid: str, exception_class: str, exception_message: str, exception_stacktrace: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_exception_uid=system_exception_uid
-        self.system_instance_uid=system_instance_uid
-        self.exception_class=exception_class
-        self.exception_message=exception_message
-        self.exception_stacktrace=exception_stacktrace
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_exception_model
-
-    def get_key(self) -> str:
-        return self.system_exception_uid
-
-
-@dataclass(frozen=False)
-class system_instance_dto(BaseDto):
-    id: int
-    system_instance_uid: str
-    host_name: str
-    host_ip: str
-    local_path: str
-    app_version: str
-    mode_name: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_instance_uid: str, host_name: str, host_ip: str, local_path: str, app_version: str, mode_name: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_instance_uid=system_instance_uid
-        self.host_name=host_name
-        self.host_ip=host_ip
-        self.local_path=local_path
-        self.app_version=app_version
-        self.mode_name=mode_name
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_instance_model
-
-    def get_key(self) -> str:
-        return self.system_instance_uid
-
-
-@dataclass(frozen=False)
-class system_object_dto(BaseDto):
-    id: int
-    system_object_uid: str
-    object_name: str
-    object_type: str
-    table_name: str
-    key_name: str
-    parent_system_object_uid: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_object_uid: str, object_name: str, object_type: str, table_name: str, key_name: str, parent_system_object_uid: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_object_uid=system_object_uid
-        self.object_name=object_name
-        self.object_type=object_type
-        self.table_name=table_name
-        self.key_name=key_name
-        self.parent_system_object_uid=parent_system_object_uid
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_object_model
-
-    def get_key(self) -> str:
-        return self.system_object_uid
-
-
-@dataclass(frozen=False)
-class system_setting_dto(BaseDto):
-    id: int
-    system_setting_uid: str
-    account_instance_uid: str
-    setting_name: str
-    setting_value: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_setting_uid: str, account_instance_uid: str, setting_name: str, setting_value: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_setting_uid=system_setting_uid
-        self.account_instance_uid=account_instance_uid
-        self.setting_name=setting_name
-        self.setting_value=setting_value
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_setting_model
-
-    def get_key(self) -> str:
-        return self.system_setting_uid
-
-
-@dataclass(frozen=False)
-class system_state_dto(BaseDto):
-    id: int
-    system_state_uid: str
-    system_instance_uid: str
-    host_name: str
-    host_ip: str
-    local_path: str
-    app_version: str
-    mode_name: str
-    row_guid: str
-    is_active: int
-    created_date: datetime
-    created_by: str
-    last_updated_date: datetime
-    last_updated_by: str
-    removed_date: datetime
-    removed_by: str
-    custom_attributes: str
-
-    def __init__(self, id: int, system_state_uid: str, system_instance_uid: str, host_name: str, host_ip: str, local_path: str, app_version: str, mode_name: str, row_guid: str, is_active: int, created_date: datetime, created_by: str, last_updated_date: datetime, last_updated_by: str, removed_date: datetime, removed_by: str, custom_attributes: str):
-        self.id=id
-        self.system_state_uid=system_state_uid
-        self.system_instance_uid=system_instance_uid
-        self.host_name=host_name
-        self.host_ip=host_ip
-        self.local_path=local_path
-        self.app_version=app_version
-        self.mode_name=mode_name
-        self.row_guid=row_guid
-        self.is_active=is_active
-        self.created_date=created_date
-        self.created_by=created_by
-        self.last_updated_date=last_updated_date
-        self.last_updated_by=last_updated_by
-        self.removed_date=removed_date
-        self.removed_by=removed_by
-        self.custom_attributes=custom_attributes
-
-    def get_model(self) -> ModelBase:
-        return system_state_model
-
-    def get_key(self) -> str:
-        return self.system_state_uid
-
+class base_dtos:
+    dtos: list[base_read_dto]
+    def __init__(self, dtos: list[base_read_dto]):
+        self.dtos = dtos
+    def get_dtos(self) -> list[base_read_dto]:
+        return self.dtos
+    def get_keys(self) -> list[str]:
+        return list(map(extract_key, self.dtos))
+    def get_active_dtos(self):
+        return list(filter(lambda x: x.is_active == 1, self.dtos))
+    def count(self) -> int:
+        return len(self.dtos)
+    def count_active_only(self):
+        return len(self.get_active_dtos())
+    def touch_all(self, updated_by: str = "system"):
+        for dto in self.dtos:
+            dto.touch(updated_by)
+    @abstractmethod
+    def get_write_dicts(self) -> list[dict]:
+        pass
+    @abstractmethod
+    def get_read_dicts(self) -> list[dict]:
+        pass
+    @abstractmethod
+    def find_by_uid(self, uid: str):
+        pass
+    @abstractmethod
+    def get_first(self):
+        pass

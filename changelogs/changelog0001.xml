@@ -34,10 +34,11 @@
             <column name="mode_name" type="text" defaultValue="DEV"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -60,10 +61,11 @@
             <column name="mode_name" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -84,10 +86,11 @@
             <column name="exception_stacktrace" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValue="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -109,10 +112,11 @@
             <column name="parent_system_object_uid" type="text" />
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('system_attribute_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -136,10 +140,11 @@
             <column name="attribute_description" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('system_attribute_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -161,10 +166,11 @@
             <column name="change_json" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_password_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -184,10 +190,11 @@
             <column name="setting_value" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('system_setting_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -207,10 +214,11 @@
             <column name="channel_definition" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -232,10 +240,11 @@
             <column name="subscription_template" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -260,10 +269,11 @@
             <column name="event_date" type="timestamp"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('event_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -299,10 +309,11 @@
             <column name="is_focused" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('country_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -322,10 +333,11 @@
             <column name="is_focused" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('country_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -352,10 +364,11 @@
             <column name="is_test" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('client_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -375,10 +388,11 @@
             <column name="title_description" type="text" remarks="Title description"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('account_title_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -397,10 +411,11 @@
             <column name="account_group_description" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('account_group_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -419,10 +434,11 @@
             <column name="division_description" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('account_division_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -448,10 +464,11 @@
             <column name="is_system" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('account_division_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -478,10 +495,11 @@
             <column name="is_last" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_token_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -507,10 +525,11 @@
             <column name="is_custom" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_role_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -534,10 +553,11 @@
             <column name="valid_till_date" type="timestamp" remarks="permission till date"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_permission_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -562,10 +582,11 @@
             <column name="usage_count" type="bigint" defaultValueNumeric="0" remarks="numer of password usages"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_password_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -594,10 +615,11 @@
             <column name="use_date" type="timestamp" remarks="date and time of use" />
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_password_request_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -618,10 +640,11 @@
             <column name="last_status_name" type="text" defaultValue="Unknown"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auth_identity_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -645,10 +668,11 @@
             <column name="sending_status" type="text" defaultValue="Created"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('notification_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -674,10 +698,11 @@
             <column name="invoice_amount" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('invoice_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -696,10 +721,11 @@
             <column name="project_group_description" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_group_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -726,10 +752,11 @@
             <column name="budget" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_instance_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -754,10 +781,11 @@
             <column name="is_current" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_budget_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -781,10 +809,11 @@
             <column name="status_name" type="text" remarks="status of that milestone" defaultValue="Created"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_budget_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -813,10 +842,11 @@
             <column name="is_approved" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('time_entry_save_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
@@ -846,10 +876,11 @@
             <column name="is_approved" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('time_entry_final_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database" />
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row" />
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
             <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
             <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />

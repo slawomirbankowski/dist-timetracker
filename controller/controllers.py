@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request, abort
 
+from dao.daos_instances import *
+
 print('Flask starting app')
 app = Flask(__name__)
 
@@ -40,6 +42,13 @@ def get_clients():
 @app.route('/api/clients-active', methods=['GET'])
 def get_clients_active():
    return jsonify({'tasks': tasks})
+
+@app.route('/api/account-division-all', methods=['GET'])
+def get_account_division_all():
+    #request.content_type
+    #request.content_length
+   return jsonify(account_division_dao_instance.get_items_all(1000).dtos)
+
 
 def startHttpListening():
     print('Start listening')
