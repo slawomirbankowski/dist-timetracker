@@ -1,39 +1,59 @@
-# Main entry point for TimeTracker app
 import os
-import psycopg2
-import psycopg2.pool
-from pyliquibase import Pyliquibase
+import logging
+import atexit
+import dao.dao_connection
+from base.base_objects import objects
+from base.cache import cache
+from dao.daos import daos
+from dto.dtos_models import db_models
+from service.services import services
+from controller.controller_app import start_http_listening
+from controller.controllers import controllers
 
-import dao
-# import dto
-# import service
-# import controller
 
-import controller.controllers
-
-from dao import dao_connection
-# from controller import ClientController
-# from controller import MainController
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    print("=================================================== STARTING")
+    logging.info("Starting new Python application")
+    #logging.log(2, "Some log")
+    db_url = os.environ.get('JDBC_URL')
+    db_host = os.environ.get('JDBC_HOST')
+    db_name = os.environ.get('JDBC_NAME')
+    db_user = os.environ.get('JDBC_USER')
+    db_pass = os.environ.get('JDBC_PASS')
+    #logging.basicConfig()
+    logging.info("Main database URL =" + db_url)
+    logging.info("Main database HOST=" + db_host)
+    logging.info("Main database NAME=" + db_name)
+    logging.info("Main database USER=" + db_user)
+    print("=================================================== OBJECTS")
+    objects.initialize()
+    print("=================================================== CACHE")
+    cache.initialize()
+    print("=================================================== MODELS")
+    # initialize all models
+    db_models.initialize()
+    print("=================================================== CONNECTIONS")
+    # initialize DB connections
+    dao.dao_connection.db_connections.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
+    print("=================================================== DAS")
+    # initialize services
+    daos.initialize_daos()
+    print("=================================================== SERVICES")
+    services.initialize_services()
+    print("=================================================== CONTROLLERS")
+    controllers.initialize_controllers()
+    print("=================================================== HTTP")
+    start_http_listening()
 
-    daoConn = dao_connection.daoConn
-    print('MAIN ::: Got DAO')
-    print(daoConn)
-    conn = daoConn.getConnection()
-    print(conn)
-    conn.close()
-    conn2 = daoConn.getConnection()
-    print('MAIN ::: Got connection')
-    print(conn2)
-    conn2.close()
 
-    # initialize Liquibase schema
-    daoConn.initializeSchema()
+def exit_handler():
+    print("TimeTracker application is ending")
+    controllers.close()
+    daos.close()
+    dao.dao_connection.db_connections.close()
+    db_models.close()
+    objects.close()
+    print("TimeTracker ENDED!!!")
 
-    print(controller.controllers.version)
-    print('Start listening on HTTP port')
-    controller.controllers.startHttpListening()
+
+atexit.register(exit_handler)

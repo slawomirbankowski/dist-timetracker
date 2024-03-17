@@ -1,102 +1,890 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0002.xml">
 
-    <changeSet id="0002 - dictionary data" author="slawomir.bankowski">
+-- ----------------------------------------------------------------------------------------------------------------
+drop view  v_table_list;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into system_version(system_version_uid, version_description) values ('1.0.0', 'Initial version of application with all basic features.');
-        </sql>
+create view  v_table_list as
+	select table_name
+	, concat('class ', table_name, '_dtos(base_dto):') as dtos_class
+	, concat('', table_name, '_dtos') as dtos_class_name
+	, concat('class ', table_name, '_write_dto(base_write_dto):') as dto_write_class
+	, concat('', table_name, '_write_dto') as dto_write_class_name
+	, concat('list[', table_name, '_write_dto]') as dto_write_class_name_list
+	, concat('class ', table_name, '_read_dto(base_read_dto, ', table_name, '_write_dto):') as dto_read_class_definition
+	, concat('', table_name, '_read_dto') as dto_read_class_name
+	, concat('list[', table_name, '_read_dto]') as dto_read_class_name_list
+	, concat('', table_name, '_thin_dto') as dto_thin_class_name
+	, concat('class ', table_name, '_dao(base_dao):') as dao_class_definition
+	, concat('', table_name, '_dao') as dao_class_name
+	, concat('class ', table_name, '_service(base_service):') as service_class_definition
+	, concat('', table_name, '_service') as service_class_name
+	, concat('class ', table_name, '_controller(base_controller):') as controller_class_definition
+	, concat('', table_name, '_controller') as controller_class_name
+	, '@dataclass(frozen=False)' as dataclass_definition
+	, concat('    def get_model(self) -> base_model:') as get_model_method_definition
+	, concat('    def get_key(self) -> str:') as get_key_method_definition
+	, concat(table_name, '_model') as get_model_object_definition
+	, '' as empty_line_definition
+	from information_schema.tables
+	where table_schema='public' and table_type='BASE TABLE' and table_name not in ('databasechangeloglock', 'databasechangelog')
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('country', '1.0.0', 'Country', 'dictionary', 'country', 'country_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('currency', '1.0.0', 'Currency', 'dictionary', 'currency', 'currency_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('client_type', '1.0.0', 'Client Type', 'dictionary', 'client_type', 'client_type_uid', '');
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Default', '1.0.0', 'Default');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('System', '1.0.0', 'System');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Test', '1.0.0', 'Test');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Individual', '1.0.0', 'Individual');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Corporate', '1.0.0', 'Corporate');
-        </sql>
+drop view v_column_list;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('system', 'XX', 'system', 'system', 'System client - default one', now(), 1, 1, 0);
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('test', 'XX', 'test', 'test', 'Test client - just for testing purpose', now(), 1, 1, 1);
-        </sql>
+create view v_column_list as
+	select table_name
+	 , column_name
+	 , concat('self.', column_name) as self_column_name
+	 , data_type
+	 , is_nullable
+	 , ordinal_position
+	 , cast(concat(case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, ' ', case when is_nullable='YES' then '| None' else '' end) as text) as python_type
+	 , cast(concat( column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, ' ', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition
+	 , cast(concat('    ', column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, ' ', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition_class
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='custom_attributes' then '"{}"' when column_name='' then ''  when column_name='' then '' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_empty_value
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_default_value
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then 'base_dto.get_random_uid()' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_random_value
+	 , cast(concat('        self.', column_name, ' = ', column_name) as text) as self_set
+	 , case when column_name  in ('id', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_metadata
+	 , case when column_name  in ('id', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_value
+	 , case when column_name like '%_uid' and column_name<> concat(table_name, '_uid') then 1 else 0 end as is_fk
+	 , case when column_name not in (concat(table_name, '_uid'), 'id', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_non_key_attribute
+	 , case when column_name not in ('id', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_attribute
+	 , case when column_name not in ('id', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by') then 1 else 0 end as is_write
+	from information_schema.columns
+	where table_schema='public' and table_name not in ('databasechangeloglock', 'databasechangelog') and table_name not like 'v_%'
+	order by ordinal_position
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('System', '1.0.0', 'System', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Person', '1.0.0', 'Person', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Client', '1.0.0', 'Client', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Application', '1.0.0', 'Application', '');
-        </sql>
+drop view v_table_column ;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CEO', '1.0.0', 'Chief Execution Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CFO', '1.0.0', 'Chief Financial Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CIO', '1.0.0', 'Chief Information Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CSO', '1.0.0', 'Chief Security Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CMO', '1.0.0', 'Chief Marketing Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('COO', '1.0.0', 'Chief Operating Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CTO', '1.0.0', 'Chief Technology Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CCO', '1.0.0', 'Chief Communications Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoE', '1.0.0', 'Head of Engineering', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoA', '1.0.0', 'Head of Analysis', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoC', '1.0.0', 'Head of Cloud', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DMgr', '1.0.0', 'Delivery Manager', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DE', '1.0.0', 'Data Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LDE', '1.0.0', 'Lead Data Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CE', '1.0.0', 'Cloud Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LCE', '1.0.0', 'Lead Cloud Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DA', '1.0.0', 'Data Analyst', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LDA', '1.0.0', 'Lead Data Analyst', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('ADM', '1.0.0', 'Administrator', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DEF', '1.0.0', 'Default', '');
-        </sql>
+create view v_table_column as
+    select t.*
+    	-- all columns
+        , allcolls.column_list as all_column_list
+        , allcolls.column_names_list as all_column_names_list
+        , allcolls.column_list_with_type as all_column_list_with_type
+        , allcolls.column_dictionary as all_column_dictionary
+        , allcolls.column_self_list as all_column_self_list
+        , allcolls.column_dto_list as all_column_dto_list
+        , allcolls.column_dict_list as all_column_dict_list
+        , allcolls.cols_type_definition as all_cols_type_definition
+        , allcolls.init_definition as all_init_definition
+        , allcolls.python_empty_values as all_python_empty_values
+        , allcolls.python_default_values as all_python_default_values
+        , allcolls.python_random_values as all_python_random_values
+        -- attribute columns
+        , attrcols.column_list as attr_column_list
+        , attrcols.column_names_list as attr_column_names_list
+        , attrcols.column_list_with_type as attr_column_list_with_type
+        , attrcols.column_dictionary as attr_column_dictionary
+        , attrcols.column_self_list as attr_column_self_list
+        , attrcols.column_dto_list as attr_column_dto_list
+        , attrcols.column_dict_list as attr_column_dict_list
+        , attrcols.cols_type_definition as attr_cols_type_definition
+        , attrcols.init_definition as attr_init_definition
+        , attrcols.python_empty_values as attrcols_python_empty_values
+        , attrcols.python_default_values as attrcols_python_default_values
+        , attrcols.python_random_values as attrcols_python_random_values
+        -- attribute non key columns
+        , attrnonkeycols.column_list as attrnonkey_column_list
+        , attrnonkeycols.column_names_list as attrnonkey_column_names_list
+        , attrnonkeycols.column_list_with_type as attrnonkey_column_list_with_type
+        , attrnonkeycols.column_dictionary as attrnonkey_column_dictionary
+        , attrnonkeycols.column_self_list as attrnonkey_column_self_list
+        , attrnonkeycols.column_dto_list as attrnonkey_column_dto_list
+        , attrnonkeycols.column_dict_list as attrnonkey_column_dict_list
+        , attrnonkeycols.cols_type_definition as attrnonkey_cols_type_definition
+        , attrnonkeycols.init_definition as attrnonkey_init_definition
+        , attrnonkeycols.python_empty_values as attrnonkey_python_empty_values
+        , attrnonkeycols.python_default_values as attrnonkey_python_default_values
+        , attrnonkeycols.python_random_values as attrnonkey_python_random_values
+	from v_table_list t
+	 join (
+	 	select table_name
+	 	 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+	 	 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+		from v_column_list
+	 	group by table_name
+	 ) allcolls on t.table_name = allcolls.table_name
+	 join (
+		select table_name
+		 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+		 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+		from v_column_list
+		where is_attribute=1
+		group by table_name
+	 ) attrcols on t.table_name = attrcols.table_name
+	 join (
+		select table_name
+		 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+		 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+		from v_column_list
+		where is_non_key_attribute=1
+		group by table_name
+	 ) attrnonkeycols on t.table_name = attrnonkeycols.table_name
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_group(account_group_uid, system_version_uid, account_group_name, account_group_description) values ('Default', '1.0.0', 'Default', '');
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_division(account_division_uid, system_version_uid, division_name, division_description) values ('Default', '1.0.0', 'Default', '');
-        </sql>
+select * from information_schema.columns
 
-        <sql splitStatements="false" stripComments="false">
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('system', 'DEF', 'Default', 'Default', 'Internal', '${system_email}', 'system', 'System', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('test', 'DEF', 'Test', 'Test', 'Internal', '${test_email}', 'test', 'Test', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('administrator', 'ADM', 'Default', 'Default', 'Internal', '${administrator_email}', 'Administrator', 'Administrator', 1);
-        </sql>
+select *
+from v_table_list
+;
+select *
+from v_column_list
+;
+select *
+from v_table_column
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
-        </sql>
 
-        <sql splitStatements="false" stripComments="false">
-            insert into auth_identity(auth_identity_uid, client_instance_uid, identity_name, identity_type) values ('Internal', 'test', 'Internal', 'Internal');
-        </sql>
+-- models
+select concat(table_name, '_model = base_model(''', table_name, ''', [',  all_column_names_list, '], [', attr_column_names_list, '])'), *
+from v_table_column
+;
 
-        <sql splitStatements="false" stripComments="false">
-            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain)
-            values ('-', '', 'Xx', 'XX', 'XX', '000', '000', 'XX', 'XX', 'XX', 'XX', '000', '0', '0', 'XX', '0', '', '000000', '-', '.xx');
-            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Afghanistan', 'AF', 'AFG', '004', '93', 'AFN', 'Kabul', 'Asia', 'Southern Asia', '142', '33', '65', 'Afghanistan Afghani', '37100000', 'Balochi,Dari,Pashto,Turkmenian,Uzbek', '652000', '-', '.af');
+-- write_dto classes
+select *
+from (
+select table_name, 100 as ordinal_position, dataclass_definition as python from v_table_list
+union all select table_name, 110 as ordinal_position, dto_write_class as python from v_table_list
+union all select table_name, 200+ordinal_position , python_definition_class from v_column_list where is_attribute=1
+
+union all select table_name, 400 as ordinal_position, concat('    def __init__(self, ',  attr_column_list_with_type , ', custom_attributes: str = "{}"):') from v_table_column
+union all select table_name, 500+ordinal_position , self_set from v_column_list where is_attribute=1
+union all select table_name, 599 as ordinal_position, concat('        self.custom_attributes = custom_attributes') from v_table_column
+
+union all select table_name, 1110 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1120 as ordinal_position, '    def empty_write(cls):' as python from v_table_list
+union all select table_name, 1130 as ordinal_position, concat('        return cls(', attrcols_python_empty_values, ')') as python from v_table_column
+union all select table_name, 1210 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1220 as ordinal_position, '    def default_write(cls):' as python from v_table_list
+union all select table_name, 1230 as ordinal_position, concat('        return cls(', attrcols_python_default_values, ')') as python from v_table_column
+union all select table_name, 1310 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1320 as ordinal_position, '    def random_write(cls):' as python from v_table_list
+union all select table_name, 1330 as ordinal_position, concat('        return cls(', attrcols_python_random_values, ')') as python from v_table_column
+
+union all select table_name, 1410 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1420 as ordinal_position, concat('    def new_write(cls, ', attr_column_list_with_type , '):') as python from v_table_column
+union all select table_name, 1430 as ordinal_position, concat('        return cls(', attr_column_list, ')') as python from v_table_column
+
+union all select table_name, 1510 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1520 as ordinal_position, concat('    def new_write_random_uid(cls, ', attrnonkey_column_list_with_type , '):') as python from v_table_column
+union all select table_name, 1530 as ordinal_position, concat('        return cls(base_dto.get_random_uid(), ', attrnonkey_column_list, ')') as python from v_table_column
+
+union all select table_name, 1810 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1811 as ordinal_position, '    def get_class_model(cls) -> base_model:' as python from v_table_list
+union all select table_name, 1812 as ordinal_position, concat('        return ', table_name, '_model') as python from v_table_list
+
+union all select table_name, 1821 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1822 as ordinal_position, '    def from_dictionary(cls, d: dict[str, any]):' as python from v_table_list
+union all select table_name, 1823 as ordinal_position, concat('        return cls(', attr_column_dict_list, ')') as python from v_table_column
+
+union all select table_name, 1900 , concat('    def to_write_dict(self) -> dict:') from v_table_list
+union all select table_name, 1901 , concat('        return asdict(self)') from v_table_list
+
+union all select table_name, 2120 as ordinal_position, '    def clone_write(self):' as python from v_table_list
+union all select table_name, 2130 as ordinal_position, concat('        return ', dto_write_class_name , '(', attr_column_self_list, ', self.custom_attributes)') as python from v_table_column
+union all select table_name, 2210 as ordinal_position, '    def clone_write_new_uid(self):' as python from v_table_list
+union all select table_name, 2220 as ordinal_position, concat('        return ', dto_write_class_name , '(base_dto.get_random_uid(), ', attrnonkey_column_self_list, ', self.custom_attributes)') as python from v_table_column
+union all select table_name, 2310 as ordinal_position, '    def clone_with_uid(self, uid: str):' as python from v_table_list
+union all select table_name, 2320 as ordinal_position, concat('        return ', dto_write_class_name , '(uid, ', attrnonkey_column_self_list, ', self.custom_attributes)') as python from v_table_column
+
+union all select table_name, 3110 as ordinal_position, '    def get_model(self) -> base_model:' as python from v_table_list
+union all select table_name, 3120 as ordinal_position, concat('        return ', table_name, '_model') as python from v_table_list
+union all select table_name, 3210 as ordinal_position, '    def get_key(self) -> str:' as python from v_table_list
+union all select table_name, 3211 as ordinal_position, concat('        return self.', table_name, '_uid') as python from v_table_list
+
+union all select table_name, 3221 as ordinal_position, '    def get_uid(self) -> str:' as python from v_table_list
+union all select table_name, 3222 as ordinal_position, concat('        return self.', table_name, '_uid') as python from v_table_list
+
+union all select table_name, 3310 as ordinal_position, '    def get_list_values(self) -> list[any]:' as python from v_table_list
+union all select table_name, 3311 as ordinal_position, concat('        return [', attr_column_self_list, ', self.custom_attributes]') as python from v_table_column
+
+union all select table_name, 3321 as ordinal_position, '    def get_list_values_no_custom(self) -> list[any]:' as python from v_table_list
+union all select table_name, 3322 as ordinal_position, concat('        return [', attr_column_self_list, ']') as python from v_table_column
+
+union all select table_name, 3331 as ordinal_position, '    def get_list_write_update(self, updated_by: str) -> list[any]:' as python from v_table_list
+union all select table_name, 3332 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes, updated_by, self.', table_name, '_uid]') as python from v_table_column
+
+union all select table_name, 3341 as ordinal_position, '    def get_list_write_insert(self, created_by: str) -> list[any]:' as python from v_table_list
+union all select table_name, 3342 as ordinal_position, concat('        return [self.', table_name, '_uid, ', attrnonkey_column_self_list, ', created_by, created_by, self.custom_attributes]') as python from v_table_column
+
+union all select table_name, 3410 as ordinal_position, '    def get_nonkey_values(self) -> list[any]:' as python from v_table_list
+union all select table_name, 3411 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ']') as python from v_table_column
+
+union all select table_name, 3420 as ordinal_position, '    def get_nonkey_values_with_custom(self) -> list[any]:' as python from v_table_list
+union all select table_name, 3421 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes]') as python from v_table_column
+
+union all select table_name, 3431 as ordinal_position, '    def to_json_write(self) -> str:' as python from v_table_list
+union all select table_name, 3432 as ordinal_position, concat('        return json.dumps(self.to_write_dict())') as python from v_table_column
+
+union all select table_name, 3510 as ordinal_position, '    def compare_uid(self, obj: base_write_dto) -> bool:' as python from v_table_list
+union all select table_name, 3520 as ordinal_position, concat('        return self.get_key() == obj.get_key()') as python from v_table_column
+
+union all select table_name, 4110 as ordinal_position, '    def update_uid(self, uid: str):' as python from v_table_list
+union all select table_name, 4111 as ordinal_position, concat('        self.', table_name ,'_uid = uid') as python from v_table_list
+
+union all select table_name, 4202 as ordinal_position, concat('    def update_uid_attributes(self, ', attr_column_list_with_type  , '):') as python from v_table_column
+union all select table_name, 4203+ordinal_position as ordinal_position, concat('        self.', column_name, ' = ', column_name , '') as python from v_column_list where is_attribute=1
+
+union all select table_name, 4302 as ordinal_position, concat('    def update_attributes(self, ', attrnonkey_column_list_with_type , '):') as python from v_table_column
+union all select table_name, 4303+ordinal_position as ordinal_position, concat('        self.', column_name, ' = ', column_name , '') as python from v_column_list where is_non_key_attribute=1
+
+--union all select table_name, 2700 as ordinal_position, concat('    def to_read(self) -> ', table_name, '_read_dto:') as python from v_table_list
+--union all select table_name, 2800 as ordinal_position, concat('        return ', table_name, '_read_dto(0, ', attr_column_self_list, ', "", 0, 1, datetime.now(), "system", datetime.now(), "system", None, None, "{}")') as python from v_table_column
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+
+-- thin_dto classes - TO BE DONE
+select *
+from (
+select table_name, 100 as ordinal_position, dataclass_definition as python from v_table_list
+union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_thin_dto(base_dto):') as python from v_table_list
+
+union all select table_name, 201 , concat('    ', table_name , '_uid: str') from v_table_list
+union all select table_name, 202 , concat('    row_guid: str') from v_table_list
+union all select table_name, 203 , concat('    is_active: int') from v_table_list
+union all select table_name, 204 , concat('    def __init__(self, ', table_name , '_uid: str , row_guid: str , is_active: int):') from v_table_list
+union all select table_name, 205 , concat('        self.', table_name , '_uid = ', table_name , '_uid') from v_table_list
+union all select table_name, 206 , concat('        self.row_guid = row_guid') from v_table_list
+union all select table_name, 207 , concat('        self.is_active = is_active') from v_table_list
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+-- read_dto classes
+select *
+from (
+select table_name, 100 as ordinal_position, dataclass_definition as python from v_table_list
+union all select table_name, 110 as ordinal_position, dto_read_class_definition as python from v_table_list
+union all select table_name, 200+ordinal_position , python_definition_class from v_column_list
+union all select table_name, 400 as ordinal_position, all_init_definition from v_table_column
+union all select table_name, 500+ordinal_position , self_set from v_column_list
+
+union all select table_name, 1110 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1120 as ordinal_position, '    def empty_read(cls):' as python from v_table_list
+union all select table_name, 1130 as ordinal_position, concat('        return cls(0, ', attrcols_python_empty_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_table_column
+union all select table_name, 1210 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1220 as ordinal_position, '    def default_read(cls):' as python from v_table_list
+union all select table_name, 1230 as ordinal_position, concat('        return cls(0, ', attrcols_python_default_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_table_column
+union all select table_name, 1310 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1320 as ordinal_position, '    def random_read(cls):' as python from v_table_list
+union all select table_name, 1330 as ordinal_position, concat('        return cls(0, ', attrcols_python_random_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_table_column
+
+union all select table_name, 1410 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1420 as ordinal_position, concat('    def new_read_default(cls, ', attr_column_list_with_type , '):') as python from v_table_column
+union all select table_name, 1430 as ordinal_position, concat('        return cls(0, ', attr_column_list, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_table_column
+
+union all select table_name, 1510 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1520 as ordinal_position, concat('    def new_read_full(cls, ', all_column_list_with_type , '):') as python from v_table_column
+union all select table_name, 1530 as ordinal_position, concat('        return cls(', all_column_list, ')') as python from v_table_column
+
+union all select table_name, 1610 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1620 as ordinal_position, concat('    def from_write(cls, dto: ', dto_write_class_name, '):') as python from v_table_column
+union all select table_name, 1630 as ordinal_position, concat('        return cls(0, ', attr_column_dto_list, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)') as python from v_table_column
+
+union all select table_name, 1710 as ordinal_position, '    def clone_read(self):' as python from v_table_list
+union all select table_name, 1711 as ordinal_position, concat('        return ', dto_read_class_name , '(', all_column_self_list, ')') as python from v_table_column
+--union all select table_name, 1720 as ordinal_position, '    def clone_read_new_uid(self):' as python from v_table_list
+--union all select table_name, 1721 as ordinal_position, concat('        return ', dto_read_class_name , '(base_dto.get_random_uid(), ', attrnonkey_column_self_list, ')') as python from v_table_column
+--union all select table_name, 1730 as ordinal_position, '    def clone_read_with_uid(self, uid: str):' as python from v_table_list
+--union all select table_name, 1731 as ordinal_position, concat('        return ', dto_read_class_name , '(uid, ', attrnonkey_column_self_list, ')') as python from v_table_column
+
+union all select table_name, 1721 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1722 as ordinal_position, '    def from_dictionary(cls, d: dict[str, any]):' as python from v_table_list
+union all select table_name, 1723 as ordinal_position, concat('        return cls(', all_column_dict_list, ')') as python from v_table_column
+
+union all select table_name, 1731 , concat('    def to_read_dict(self) -> dict:') from v_table_list
+union all select table_name, 1732 , concat('        return asdict(self)') from v_table_list
+
+union all select table_name, 1800 as ordinal_position, concat('    def to_write(self) -> ', dto_write_class_name, ':') as python from v_table_list
+union all select table_name, 1801 as ordinal_position, concat('        return ', dto_write_class_name, '(', attr_column_self_list, ', self.custom_attributes)') as python from v_table_column
+
+union all select table_name, 1810 as ordinal_position, concat('    def to_thin(self) -> ', table_name, '_thin_dto:') as python from v_table_list
+union all select table_name, 1811 as ordinal_position, concat('        return ', table_name, '_thin_dto(self.', table_name, '_uid, self.row_guid, self.is_active)') as python from v_table_column
+
+union all select table_name, 1910 as ordinal_position, '    def touch(self, updated_by: str = "system"):' as python from v_table_list
+union all select table_name, 1911 as ordinal_position, concat('        self.last_updated_date = datetime.datetime.now()') as python from v_table_list
+union all select table_name, 1912 as ordinal_position, concat('        self.last_updated_by = updated_by') as python from v_table_list
+union all select table_name, 1913 as ordinal_position, concat('        self.row_version = self.row_version+1') as python from v_table_list
+
+union all select table_name, 2300 as ordinal_position, '    def get_list_all_values(self) -> list[any]:' as python from v_table_list
+union all select table_name, 2301 as ordinal_position, concat('        return ', all_column_dictionary, '') as python from v_table_column
+
+union all select table_name, 2310 as ordinal_position, '    def get_list_update_values(self, updated_by: str) -> list[any]:' as python from v_table_list
+union all select table_name, 2311 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes, updated_by, self.', table_name, '_uid]') as python from v_table_column
+
+union all select table_name, 2400 as ordinal_position, '    def is_older_than(self, dt: datetime.datetime) -> bool:' as python from v_table_list
+union all select table_name, 2410 as ordinal_position, concat('        return self.created_date < dt') as python from v_table_column
+union all select table_name, 2500 as ordinal_position, '    def is_newer_than(self, dt: datetime.datetime) -> bool:' as python from v_table_list
+union all select table_name, 2510 as ordinal_position, concat('        return self.created_date > dt') as python from v_table_column
+
+union all select table_name, 2600 as ordinal_position, '    def to_json_read(self) -> str:' as python from v_table_list
+union all select table_name, 2610 as ordinal_position, concat('        return json.dumps(self.to_read_dict())') as python from v_table_column
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+
+
+union all select table_name, 562 , concat('') from v_table_list
+union all select table_name, 562 , concat('') from v_table_list
+union all select table_name, 562 , concat('') from v_table_list
+union all select table_name, 562 , concat('') from v_table_list
+union all select table_name, 562 , concat('') from v_table_list
+union all select table_name, 562 , concat('') from v_table_list
+
+
+
+-- read_dtos classes
+select *
+from (
+select table_name, 100 as ordinal_position, dataclass_definition as python from v_table_list
+union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_read_dtos(base_dtos):') as python from v_table_list
+union all select table_name, 210 , concat('    dtos: list[', table_name , '_read_dto]') from v_table_list
+union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_read_dto]):') from v_table_list
+union all select table_name, 230 , '        self.dtos = dtos' from v_table_list
+
+union all select table_name, 300 , '    @classmethod' from v_table_list
+union all select table_name, 301 , '    def empty_list(cls):' from v_table_list
+union all select table_name, 302 , '        return cls(list())' from v_table_list
+
+union all select table_name, 310 , '    @classmethod' from v_table_list
+union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_read_dto]):') from v_table_list
+union all select table_name, 312 , '        return cls(dtos)' from v_table_list
+
+union all select table_name, 320 , '    @classmethod' from v_table_list
+union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_read_dto):') from v_table_list
+union all select table_name, 322 , '        return cls(list(dto))' from v_table_list
+
+union all select table_name, 330 , '    @classmethod' from v_table_list
+union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_read_dto], dtos2: list[', table_name , '_read_dto]):') from v_table_list
+union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_table_list
+
+union all select table_name, 501 , concat('    def get_active(self):') from v_table_list
+union all select table_name, 502 , concat('        return ', table_name, '_read_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))') from v_table_list
+
+union all select table_name, 511 , concat('    def get_inactive(self):') from v_table_list
+union all select table_name, 512 , concat('        return ', table_name, '_read_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))') from v_table_list
+
+union all select table_name, 521 , concat('    def get_write_dtos(self) -> list[', table_name , '_write_dto]:') from v_table_list
+union all select table_name, 522 , concat('        return list(filter(lambda x: x.to_write() != 1, self.dtos))') from v_table_list
+
+union all select table_name, 531 , concat('    def get_write_dicts(self) -> list[dict]:') from v_table_list
+union all select table_name, 532 , concat('        return list(map(lambda x: x.to_write().to_write_dict(), self.dtos))') from v_table_list
+
+union all select table_name, 541 , concat('    def get_read_dicts(self) -> list[dict]:') from v_table_list
+union all select table_name, 542 , concat('        return list(map(lambda x: x.to_write_dict(), self.dtos))') from v_table_list
+
+union all select table_name, 551 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_read_dto | None:') from v_table_list
+union all select table_name, 552 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_table_list
+union all select table_name, 553 , concat('        if (len(found_dtos)>0):') from v_table_list
+union all select table_name, 554 , concat('            return found_dtos[0]') from v_table_list
+union all select table_name, 555 , concat('        else:') from v_table_list
+union all select table_name, 556 , concat('            return None') from v_table_list
+
+union all select table_name, 1001 , concat('    def get_first(self) -> ', table_name, '_read_dto | None:') from v_table_list
+union all select table_name, 1002 , concat('        if len(self.dtos) > 0:') from v_table_list
+union all select table_name, 1003 , concat('            return self.dtos[0]') from v_table_list
+union all select table_name, 1004 , concat('        else:') from v_table_list
+union all select table_name, 1005 , concat('            return None') from v_table_list
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+union all select table_name, 1004 , concat('') from v_table_list
+union all select table_name, 1005 , concat('') from v_table_list
+union all select table_name, 1006 , concat('') from v_table_list
+union all select table_name, 1007 , concat('') from v_table_list
+
+
+
+-- write_dtos classes
+select *
+from (
+select table_name, 100 as ordinal_position, dataclass_definition as python from v_table_list
+union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_write_dtos(base_dtos):') as python from v_table_list
+union all select table_name, 210 , concat('    dtos: list[', table_name , '_write_dto]') from v_table_list
+union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_write_dto]):') from v_table_list
+union all select table_name, 230 , '        self.dtos = dtos' from v_table_list
+
+union all select table_name, 300 , '    @classmethod' from v_table_list
+union all select table_name, 301 , '    def empty_list(cls):' from v_table_list
+union all select table_name, 302 , '        return cls(list())' from v_table_list
+
+union all select table_name, 310 , '    @classmethod' from v_table_list
+union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_write_dto]):') from v_table_list
+union all select table_name, 312 , '        return cls(dtos)' from v_table_list
+
+union all select table_name, 320 , '    @classmethod' from v_table_list
+union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_write_dto):') from v_table_list
+union all select table_name, 322 , '        return cls(list(dto))' from v_table_list
+
+union all select table_name, 330 , '    @classmethod' from v_table_list
+union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_write_dto], dtos2: list[', table_name , '_write_dto]):') from v_table_list
+union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_table_list
+
+union all select table_name, 531 , concat('    def get_write_dicts(self) -> list[dict]:') from v_table_list
+union all select table_name, 532 , concat('        return list(map(lambda x: x.to_write_dict(), self.dtos))') from v_table_list
+
+union all select table_name, 551 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_write_dto | None:') from v_table_list
+union all select table_name, 552 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_table_list
+union all select table_name, 553 , concat('        if (len(found_dtos)>0):') from v_table_list
+union all select table_name, 554 , concat('            return found_dtos[0]') from v_table_list
+union all select table_name, 555 , concat('        else:') from v_table_list
+union all select table_name, 556 , concat('            return None') from v_table_list
+
+union all select table_name, 561 , concat('    def map_by_uid(self) -> dict[str, ', table_name , '_write_dto]:') from v_table_list
+union all select table_name, 562 , concat('        res = {}') from v_table_list
+union all select table_name, 563 , concat('        for dto in self.dtos:') from v_table_list
+union all select table_name, 564 , concat('            res[dto.', table_name , '_uid] = dto') from v_table_list
+union all select table_name, 565 , concat('        return res') from v_table_list
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+
+-- dao classes
+select *
+from (
+select table_name, 1000 as ordinal_position, concat('class ', table_name, '_dao(base_dao):') from v_table_list
+union all select table_name, 1001 , concat('    def __init__(self):') from v_table_list
+union all select table_name, 1002 , concat('        print("Starting ', table_name, ' DAO")') from v_table_list
+union all select table_name, 1003 , concat('    def get_model(self) -> base_model:') from v_table_list
+union all select table_name, 1004 , concat('        return ', table_name, '_model') from v_table_list
+
+union all select table_name, 1005 , concat('    def get_items(self, sql: str) -> list[', table_name, '_read_dto]:') from v_table_list
+union all select table_name, 1006 , concat('        return list(map(lambda r: ', table_name, '_read_dto(*r), self.get_objects(sql)))') from v_table_list
+union all select table_name, 1007 , concat('    def get_items_with_params(self, sql: str, params: Iterable) -> list[', table_name, '_read_dto]:') from v_table_list
+union all select table_name, 1008 , concat('        return list(map(lambda r: ', table_name, '_read_dto(*r), self.get_objects_by_params(sql, params)))') from v_table_list
+
+union all select table_name, 1020 , concat('    def get_items_write(self, sql: str) -> list[', table_name, '_write_dto]:') from v_table_list
+union all select table_name, 1021 , concat('        return list(map(lambda r: ', table_name, '_write_dto(*r), self.get_objects(sql)))') from v_table_list
+union all select table_name, 1022 , concat('    def get_items_write_with_params(self, sql: str, params: Iterable) -> list[', table_name, '_write_dto]:') from v_table_list
+union all select table_name, 1023 , concat('        return list(map(lambda r: ', table_name, '_write_dto(*r), self.get_objects_by_params(sql, params)))') from v_table_list
+
+union all select table_name, 1120 , concat('    def get_items_all(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_table_list
+union all select table_name, 1121 , concat('        return ', table_name, '_read_dtos(self.get_items(self.get_model().get_select_all_limit_sql(n)))') from v_table_list
+union all select table_name, 1122 , concat('    def get_items_active(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_table_list
+union all select table_name, 1123 , concat('        return ', table_name, '_read_dtos(self.get_items(self.get_model().get_select_active_limit_sql(n)))') from v_table_list
+union all select table_name, 1130 , concat('    def get_items_all_latest(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_table_list
+union all select table_name, 1131 , concat('        return ', table_name, '_read_dtos(self.get_items(self.get_model().get_select_all_latest_sql(n)))') from v_table_list
+union all select table_name, 1132 , concat('    def get_items_active_latest(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_table_list
+union all select table_name, 1133 , concat('        return ', table_name, '_read_dtos(self.get_items(self.get_model().get_select_active_latest_sql(n)))') from v_table_list
+
+union all select table_name, 1140 , concat('    def get_items_write_all(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_table_list
+union all select table_name, 1141 , concat('        return ', table_name, '_write_dtos(self.get_items_write(self.get_model().get_select_write_all_limit_sql(n)))') from v_table_list
+union all select table_name, 1142 , concat('    def get_items_write_active(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_table_list
+union all select table_name, 1143 , concat('        return ', table_name, '_write_dtos(self.get_items_write(self.get_model().get_select_write_active_limit_sql(n)))') from v_table_list
+union all select table_name, 1150 , concat('    def get_items_write_all_latest(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_table_list
+union all select table_name, 1151 , concat('        return ', table_name, '_write_dtos(self.get_items_write(self.get_model().get_select_write_all_latest_sql(n)))') from v_table_list
+union all select table_name, 1152 , concat('    def get_items_write_active_latest(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_table_list
+union all select table_name, 1153 , concat('        return ', table_name, '_write_dtos(self.get_items_write(self.get_model().get_select_write_active_latest_sql(n)))') from v_table_list
+
+union all select table_name, 1240 , concat('    def get_item_by_uid(self, uid: str) -> ', table_name, '_read_dto | None:') from v_table_list
+union all select table_name, 1241 , concat('        return ', table_name, '_read_dtos(self.get_items_with_params(self.get_model().get_select_by_key(), (uid,))).get_first()') from v_table_list
+union all select table_name, 1242 , concat('    def get_item_by_id(self, id: int) -> ', table_name, '_read_dto | None:') from v_table_list
+union all select table_name, 1243 , concat('        return ', table_name, '_read_dtos(self.get_items_with_params(self.get_model().get_select_by_id(), (id,))).get_first()') from v_table_list
+
+union all select table_name, 1250 , concat('    def get_items_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> ', table_name, '_read_dtos:') from v_table_list
+union all select table_name, 1251 , concat('        return ', table_name, '_read_dtos(self.get_items_with_params(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,)))') from v_table_list
+union all select table_name, 1252 , concat('    def get_uids(self, n: int = 1000) -> list[str]:') from v_table_list
+union all select table_name, 1253 , concat('        return self.get_column_values_all(self.get_model().get_select_all_keys(n))') from v_table_list
+union all select table_name, 1254 , concat('    def get_guids(self, n: int = 1000) -> list[str]:') from v_table_list
+union all select table_name, 1255 , concat('        return self.get_column_values_all(self.get_model().get_select_all_guids(n))') from v_table_list
+
+union all select table_name, 1360 , concat('    def count_all(self) -> int:') from v_table_list
+union all select table_name, 1361 , concat('        return self.get_single_value_int_or_default(self.get_model().get_select_count_all_sql())') from v_table_list
+union all select table_name, 1363 , concat('    def count_active(self) -> int:') from v_table_list
+union all select table_name, 1364 , concat('        return self.get_single_value_int_or_default(self.get_model().get_select_count_active_sql())') from v_table_list
+union all select table_name, 1365 , concat('    def count_by_any_column(self, col_name: str, col_value: any) -> int:') from v_table_list
+union all select table_name, 1366 , concat('        return self.get_single_value_int_or_default_by_params(self.get_model().get_select_count_by_any_column_sql(col_name), (col_value,))') from v_table_list
+
+union all select table_name, 1410 , concat('    def insert_dtos(self, dtos: list[', table_name, '_write_dto], created_by: str):') from v_table_list
+union all select table_name, 1411 , concat('        self.insert_many(dtos, created_by)') from v_table_list
+
+union all select table_name, 1420 , concat('    def insert_write_dtos(self, dtos: ', table_name, '_write_dtos, created_by: str):') from v_table_list
+union all select table_name, 1421 , concat('        self.insert_dtos(dtos.dtos, created_by)') from v_table_list
+
+union all select table_name, 1430 , concat('    def insert_read_dtos(self, dtos: ', table_name, '_read_dtos, created_by: str):') from v_table_list
+union all select table_name, 1431 , concat('        self.insert_dtos(dtos.get_write_dtos(), created_by)') from v_table_list
+
+union all select table_name, 1440 , concat('    def delete_logical_dtos(self, dtos: list[', table_name, '_write_dto], removed_by: str):') from v_table_list
+union all select table_name, 1441 , concat('        uids = list(map(lambda dto: dto.get_uid(), dtos))') from v_table_list
+union all select table_name, 1442 , concat('        return self.delete_logical_by_uids(uids, removed_by)') from v_table_list
+
+union all select table_name, 1450 , concat('    def delete_logical_write_dtos(self, dtos: ', table_name, '_write_dtos, removed_by: str):') from v_table_list
+union all select table_name, 1451 , concat('        return self.delete_logical_dtos(dtos.dtos, removed_by)') from v_table_list
+
+union all select table_name, 99900 , empty_line_definition from v_table_list
+union all select table_name, 99901 , empty_line_definition from v_table_list
+) x order by x.table_name, x.ordinal_position
+;
+
+
+
+
+
+
+-- models
+select concat(table_name, '_dao_instance = ', table_name,'_dao()')
+from v_table_column
+;
+
+
+
+
+
+union all select table_name, 1460 , concat('') from v_table_list
+union all select table_name, 1461 , concat('') from v_table_list
+
+
+union all select table_name, 1580 , concat('') from v_table_list
+union all select table_name, 1581 , concat('') from v_table_list
+
+
+union all select table_name, 1004 , concat('') from v_table_list
+union all select table_name, 1005 , concat('') from v_table_list
+union all select table_name, 1006 , concat('') from v_table_list
+union all select table_name, 1007 , concat('') from v_table_list
+
+
+
+
+
+union all
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+union all select table_name, 1110 as ordinal_position, '    @classmethod' as python from v_table_list
+union all select table_name, 1120 as ordinal_position, '    def empty_read(cls):' as python from v_table_list
+union all select table_name, 1130 as ordinal_position, concat('        return cls(0, ', attrcols_python_empty_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_table_column
+
+
+
+    def get_list_all_values(self) -> list[any]:
+        return [self.id, self.account_division_uid, self.division_name, self.division_description, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def is_older_than(self, dt: datetime) -> bool:
+        return self.created_date > dt
+
+
+    @classmethod
+    def from_write(cls, account_division_uid: str, division_name: str, division_description: str):
+        return cls(0, account_division_uid, division_name, division_description, "", 0, 1, datetime.now(), "system", datetime.now(), "system", None, None, "{}")
+
+
+
+select *
+from information_schema.table_constraints tc
+where constraint_schema ='public'
+
+SELECT
+  tc.constraint_name,
+  tc.constraint_type,
+  tc.table_name,
+  kcu.column_name,
+  ccu.table_name AS foreign_table_name,
+  ccu.column_name AS foreign_column_name
+FROM information_schema.table_constraints AS tc
+ JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+ JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+WHERE constraint_type = 'FOREIGN KEY'
+
+
+    def is_active(self) -> bool:
+        return self.is_active == 1
+
+select * from v_table_list
+
+-- service classes
+t_service
+	insert_all()
+
+-- controller classes
+t_controller(base_controller)
+
+	@app.route('/api/token', methods=['GET'])
+	@app.route('/api/userinfo', methods=['GET'])
+	@app.route('/api/userinfo', methods=['GET'])
+
+
+	def get_t_by_uid(uid):
+		t_dao_instance.get_rows()
+	   return jsonify({'tasks': clients})
+
+	@app.route('/api/t-list', methods=['GET'])
+	def get_t_by_uid(uid):
+		t_dao_instance.get_rows()
+	   return jsonify({'tasks': clients})
+
+	@app.route('/api/t-active', methods=['GET'])
+	@app.route('/api/t-removed', methods=['GET'])
+
+	@app.route('/api/t-last', methods=['GET'])
+	def get_t_last()
+
+	@app.route('/api/t', methods=['POST'])
+	-- wrap with security somehow
+	def get_t_last()
+
+
+
+
+
+
+
+
+
+y(y_uid)
+z(z_uid)
+t(t_id, t_uid, t_name, y_uid, z_uid, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version )
+t_history(t_id, t_uid, t_name, y_uid, z_uid, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version, inserted_row_date)
+insert into t_history() select * from t where ...
+insert into t() values (?, ?, ?, ?, ?, ?) on conflict () do nothing;
+insert into t() values (?, ?, ?, ?, ?, ?) on conflict () do update set ....
+
+COLUMNS
+metadata=id, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, custom_attributes
+uid=t_uid
+values=some_name, other_name
+attributes=t_uid, some_name, other_name
+write_columns={attribute}, custom_attributes
+name=some_name
+fks=some_table_uid, other_table_uid,
+----
+all_columns=id, ...., row_guid, is_active, ...
+uid_column=t_uid
+fk_columns
+name_column=t_name
+
+
+create view v_t as
+select *
+from t t
+join y y on t.y_uid=y.y_uid
+join z z on t.z_uid=z.z_uid
+;
+-- ------------------------------------------------------------------------------------------------------------
+
+DB
+id, t_uid, {*}, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version: int, custom_attributes
+* = custom_col, ...
+
+DTOs
+	base_dto
+	custom_attributes
+
+base_write_dto(base_dto)
+	+custom_attributes
+	abstract get_key()
+	abstract get_name()
+	abstract get_uid()
+	set_custom_attributes(dict)
+	add_custom_attribute(name, value)
+	get_custom_attributes_as_dict(): dict
+	get_custom_attributes_as_json(): str
+	clear_custom_attributes()
+	remove_custom_attribute()
+	get_custom_attributes_names(): list[str]
+	get_custom_attributes()
+	get_custom_attribute(attr_name)
+
+base_read_dto(base_dto)
+	+id, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version, custom_attributes
+	get_id()
+	get_created_date()
+	get_created_date_as_int()
+	get_last_upadted_date()
+	get_last_upadted_date_as_long()
+	get_as_dictionary(): dict
+	get_as_json(): str
+	get_as_string(): str
+	get_write_table(): list[any]
+	is_created_later_than(datetime)
+	is_updated_later_than(datetime)
+	get_custom_attributes(): str
+	get_custom_attributes_as_dict(): dict
+	get_custom_attributes_names(): set[]
+	get_custom_attributes_values(): list[]
+
+t_thin_dto(base_dto)
+	+id, uid, is_active
+
+t_write_dto(base_write_dto)
+	{attributes}, custom_attributes
+	get_uid()
+	get_attr_one()
+	...
+	value_columns ?? custom_attributes = {}
+	attributes ?? custom_attributes = {}
+	value_attributes
+
+t_read_dto(base_read_dto, t_thin_dto, t_write_dto)
+	override attributes + metadata + FKs + custom_attributes
+	get_model()
+	get_
+	get_as_long_description(): str
+	get_row_comment(): str
+	get_created_date()
+	get_live_time_seconds(): float
+	get_live_time_hours(): float
+	get_last_updated_date()
+
+
+t_full_dto
+	attributes + custom_attributes + metadata + FKs + FK attributes
+
+t_dtos(list[t_read_dto]) !!! TYPE t_dtos = list[t_read_dto]
+	get_rows(): list[t_read_dto]
+	get_uids(): list[string]
+	get_ids(): list[int]
+	get_names(): list[str]
+	get(col_name)
+	order_by_id():
+	order_by_uid():
+	order_by_created():
+	order_by_updated():
+	filter_active(): list[t_read_dto]
+	filter_inactive(): list[t_read_dto]
+
+
+
+DAOs
+	base_dao
+	base_read_dao -- only read methods, no update, insert, delete
+	base_write_dao
+	execute()
+
+t_dao
+	get_count_all()
+	get_count_active()
+	get_count_inactive()
+	get_count_by_column(col_name, col_value)
+	get_count_by_column_values(col_name, col_values: list[any])
+
+	group_by_col(col_name): groupped_dto(column_value, rows_count, created_date_min, created_date_max...)
+	select col_name, count(*) as rows_count, min(), max() as created_date_max from t group by col_name order by col_name
+
+	get_rows_all(n=1000): list[t_read_dto]
+	select * frm t limit n
+	get_rows_active(n=1000): list[t_read_dto
+	select * from t where is_active=1 limit n
+	get_rows_inactive(n=1000): list[t_read_dto]
+	select * from t where is_active=0 limit n
+
+	get_by_uid_active(uid): Option[t_read_dto]
+	select * from t where is_active=1 and t_uid=? limit 1
+	get_by_id_active(id):
+	select * from t where is_active=1 and id=? limit 1
+	get_by_uid_or_none_active(): t_read_dto | None
+	select * from t where is_active=1 and uid=? limit 1
+	get_latest_created_active(n): list[t_read_dto]
+	select * from t where is_active=1 order by created_date desc limit n
+	get_latest_created_all(n): list[t_read_dto]
+	select * from t order by created_date desc limit n
+	get_latest_removed(n): list[t_read_dto]
+	select * from t where is_active=0 order by removed_date desc limit n
+
+	get_latest_updated(n): list[t_read_dto]
+	select * from t order by created_date desc limit n
+	get_by_query(sql): list[t_read_dto]
+	sql
+	get_by_column(col_name, col_value, n): list[t_read_dto]
+	select * from t where col_name=? limit n
+	get_all_uids(n): list[t_read_dto]
+
+	get_active_: list[t_read_dto]
+	get_column(col_name, )
+
+	add_single(t_write_dto):
+	add_and_get_single(t_write_dto): t_read_dto
+	add_many(list[t_write_dto]) -> int
+	add_or_update(list[t_write_dto], updated_by: str)
+
+
+	update_touch(updated_by: str)
+	update t set last_updated_date=now(), row_version=row_version+1, updated_by=?
+	update_by_uid(t_write_dto, updated_by: str):
+	update_by_condition(sql) ????
+	update_comment(uid, comment)
+
+
+	delete_logically_by_uid(uid): int
+	delete_logically_by_name(name): int
+	delete_logically_by_condition(sql): int
+	delete_by
+
+	FOR EACH FK:
+	get_by_fk1(uid)
+
+
+--
+
+
+
+
+
+
+
+
+;            insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Afghanistan', 'AF', 'AFG', '004', '93', 'AFN', 'Kabul', 'Asia', 'Southern Asia', '142', '33', '65', 'Afghanistan Afghani', '37100000', 'Balochi,Dari,Pashto,Turkmenian,Uzbek', '652000', '-', '.af');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('-', '', 'Aland Islands', 'AX', 'ALA', '248', '-', '-', '-', 'Europe', 'Northern Europe', '150', '-', '-', '-', '-', '-', '-', '-', '.ax');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Europe', '', 'Albania', 'AL', 'ALB', '008', '355', 'ALL', 'Tirana', 'Europe', 'Southern Europe', '150', '41', '20', 'Albanian Lek', '2866000', 'Albaniana,Greek,Macedonian', '28000', '530', '.al');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Algeria', 'DZ', 'DZA', '012', '213', 'DZD', 'Alger', 'Africa', 'Northern Africa', '002', '28', '3', 'Algerian Dinar', '42200000', 'Arabic,Berberi', '2381000', '613', '.dz');
@@ -345,13 +1133,56 @@
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Asia', '', 'Yemen', 'YE', 'YEM', '887', '967', 'YER', 'Sanaa', 'Asia', 'Western Asia', '142', '15', '48', 'Yemeni Rial', '28400000', 'Arabic,Soqutri', '527000', '-', '.ye');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zambia', 'ZM', 'ZMB', '894', '260', 'ZMW', 'Lusaka', 'Africa', 'Sub-Saharan Africa', '002', '-15', '30', 'Zambian Kwacha', '17300000', 'Bemba,Chewa,Lozi,Nsenga,Nyanja,Tongan', '752000', '-', '.zm');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zimbabwe', 'ZW', 'ZWE', '716', '263', 'ZWD', 'Harare', 'Africa', 'Sub-Saharan Africa', '002', '-20', '30', 'Zimbabwe Dollar', '14400000', 'English,Ndebele,Nyanja,Shona', '390000', '-', '.zw');
-        </sql>
-
-        <sql splitStatements="false" stripComments="false">
-            insert into project_group(project_group_uid, project_group_name, project_group_description) values ('', '', '');
-        </sql>
 
 
-    </changeSet>
+            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('system', 'XX', 'system', 'system', 'System client - default one', now(), 1, 1, 0);
+            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('test', 'XX', 'test', 'test', 'Test client - just for testing purpose', now(), 1, 1, 1);
 
-</databaseChangeLog>
+
+            insert into account_title(account_title_uid, title_name, title_description) values ('CEO', 'Chief Execution Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CFO', 'Chief Financial Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CIO', 'Chief Information Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CSO', 'Chief Security Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CMO', 'Chief Marketing Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('COO', 'Chief Operating Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CTO', 'Chief Technology Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CCO', 'Chief Communications Officer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoE', 'Head of Engineering', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoA', 'Head of Analysis', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('HoC', 'Head of Cloud', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DMgr', 'Delivery Manager', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DE', 'Data Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LDE', 'Lead Data Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('CE', 'Cloud Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LCE', 'Lead Cloud Engineer', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DA', 'Data Analyst', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('LDA', 'Lead Data Analyst', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('ADM', 'Administrator', '');
+            insert into account_title(account_title_uid, title_name, title_description) values ('DEF', 'Default', '');
+
+            insert into account_group(account_group_uid, account_group_name, account_group_description) values ('Default', 'Default', '');
+
+
+
+            insert into account_division(account_division_uid, division_name, division_description) values ('Default', 'Default', '');
+
+
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('system', 'DEF', 'Default', 'Default', 'Internal', '{system_email}', 'system', 'System', 1);
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('test', 'DEF', 'Test', 'Test', 'Internal', '{test_email}', 'test', 'Test', 1);
+            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
+            values ('administrator', 'ADM', 'Default', 'Default', 'Internal', '{administrator_email}', 'Administrator', 'Administrator', 1);
+
+                       insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
+
+            insert into auth_identity(auth_identity_uid, identity_name, identity_type) values ('Internal', 'Internal', 'INTERNAL');
