@@ -24,3 +24,29 @@ hs_err_pid*
 replay_pid*
 
 .idea
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+dto/__pycache__/
+dao/__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+

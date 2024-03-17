@@ -1,207 +1,133 @@
 import dao.dao_connection
 from typing import TypeVar, Generic, List, Iterable, Any
 
-from dto.dtos import *
-from dto.dtos_read import *
-from dto.dtos_write import *
+from dao.daos_read import *
+from dao.daos_full import *
+import socket
+import os
 
-daoConn = dao.dao_connection.daoConn
+# DB connections t obe used by DAOs
+db_connections = dao.dao_connection.db_connections
 
-class base_dao:
-    executed_queries: int
+
+class Daos(base_object):
+    # auto-generated - Daos - START
+    account_division_dao_instance = account_division_full_dao()
+    account_group_dao_instance = account_group_full_dao()
+    account_instance_dao_instance = account_instance_full_dao()
+    account_title_dao_instance = account_title_full_dao()
+    account_type_dao_instance = account_type_full_dao()
+    auth_identity_dao_instance = auth_identity_full_dao()
+    auth_password_dao_instance = auth_password_full_dao()
+    auth_permission_dao_instance = auth_permission_full_dao()
+    auth_request_dao_instance = auth_request_full_dao()
+    auth_role_dao_instance = auth_role_full_dao()
+    auth_token_dao_instance = auth_token_full_dao()
+    client_instance_dao_instance = client_instance_full_dao()
+    client_type_dao_instance = client_type_full_dao()
+    country_dao_instance = country_full_dao()
+    currency_dao_instance = currency_full_dao()
+    entry_final_dao_instance = entry_final_full_dao()
+    entry_save_dao_instance = entry_save_full_dao()
+    event_channel_dao_instance = event_channel_full_dao()
+    event_instance_dao_instance = event_instance_full_dao()
+    event_subscription_dao_instance = event_subscription_full_dao()
+    invoice_instance_dao_instance = invoice_instance_full_dao()
+    notification_instance_dao_instance = notification_instance_full_dao()
+    project_budget_dao_instance = project_budget_full_dao()
+    project_group_dao_instance = project_group_full_dao()
+    project_instance_dao_instance = project_instance_full_dao()
+    project_milestone_dao_instance = project_milestone_full_dao()
+    system_attribute_dao_instance = system_attribute_full_dao()
+    system_change_dao_instance = system_change_full_dao()
+    system_database_dao_instance = system_database_full_dao()
+    system_exception_dao_instance = system_exception_full_dao()
+    system_instance_dao_instance = system_instance_full_dao()
+    system_object_dao_instance = system_object_full_dao()
+    system_object_type_dao_instance = system_object_type_full_dao()
+    system_setting_dao_instance = system_setting_full_dao()
+    system_state_dao_instance = system_state_full_dao()
+    system_version_dao_instance = system_version_full_dao()
+    # auto-generated - Daos - END
+    all_daos: dict[str, base_dao] = {}
+    # constant values initialized
+    system_instance_uid: str = base_dto.get_random_uid_with_name("SI")
+    host_name: str = socket.gethostname()
+    host_ip: str = socket.gethostname()
+    local_path = os.path.dirname(os.path.realpath(__file__))
+    app_version = "1.0.0"
+    system_instance_dto: system_instance_read_dto | None
+    system_database_dto: system_database_read_dto | None
+    settings_by_name: dict[str, system_setting_read_dto]
     def __init__(self):
-        print("Starting DAO")
-        self.executed_queries = 0
-    @abstractmethod
-    def get_model(self) -> base_model:
-        pass
-    def get_objects(self, query: str) -> list[tuple]:
-        print("Executing SQL query on database, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        cursor.execute(query)
-        results = cursor.fetchall()
-        daoConn.close(conn)
-        #self.executed_queries = self.executed_queries+1
-        return results
+        super().__init__()
 
-    def get_objects_by_params(self, query: str, params: Iterable) -> list[tuple]:
-        print("Executing SQL query on database with parameters, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        results = cursor.fetchall()
-        daoConn.close(conn)
-        #self.executed_queries = self.executed_queries+1
-        return results
-    def execute_query_no_results(self, query: str, params: Iterable):
-        print("Executing SQL query on database with parameters, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        daoConn.close(conn)
-        #self.executed_queries = self.executed_queries+1
-    def execute_query_with_params(self, query: str, params: Iterable) -> int:
-        print("Executing SQL query on database with parameters, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        conn.commit()
-        results = cursor.rowcount
-        daoConn.close(conn)
-       # self.executed_queries = self.executed_queries+1
-        return results
-    def execute_queries_with_params(self, query: str, params: list[Iterable]) -> int:
-        print("Executing SQL queries on database with many parameters, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        for param in params:
-            cursor.execute(query, param)
-        conn.commit()
-        results = cursor.rowcount
-        daoConn.close(conn)
-       # self.executed_queries = self.executed_queries+1
-        return results
-    def execute_query(self, query: str) -> int:
-        print("Executing SQL query on database, Q=" + query)
-        conn = daoConn.getConnection()
-        cursor = conn.cursor()
-        cursor.execute(query)
-        conn.commit()
-        results = cursor.rowcount
-        daoConn.close(conn)
-        #self.executed_queries = self.executed_queries+1
-        return results
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return "Daos"
+    # get type of base object
+    def get_base_object_type(self) -> str:
+        return "Daos"
+    def get_base_dict_custom_info(self) -> dict[str, any]:
+        return {
+            "system_instance_uid": self.system_instance_uid,
+            "host_name": self.host_name,
+            "host_ip": self.host_ip,
+            "local_path": self.local_path,
+            "app_version": self.app_version
+        }
+    def register_all_standard_daos(self):
+        # auto-generated - DaoRegister - START
+        self.all_daos["account_division_dao"] = self.account_division_dao_instance
+        self.all_daos["account_group_dao"] = self.account_group_dao_instance
+        self.all_daos["account_instance_dao"] = self.account_instance_dao_instance
+        self.all_daos["account_title_dao"] = self.account_title_dao_instance
+        self.all_daos["account_type_dao"] = self.account_type_dao_instance
+        self.all_daos["auth_identity_dao"] = self.auth_identity_dao_instance
+        self.all_daos["auth_password_dao"] = self.auth_password_dao_instance
+        self.all_daos["auth_permission_dao"] = self.auth_permission_dao_instance
+        self.all_daos["auth_request_dao"] = self.auth_request_dao_instance
+        self.all_daos["auth_role_dao"] = self.auth_role_dao_instance
+        self.all_daos["auth_token_dao"] = self.auth_token_dao_instance
+        self.all_daos["client_instance_dao"] = self.client_instance_dao_instance
+        self.all_daos["client_type_dao"] = self.client_type_dao_instance
+        self.all_daos["country_dao"] = self.country_dao_instance
+        self.all_daos["currency_dao"] = self.currency_dao_instance
+        self.all_daos["entry_final_dao"] = self.entry_final_dao_instance
+        self.all_daos["entry_save_dao"] = self.entry_save_dao_instance
+        self.all_daos["event_channel_dao"] = self.event_channel_dao_instance
+        self.all_daos["event_instance_dao"] = self.event_instance_dao_instance
+        self.all_daos["event_subscription_dao"] = self.event_subscription_dao_instance
+        self.all_daos["invoice_instance_dao"] = self.invoice_instance_dao_instance
+        self.all_daos["notification_instance_dao"] = self.notification_instance_dao_instance
+        self.all_daos["project_budget_dao"] = self.project_budget_dao_instance
+        self.all_daos["project_group_dao"] = self.project_group_dao_instance
+        self.all_daos["project_instance_dao"] = self.project_instance_dao_instance
+        self.all_daos["project_milestone_dao"] = self.project_milestone_dao_instance
+        self.all_daos["system_attribute_dao"] = self.system_attribute_dao_instance
+        self.all_daos["system_change_dao"] = self.system_change_dao_instance
+        self.all_daos["system_database_dao"] = self.system_database_dao_instance
+        self.all_daos["system_exception_dao"] = self.system_exception_dao_instance
+        self.all_daos["system_instance_dao"] = self.system_instance_dao_instance
+        self.all_daos["system_object_dao"] = self.system_object_dao_instance
+        self.all_daos["system_object_type_dao"] = self.system_object_type_dao_instance
+        self.all_daos["system_setting_dao"] = self.system_setting_dao_instance
+        self.all_daos["system_state_dao"] = self.system_state_dao_instance
+        self.all_daos["system_version_dao"] = self.system_version_dao_instance
+        # auto-generated - DaoRegister - END
 
-    def get_column_values_by_params(self, query: str, params: Iterable) -> list[str]:
-        tuples = self.get_objects_by_params(query, params)
-        return list(map(lambda x: str(x[0]), tuples))
-    def get_column_values_all(self, query: str) -> list[str]:
-        tuples = self.get_objects(query)
-        return list(map(lambda x: str(x[0]), tuples))
-    def get_column_by_params(self, query: str, params: Iterable, col_num: int=0) -> list[any]:
-        tuples = self.get_objects_by_params(query, params)
-        return list(map(lambda x: x[col_num], tuples))
-    def get_column_all(self, query: str, col_num: int=0) -> list[any]:
-        tuples = self.get_objects(query)
-        return list(map(lambda x: x[col_num], tuples))
-    def get_single_row(self, query: str) -> tuple | None:
-        tuples = self.get_objects(query)
-        if len(tuples)>0:
-            return tuples[0]
-        else:
-            return None
-    def get_single_row_by_params(self, query: str, params: Iterable) -> tuple | None:
-        tuples = self.get_objects_by_params(query, params)
-        if len(tuples)>0:
-            return tuples[0]
-        else:
-            return None
-    def get_single_value(self, query: str, col_num: int=0) -> Any | None:
-        tuple = self.get_single_row(query)
-        if tuple is None:
-            return None
-        else:
-            return tuple[col_num]
-    def get_single_value_or_default(self, query: str, default_value: any, col_num: int=0) -> Any:
-        tuple = self.get_single_row(query)
-        if tuple is None:
-            return default_value
-        else:
-            return tuple[col_num]
-    def get_single_value_or_default_by_params(self, query: str, params: Iterable, default_value: any, col_num: int = 0) -> Any:
-        tuple = self.get_single_row_by_params(query, params)
-        if tuple is None:
-            return default_value
-        else:
-            return tuple[col_num]
-    def get_single_value_int_or_default(self, query: str, default_value: int = 0, col_num: int=0) -> int:
-        tuple = self.get_single_row(query)
-        if tuple is None:
-            return default_value
-        else:
-            return int(tuple[col_num])
-    def get_single_value_int_or_default_by_params(self, query: str, params: Iterable, default_value: int = 0, col_num: int=0) -> int:
-        tuple = self.get_single_row_by_params(query, params)
-        if tuple is None:
-            return default_value
-        else:
-            return int(tuple[col_num])
-    def count_by_table_all(self, table_name: str):
-        return self.get_single_value_int_or_default("select count(*) as cnt from " + table_name, 0)
-    def count_by_table_active(self, table_name: str):
-        return self.get_single_value_int_or_default("select count(*) as cnt from " + table_name + " where is_active=1", 0)
-    def count_by_query(self, sql: str):
-        return self.get_single_value_int_or_default(sql, 0)
-
-    def insert_single(self, dto: base_write_dto, created_by: str = "system") -> int:
-        return self.execute_query_with_params(dto.get_model().insert_attrs_sql, dto.get_list_write_insert(created_by))
-    def insert_many_with_model(self, model: base_model, dtos: list[base_write_dto], created_by: str = "system") -> int:
-        params = list(map(lambda x: x.get_list_write_insert(created_by), dtos))
-        return self.execute_queries_with_params(model.insert_attrs_sql, params)
-    def insert_many(self, dtos: list[base_write_dto], created_by: str = "system") -> int:
-        if len(dtos) > 0:
-            model = dtos[0].get_model()
-            return self.insert_many_with_model(model, dtos, created_by)
-        else:
-            return 0
-
-    def delete_logical_by_any_column(self, col_name: str, col_value: any, removed_by: str) -> int:
-        m = self.get_model()
-        return self.execute_query_with_params("update " + m.table_name + " set is_active=0, row_version=row_version+1, last_updated_date=now(), last_updated_by=%s, removed_date=now(), removed_by=%s  where " + col_name + "=%s", (removed_by, removed_by, col_value,))
-
-    def delete_logical_by_uid(self, uid: str, removed_by: str) -> int:
-        m = self.get_model()
-        return self.delete_logical_by_any_column(m.key_column_name, uid, removed_by)
-    def delete_logical_by_uids(self, uids: list[str], removed_by: str) -> int:
-        m = self.get_model()
-        sql = "update " + m.table_name + " set is_active=0, row_version=row_version+1, last_updated_date=now(), last_updated_by=%s, removed_date=now(), removed_by=%s  where " + m.key_column_name + "=%s"
-        params = list(map(lambda uid: (removed_by, removed_by, uid,), uids))
-        return self.execute_queries_with_params(sql, params)
-    def delete_logical_by_objects(self, dtos: list[base_write_dto], removed_by: str) -> int:
-        uids = list(map(lambda dto: dto.get_uid(), dtos))
-        return self.delete_logical_by_uids(uids, removed_by)
-    def delete_logical_by_object(self, obj: base_read_dto, removed_by: str) -> int:
-        m = self.get_model()
-        return self.delete_logical_by_any_column(m.key_column_name, obj.get_key(), removed_by)
-    def delete_logical_by_id(self, id: int, removed_by: str) -> int:
-        return self.delete_logical_by_any_column("id", id, removed_by)
-    def delete_logical_before_created(self, removed_by: str, dt: datetime.datetime) -> int:
-        m = self.get_model()
-        return self.execute_query_with_params("update " + m.table_name + " set is_active=0, row_version=row_version+1, last_updated_date=now(), last_updated_by=%s, removed_date=now(), removed_by=%s  where created_date < %s", (removed_by, removed_by, dt,))
-    def delete_physical_by_uid(self, uid: str):
-        m = self.get_model()
-        return self.execute_query_with_params("delete from " + m.table_name + " where " + m.key_column_name + "=%s", (uid, ))
-    def delete_physical_for_deleted_logical(self):
-        m = self.get_model()
-        return self.execute_query("delete from " + m.table_name + " where is_active=0")
-    def delete_physical_before_created(self, dt: datetime.datetime):
-        m = self.get_model()
-        return self.execute_query_with_params("delete from " + m.table_name + " where created_date < %s", (dt, ))
-    def update_single_column_by_uid(self, uid: str, col_name: str, col_value: str, updated_by: str = "system"):
-        m = self.get_model()
-        sql = "update " + m.table_name + " set " + col_name + "=%s, row_version=row_version+1, last_updated_date=now(), last_updated_by=%s where " + m.key_column_name + "=%s"
-        return self.execute_query_with_params(sql, (col_value, updated_by, uid,))
-    def update_single_column_by_id(self, id: int, col_name: str, col_value: str, updated_by: str = "system"):
-        m = self.get_model()
-        sql = "update " + m.table_name + " set " + col_name + "=%s, row_version=row_version+1, last_updated_date=now(), last_updated_by=%s where id=%s"
-        return self.execute_query_with_params(sql, (col_value, updated_by, id,))
-    def update_write_dto(self, dto: base_write_dto, updated_by: str = "system"):
-        m = self.get_model()
-        params = dto.get_list_write_update(updated_by)
-        return self.execute_query_with_params(m.update_attrs_sql, params)
-    def update_write_dtos(self, dtos: list[base_write_dto], updated_by: str = "system"):
-        m = self.get_model()
-        params = list(map(lambda dto: dto.get_list_write_update(updated_by), dtos))
-        return self.execute_queries_with_params(m.update_attrs_sql, params)
-    def upsert_write_dto(self, dto: base_write_dto, updated_by: str = "system"):
-        m = self.get_model()
-        params = dto.get_list_write_insert(updated_by)
-        return self.execute_query_with_params(m.upsert_attrs_sql, params)
-    def upsert_write_dtos(self, dtos: list[base_write_dto], updated_by: str = "system"):
-        m = self.get_model()
-        params = list(map(lambda dto: dto.get_list_write_insert(updated_by), dtos))
-        return self.execute_queries_with_params(m.upsert_attrs_sql, params)
+    def initialize_daos(self):
+        self.system_instance_dto = self.system_instance_dao_instance.insert_and_get(
+            system_instance_write_dto(self.system_instance_uid, "1.0.0", self.host_name, self.host_ip, self.local_path, "DEV"),
+            "system")
+        self.system_database_dto = self.system_database_dao_instance.upsert_row_and_get("main", db_connections.db_url, "", "", "")
+        self.settings_by_name = self.system_setting_dao_instance.get_items_active().to_dict_by_setting_name()
+        self.register_all_standard_daos()
+        print("End of DAOs initialization, system instance: ")
+    # handler for closing application
+    def close(self):
+        print("Closing DAOs")
 
 
-
+# instance of Daos with all DAOs instances
+daos = Daos()

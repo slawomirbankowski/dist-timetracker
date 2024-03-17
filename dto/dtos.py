@@ -4,11 +4,14 @@ from dataclasses import dataclass
 import uuid
 import random
 from random import randrange, uniform, randint
+from typing import Iterable
+
+from base.base_objects import base_object
 
 
 # base model class to keep objects representing tables in database
 @dataclass(frozen=False)
-class base_model:
+class base_model(base_object):
     table_name: str  # name of table in database
     key_column_name: str  # name of UID column, typically it is table_uid
     all_columns: list[str]  # list od all column names
@@ -31,11 +34,25 @@ class base_model:
     upsert_attrs_sql: str
     select_all_sql: str
 
-    def __init__(self, table_name: str, all_columns: list[str], attr_columns: list[str]):
-        print("Initializing model for table: " + table_name)
+    def __init__(self, table_name: str, attr_columns: list[str]):
+        # only attr_columns should be passed
+        super().__init__()
         self.table_name = table_name
         self.key_column_name = self.table_name + "_uid"
-        self.all_columns = all_columns
+        self.all_columns = []
+        self.all_columns.append("id")
+        for c in attr_columns:
+            self.all_columns.append(c)
+        self.all_columns.append("row_guid")
+        self.all_columns.append("row_version")
+        self.all_columns.append("is_active")
+        self.all_columns.append("created_date")
+        self.all_columns.append("created_by")
+        self.all_columns.append("last_updated_date")
+        self.all_columns.append("last_updated_by")
+        self.all_columns.append("removed_date")
+        self.all_columns.append("removed_by")
+        self.all_columns.append("custom_attributes")
         self.attr_columns = attr_columns
         self.insert_columns = self.attr_columns.copy()
         self.insert_columns.append("created_by")
@@ -45,11 +62,11 @@ class base_model:
         self.insert_columns_question_marks = ",".join(list(map(lambda x: "%s", self.insert_columns)))
         self.attr_no_uid_columns = [x for x in self.attr_columns if x != self.key_column_name]
         self.attr_no_uid_columns_eq = [x+"=%s" for x in self.attr_no_uid_columns]
-        self.all_columns_list = ','.join(all_columns)
+        self.all_columns_list = ','.join(self.all_columns)
         self.attr_columns_list = ",".join(attr_columns)
         self.attr_no_uid_columns_list = ",".join(self.attr_no_uid_columns)
         self.attr_no_uid_columns_eq_list = ",". join(self.attr_no_uid_columns_eq)
-        self.all_question_marks = ",".join(list(map(lambda x: "%s", all_columns)))
+        self.all_question_marks = ",".join(list(map(lambda x: "%s", self.all_columns)))
         self.attr_question_marks = ",".join(list(map(lambda x: "%s", attr_columns)))
         self.insert_attrs_sql = "insert into " + self.table_name + "(" + self.insert_columns_list + ") values (" + self.insert_columns_question_marks + ")"
         self.update_attrs_sql = "update " + self.table_name + " set " + self.attr_no_uid_columns_eq_list + ", custom_attributes=%s, last_updated_date=now(), row_version=row_version+1, last_updated_by=%s where " + self.key_column_name + "=%s"
@@ -59,35 +76,63 @@ class base_model:
         self.upsert_columns_exclude_list = ",".join([x+"=excluded."+x for x in self.upsert_columns])
         self.upsert_attrs_sql = "insert into " + self.table_name + "(" + self.insert_columns_list + ") values (" + self.insert_columns_question_marks + ") on conflict (" + self.table_name + "_uid) do update set " + self.upsert_columns_exclude_list + ", last_updated_date=now()"
         self.select_all_sql = "select * from " + self.table_name
-
-    def get_key_column_name(self):
+    def get_base_dict_custom_info(self) -> dict[str, any]:
+        return {
+            "table_name": self.table_name,
+            "key_column_name": self.key_column_name,
+            "attr_columns": self.attr_columns,
+            "insert_columns": self.insert_columns,
+            "insert_columns_list": self.insert_columns_list,
+            "insert_attrs_sql": self.insert_attrs_sql,
+            "update_attrs_sql": self.update_attrs_sql
+        }
+    # get type of base object
+    def get_base_object_type(self) -> str:
+        return "Model"
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return self.table_name
+    def get_uid_column_name(self) -> str:
         return self.table_name + "_uid"
 
-    def get_insert_sql(self):
+    def get_name_column_name(self) -> str:
+        return self.table_name + "_uid"
+
+    def get_key_column_name(self) -> str:
+        return self.table_name + "_uid"
+
+    def get_insert_sql(self) -> str:
         return self.insert_attrs_sql
 
-    def get_select_all_limit_sql(self, n: int = 1000):
-        return "select * from " + self.table_name + " limit " + str(n)
-    def get_select_active_limit_sql(self, n: int = 1000) -> str:
-        return "select * from " + self.table_name + " where is_active=1 limit " + str(n)
-    def get_select_all_latest_sql(self, n: int = 1000) -> str:
-        return "select * from " + self.table_name + " order by created_date desc limit " + str(n)
-    def get_select_active_latest_sql(self, n: int = 1000) -> str:
-        return "select * from " + self.table_name + " order by created_date desc limit " + str(n)
+    def get_select_all_limit_sql(self, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " limit " + str(max_rows)
+    def get_select_active_limit_sql(self, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " where is_active=1 limit " + str(max_rows)
+    def get_select_all_latest_sql(self, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_active_latest_sql(self, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " order by created_date desc limit " + str(max_rows)
 
-    def get_select_write_all_limit_sql(self, n: int = 1000):
-        return "select " + self.attr_columns_list + " from " + self.table_name + " limit " + str(n)
-    def get_select_write_active_limit_sql(self, n: int = 1000) -> str:
-        return "select " + self.attr_columns_list + " from " + self.table_name + " where is_active=1 limit " + str(n)
-    def get_select_write_all_latest_sql(self, n: int = 1000) -> str:
-        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(n)
-    def get_select_write_active_latest_sql(self, n: int = 1000) -> str:
-        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(n)
-
-    def get_select_all_keys(self, n: int = 1000) -> str:
-        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(n)
-    def get_select_all_guids(self, n: int = 1000) -> str:
-        return "select row_guid from " + self.table_name + " limit " + str(n)
+    def get_select_write_all_limit_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " limit " + str(max_rows)
+    def get_select_write_active_limit_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " where is_active=1 limit " + str(max_rows)
+    def get_select_write_all_latest_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_write_active_latest_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_all_uids(self, max_rows: int = 1000) -> str:
+        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
+    def get_select_all_keys(self, max_rows: int = 1000) -> str:
+        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
+    def get_select_all_names(self, max_rows: int = 1000) -> str:
+        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
+    def get_select_all_guids(self, max_rows: int = 1000) -> str:
+        return "select row_guid from " + self.table_name + " limit " + str(max_rows)
+    def get_select_keys_by_column_name(self, col_name: str, max_rows: int = 1000) -> str:
+        return "select " + self.get_key_column_name() + " from " + self.table_name + " where " + col_name + "=%s order by " + self.get_key_column_name() + " limit " + str(max_rows)
+    def get_select_guids_by_column_name(self, col_name: str, max_rows: int = 1000) -> str:
+        return "select row_guid from " + self.table_name + " where " + col_name + "=%s limit " + str(max_rows)
 
     def get_select_count_all_sql(self) -> str:
         return "select count(*) as cnt from " + self.table_name
@@ -95,14 +140,21 @@ class base_model:
         return "select count(*) as cnt from " + self.table_name + " where is_active=1"
     def get_select_count_by_any_column_sql(self, column_name: str) -> str:
         return "select count(*) as cnt from " + self.table_name + " where is_active=1 and " + column_name + "=%s"
+    def get_select_count_by_two_columns_sql(self, col1: str, col2: str) -> str:
+        return "select count(*) as cnt from " + self.table_name + " where is_active=1 and " + col1 + "=%s and " + col2 + "%s"
+
     def get_select_by_key(self) -> str:
         return "select * from " + self.table_name + " where " + self.key_column_name + "=%s"
     def get_select_by_id(self) -> str:
         return "select * from " + self.table_name + " where id=%s limit 1"
     def get_select_active_only(self) -> str:
         return "select * from " + self.table_name + " where is_active=1 order by created_date desc limit 1000"
-    def get_select_active_by_any_column(self, column_name: str, n: int = 1000) -> str:
-        return "select * from " + self.table_name + " where is_active=1 and " + column_name + "=%s order by created_date desc limit " + str(n)
+    def get_select_active_by_any_column(self, column_name: str, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " where is_active=1 and " + column_name + "=%s order by created_date desc limit " + str(max_rows)
+    def get_select_active_by_any_column_values(self, column_name: str, values: Iterable, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " where is_active=1 and " + column_name + " in (%s) order by created_date desc limit " + str(max_rows)
+    def get_select_with_custom_where(self, where_sql: str, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " where " + where_sql + " limit " + str(max_rows)
 
 
 # base DTO with nothing
@@ -110,14 +162,24 @@ class base_dto:
     @classmethod
     def get_random_uid(cls) -> str:
         return str(uuid.uuid4())
+
+    @classmethod
+    def get_random_uid_for_object(cls, prefix: str, obj: any) -> str:
+        return prefix + "_" + type(obj).__name__ + "_" + str(datetime.datetime.now())[:10].replace("-", "_") + "_" + str(uuid.uuid4())[:13].replace("-", "_")
+
+    @classmethod
+    def get_random_uid_with_name(cls, prefix: str) -> str:
+        return prefix + "_" + str(datetime.datetime.now())[:10].replace("-", "_") + "_" + str(uuid.uuid4())[:13].replace("-", "_")
+
     @classmethod
     def get_random_int(cls) -> int:
-        return str(random.randint(0, 1000000))
+        return random.randint(0, 1000000)
     @classmethod
     def get_random_float(cls) -> float:
-        return str(random.uniform(0, 1000000))
+        return random.uniform(0, 1000000)
     @classmethod
     def get_random_date(cls) -> int:
+        # TODO: generate random date and time
         return str(uuid.uuid4())
 
 
@@ -131,7 +193,7 @@ class base_custom_dto(base_dto):
     def get_custom_attributes_names(self):
         return None
 
-#
+# base DTO to insert/write row into DB
 class base_write_dto(base_custom_dto):
     def __init__(self):
         print("Creating new DTO")
@@ -233,11 +295,6 @@ class base_read_dto(base_write_dto):
     def to_json_read(self) -> str:
         pass
 
-# extract key
-def extract_key(dto: base_write_dto) -> str:
-    print("Extracting key from DTO: " + str(dto) + ", TYPE=" + str(type(dto)) + ", key=" + str(dto.get_key()))
-    return dto.get_key()
-
 
 # helper class to store list of items
 class base_dtos:
@@ -247,9 +304,10 @@ class base_dtos:
     def get_dtos(self) -> list[base_read_dto]:
         return self.dtos
     def get_keys(self) -> list[str]:
-        return list(map(extract_key, self.dtos))
+        return list(map(lambda dto: dto.get_key(), self.dtos))
     def get_active_dtos(self):
         return list(filter(lambda x: x.is_active == 1, self.dtos))
+    # count number of rows in this collection
     def count(self) -> int:
         return len(self.dtos)
     def count_active_only(self):
@@ -269,3 +327,8 @@ class base_dtos:
     @abstractmethod
     def get_first(self):
         pass
+
+@dataclass(frozen=False)
+class group_dto:
+    value: str
+    rows_count: any

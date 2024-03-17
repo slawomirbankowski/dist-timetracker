@@ -6,6 +6,9 @@ from dto.dtos import *
 from dto.dtos_read import *
 from dto.dtos_write import *
 
+
+# auto-generated - DtosWrite - START
+
 @dataclass(frozen=False)
 class account_division_write_dtos(base_dtos):
     dtos: list[account_division_write_dto]
@@ -131,6 +134,38 @@ class account_title_write_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.account_title_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class account_type_write_dtos(base_dtos):
+    dtos: list[account_type_write_dto]
+    def __init__(self, dtos: list[account_type_write_dto]):
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_type_write_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_type_write_dto):
+        return cls(list(dto))
+    @classmethod
+    def from_lists(cls, dtos1: list[account_type_write_dto], dtos2: list[account_type_write_dto]):
+        return cls(dtos1 + dtos2)
+    def get_write_dicts(self) -> list[dict]:
+        return list(map(lambda x: x.to_write_dict(), self.dtos))
+    def find_by_uid(self, uid: str) -> account_type_write_dto | None:
+        found_dtos = list(filter(lambda x: x.account_type_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_type_write_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_type_uid] = dto
         return res
 
 
@@ -355,6 +390,38 @@ class client_instance_write_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.client_instance_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class client_type_write_dtos(base_dtos):
+    dtos: list[client_type_write_dto]
+    def __init__(self, dtos: list[client_type_write_dto]):
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[client_type_write_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: client_type_write_dto):
+        return cls(list(dto))
+    @classmethod
+    def from_lists(cls, dtos1: list[client_type_write_dto], dtos2: list[client_type_write_dto]):
+        return cls(dtos1 + dtos2)
+    def get_write_dicts(self) -> list[dict]:
+        return list(map(lambda x: x.to_write_dict(), self.dtos))
+    def find_by_uid(self, uid: str) -> client_type_write_dto | None:
+        found_dtos = list(filter(lambda x: x.client_type_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, client_type_write_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.client_type_uid] = dto
         return res
 
 
@@ -839,6 +906,38 @@ class system_change_write_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class system_database_write_dtos(base_dtos):
+    dtos: list[system_database_write_dto]
+    def __init__(self, dtos: list[system_database_write_dto]):
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[system_database_write_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: system_database_write_dto):
+        return cls(list(dto))
+    @classmethod
+    def from_lists(cls, dtos1: list[system_database_write_dto], dtos2: list[system_database_write_dto]):
+        return cls(dtos1 + dtos2)
+    def get_write_dicts(self) -> list[dict]:
+        return list(map(lambda x: x.to_write_dict(), self.dtos))
+    def find_by_uid(self, uid: str) -> system_database_write_dto | None:
+        found_dtos = list(filter(lambda x: x.system_database_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, system_database_write_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.system_database_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
 class system_exception_write_dtos(base_dtos):
     dtos: list[system_exception_write_dto]
     def __init__(self, dtos: list[system_exception_write_dto]):
@@ -935,6 +1034,38 @@ class system_object_write_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class system_object_type_write_dtos(base_dtos):
+    dtos: list[system_object_type_write_dto]
+    def __init__(self, dtos: list[system_object_type_write_dto]):
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[system_object_type_write_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: system_object_type_write_dto):
+        return cls(list(dto))
+    @classmethod
+    def from_lists(cls, dtos1: list[system_object_type_write_dto], dtos2: list[system_object_type_write_dto]):
+        return cls(dtos1 + dtos2)
+    def get_write_dicts(self) -> list[dict]:
+        return list(map(lambda x: x.to_write_dict(), self.dtos))
+    def find_by_uid(self, uid: str) -> system_object_type_write_dto | None:
+        found_dtos = list(filter(lambda x: x.system_object_type_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, system_object_type_write_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.system_object_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
 class system_setting_write_dtos(base_dtos):
     dtos: list[system_setting_write_dto]
     def __init__(self, dtos: list[system_setting_write_dto]):
@@ -997,3 +1128,37 @@ class system_state_write_dtos(base_dtos):
             res[dto.system_state_uid] = dto
         return res
 
+
+@dataclass(frozen=False)
+class system_version_write_dtos(base_dtos):
+    dtos: list[system_version_write_dto]
+    def __init__(self, dtos: list[system_version_write_dto]):
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[system_version_write_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: system_version_write_dto):
+        return cls(list(dto))
+    @classmethod
+    def from_lists(cls, dtos1: list[system_version_write_dto], dtos2: list[system_version_write_dto]):
+        return cls(dtos1 + dtos2)
+    def get_write_dicts(self) -> list[dict]:
+        return list(map(lambda x: x.to_write_dict(), self.dtos))
+    def find_by_uid(self, uid: str) -> system_version_write_dto | None:
+        found_dtos = list(filter(lambda x: x.system_version_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, system_version_write_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.system_version_uid] = dto
+        return res
+
+
+# auto-generated - DtosWrite - END
