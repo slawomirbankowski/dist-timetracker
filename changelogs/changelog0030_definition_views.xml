@@ -1,0 +1,171 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00030_definition_views.xml">
+
+    <changeSet id="0030 - definition views" author="slawomir.bankowski">
+
+      <createView  viewName="v_definition_table_all_list">
+        select t.table_name
+        , t.table_full_name
+        , replace(t.table_name, 'v_rich_', '') as full_name
+        , concat('class ', t.table_name, '_dtos(base_dto):') as dtos_class
+        , concat('', t.table_name, '_dtos') as dtos_class_name
+        , concat('class ', t.table_name, '_write_dto(base_write_dto):') as dto_write_class
+        , concat('', t.table_name, '_write_dto') as dto_write_class_name
+        , concat('list[', t.table_name, '_write_dto]') as dto_write_class_name_list
+        , concat('class ', t.table_name, '_read_dto(base_read_dto, ', t.table_name, '_write_dto):') as dto_read_class_definition
+        , concat('', t.table_name, '_read_dto') as dto_read_class_name
+        , concat('list[', t.table_name, '_read_dto]') as dto_read_class_name_list
+        , concat('', t.table_name, '_thin_dto') as dto_thin_class_name
+        , concat('class ', t.table_name, '_dao(base_dao):') as dao_class_definition
+        , concat('', t.table_name, '_dao') as dao_class_name
+        , concat('class ', t.table_name, '_service(base_service):') as service_class_definition
+        , concat('', t.table_name, '_service') as service_class_name
+        , concat('class ', t.table_name, '_controller(base_controller):') as controller_class_definition
+        , concat('', t.table_name, '_controller') as controller_class_name
+        , concat(t.table_name, '_model') as get_model_object_definition
+        , '' as empty_line_definition
+        , coalesce(tc.table_comment, '') as table_comment
+        , case when t.table_full_name not like 'v_%' and t.table_type='BASE TABLE' then 1 else 0 end as is_base
+        , case when t.table_full_name like 'v_rich_%' then 1 else 0 end as is_rich
+        , case when t.table_full_name like 'v_custom_%' then 1 else 0 end as is_custom
+        , case when t.table_full_name like 'v_definition_%' then 1 else 0 end as is_definition
+        from
+         (select table_name as table_full_name, replace(table_name, 'v_rich_', '') as table_name, table_type from information_schema.tables where table_schema='public'  and table_name not in ('databasechangeloglock', 'databasechangelog')) t
+         left join (
+             SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+                FROM information_schema.tables t
+                INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+                WHERE t.table_type='BASE TABLE'
+                AND t.table_schema='public'
+         ) tc on t.table_full_name = tc.table_name
+      </createView>
+
+      <createView viewName="v_definition_table_base_list">
+        select *
+        from v_definition_table_all_list
+        where is_base=1
+      </createView>
+
+
+      <createView viewName="v_definition_table_rich_list">
+        select *
+        from v_definition_table_all_list
+        where is_rich=1
+      </createView>
+
+
+      <createView viewName="v_definition_table_custom_list">
+        select *
+        from v_definition_table_all_list
+        where is_custom=1
+      </createView>
+
+      <createView viewName="v_definition_system_table_generation_list">
+            select concat('insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment)',
+             ' values (''', t.table_name, ''',''', t.table_name, ''',''',concat(t.table_name, '_uid'), ''', '''', ''', tc.table_comment, ''');') as sql_line
+            from information_schema.tables t
+                             left join (
+                             SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+                                FROM information_schema.tables t
+                                INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+                                WHERE t.table_type='BASE TABLE'
+                                AND t.table_schema='public'
+                         ) tc on t.table_name = tc.table_name
+            WHERE t.table_type='BASE TABLE' and t.table_schema='public' and t.table_name not in ('databasechangeloglock', 'databasechangelog')
+            order by t.table_name
+      </createView>
+
+      <createView viewName="v_definition_column_all_list">
+            select table_name as table_full_name
+             , replace(replace(table_name, 'v_rich_', ''), 'v_custom', '') as table_name
+             , column_name
+             , case when column_default like '%replace%' then null else replace(replace(column_default, '::text', ''), 'now()', 'datetime.datetime.now()') end as column_default
+             , concat('self.', column_name) as self_column_name
+             , data_type
+             , is_nullable
+             , ordinal_position
+             , cast(concat(case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then '| None' else '' end) as text) as python_type
+             , cast(concat( column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition
+             , cast(concat( column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end, ' = ',
+                case when column_name='is_active' then '1' when column_name='custom_attributes' then '"{}"' when column_name='system_version_uid' then 'objects.system_version_uid' when column_name='system_instance_uid' then 'objects.system_instance_uid' when column_name='' then ''  when column_name='' then '' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_definition_default
+             --, cast(concat('    ', column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition_class
+             , cast(concat('"', column_name, '": "', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end, '"') as text) as python_map_definition
+             , cast(concat(case when column_name='is_active' then '1' when column_name='custom_attributes' then '"{}"' when column_name='' then ''  when column_name='' then '' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_empty_value
+             , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_default_value
+             , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then 'base_dto.get_random_uid()' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_random_value
+             , cast(concat('        self.', column_name, ' = ', column_name) as text) as self_set
+             , case when column_name  in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_metadata
+             , case when column_name  in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_value
+             , case when column_name like '%_uid' and column_name!= concat(table_name, '_uid') then 1 else 0 end as is_fk
+             , case when column_name = concat(table_name, '_name') and column_name!= concat(table_name, '_uid') then 1 else 0 end as is_name
+             , case when column_name not in (concat(table_name, '_uid'), 'row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_non_key_attribute
+             , case when column_name not in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_attribute
+             , case when column_name not in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by') then 1 else 0 end as is_write
+             , case when table_name not like 'v_%' then 1 else 0 end as is_base
+             , case when table_name like 'v_rich_%' then 1 else 0 end as is_rich
+             , case when table_name like 'v_custom_%' then 1 else 0 end as is_custom
+             , case when table_name like 'v_definition_%' then 1 else 0 end as is_definition
+            from information_schema.columns
+            where table_schema='public' and table_name not in ('databasechangeloglock', 'databasechangelog')
+            order by ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_column_base_list">
+        select *
+        from v_definition_column_all_list
+        where is_base=1
+      </createView>
+
+      <createView viewName="v_definition_column_rich_list">
+        select *
+        from v_definition_column_all_list
+        where is_rich=1
+      </createView>
+
+      <createView viewName="v_definition_column_custom_list">
+        select *
+        from v_definition_column_all_list
+        where is_custom=1
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+
+
+    </changeSet>
+
+</databaseChangeLog>

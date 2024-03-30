@@ -4,11 +4,11 @@ import psycopg2
 import psycopg2.pool
 from pyliquibase import Pyliquibase
 
-from base.base_objects import base_object
+from base.base_objects import base_object, DaoConnectionBase, DaoConnectionsBase, objects
 
 
 # DaoConnection with DBCP to Postgres database
-class DaoConnection(base_object):
+class DaoConnection(DaoConnectionBase):
     db_url: str
     db_host: str
     db_name: str = "timetracker"
@@ -88,7 +88,7 @@ class DaoConnection(base_object):
 
 
 # DAO connections to main database and all other client databases
-class DaoConnections(base_object):
+class DaoConnections(DaoConnectionsBase):
     is_initialized: bool = False
     creation_time: datetime.datetime | None
     initialization_time: datetime.datetime | None
@@ -124,9 +124,8 @@ class DaoConnections(base_object):
         self.db_pass = db_pass
         self.initialization_time = datetime.datetime.now()
     # handler for closing application
-    def close(self):
-        print("Closing Connections")
-
+    def close_connections(self):
+        print("Closing ALL Connections")
     def get_base_dict_custom_info(self):
         return {
             "is_initialized": self.is_initialized,
@@ -159,5 +158,7 @@ class DaoConnections(base_object):
     def close_tenant_connection(self, db_name: str, db_conn):
         return self.connections[db_name].close(db_conn)
 
+
 # main object with all DB connection - main and tenants
 db_connections = DaoConnections()
+objects.register_connections(db_connections)

@@ -18,4 +18,4 @@ class ReportController(BaseController):
     # route in Process controller - select method and run it
     def route(self, session: RequestSession) -> ResponseSession:
         print("Route from Flask: " + session.request.url)
-        return jsonify({'access_token': "123456"})
+        return ResponseSession(jsonify({'access_token': "123456"}))

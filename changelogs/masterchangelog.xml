@@ -3,7 +3,26 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <include file="./changelog0001.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0002.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0001_common.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0002_system.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0003_dictionary.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0004_location.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0005_connection.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0006_audit.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0007_storage.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0008_synchronization.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0009_monitor.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0010_event.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0011_process.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0012_report.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0020_tenant.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0021_client.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0022_account.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0023_auth.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0024_invoice.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0025_project.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0026_time.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0027_calendar.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0031_rich_views.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -7,11 +7,11 @@ from base.cache import cache
 from dao.daos import daos
 from dto.dtos_models import db_models
 from service.services import services
-from controller.controller_app import start_http_listening
-from controller.controllers import controllers
+#from controller.controller_app import start_http_listening
+#from controller.controllers import controllers
 
 
-if __name__ == '__main__':
+def main_application():
     print("=================================================== STARTING")
     logging.info("Starting new Python application")
     #logging.log(2, "Some log")
@@ -41,18 +41,27 @@ if __name__ == '__main__':
     print("=================================================== SERVICES")
     services.initialize_services()
     print("=================================================== CONTROLLERS")
-    controllers.initialize_controllers()
+    #controllers.initialize_controllers()
     print("=================================================== HTTP")
-    start_http_listening()
+    #start_http_listening()
+
+
+if __name__ == '__main__':
+    main_application()
+    #objects.initialize()
+    #cache.initialize()
+    #db_models.initialize()
+    #db_models.generate_rich_view(db_models.account_instance_model)
+    #db_models.print_all_rich_views()
 
 
 def exit_handler():
     print("TimeTracker application is ending")
-    controllers.close()
-    daos.close()
-    dao.dao_connection.db_connections.close()
-    db_models.close()
-    objects.close()
+    #controllers.close()
+    #daos.close()
+    #dao.dao_connection.db_connections.close()
+    #db_models.close()
+    #objects.close()
     print("TimeTracker ENDED!!!")
 
 

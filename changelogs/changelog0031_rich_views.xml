@@ -1,0 +1,1086 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0031.xml">
+
+    <changeSet id="0031 - rich views" author="slawomir.bankowski">
+
+  <createView  viewName="v_rich_account">
+    select account.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_type_uid.account_type_name as account_type_uid_account_type_name    , _account_type_uid.account_type_description as account_type_uid_account_type_description
+    , _account_title_uid.account_title_name as account_title_uid_account_title_name    , _account_title_uid.title_description as account_title_uid_title_description
+    , _account_division_uid.account_division_name as account_division_uid_account_division_name    , _account_division_uid.tenant_uid as account_division_uid_tenant_uid    , _account_division_uid.account_uid as account_division_uid_account_uid    , _account_division_uid.account_division_template_uid as account_division_uid_account_division_template_uid    , _account_division_uid.division_description as account_division_uid_division_description
+    , _account_group_uid.account_group_name as account_group_uid_account_group_name    , _account_group_uid.tenant_uid as account_group_uid_tenant_uid    , _account_group_uid.account_group_description as account_group_uid_account_group_description
+    , _auth_identity_uid.auth_identity_name as auth_identity_uid_auth_identity_name    , _auth_identity_uid.class_name as auth_identity_uid_class_name    , _auth_identity_uid.default_parameters_json as auth_identity_uid_default_parameters_json
+    from account
+    left join tenant _tenant_uid on account.tenant_uid = _tenant_uid.tenant_uid
+    left join account_type _account_type_uid on account.account_type_uid = _account_type_uid.account_type_uid
+    left join account_title _account_title_uid on account.account_title_uid = _account_title_uid.account_title_uid
+    left join account_division _account_division_uid on account.account_division_uid = _account_division_uid.account_division_uid
+    left join account_group _account_group_uid on account.account_group_uid = _account_group_uid.account_group_uid
+    left join auth_identity _auth_identity_uid on account.auth_identity_uid = _auth_identity_uid.auth_identity_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_division">
+    select account_division.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _account_division_template_uid.account_division_template_name as account_division_template_uid_account_division_template_name    , _account_division_template_uid.division_description as account_division_template_uid_division_description
+    from account_division
+    left join tenant _tenant_uid on account_division.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on account_division.account_uid = _account_uid.account_uid
+    left join account_division_template _account_division_template_uid on account_division.account_division_template_uid = _account_division_template_uid.account_division_template_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_division_template">
+    select account_division_template.*
+    from account_division_template
+  </createView>
+
+  <createView  viewName="v_rich_account_group">
+    select account_group.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from account_group
+    left join tenant _tenant_uid on account_group.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_hierarchy">
+    select account_hierarchy.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _parent_account_uid.account_name as parent_account_uid_account_name    , _parent_account_uid.tenant_uid as parent_account_uid_tenant_uid    , _parent_account_uid.account_type_uid as parent_account_uid_account_type_uid    , _parent_account_uid.account_title_uid as parent_account_uid_account_title_uid    , _parent_account_uid.account_division_uid as parent_account_uid_account_division_uid    , _parent_account_uid.account_group_uid as parent_account_uid_account_group_uid    , _parent_account_uid.auth_identity_uid as parent_account_uid_auth_identity_uid    , _parent_account_uid.account_email as parent_account_uid_account_email    , _parent_account_uid.display_name as parent_account_uid_display_name    , _parent_account_uid.is_system as parent_account_uid_is_system
+    , _child_account_uid.account_name as child_account_uid_account_name    , _child_account_uid.tenant_uid as child_account_uid_tenant_uid    , _child_account_uid.account_type_uid as child_account_uid_account_type_uid    , _child_account_uid.account_title_uid as child_account_uid_account_title_uid    , _child_account_uid.account_division_uid as child_account_uid_account_division_uid    , _child_account_uid.account_group_uid as child_account_uid_account_group_uid    , _child_account_uid.auth_identity_uid as child_account_uid_auth_identity_uid    , _child_account_uid.account_email as child_account_uid_account_email    , _child_account_uid.display_name as child_account_uid_display_name    , _child_account_uid.is_system as child_account_uid_is_system
+    from account_hierarchy
+    left join tenant _tenant_uid on account_hierarchy.tenant_uid = _tenant_uid.tenant_uid
+    left join account _parent_account_uid on account_hierarchy.parent_account_uid = _parent_account_uid.account_uid
+    left join account _child_account_uid on account_hierarchy.child_account_uid = _child_account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_rate">
+    select account_rate.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _currency_uid.currency_name as currency_uid_currency_name    , _currency_uid.is_focused as currency_uid_is_focused
+    from account_rate
+    left join tenant _tenant_uid on account_rate.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on account_rate.account_uid = _account_uid.account_uid
+    left join currency _currency_uid on account_rate.currency_uid = _currency_uid.currency_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_skill">
+    select account_skill.*
+    from account_skill
+  </createView>
+
+  <createView  viewName="v_rich_account_team">
+    select account_team.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _owner_account_uid.account_name as owner_account_uid_account_name    , _owner_account_uid.tenant_uid as owner_account_uid_tenant_uid    , _owner_account_uid.account_type_uid as owner_account_uid_account_type_uid    , _owner_account_uid.account_title_uid as owner_account_uid_account_title_uid    , _owner_account_uid.account_division_uid as owner_account_uid_account_division_uid    , _owner_account_uid.account_group_uid as owner_account_uid_account_group_uid    , _owner_account_uid.auth_identity_uid as owner_account_uid_auth_identity_uid    , _owner_account_uid.account_email as owner_account_uid_account_email    , _owner_account_uid.display_name as owner_account_uid_display_name    , _owner_account_uid.is_system as owner_account_uid_is_system
+    from account_team
+    left join tenant _tenant_uid on account_team.tenant_uid = _tenant_uid.tenant_uid
+    left join account _owner_account_uid on account_team.owner_account_uid = _owner_account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_title">
+    select account_title.*
+    from account_title
+  </createView>
+
+  <createView  viewName="v_rich_account_title_responsibility">
+    select account_title_responsibility.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_title_uid.account_title_name as account_title_uid_account_title_name    , _account_title_uid.title_description as account_title_uid_title_description
+    from account_title_responsibility
+    left join tenant _tenant_uid on account_title_responsibility.tenant_uid = _tenant_uid.tenant_uid
+    left join account_title _account_title_uid on account_title_responsibility.account_title_uid = _account_title_uid.account_title_uid
+  </createView>
+
+  <createView  viewName="v_rich_account_type">
+    select account_type.*
+    from account_type
+  </createView>
+
+  <createView  viewName="v_rich_audit_change">
+    select audit_change.*
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _audit_type_uid.audit_type_name as audit_type_uid_audit_type_name
+    from audit_change
+    left join account _account_uid on audit_change.account_uid = _account_uid.account_uid
+    left join audit_type _audit_type_uid on audit_change.audit_type_uid = _audit_type_uid.audit_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_audit_type">
+    select audit_type.*
+    from audit_type
+  </createView>
+
+  <createView  viewName="v_rich_auth_attempt">
+    select auth_attempt.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from auth_attempt
+    left join tenant _tenant_uid on auth_attempt.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_attempt.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_identity">
+    select auth_identity.*
+    from auth_identity
+  </createView>
+
+  <createView  viewName="v_rich_auth_identity_tenant">
+    select auth_identity_tenant.*
+    , _auth_identity_tenant_uid.tenant_name as auth_identity_tenant_uid_tenant_name    , _auth_identity_tenant_uid.country_uid as auth_identity_tenant_uid_country_uid    , _auth_identity_tenant_uid.tenant_type_uid as auth_identity_tenant_uid_tenant_type_uid    , _auth_identity_tenant_uid.tenant_category_uid as auth_identity_tenant_uid_tenant_category_uid    , _auth_identity_tenant_uid.tenant_code as auth_identity_tenant_uid_tenant_code    , _auth_identity_tenant_uid.tenant_description as auth_identity_tenant_uid_tenant_description    , _auth_identity_tenant_uid.start_date as auth_identity_tenant_uid_start_date    , _auth_identity_tenant_uid.end_date as auth_identity_tenant_uid_end_date    , _auth_identity_tenant_uid.is_internal as auth_identity_tenant_uid_is_internal    , _auth_identity_tenant_uid.is_system as auth_identity_tenant_uid_is_system    , _auth_identity_tenant_uid.is_test as auth_identity_tenant_uid_is_test    , _auth_identity_tenant_uid.account_uid as auth_identity_tenant_uid_account_uid
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _auth_identity_uid.auth_identity_name as auth_identity_uid_auth_identity_name    , _auth_identity_uid.class_name as auth_identity_uid_class_name    , _auth_identity_uid.default_parameters_json as auth_identity_uid_default_parameters_json
+    , _auth_sso_uid.auth_sso_name as auth_sso_uid_auth_sso_name    , _auth_sso_uid.tenant_uid as auth_sso_uid_tenant_uid    , _auth_sso_uid.owner_account_uid as auth_sso_uid_owner_account_uid    , _auth_sso_uid.sso_name as auth_sso_uid_sso_name    , _auth_sso_uid.sso_url as auth_sso_uid_sso_url    , _auth_sso_uid.sso_key as auth_sso_uid_sso_key    , _auth_sso_uid.sso_secret as auth_sso_uid_sso_secret    , _auth_sso_uid.sso_code as auth_sso_uid_sso_code    , _auth_sso_uid.clientid as auth_sso_uid_clientid    , _auth_sso_uid.clientsecret as auth_sso_uid_clientsecret    , _auth_sso_uid.callback_url as auth_sso_uid_callback_url
+    from auth_identity_tenant
+    left join tenant _auth_identity_tenant_uid on auth_identity_tenant.auth_identity_tenant_uid = _auth_identity_tenant_uid.tenant_uid
+    left join tenant _tenant_uid on auth_identity_tenant.tenant_uid = _tenant_uid.tenant_uid
+    left join auth_identity _auth_identity_uid on auth_identity_tenant.auth_identity_uid = _auth_identity_uid.auth_identity_uid
+    left join auth_sso _auth_sso_uid on auth_identity_tenant.auth_sso_uid = _auth_sso_uid.auth_sso_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_key">
+    select auth_key.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _owner_account_uid.account_name as owner_account_uid_account_name    , _owner_account_uid.tenant_uid as owner_account_uid_tenant_uid    , _owner_account_uid.account_type_uid as owner_account_uid_account_type_uid    , _owner_account_uid.account_title_uid as owner_account_uid_account_title_uid    , _owner_account_uid.account_division_uid as owner_account_uid_account_division_uid    , _owner_account_uid.account_group_uid as owner_account_uid_account_group_uid    , _owner_account_uid.auth_identity_uid as owner_account_uid_auth_identity_uid    , _owner_account_uid.account_email as owner_account_uid_account_email    , _owner_account_uid.display_name as owner_account_uid_display_name    , _owner_account_uid.is_system as owner_account_uid_is_system
+    , _auth_key_type_uid.auth_key_type_name as auth_key_type_uid_auth_key_type_name    , _auth_key_type_uid.class_name as auth_key_type_uid_class_name
+    from auth_key
+    left join tenant _tenant_uid on auth_key.tenant_uid = _tenant_uid.tenant_uid
+    left join account _owner_account_uid on auth_key.owner_account_uid = _owner_account_uid.account_uid
+    left join auth_key_type _auth_key_type_uid on auth_key.auth_key_type_uid = _auth_key_type_uid.auth_key_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_key_type">
+    select auth_key_type.*
+    from auth_key_type
+  </createView>
+
+  <createView  viewName="v_rich_auth_password">
+    select auth_password.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from auth_password
+    left join tenant _tenant_uid on auth_password.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_password.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_password_current">
+    select auth_password_current.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from auth_password_current
+    left join tenant _tenant_uid on auth_password_current.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_password_current.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_password_rule">
+    select auth_password_rule.*
+    , _auth_password_uid.auth_password_name as auth_password_uid_auth_password_name    , _auth_password_uid.tenant_uid as auth_password_uid_tenant_uid    , _auth_password_uid.account_uid as auth_password_uid_account_uid    , _auth_password_uid.password_hash as auth_password_uid_password_hash    , _auth_password_uid.password_salt as auth_password_uid_password_salt    , _auth_password_uid.date_from as auth_password_uid_date_from    , _auth_password_uid.date_to as auth_password_uid_date_to    , _auth_password_uid.usage_count as auth_password_uid_usage_count
+    from auth_password_rule
+    left join auth_password _auth_password_uid on auth_password_rule.auth_password_uid = _auth_password_uid.auth_password_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_permission">
+    select auth_permission.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _auth_role_uid.auth_role_name as auth_role_uid_auth_role_name    , _auth_role_uid.parent_auth_role_uid as auth_role_uid_parent_auth_role_uid    , _auth_role_uid.tenant_uid as auth_role_uid_tenant_uid    , _auth_role_uid.role_description as auth_role_uid_role_description    , _auth_role_uid.access_uris as auth_role_uid_access_uris    , _auth_role_uid.is_project as auth_role_uid_is_project    , _auth_role_uid.is_tenant as auth_role_uid_is_tenant    , _auth_role_uid.is_client as auth_role_uid_is_client    , _auth_role_uid.is_custom as auth_role_uid_is_custom
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    from auth_permission
+    left join tenant _tenant_uid on auth_permission.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_permission.account_uid = _account_uid.account_uid
+    left join auth_role _auth_role_uid on auth_permission.auth_role_uid = _auth_role_uid.auth_role_uid
+    left join client _client_uid on auth_permission.client_uid = _client_uid.client_uid
+    left join project_instance _project_instance_uid on auth_permission.project_instance_uid = _project_instance_uid.project_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_request">
+    select auth_request.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _event_notification_uid.event_notification_name as event_notification_uid_event_notification_name    , _event_notification_uid.tenant_uid as event_notification_uid_tenant_uid    , _event_notification_uid.account_uid as event_notification_uid_account_uid    , _event_notification_uid.notification_type as event_notification_uid_notification_type    , _event_notification_uid.notification_topic as event_notification_uid_notification_topic    , _event_notification_uid.notification_format as event_notification_uid_notification_format    , _event_notification_uid.notification_content as event_notification_uid_notification_content    , _event_notification_uid.sending_status as event_notification_uid_sending_status
+    from auth_request
+    left join tenant _tenant_uid on auth_request.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_request.account_uid = _account_uid.account_uid
+    left join event_notification _event_notification_uid on auth_request.event_notification_uid = _event_notification_uid.event_notification_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_role">
+    select auth_role.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from auth_role
+    left join tenant _tenant_uid on auth_role.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_role_uri">
+    select auth_role_uri.*
+    , _auth_role_uid.auth_role_name as auth_role_uid_auth_role_name    , _auth_role_uid.parent_auth_role_uid as auth_role_uid_parent_auth_role_uid    , _auth_role_uid.tenant_uid as auth_role_uid_tenant_uid    , _auth_role_uid.role_description as auth_role_uid_role_description    , _auth_role_uid.access_uris as auth_role_uid_access_uris    , _auth_role_uid.is_project as auth_role_uid_is_project    , _auth_role_uid.is_tenant as auth_role_uid_is_tenant    , _auth_role_uid.is_client as auth_role_uid_is_client    , _auth_role_uid.is_custom as auth_role_uid_is_custom
+    from auth_role_uri
+    left join auth_role _auth_role_uid on auth_role_uri.auth_role_uid = _auth_role_uid.auth_role_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_session">
+    select auth_session.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from auth_session
+    left join tenant _tenant_uid on auth_session.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_session.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_sso">
+    select auth_sso.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _owner_account_uid.account_name as owner_account_uid_account_name    , _owner_account_uid.tenant_uid as owner_account_uid_tenant_uid    , _owner_account_uid.account_type_uid as owner_account_uid_account_type_uid    , _owner_account_uid.account_title_uid as owner_account_uid_account_title_uid    , _owner_account_uid.account_division_uid as owner_account_uid_account_division_uid    , _owner_account_uid.account_group_uid as owner_account_uid_account_group_uid    , _owner_account_uid.auth_identity_uid as owner_account_uid_auth_identity_uid    , _owner_account_uid.account_email as owner_account_uid_account_email    , _owner_account_uid.display_name as owner_account_uid_display_name    , _owner_account_uid.is_system as owner_account_uid_is_system
+    from auth_sso
+    left join tenant _tenant_uid on auth_sso.tenant_uid = _tenant_uid.tenant_uid
+    left join account _owner_account_uid on auth_sso.owner_account_uid = _owner_account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_auth_token">
+    select auth_token.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from auth_token
+    left join tenant _tenant_uid on auth_token.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on auth_token.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_account">
+    select calendar_account.*
+    , _calendar_account_uid.account_name as calendar_account_uid_account_name    , _calendar_account_uid.tenant_uid as calendar_account_uid_tenant_uid    , _calendar_account_uid.account_type_uid as calendar_account_uid_account_type_uid    , _calendar_account_uid.account_title_uid as calendar_account_uid_account_title_uid    , _calendar_account_uid.account_division_uid as calendar_account_uid_account_division_uid    , _calendar_account_uid.account_group_uid as calendar_account_uid_account_group_uid    , _calendar_account_uid.auth_identity_uid as calendar_account_uid_auth_identity_uid    , _calendar_account_uid.account_email as calendar_account_uid_account_email    , _calendar_account_uid.display_name as calendar_account_uid_display_name    , _calendar_account_uid.is_system as calendar_account_uid_is_system
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _calendar_type_uid.calendar_type_name as calendar_type_uid_calendar_type_name
+    from calendar_account
+    left join account _calendar_account_uid on calendar_account.calendar_account_uid = _calendar_account_uid.account_uid
+    left join tenant _tenant_uid on calendar_account.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on calendar_account.account_uid = _account_uid.account_uid
+    left join calendar_type _calendar_type_uid on calendar_account.calendar_type_uid = _calendar_type_uid.calendar_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_approval">
+    select calendar_approval.*
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _calendar_approval_type_uid.calendar_approval_type_name as calendar_approval_type_uid_calendar_approval_type_name
+    , _calendar_event_group_uid.calendar_event_group_name as calendar_event_group_uid_calendar_event_group_name    , _calendar_event_group_uid.client_uid as calendar_event_group_uid_client_uid    , _calendar_event_group_uid.account_uid as calendar_event_group_uid_account_uid    , _calendar_event_group_uid.calendar_account_uid as calendar_event_group_uid_calendar_account_uid    , _calendar_event_group_uid.calendar_event_type_uid as calendar_event_group_uid_calendar_event_type_uid    , _calendar_event_group_uid.group_comment as calendar_event_group_uid_group_comment    , _calendar_event_group_uid.event_start_date as calendar_event_group_uid_event_start_date    , _calendar_event_group_uid.event_end_date as calendar_event_group_uid_event_end_date    , _calendar_event_group_uid.is_approved as calendar_event_group_uid_is_approved
+    , _calendar_type_uid.calendar_type_name as calendar_type_uid_calendar_type_name
+    from calendar_approval
+    left join client _client_uid on calendar_approval.client_uid = _client_uid.client_uid
+    left join account _account_uid on calendar_approval.account_uid = _account_uid.account_uid
+    left join calendar_approval_type _calendar_approval_type_uid on calendar_approval.calendar_approval_type_uid = _calendar_approval_type_uid.calendar_approval_type_uid
+    left join calendar_event_group _calendar_event_group_uid on calendar_approval.calendar_event_group_uid = _calendar_event_group_uid.calendar_event_group_uid
+    left join calendar_type _calendar_type_uid on calendar_approval.calendar_type_uid = _calendar_type_uid.calendar_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_approval_type">
+    select calendar_approval_type.*
+    from calendar_approval_type
+  </createView>
+
+  <createView  viewName="v_rich_calendar_event">
+    select calendar_event.*
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _calendar_event_group_uid.calendar_event_group_name as calendar_event_group_uid_calendar_event_group_name    , _calendar_event_group_uid.client_uid as calendar_event_group_uid_client_uid    , _calendar_event_group_uid.account_uid as calendar_event_group_uid_account_uid    , _calendar_event_group_uid.calendar_account_uid as calendar_event_group_uid_calendar_account_uid    , _calendar_event_group_uid.calendar_event_type_uid as calendar_event_group_uid_calendar_event_type_uid    , _calendar_event_group_uid.group_comment as calendar_event_group_uid_group_comment    , _calendar_event_group_uid.event_start_date as calendar_event_group_uid_event_start_date    , _calendar_event_group_uid.event_end_date as calendar_event_group_uid_event_end_date    , _calendar_event_group_uid.is_approved as calendar_event_group_uid_is_approved
+    , _calendar_type_uid.calendar_type_name as calendar_type_uid_calendar_type_name
+    from calendar_event
+    left join client _client_uid on calendar_event.client_uid = _client_uid.client_uid
+    left join account _account_uid on calendar_event.account_uid = _account_uid.account_uid
+    left join calendar_event_group _calendar_event_group_uid on calendar_event.calendar_event_group_uid = _calendar_event_group_uid.calendar_event_group_uid
+    left join calendar_type _calendar_type_uid on calendar_event.calendar_type_uid = _calendar_type_uid.calendar_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_event_group">
+    select calendar_event_group.*
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _calendar_account_uid.account_name as calendar_account_uid_account_name    , _calendar_account_uid.tenant_uid as calendar_account_uid_tenant_uid    , _calendar_account_uid.account_type_uid as calendar_account_uid_account_type_uid    , _calendar_account_uid.account_title_uid as calendar_account_uid_account_title_uid    , _calendar_account_uid.account_division_uid as calendar_account_uid_account_division_uid    , _calendar_account_uid.account_group_uid as calendar_account_uid_account_group_uid    , _calendar_account_uid.auth_identity_uid as calendar_account_uid_auth_identity_uid    , _calendar_account_uid.account_email as calendar_account_uid_account_email    , _calendar_account_uid.display_name as calendar_account_uid_display_name    , _calendar_account_uid.is_system as calendar_account_uid_is_system
+    , _calendar_event_type_uid.calendar_event_type_name as calendar_event_type_uid_calendar_event_type_name    , _calendar_event_type_uid.client_uid as calendar_event_type_uid_client_uid    , _calendar_event_type_uid.calendar_type_uid as calendar_event_type_uid_calendar_type_uid    , _calendar_event_type_uid.auto_approved as calendar_event_type_uid_auto_approved
+    from calendar_event_group
+    left join client _client_uid on calendar_event_group.client_uid = _client_uid.client_uid
+    left join account _account_uid on calendar_event_group.account_uid = _account_uid.account_uid
+    left join account _calendar_account_uid on calendar_event_group.calendar_account_uid = _calendar_account_uid.account_uid
+    left join calendar_event_type _calendar_event_type_uid on calendar_event_group.calendar_event_type_uid = _calendar_event_type_uid.calendar_event_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_event_type">
+    select calendar_event_type.*
+    , _calendar_event_type_uid.event_type_name as calendar_event_type_uid_event_type_name    , _calendar_event_type_uid.event_type_description as calendar_event_type_uid_event_type_description
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _calendar_type_uid.calendar_type_name as calendar_type_uid_calendar_type_name
+    from calendar_event_type
+    left join event_type _calendar_event_type_uid on calendar_event_type.calendar_event_type_uid = _calendar_event_type_uid.event_type_uid
+    left join client _client_uid on calendar_event_type.client_uid = _client_uid.client_uid
+    left join calendar_type _calendar_type_uid on calendar_event_type.calendar_type_uid = _calendar_type_uid.calendar_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_calendar_type">
+    select calendar_type.*
+    from calendar_type
+  </createView>
+
+  <createView  viewName="v_rich_client">
+    select client.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _country_uid.country_name as country_uid_country_name    , _country_uid.continent_name as country_uid_continent_name    , _country_uid.continent_code as country_uid_continent_code    , _country_uid.country_iso3 as country_uid_country_iso3    , _country_uid.country_code as country_uid_country_code    , _country_uid.phone_code as country_uid_phone_code    , _country_uid.currency_code as country_uid_currency_code    , _country_uid.capital_name as country_uid_capital_name    , _country_uid.region_name as country_uid_region_name    , _country_uid.subregion_name as country_uid_subregion_name    , _country_uid.region_code as country_uid_region_code    , _country_uid.latitude as country_uid_latitude    , _country_uid.longitude as country_uid_longitude    , _country_uid.currency_name as country_uid_currency_name    , _country_uid.population as country_uid_population    , _country_uid.languages as country_uid_languages    , _country_uid.area as country_uid_area    , _country_uid.bar_code as country_uid_bar_code    , _country_uid.top_level_domain as country_uid_top_level_domain    , _country_uid.is_focused as country_uid_is_focused
+    , _client_type_uid.client_type_name as client_type_uid_client_type_name    , _client_type_uid.client_type_description as client_type_uid_client_type_description
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from client
+    left join tenant _tenant_uid on client.tenant_uid = _tenant_uid.tenant_uid
+    left join country _country_uid on client.country_uid = _country_uid.country_uid
+    left join client_type _client_type_uid on client.client_type_uid = _client_type_uid.client_type_uid
+    left join account _account_uid on client.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_client_account">
+    select client_account.*
+    , _client_account_uid.account_name as client_account_uid_account_name    , _client_account_uid.tenant_uid as client_account_uid_tenant_uid    , _client_account_uid.account_type_uid as client_account_uid_account_type_uid    , _client_account_uid.account_title_uid as client_account_uid_account_title_uid    , _client_account_uid.account_division_uid as client_account_uid_account_division_uid    , _client_account_uid.account_group_uid as client_account_uid_account_group_uid    , _client_account_uid.auth_identity_uid as client_account_uid_auth_identity_uid    , _client_account_uid.account_email as client_account_uid_account_email    , _client_account_uid.display_name as client_account_uid_display_name    , _client_account_uid.is_system as client_account_uid_is_system
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _client_role_uid.client_role_name as client_role_uid_client_role_name    , _client_role_uid.role_description as client_role_uid_role_description
+    from client_account
+    left join account _client_account_uid on client_account.client_account_uid = _client_account_uid.account_uid
+    left join tenant _tenant_uid on client_account.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on client_account.client_uid = _client_uid.client_uid
+    left join account _account_uid on client_account.account_uid = _account_uid.account_uid
+    left join client_role _client_role_uid on client_account.client_role_uid = _client_role_uid.client_role_uid
+  </createView>
+
+  <createView  viewName="v_rich_client_country">
+    select client_country.*
+    , _client_country_uid.country_name as client_country_uid_country_name    , _client_country_uid.continent_name as client_country_uid_continent_name    , _client_country_uid.continent_code as client_country_uid_continent_code    , _client_country_uid.country_iso3 as client_country_uid_country_iso3    , _client_country_uid.country_code as client_country_uid_country_code    , _client_country_uid.phone_code as client_country_uid_phone_code    , _client_country_uid.currency_code as client_country_uid_currency_code    , _client_country_uid.capital_name as client_country_uid_capital_name    , _client_country_uid.region_name as client_country_uid_region_name    , _client_country_uid.subregion_name as client_country_uid_subregion_name    , _client_country_uid.region_code as client_country_uid_region_code    , _client_country_uid.latitude as client_country_uid_latitude    , _client_country_uid.longitude as client_country_uid_longitude    , _client_country_uid.currency_name as client_country_uid_currency_name    , _client_country_uid.population as client_country_uid_population    , _client_country_uid.languages as client_country_uid_languages    , _client_country_uid.area as client_country_uid_area    , _client_country_uid.bar_code as client_country_uid_bar_code    , _client_country_uid.top_level_domain as client_country_uid_top_level_domain    , _client_country_uid.is_focused as client_country_uid_is_focused
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _country_uid.country_name as country_uid_country_name    , _country_uid.continent_name as country_uid_continent_name    , _country_uid.continent_code as country_uid_continent_code    , _country_uid.country_iso3 as country_uid_country_iso3    , _country_uid.country_code as country_uid_country_code    , _country_uid.phone_code as country_uid_phone_code    , _country_uid.currency_code as country_uid_currency_code    , _country_uid.capital_name as country_uid_capital_name    , _country_uid.region_name as country_uid_region_name    , _country_uid.subregion_name as country_uid_subregion_name    , _country_uid.region_code as country_uid_region_code    , _country_uid.latitude as country_uid_latitude    , _country_uid.longitude as country_uid_longitude    , _country_uid.currency_name as country_uid_currency_name    , _country_uid.population as country_uid_population    , _country_uid.languages as country_uid_languages    , _country_uid.area as country_uid_area    , _country_uid.bar_code as country_uid_bar_code    , _country_uid.top_level_domain as country_uid_top_level_domain    , _country_uid.is_focused as country_uid_is_focused
+    from client_country
+    left join country _client_country_uid on client_country.client_country_uid = _client_country_uid.country_uid
+    left join tenant _tenant_uid on client_country.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on client_country.client_uid = _client_uid.client_uid
+    left join country _country_uid on client_country.country_uid = _country_uid.country_uid
+  </createView>
+
+  <createView  viewName="v_rich_client_payment">
+    select client_payment.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _currency_uid.currency_name as currency_uid_currency_name    , _currency_uid.is_focused as currency_uid_is_focused
+    from client_payment
+    left join tenant _tenant_uid on client_payment.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on client_payment.client_uid = _client_uid.client_uid
+    left join account _account_uid on client_payment.account_uid = _account_uid.account_uid
+    left join currency _currency_uid on client_payment.currency_uid = _currency_uid.currency_uid
+  </createView>
+
+  <createView  viewName="v_rich_client_role">
+    select client_role.*
+    from client_role
+  </createView>
+
+  <createView  viewName="v_rich_client_status">
+    select client_status.*
+    from client_status
+  </createView>
+
+  <createView  viewName="v_rich_client_type">
+    select client_type.*
+    from client_type
+  </createView>
+
+  <createView  viewName="v_rich_connection_engine">
+    select connection_engine.*
+    from connection_engine
+  </createView>
+
+  <createView  viewName="v_rich_connection_host">
+    select connection_host.*
+    , _connection_engine_uid.connection_engine_name as connection_engine_uid_connection_engine_name    , _connection_engine_uid.start_date as connection_engine_uid_start_date    , _connection_engine_uid.calls_count as connection_engine_uid_calls_count    , _connection_engine_uid.last_time as connection_engine_uid_last_time    , _connection_engine_uid.host_count as connection_engine_uid_host_count    , _connection_engine_uid.user_count as connection_engine_uid_user_count    , _connection_engine_uid.token_count as connection_engine_uid_token_count
+    from connection_host
+    left join connection_engine _connection_engine_uid on connection_host.connection_engine_uid = _connection_engine_uid.connection_engine_uid
+  </createView>
+
+  <createView  viewName="v_rich_connection_user">
+    select connection_user.*
+    , _connection_engine_uid.connection_engine_name as connection_engine_uid_connection_engine_name    , _connection_engine_uid.start_date as connection_engine_uid_start_date    , _connection_engine_uid.calls_count as connection_engine_uid_calls_count    , _connection_engine_uid.last_time as connection_engine_uid_last_time    , _connection_engine_uid.host_count as connection_engine_uid_host_count    , _connection_engine_uid.user_count as connection_engine_uid_user_count    , _connection_engine_uid.token_count as connection_engine_uid_token_count
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from connection_user
+    left join connection_engine _connection_engine_uid on connection_user.connection_engine_uid = _connection_engine_uid.connection_engine_uid
+    left join account _account_uid on connection_user.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_country">
+    select country.*
+    from country
+  </createView>
+
+  <createView  viewName="v_rich_currency">
+    select currency.*
+    from currency
+  </createView>
+
+  <createView  viewName="v_rich_event_acknowledge">
+    select event_acknowledge.*
+    , _event_notification_uid.event_notification_name as event_notification_uid_event_notification_name    , _event_notification_uid.tenant_uid as event_notification_uid_tenant_uid    , _event_notification_uid.account_uid as event_notification_uid_account_uid    , _event_notification_uid.notification_type as event_notification_uid_notification_type    , _event_notification_uid.notification_topic as event_notification_uid_notification_topic    , _event_notification_uid.notification_format as event_notification_uid_notification_format    , _event_notification_uid.notification_content as event_notification_uid_notification_content    , _event_notification_uid.sending_status as event_notification_uid_sending_status
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from event_acknowledge
+    left join event_notification _event_notification_uid on event_acknowledge.event_notification_uid = _event_notification_uid.event_notification_uid
+    left join tenant _tenant_uid on event_acknowledge.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on event_acknowledge.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_channel">
+    select event_channel.*
+    , _event_channel_type_uid.event_channel_type_name as event_channel_type_uid_event_channel_type_name    , _event_channel_type_uid.channel_type_description as event_channel_type_uid_channel_type_description
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from event_channel
+    left join event_channel_type _event_channel_type_uid on event_channel.event_channel_type_uid = _event_channel_type_uid.event_channel_type_uid
+    left join tenant _tenant_uid on event_channel.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on event_channel.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_channel_type">
+    select event_channel_type.*
+    from event_channel_type
+  </createView>
+
+  <createView  viewName="v_rich_event_instance">
+    select event_instance.*
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    from event_instance
+    left join client _client_uid on event_instance.client_uid = _client_uid.client_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_notification">
+    select event_notification.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from event_notification
+    left join tenant _tenant_uid on event_notification.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on event_notification.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_observer">
+    select event_observer.*
+    from event_observer
+  </createView>
+
+  <createView  viewName="v_rich_event_subscription">
+    select event_subscription.*
+    , _event_channel_uid.event_channel_name as event_channel_uid_event_channel_name    , _event_channel_uid.event_channel_type_uid as event_channel_uid_event_channel_type_uid    , _event_channel_uid.channel_definition as event_channel_uid_channel_definition    , _event_channel_uid.last_status_name as event_channel_uid_last_status_name    , _event_channel_uid.tenant_uid as event_channel_uid_tenant_uid    , _event_channel_uid.account_uid as event_channel_uid_account_uid
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from event_subscription
+    left join event_channel _event_channel_uid on event_subscription.event_channel_uid = _event_channel_uid.event_channel_uid
+    left join tenant _tenant_uid on event_subscription.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on event_subscription.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_template">
+    select event_template.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from event_template
+    left join tenant _tenant_uid on event_template.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_event_type">
+    select event_type.*
+    from event_type
+  </createView>
+
+  <createView  viewName="v_rich_invoice_action">
+    select invoice_action.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _invoice_instance_uid.invoice_instance_name as invoice_instance_uid_invoice_instance_name    , _invoice_instance_uid.tenant_uid as invoice_instance_uid_tenant_uid    , _invoice_instance_uid.account_uid as invoice_instance_uid_account_uid    , _invoice_instance_uid.invoice_flow_uid as invoice_instance_uid_invoice_flow_uid    , _invoice_instance_uid.invoice_status_uid as invoice_instance_uid_invoice_status_uid    , _invoice_instance_uid.invoice_category_uid as invoice_instance_uid_invoice_category_uid    , _invoice_instance_uid.invoice_type_uid as invoice_instance_uid_invoice_type_uid    , _invoice_instance_uid.period_uid as invoice_instance_uid_period_uid    , _invoice_instance_uid.currency_uid as invoice_instance_uid_currency_uid    , _invoice_instance_uid.invoice_number as invoice_instance_uid_invoice_number    , _invoice_instance_uid.invoice_details as invoice_instance_uid_invoice_details    , _invoice_instance_uid.invoice_amount_net as invoice_instance_uid_invoice_amount_net    , _invoice_instance_uid.invoice_amount_tax as invoice_instance_uid_invoice_amount_tax    , _invoice_instance_uid.invoice_amount_gross as invoice_instance_uid_invoice_amount_gross
+    , _invoice_action_type_uid.invoice_action_type_name as invoice_action_type_uid_invoice_action_type_name
+    from invoice_action
+    left join tenant _tenant_uid on invoice_action.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on invoice_action.account_uid = _account_uid.account_uid
+    left join invoice_instance _invoice_instance_uid on invoice_action.invoice_instance_uid = _invoice_instance_uid.invoice_instance_uid
+    left join invoice_action_type _invoice_action_type_uid on invoice_action.invoice_action_type_uid = _invoice_action_type_uid.invoice_action_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_invoice_action_type">
+    select invoice_action_type.*
+    from invoice_action_type
+  </createView>
+
+  <createView  viewName="v_rich_invoice_category">
+    select invoice_category.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from invoice_category
+    left join tenant _tenant_uid on invoice_category.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_invoice_entry">
+    select invoice_entry.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _invoice_instance_uid.invoice_instance_name as invoice_instance_uid_invoice_instance_name    , _invoice_instance_uid.tenant_uid as invoice_instance_uid_tenant_uid    , _invoice_instance_uid.account_uid as invoice_instance_uid_account_uid    , _invoice_instance_uid.invoice_flow_uid as invoice_instance_uid_invoice_flow_uid    , _invoice_instance_uid.invoice_status_uid as invoice_instance_uid_invoice_status_uid    , _invoice_instance_uid.invoice_category_uid as invoice_instance_uid_invoice_category_uid    , _invoice_instance_uid.invoice_type_uid as invoice_instance_uid_invoice_type_uid    , _invoice_instance_uid.period_uid as invoice_instance_uid_period_uid    , _invoice_instance_uid.currency_uid as invoice_instance_uid_currency_uid    , _invoice_instance_uid.invoice_number as invoice_instance_uid_invoice_number    , _invoice_instance_uid.invoice_details as invoice_instance_uid_invoice_details    , _invoice_instance_uid.invoice_amount_net as invoice_instance_uid_invoice_amount_net    , _invoice_instance_uid.invoice_amount_tax as invoice_instance_uid_invoice_amount_tax    , _invoice_instance_uid.invoice_amount_gross as invoice_instance_uid_invoice_amount_gross
+    from invoice_entry
+    left join tenant _tenant_uid on invoice_entry.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on invoice_entry.account_uid = _account_uid.account_uid
+    left join invoice_instance _invoice_instance_uid on invoice_entry.invoice_instance_uid = _invoice_instance_uid.invoice_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_invoice_flow">
+    select invoice_flow.*
+    from invoice_flow
+  </createView>
+
+  <createView  viewName="v_rich_invoice_flow_state">
+    select invoice_flow_state.*
+    , _invoice_flow_uid.invoice_flow_name as invoice_flow_uid_invoice_flow_name    , _invoice_flow_uid.flow_description as invoice_flow_uid_flow_description    , _invoice_flow_uid.flow_definition_json as invoice_flow_uid_flow_definition_json
+    from invoice_flow_state
+    left join invoice_flow _invoice_flow_uid on invoice_flow_state.invoice_flow_uid = _invoice_flow_uid.invoice_flow_uid
+  </createView>
+
+  <createView  viewName="v_rich_invoice_instance">
+    select invoice_instance.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _invoice_flow_uid.invoice_flow_name as invoice_flow_uid_invoice_flow_name    , _invoice_flow_uid.flow_description as invoice_flow_uid_flow_description    , _invoice_flow_uid.flow_definition_json as invoice_flow_uid_flow_definition_json
+    , _invoice_status_uid.invoice_status_name as invoice_status_uid_invoice_status_name    , _invoice_status_uid.status_description as invoice_status_uid_status_description
+    , _invoice_category_uid.invoice_category_name as invoice_category_uid_invoice_category_name    , _invoice_category_uid.tenant_uid as invoice_category_uid_tenant_uid    , _invoice_category_uid.invoice_category_description as invoice_category_uid_invoice_category_description
+    , _invoice_type_uid.invoice_type_name as invoice_type_uid_invoice_type_name
+    , _period_uid.period_name as period_uid_period_name    , _period_uid.period_number as period_uid_period_number    , _period_uid.period_type as period_uid_period_type    , _period_uid.period_start_time as period_uid_period_start_time    , _period_uid.period_end_time as period_uid_period_end_time    , _period_uid.period_year as period_uid_period_year    , _period_uid.period_quarter as period_uid_period_quarter    , _period_uid.period_month as period_uid_period_month    , _period_uid.period_week as period_uid_period_week    , _period_uid.period_day as period_uid_period_day
+    , _currency_uid.currency_name as currency_uid_currency_name    , _currency_uid.is_focused as currency_uid_is_focused
+    from invoice_instance
+    left join tenant _tenant_uid on invoice_instance.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on invoice_instance.account_uid = _account_uid.account_uid
+    left join invoice_flow _invoice_flow_uid on invoice_instance.invoice_flow_uid = _invoice_flow_uid.invoice_flow_uid
+    left join invoice_status _invoice_status_uid on invoice_instance.invoice_status_uid = _invoice_status_uid.invoice_status_uid
+    left join invoice_category _invoice_category_uid on invoice_instance.invoice_category_uid = _invoice_category_uid.invoice_category_uid
+    left join invoice_type _invoice_type_uid on invoice_instance.invoice_type_uid = _invoice_type_uid.invoice_type_uid
+    left join period _period_uid on invoice_instance.period_uid = _period_uid.period_uid
+    left join currency _currency_uid on invoice_instance.currency_uid = _currency_uid.currency_uid
+  </createView>
+
+  <createView  viewName="v_rich_invoice_status">
+    select invoice_status.*
+    from invoice_status
+  </createView>
+
+  <createView  viewName="v_rich_invoice_type">
+    select invoice_type.*
+    from invoice_type
+  </createView>
+
+  <createView  viewName="v_rich_monitor">
+    select monitor.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _monitor_type_uid.monitor_type_name as monitor_type_uid_monitor_type_name    , _monitor_type_uid.class_name as monitor_type_uid_class_name    , _monitor_type_uid.parameters_json as monitor_type_uid_parameters_json
+    from monitor
+    left join tenant _tenant_uid on monitor.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on monitor.account_uid = _account_uid.account_uid
+    left join monitor_type _monitor_type_uid on monitor.monitor_type_uid = _monitor_type_uid.monitor_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_monitor_run">
+    select monitor_run.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _monitor_uid.monitor_name as monitor_uid_monitor_name    , _monitor_uid.tenant_uid as monitor_uid_tenant_uid    , _monitor_uid.account_uid as monitor_uid_account_uid    , _monitor_uid.monitor_type_uid as monitor_uid_monitor_type_uid    , _monitor_uid.schedule_expression as monitor_uid_schedule_expression    , _monitor_uid.monitor_protocol as monitor_uid_monitor_protocol    , _monitor_uid.monitor_url as monitor_uid_monitor_url    , _monitor_uid.monitor_user as monitor_uid_monitor_user    , _monitor_uid.monitor_priority as monitor_uid_monitor_priority    , _monitor_uid.is_on_hold as monitor_uid_is_on_hold    , _monitor_uid.last_status_name as monitor_uid_last_status_name    , _monitor_uid.last_run_time as monitor_uid_last_run_time    , _monitor_uid.last_exception_message as monitor_uid_last_exception_message
+    from monitor_run
+    left join tenant _tenant_uid on monitor_run.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on monitor_run.account_uid = _account_uid.account_uid
+    left join monitor _monitor_uid on monitor_run.monitor_uid = _monitor_uid.monitor_uid
+  </createView>
+
+  <createView  viewName="v_rich_monitor_type">
+    select monitor_type.*
+    from monitor_type
+  </createView>
+
+  <createView  viewName="v_rich_period">
+    select period.*
+    from period
+  </createView>
+
+  <createView  viewName="v_rich_process">
+    select process.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _process_type_uid.process_type_name as process_type_uid_process_type_name    , _process_type_uid.class_name as process_type_uid_class_name
+    from process
+    left join tenant _tenant_uid on process.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on process.account_uid = _account_uid.account_uid
+    left join process_type _process_type_uid on process.process_type_uid = _process_type_uid.process_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_process_run">
+    select process_run.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _process_uid.process_name as process_uid_process_name    , _process_uid.tenant_uid as process_uid_tenant_uid    , _process_uid.account_uid as process_uid_account_uid    , _process_uid.process_type_uid as process_uid_process_type_uid
+    from process_run
+    left join tenant _tenant_uid on process_run.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on process_run.account_uid = _account_uid.account_uid
+    left join process _process_uid on process_run.process_uid = _process_uid.process_uid
+  </createView>
+
+  <createView  viewName="v_rich_process_type">
+    select process_type.*
+    from process_type
+  </createView>
+
+  <createView  viewName="v_rich_project_account">
+    select project_account.*
+    , _project_account_uid.account_name as project_account_uid_account_name    , _project_account_uid.tenant_uid as project_account_uid_tenant_uid    , _project_account_uid.account_type_uid as project_account_uid_account_type_uid    , _project_account_uid.account_title_uid as project_account_uid_account_title_uid    , _project_account_uid.account_division_uid as project_account_uid_account_division_uid    , _project_account_uid.account_group_uid as project_account_uid_account_group_uid    , _project_account_uid.auth_identity_uid as project_account_uid_auth_identity_uid    , _project_account_uid.account_email as project_account_uid_account_email    , _project_account_uid.display_name as project_account_uid_display_name    , _project_account_uid.is_system as project_account_uid_is_system
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    from project_account
+    left join account _project_account_uid on project_account.project_account_uid = _project_account_uid.account_uid
+    left join tenant _tenant_uid on project_account.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on project_account.client_uid = _client_uid.client_uid
+    left join account _account_uid on project_account.account_uid = _account_uid.account_uid
+    left join project_instance _project_instance_uid on project_account.project_instance_uid = _project_instance_uid.project_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_project_budget">
+    select project_budget.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    , _currency_uid.currency_name as currency_uid_currency_name    , _currency_uid.is_focused as currency_uid_is_focused
+    from project_budget
+    left join tenant _tenant_uid on project_budget.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on project_budget.client_uid = _client_uid.client_uid
+    left join project_instance _project_instance_uid on project_budget.project_instance_uid = _project_instance_uid.project_instance_uid
+    left join currency _currency_uid on project_budget.currency_uid = _currency_uid.currency_uid
+  </createView>
+
+  <createView  viewName="v_rich_project_group">
+    select project_group.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from project_group
+    left join tenant _tenant_uid on project_group.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_project_instance">
+    select project_instance.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _project_type_uid.project_type_name as project_type_uid_project_type_name    , _project_type_uid.project_type_description as project_type_uid_project_type_description
+    , _manager_account_uid.account_name as manager_account_uid_account_name    , _manager_account_uid.tenant_uid as manager_account_uid_tenant_uid    , _manager_account_uid.account_type_uid as manager_account_uid_account_type_uid    , _manager_account_uid.account_title_uid as manager_account_uid_account_title_uid    , _manager_account_uid.account_division_uid as manager_account_uid_account_division_uid    , _manager_account_uid.account_group_uid as manager_account_uid_account_group_uid    , _manager_account_uid.auth_identity_uid as manager_account_uid_auth_identity_uid    , _manager_account_uid.account_email as manager_account_uid_account_email    , _manager_account_uid.display_name as manager_account_uid_display_name    , _manager_account_uid.is_system as manager_account_uid_is_system
+    , _project_group_uid.project_group_name as project_group_uid_project_group_name    , _project_group_uid.tenant_uid as project_group_uid_tenant_uid    , _project_group_uid.project_group_description as project_group_uid_project_group_description
+    from project_instance
+    left join tenant _tenant_uid on project_instance.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on project_instance.client_uid = _client_uid.client_uid
+    left join project_type _project_type_uid on project_instance.project_type_uid = _project_type_uid.project_type_uid
+    left join account _manager_account_uid on project_instance.manager_account_uid = _manager_account_uid.account_uid
+    left join project_group _project_group_uid on project_instance.project_group_uid = _project_group_uid.project_group_uid
+  </createView>
+
+  <createView  viewName="v_rich_project_milestone">
+    select project_milestone.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _client_uid.client_name as client_uid_client_name    , _client_uid.tenant_uid as client_uid_tenant_uid    , _client_uid.country_uid as client_uid_country_uid    , _client_uid.client_type_uid as client_uid_client_type_uid    , _client_uid.client_category_uid as client_uid_client_category_uid    , _client_uid.account_uid as client_uid_account_uid    , _client_uid.client_code as client_uid_client_code    , _client_uid.client_description as client_uid_client_description    , _client_uid.start_date as client_uid_start_date    , _client_uid.end_date as client_uid_end_date    , _client_uid.is_internal as client_uid_is_internal    , _client_uid.is_system as client_uid_is_system    , _client_uid.is_test as client_uid_is_test
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    , _project_budget_uid.project_budget_name as project_budget_uid_project_budget_name    , _project_budget_uid.tenant_uid as project_budget_uid_tenant_uid    , _project_budget_uid.client_uid as project_budget_uid_client_uid    , _project_budget_uid.project_instance_uid as project_budget_uid_project_instance_uid    , _project_budget_uid.currency_uid as project_budget_uid_currency_uid    , _project_budget_uid.budget_value as project_budget_uid_budget_value    , _project_budget_uid.is_approved as project_budget_uid_is_approved    , _project_budget_uid.is_current as project_budget_uid_is_current
+    from project_milestone
+    left join tenant _tenant_uid on project_milestone.tenant_uid = _tenant_uid.tenant_uid
+    left join client _client_uid on project_milestone.client_uid = _client_uid.client_uid
+    left join project_instance _project_instance_uid on project_milestone.project_instance_uid = _project_instance_uid.project_instance_uid
+    left join project_budget _project_budget_uid on project_milestone.project_budget_uid = _project_budget_uid.project_budget_uid
+  </createView>
+
+  <createView  viewName="v_rich_project_type">
+    select project_type.*
+    from project_type
+  </createView>
+
+  <createView  viewName="v_rich_report">
+    select report.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _report_status_uid.report_status_name as report_status_uid_report_status_name
+    from report
+    left join tenant _tenant_uid on report.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on report.account_uid = _account_uid.account_uid
+    left join report_status _report_status_uid on report.report_status_uid = _report_status_uid.report_status_uid
+  </createView>
+
+  <createView  viewName="v_rich_report_content_type">
+    select report_content_type.*
+    from report_content_type
+  </createView>
+
+  <createView  viewName="v_rich_report_format">
+    select report_format.*
+    from report_format
+  </createView>
+
+  <createView  viewName="v_rich_report_run">
+    select report_run.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _report_uid.report_name as report_uid_report_name    , _report_uid.tenant_uid as report_uid_tenant_uid    , _report_uid.account_uid as report_uid_account_uid    , _report_uid.report_status_uid as report_uid_report_status_uid    , _report_uid.report_query as report_uid_report_query    , _report_uid.report_parameters as report_uid_report_parameters
+    , _report_format_uid.report_format_name as report_format_uid_report_format_name
+    , _report_status_uid.report_status_name as report_status_uid_report_status_name
+    , _report_content_type_uid.report_content_type_name as report_content_type_uid_report_content_type_name
+    from report_run
+    left join tenant _tenant_uid on report_run.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on report_run.account_uid = _account_uid.account_uid
+    left join report _report_uid on report_run.report_uid = _report_uid.report_uid
+    left join report_format _report_format_uid on report_run.report_format_uid = _report_format_uid.report_format_uid
+    left join report_status _report_status_uid on report_run.report_status_uid = _report_status_uid.report_status_uid
+    left join report_content_type _report_content_type_uid on report_run.report_content_type_uid = _report_content_type_uid.report_content_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_report_status">
+    select report_status.*
+    from report_status
+  </createView>
+
+  <createView  viewName="v_rich_report_type">
+    select report_type.*
+    from report_type
+  </createView>
+
+  <createView  viewName="v_rich_storage">
+    select storage.*
+    from storage
+  </createView>
+
+  <createView  viewName="v_rich_storage_connection">
+    select storage_connection.*
+    , _storage_uid.storage_name as storage_uid_storage_name    , _storage_uid.storage_class as storage_uid_storage_class    , _storage_uid.storage_parameters_json as storage_uid_storage_parameters_json
+    from storage_connection
+    left join storage _storage_uid on storage_connection.storage_uid = _storage_uid.storage_uid
+  </createView>
+
+  <createView  viewName="v_rich_storage_query">
+    select storage_query.*
+    , _storage_connection_uid.storage_connection_name as storage_connection_uid_storage_connection_name    , _storage_connection_uid.storage_uid as storage_connection_uid_storage_uid    , _storage_connection_uid.connection_type as storage_connection_uid_connection_type    , _storage_connection_uid.storage_parameters_json as storage_connection_uid_storage_parameters_json
+    , _storage_uid.storage_name as storage_uid_storage_name    , _storage_uid.storage_class as storage_uid_storage_class    , _storage_uid.storage_parameters_json as storage_uid_storage_parameters_json
+    from storage_query
+    left join storage_connection _storage_connection_uid on storage_query.storage_connection_uid = _storage_connection_uid.storage_connection_uid
+    left join storage _storage_uid on storage_query.storage_uid = _storage_uid.storage_uid
+  </createView>
+
+  <createView  viewName="v_rich_storage_type">
+    select storage_type.*
+    from storage_type
+  </createView>
+
+  <createView  viewName="v_rich_synchronization">
+    select synchronization.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _synchronization_type_uid.synchronization_type_name as synchronization_type_uid_synchronization_type_name    , _synchronization_type_uid.sync_type as synchronization_type_uid_sync_type    , _synchronization_type_uid.sync_class_came as synchronization_type_uid_sync_class_came
+    , _storage_uid.storage_name as storage_uid_storage_name    , _storage_uid.storage_class as storage_uid_storage_class    , _storage_uid.storage_parameters_json as storage_uid_storage_parameters_json
+    from synchronization
+    left join tenant _tenant_uid on synchronization.tenant_uid = _tenant_uid.tenant_uid
+    left join synchronization_type _synchronization_type_uid on synchronization.synchronization_type_uid = _synchronization_type_uid.synchronization_type_uid
+    left join storage _storage_uid on synchronization.storage_uid = _storage_uid.storage_uid
+  </createView>
+
+  <createView  viewName="v_rich_synchronization_run">
+    select synchronization_run.*
+    , _synchronization_uid.synchronization_name as synchronization_uid_synchronization_name    , _synchronization_uid.tenant_uid as synchronization_uid_tenant_uid    , _synchronization_uid.synchronization_type_uid as synchronization_uid_synchronization_type_uid    , _synchronization_uid.storage_uid as synchronization_uid_storage_uid    , _synchronization_uid.sync_expression as synchronization_uid_sync_expression    , _synchronization_uid.sync_query as synchronization_uid_sync_query    , _synchronization_uid.sync_definition as synchronization_uid_sync_definition    , _synchronization_uid.sync_priority as synchronization_uid_sync_priority    , _synchronization_uid.last_run_date as synchronization_uid_last_run_date    , _synchronization_uid.last_run_seconds as synchronization_uid_last_run_seconds
+    from synchronization_run
+    left join synchronization _synchronization_uid on synchronization_run.synchronization_uid = _synchronization_uid.synchronization_uid
+  </createView>
+
+  <createView  viewName="v_rich_synchronization_type">
+    select synchronization_type.*
+    from synchronization_type
+  </createView>
+
+  <createView  viewName="v_rich_system_attribute">
+    select system_attribute.*
+    , _system_object_uid.system_object_name as system_object_uid_system_object_name    , _system_object_uid.system_version_uid as system_object_uid_system_version_uid    , _system_object_uid.system_table_uid as system_object_uid_system_table_uid    , _system_object_uid.system_object_type_uid as system_object_uid_system_object_type_uid    , _system_object_uid.parent_system_object_uid as system_object_uid_parent_system_object_uid    , _system_object_uid.object_type as system_object_uid_object_type
+    from system_attribute
+    left join system_object _system_object_uid on system_attribute.system_object_uid = _system_object_uid.system_object_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_database">
+    select system_database.*
+    from system_database
+  </createView>
+
+  <createView  viewName="v_rich_system_exception">
+    select system_exception.*
+    from system_exception
+  </createView>
+
+  <createView  viewName="v_rich_system_instance">
+    select system_instance.*
+    , _system_version_uid.system_version_name as system_version_uid_system_version_name    , _system_version_uid.version_description as system_version_uid_version_description
+    from system_instance
+    left join system_version _system_version_uid on system_instance.system_version_uid = _system_version_uid.system_version_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_license">
+    select system_license.*
+    from system_license
+  </createView>
+
+  <createView  viewName="v_rich_system_lock">
+    select system_lock.*
+    , _lock_account_uid.account_name as lock_account_uid_account_name    , _lock_account_uid.tenant_uid as lock_account_uid_tenant_uid    , _lock_account_uid.account_type_uid as lock_account_uid_account_type_uid    , _lock_account_uid.account_title_uid as lock_account_uid_account_title_uid    , _lock_account_uid.account_division_uid as lock_account_uid_account_division_uid    , _lock_account_uid.account_group_uid as lock_account_uid_account_group_uid    , _lock_account_uid.auth_identity_uid as lock_account_uid_auth_identity_uid    , _lock_account_uid.account_email as lock_account_uid_account_email    , _lock_account_uid.display_name as lock_account_uid_display_name    , _lock_account_uid.is_system as lock_account_uid_is_system
+    from system_lock
+    left join account _lock_account_uid on system_lock.lock_account_uid = _lock_account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_module">
+    select system_module.*
+    from system_module
+  </createView>
+
+  <createView  viewName="v_rich_system_object">
+    select system_object.*
+    , _system_version_uid.system_version_name as system_version_uid_system_version_name    , _system_version_uid.version_description as system_version_uid_version_description
+    , _system_table_uid.system_table_name as system_table_uid_system_table_name    , _system_table_uid.parent_system_table_uid as system_table_uid_parent_system_table_uid    , _system_table_uid.key_name as system_table_uid_key_name    , _system_table_uid.table_code as system_table_uid_table_code    , _system_table_uid.table_comment as system_table_uid_table_comment
+    , _system_object_type_uid.system_object_type_name as system_object_type_uid_system_object_type_name    , _system_object_type_uid.object_type_description as system_object_type_uid_object_type_description
+    from system_object
+    left join system_version _system_version_uid on system_object.system_version_uid = _system_version_uid.system_version_uid
+    left join system_table _system_table_uid on system_object.system_table_uid = _system_table_uid.system_table_uid
+    left join system_object_type _system_object_type_uid on system_object.system_object_type_uid = _system_object_type_uid.system_object_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_object_type">
+    select system_object_type.*
+    from system_object_type
+  </createView>
+
+  <createView  viewName="v_rich_system_query">
+    select system_query.*
+    from system_query
+  </createView>
+
+  <createView  viewName="v_rich_system_request">
+    select system_request.*
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from system_request
+    left join account _account_uid on system_request.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_setting">
+    select system_setting.*
+    from system_setting
+  </createView>
+
+  <createView  viewName="v_rich_system_setting_account">
+    select system_setting_account.*
+    , _system_setting_account_uid.account_name as system_setting_account_uid_account_name    , _system_setting_account_uid.tenant_uid as system_setting_account_uid_tenant_uid    , _system_setting_account_uid.account_type_uid as system_setting_account_uid_account_type_uid    , _system_setting_account_uid.account_title_uid as system_setting_account_uid_account_title_uid    , _system_setting_account_uid.account_division_uid as system_setting_account_uid_account_division_uid    , _system_setting_account_uid.account_group_uid as system_setting_account_uid_account_group_uid    , _system_setting_account_uid.auth_identity_uid as system_setting_account_uid_auth_identity_uid    , _system_setting_account_uid.account_email as system_setting_account_uid_account_email    , _system_setting_account_uid.display_name as system_setting_account_uid_display_name    , _system_setting_account_uid.is_system as system_setting_account_uid_is_system
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from system_setting_account
+    left join account _system_setting_account_uid on system_setting_account.system_setting_account_uid = _system_setting_account_uid.account_uid
+    left join account _account_uid on system_setting_account.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_system_state">
+    select system_state.*
+    from system_state
+  </createView>
+
+  <createView  viewName="v_rich_system_table">
+    select system_table.*
+    from system_table
+  </createView>
+
+  <createView  viewName="v_rich_system_thread">
+    select system_thread.*
+    from system_thread
+  </createView>
+
+  <createView  viewName="v_rich_system_version">
+    select system_version.*
+    from system_version
+  </createView>
+
+  <createView  viewName="v_rich_tenant">
+    select tenant.*
+    , _country_uid.country_name as country_uid_country_name    , _country_uid.continent_name as country_uid_continent_name    , _country_uid.continent_code as country_uid_continent_code    , _country_uid.country_iso3 as country_uid_country_iso3    , _country_uid.country_code as country_uid_country_code    , _country_uid.phone_code as country_uid_phone_code    , _country_uid.currency_code as country_uid_currency_code    , _country_uid.capital_name as country_uid_capital_name    , _country_uid.region_name as country_uid_region_name    , _country_uid.subregion_name as country_uid_subregion_name    , _country_uid.region_code as country_uid_region_code    , _country_uid.latitude as country_uid_latitude    , _country_uid.longitude as country_uid_longitude    , _country_uid.currency_name as country_uid_currency_name    , _country_uid.population as country_uid_population    , _country_uid.languages as country_uid_languages    , _country_uid.area as country_uid_area    , _country_uid.bar_code as country_uid_bar_code    , _country_uid.top_level_domain as country_uid_top_level_domain    , _country_uid.is_focused as country_uid_is_focused
+    , _tenant_type_uid.tenant_type_name as tenant_type_uid_tenant_type_name    , _tenant_type_uid.tenant_type_description as tenant_type_uid_tenant_type_description
+    , _tenant_category_uid.tenant_category_name as tenant_category_uid_tenant_category_name    , _tenant_category_uid.tenant_category_description as tenant_category_uid_tenant_category_description
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    from tenant
+    left join country _country_uid on tenant.country_uid = _country_uid.country_uid
+    left join tenant_type _tenant_type_uid on tenant.tenant_type_uid = _tenant_type_uid.tenant_type_uid
+    left join tenant_category _tenant_category_uid on tenant.tenant_category_uid = _tenant_category_uid.tenant_category_uid
+    left join account _account_uid on tenant.account_uid = _account_uid.account_uid
+  </createView>
+
+  <createView  viewName="v_rich_tenant_account">
+    select tenant_account.*
+    , _tenant_account_uid.account_name as tenant_account_uid_account_name    , _tenant_account_uid.tenant_uid as tenant_account_uid_tenant_uid    , _tenant_account_uid.account_type_uid as tenant_account_uid_account_type_uid    , _tenant_account_uid.account_title_uid as tenant_account_uid_account_title_uid    , _tenant_account_uid.account_division_uid as tenant_account_uid_account_division_uid    , _tenant_account_uid.account_group_uid as tenant_account_uid_account_group_uid    , _tenant_account_uid.auth_identity_uid as tenant_account_uid_auth_identity_uid    , _tenant_account_uid.account_email as tenant_account_uid_account_email    , _tenant_account_uid.display_name as tenant_account_uid_display_name    , _tenant_account_uid.is_system as tenant_account_uid_is_system
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _tenant_role_uid.tenant_role_name as tenant_role_uid_tenant_role_name    , _tenant_role_uid.role_description as tenant_role_uid_role_description
+    from tenant_account
+    left join account _tenant_account_uid on tenant_account.tenant_account_uid = _tenant_account_uid.account_uid
+    left join tenant _tenant_uid on tenant_account.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on tenant_account.account_uid = _account_uid.account_uid
+    left join tenant_role _tenant_role_uid on tenant_account.tenant_role_uid = _tenant_role_uid.tenant_role_uid
+  </createView>
+
+  <createView  viewName="v_rich_tenant_category">
+    select tenant_category.*
+    from tenant_category
+  </createView>
+
+  <createView  viewName="v_rich_tenant_country">
+    select tenant_country.*
+    , _tenant_country_uid.country_name as tenant_country_uid_country_name    , _tenant_country_uid.continent_name as tenant_country_uid_continent_name    , _tenant_country_uid.continent_code as tenant_country_uid_continent_code    , _tenant_country_uid.country_iso3 as tenant_country_uid_country_iso3    , _tenant_country_uid.country_code as tenant_country_uid_country_code    , _tenant_country_uid.phone_code as tenant_country_uid_phone_code    , _tenant_country_uid.currency_code as tenant_country_uid_currency_code    , _tenant_country_uid.capital_name as tenant_country_uid_capital_name    , _tenant_country_uid.region_name as tenant_country_uid_region_name    , _tenant_country_uid.subregion_name as tenant_country_uid_subregion_name    , _tenant_country_uid.region_code as tenant_country_uid_region_code    , _tenant_country_uid.latitude as tenant_country_uid_latitude    , _tenant_country_uid.longitude as tenant_country_uid_longitude    , _tenant_country_uid.currency_name as tenant_country_uid_currency_name    , _tenant_country_uid.population as tenant_country_uid_population    , _tenant_country_uid.languages as tenant_country_uid_languages    , _tenant_country_uid.area as tenant_country_uid_area    , _tenant_country_uid.bar_code as tenant_country_uid_bar_code    , _tenant_country_uid.top_level_domain as tenant_country_uid_top_level_domain    , _tenant_country_uid.is_focused as tenant_country_uid_is_focused
+    , _country_uid.country_name as country_uid_country_name    , _country_uid.continent_name as country_uid_continent_name    , _country_uid.continent_code as country_uid_continent_code    , _country_uid.country_iso3 as country_uid_country_iso3    , _country_uid.country_code as country_uid_country_code    , _country_uid.phone_code as country_uid_phone_code    , _country_uid.currency_code as country_uid_currency_code    , _country_uid.capital_name as country_uid_capital_name    , _country_uid.region_name as country_uid_region_name    , _country_uid.subregion_name as country_uid_subregion_name    , _country_uid.region_code as country_uid_region_code    , _country_uid.latitude as country_uid_latitude    , _country_uid.longitude as country_uid_longitude    , _country_uid.currency_name as country_uid_currency_name    , _country_uid.population as country_uid_population    , _country_uid.languages as country_uid_languages    , _country_uid.area as country_uid_area    , _country_uid.bar_code as country_uid_bar_code    , _country_uid.top_level_domain as country_uid_top_level_domain    , _country_uid.is_focused as country_uid_is_focused
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    from tenant_country
+    left join country _tenant_country_uid on tenant_country.tenant_country_uid = _tenant_country_uid.country_uid
+    left join country _country_uid on tenant_country.country_uid = _country_uid.country_uid
+    left join tenant _tenant_uid on tenant_country.tenant_uid = _tenant_uid.tenant_uid
+  </createView>
+
+  <createView  viewName="v_rich_tenant_license">
+    select tenant_license.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _system_license_uid.system_license_name as system_license_uid_system_license_name    , _system_license_uid.license_description as system_license_uid_license_description
+    from tenant_license
+    left join tenant _tenant_uid on tenant_license.tenant_uid = _tenant_uid.tenant_uid
+    left join system_license _system_license_uid on tenant_license.system_license_uid = _system_license_uid.system_license_uid
+  </createView>
+
+  <createView  viewName="v_rich_tenant_payment">
+    select tenant_payment.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _currency_uid.currency_name as currency_uid_currency_name    , _currency_uid.is_focused as currency_uid_is_focused
+    , _tenant_payment_type_uid.tenant_payment_type_name as tenant_payment_type_uid_tenant_payment_type_name
+    from tenant_payment
+    left join tenant _tenant_uid on tenant_payment.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on tenant_payment.account_uid = _account_uid.account_uid
+    left join currency _currency_uid on tenant_payment.currency_uid = _currency_uid.currency_uid
+    left join tenant_payment_type _tenant_payment_type_uid on tenant_payment.tenant_payment_type_uid = _tenant_payment_type_uid.tenant_payment_type_uid
+  </createView>
+
+  <createView  viewName="v_rich_tenant_payment_type">
+    select tenant_payment_type.*
+    from tenant_payment_type
+  </createView>
+
+  <createView  viewName="v_rich_tenant_role">
+    select tenant_role.*
+    from tenant_role
+  </createView>
+
+  <createView  viewName="v_rich_tenant_status">
+    select tenant_status.*
+    from tenant_status
+  </createView>
+
+  <createView  viewName="v_rich_tenant_type">
+    select tenant_type.*
+    from tenant_type
+  </createView>
+
+  <createView  viewName="v_rich_time_approval">
+    select time_approval.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _time_entry_uid.time_entry_name as time_entry_uid_time_entry_name    , _time_entry_uid.time_submit_uid as time_entry_uid_time_submit_uid    , _time_entry_uid.tenant_uid as time_entry_uid_tenant_uid    , _time_entry_uid.account_uid as time_entry_uid_account_uid    , _time_entry_uid.project_instance_uid as time_entry_uid_project_instance_uid    , _time_entry_uid.project_milestone_uid as time_entry_uid_project_milestone_uid    , _time_entry_uid.period_uid as time_entry_uid_period_uid    , _time_entry_uid.invoice_instance_uid as time_entry_uid_invoice_instance_uid    , _time_entry_uid.entry_period as time_entry_uid_entry_period    , _time_entry_uid.entry_note as time_entry_uid_entry_note    , _time_entry_uid.lock_row as time_entry_uid_lock_row    , _time_entry_uid.start_date as time_entry_uid_start_date    , _time_entry_uid.end_date as time_entry_uid_end_date    , _time_entry_uid.entry_minutes as time_entry_uid_entry_minutes    , _time_entry_uid.is_approved as time_entry_uid_is_approved
+    from time_approval
+    left join tenant _tenant_uid on time_approval.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on time_approval.account_uid = _account_uid.account_uid
+    left join time_entry _time_entry_uid on time_approval.time_entry_uid = _time_entry_uid.time_entry_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_entry">
+    select time_entry.*
+    , _time_submit_uid.time_submit_name as time_submit_uid_time_submit_name    , _time_submit_uid.tenant_uid as time_submit_uid_tenant_uid    , _time_submit_uid.account_uid as time_submit_uid_account_uid    , _time_submit_uid.period_uid as time_submit_uid_period_uid    , _time_submit_uid.time_submit_description as time_submit_uid_time_submit_description
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    , _project_milestone_uid.project_milestone_name as project_milestone_uid_project_milestone_name    , _project_milestone_uid.tenant_uid as project_milestone_uid_tenant_uid    , _project_milestone_uid.client_uid as project_milestone_uid_client_uid    , _project_milestone_uid.project_instance_uid as project_milestone_uid_project_instance_uid    , _project_milestone_uid.project_budget_uid as project_milestone_uid_project_budget_uid    , _project_milestone_uid.start_date as project_milestone_uid_start_date    , _project_milestone_uid.end_date as project_milestone_uid_end_date    , _project_milestone_uid.status_name as project_milestone_uid_status_name
+    , _period_uid.period_name as period_uid_period_name    , _period_uid.period_number as period_uid_period_number    , _period_uid.period_type as period_uid_period_type    , _period_uid.period_start_time as period_uid_period_start_time    , _period_uid.period_end_time as period_uid_period_end_time    , _period_uid.period_year as period_uid_period_year    , _period_uid.period_quarter as period_uid_period_quarter    , _period_uid.period_month as period_uid_period_month    , _period_uid.period_week as period_uid_period_week    , _period_uid.period_day as period_uid_period_day
+    , _invoice_instance_uid.invoice_instance_name as invoice_instance_uid_invoice_instance_name    , _invoice_instance_uid.tenant_uid as invoice_instance_uid_tenant_uid    , _invoice_instance_uid.account_uid as invoice_instance_uid_account_uid    , _invoice_instance_uid.invoice_flow_uid as invoice_instance_uid_invoice_flow_uid    , _invoice_instance_uid.invoice_status_uid as invoice_instance_uid_invoice_status_uid    , _invoice_instance_uid.invoice_category_uid as invoice_instance_uid_invoice_category_uid    , _invoice_instance_uid.invoice_type_uid as invoice_instance_uid_invoice_type_uid    , _invoice_instance_uid.period_uid as invoice_instance_uid_period_uid    , _invoice_instance_uid.currency_uid as invoice_instance_uid_currency_uid    , _invoice_instance_uid.invoice_number as invoice_instance_uid_invoice_number    , _invoice_instance_uid.invoice_details as invoice_instance_uid_invoice_details    , _invoice_instance_uid.invoice_amount_net as invoice_instance_uid_invoice_amount_net    , _invoice_instance_uid.invoice_amount_tax as invoice_instance_uid_invoice_amount_tax    , _invoice_instance_uid.invoice_amount_gross as invoice_instance_uid_invoice_amount_gross
+    from time_entry
+    left join time_submit _time_submit_uid on time_entry.time_submit_uid = _time_submit_uid.time_submit_uid
+    left join tenant _tenant_uid on time_entry.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on time_entry.account_uid = _account_uid.account_uid
+    left join project_instance _project_instance_uid on time_entry.project_instance_uid = _project_instance_uid.project_instance_uid
+    left join project_milestone _project_milestone_uid on time_entry.project_milestone_uid = _project_milestone_uid.project_milestone_uid
+    left join period _period_uid on time_entry.period_uid = _period_uid.period_uid
+    left join invoice_instance _invoice_instance_uid on time_entry.invoice_instance_uid = _invoice_instance_uid.invoice_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_entry_final">
+    select time_entry_final.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    , _project_milestone_uid.project_milestone_name as project_milestone_uid_project_milestone_name    , _project_milestone_uid.tenant_uid as project_milestone_uid_tenant_uid    , _project_milestone_uid.client_uid as project_milestone_uid_client_uid    , _project_milestone_uid.project_instance_uid as project_milestone_uid_project_instance_uid    , _project_milestone_uid.project_budget_uid as project_milestone_uid_project_budget_uid    , _project_milestone_uid.start_date as project_milestone_uid_start_date    , _project_milestone_uid.end_date as project_milestone_uid_end_date    , _project_milestone_uid.status_name as project_milestone_uid_status_name
+    , _invoice_instance_uid.invoice_instance_name as invoice_instance_uid_invoice_instance_name    , _invoice_instance_uid.tenant_uid as invoice_instance_uid_tenant_uid    , _invoice_instance_uid.account_uid as invoice_instance_uid_account_uid    , _invoice_instance_uid.invoice_flow_uid as invoice_instance_uid_invoice_flow_uid    , _invoice_instance_uid.invoice_status_uid as invoice_instance_uid_invoice_status_uid    , _invoice_instance_uid.invoice_category_uid as invoice_instance_uid_invoice_category_uid    , _invoice_instance_uid.invoice_type_uid as invoice_instance_uid_invoice_type_uid    , _invoice_instance_uid.period_uid as invoice_instance_uid_period_uid    , _invoice_instance_uid.currency_uid as invoice_instance_uid_currency_uid    , _invoice_instance_uid.invoice_number as invoice_instance_uid_invoice_number    , _invoice_instance_uid.invoice_details as invoice_instance_uid_invoice_details    , _invoice_instance_uid.invoice_amount_net as invoice_instance_uid_invoice_amount_net    , _invoice_instance_uid.invoice_amount_tax as invoice_instance_uid_invoice_amount_tax    , _invoice_instance_uid.invoice_amount_gross as invoice_instance_uid_invoice_amount_gross
+    from time_entry_final
+    left join tenant _tenant_uid on time_entry_final.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on time_entry_final.account_uid = _account_uid.account_uid
+    left join project_instance _project_instance_uid on time_entry_final.project_instance_uid = _project_instance_uid.project_instance_uid
+    left join project_milestone _project_milestone_uid on time_entry_final.project_milestone_uid = _project_milestone_uid.project_milestone_uid
+    left join invoice_instance _invoice_instance_uid on time_entry_final.invoice_instance_uid = _invoice_instance_uid.invoice_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_entry_invoice">
+    select time_entry_invoice.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _time_submit_uid.time_submit_name as time_submit_uid_time_submit_name    , _time_submit_uid.tenant_uid as time_submit_uid_tenant_uid    , _time_submit_uid.account_uid as time_submit_uid_account_uid    , _time_submit_uid.period_uid as time_submit_uid_period_uid    , _time_submit_uid.time_submit_description as time_submit_uid_time_submit_description
+    , _time_entry_uid.time_entry_name as time_entry_uid_time_entry_name    , _time_entry_uid.time_submit_uid as time_entry_uid_time_submit_uid    , _time_entry_uid.tenant_uid as time_entry_uid_tenant_uid    , _time_entry_uid.account_uid as time_entry_uid_account_uid    , _time_entry_uid.project_instance_uid as time_entry_uid_project_instance_uid    , _time_entry_uid.project_milestone_uid as time_entry_uid_project_milestone_uid    , _time_entry_uid.period_uid as time_entry_uid_period_uid    , _time_entry_uid.invoice_instance_uid as time_entry_uid_invoice_instance_uid    , _time_entry_uid.entry_period as time_entry_uid_entry_period    , _time_entry_uid.entry_note as time_entry_uid_entry_note    , _time_entry_uid.lock_row as time_entry_uid_lock_row    , _time_entry_uid.start_date as time_entry_uid_start_date    , _time_entry_uid.end_date as time_entry_uid_end_date    , _time_entry_uid.entry_minutes as time_entry_uid_entry_minutes    , _time_entry_uid.is_approved as time_entry_uid_is_approved
+    , _project_instance_uid.project_instance_name as project_instance_uid_project_instance_name    , _project_instance_uid.tenant_uid as project_instance_uid_tenant_uid    , _project_instance_uid.client_uid as project_instance_uid_client_uid    , _project_instance_uid.project_type_uid as project_instance_uid_project_type_uid    , _project_instance_uid.manager_account_uid as project_instance_uid_manager_account_uid    , _project_instance_uid.project_group_uid as project_instance_uid_project_group_uid    , _project_instance_uid.project_code as project_instance_uid_project_code    , _project_instance_uid.project_description as project_instance_uid_project_description    , _project_instance_uid.is_billable as project_instance_uid_is_billable    , _project_instance_uid.start_date as project_instance_uid_start_date    , _project_instance_uid.end_date as project_instance_uid_end_date    , _project_instance_uid.current_billed as project_instance_uid_current_billed    , _project_instance_uid.budget as project_instance_uid_budget
+    , _project_milestone_uid.project_milestone_name as project_milestone_uid_project_milestone_name    , _project_milestone_uid.tenant_uid as project_milestone_uid_tenant_uid    , _project_milestone_uid.client_uid as project_milestone_uid_client_uid    , _project_milestone_uid.project_instance_uid as project_milestone_uid_project_instance_uid    , _project_milestone_uid.project_budget_uid as project_milestone_uid_project_budget_uid    , _project_milestone_uid.start_date as project_milestone_uid_start_date    , _project_milestone_uid.end_date as project_milestone_uid_end_date    , _project_milestone_uid.status_name as project_milestone_uid_status_name
+    , _period_uid.period_name as period_uid_period_name    , _period_uid.period_number as period_uid_period_number    , _period_uid.period_type as period_uid_period_type    , _period_uid.period_start_time as period_uid_period_start_time    , _period_uid.period_end_time as period_uid_period_end_time    , _period_uid.period_year as period_uid_period_year    , _period_uid.period_quarter as period_uid_period_quarter    , _period_uid.period_month as period_uid_period_month    , _period_uid.period_week as period_uid_period_week    , _period_uid.period_day as period_uid_period_day
+    , _invoice_instance_uid.invoice_instance_name as invoice_instance_uid_invoice_instance_name    , _invoice_instance_uid.tenant_uid as invoice_instance_uid_tenant_uid    , _invoice_instance_uid.account_uid as invoice_instance_uid_account_uid    , _invoice_instance_uid.invoice_flow_uid as invoice_instance_uid_invoice_flow_uid    , _invoice_instance_uid.invoice_status_uid as invoice_instance_uid_invoice_status_uid    , _invoice_instance_uid.invoice_category_uid as invoice_instance_uid_invoice_category_uid    , _invoice_instance_uid.invoice_type_uid as invoice_instance_uid_invoice_type_uid    , _invoice_instance_uid.period_uid as invoice_instance_uid_period_uid    , _invoice_instance_uid.currency_uid as invoice_instance_uid_currency_uid    , _invoice_instance_uid.invoice_number as invoice_instance_uid_invoice_number    , _invoice_instance_uid.invoice_details as invoice_instance_uid_invoice_details    , _invoice_instance_uid.invoice_amount_net as invoice_instance_uid_invoice_amount_net    , _invoice_instance_uid.invoice_amount_tax as invoice_instance_uid_invoice_amount_tax    , _invoice_instance_uid.invoice_amount_gross as invoice_instance_uid_invoice_amount_gross
+    from time_entry_invoice
+    left join tenant _tenant_uid on time_entry_invoice.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on time_entry_invoice.account_uid = _account_uid.account_uid
+    left join time_submit _time_submit_uid on time_entry_invoice.time_submit_uid = _time_submit_uid.time_submit_uid
+    left join time_entry _time_entry_uid on time_entry_invoice.time_entry_uid = _time_entry_uid.time_entry_uid
+    left join project_instance _project_instance_uid on time_entry_invoice.project_instance_uid = _project_instance_uid.project_instance_uid
+    left join project_milestone _project_milestone_uid on time_entry_invoice.project_milestone_uid = _project_milestone_uid.project_milestone_uid
+    left join period _period_uid on time_entry_invoice.period_uid = _period_uid.period_uid
+    left join invoice_instance _invoice_instance_uid on time_entry_invoice.invoice_instance_uid = _invoice_instance_uid.invoice_instance_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_rule">
+    select time_rule.*
+    from time_rule
+  </createView>
+
+  <createView  viewName="v_rich_time_rule_client">
+    select time_rule_client.*
+    , _time_rule_client_uid.client_name as time_rule_client_uid_client_name    , _time_rule_client_uid.tenant_uid as time_rule_client_uid_tenant_uid    , _time_rule_client_uid.country_uid as time_rule_client_uid_country_uid    , _time_rule_client_uid.client_type_uid as time_rule_client_uid_client_type_uid    , _time_rule_client_uid.client_category_uid as time_rule_client_uid_client_category_uid    , _time_rule_client_uid.account_uid as time_rule_client_uid_account_uid    , _time_rule_client_uid.client_code as time_rule_client_uid_client_code    , _time_rule_client_uid.client_description as time_rule_client_uid_client_description    , _time_rule_client_uid.start_date as time_rule_client_uid_start_date    , _time_rule_client_uid.end_date as time_rule_client_uid_end_date    , _time_rule_client_uid.is_internal as time_rule_client_uid_is_internal    , _time_rule_client_uid.is_system as time_rule_client_uid_is_system    , _time_rule_client_uid.is_test as time_rule_client_uid_is_test
+    from time_rule_client
+    left join client _time_rule_client_uid on time_rule_client.time_rule_client_uid = _time_rule_client_uid.client_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_submit">
+    select time_submit.*
+    , _tenant_uid.tenant_name as tenant_uid_tenant_name    , _tenant_uid.country_uid as tenant_uid_country_uid    , _tenant_uid.tenant_type_uid as tenant_uid_tenant_type_uid    , _tenant_uid.tenant_category_uid as tenant_uid_tenant_category_uid    , _tenant_uid.tenant_code as tenant_uid_tenant_code    , _tenant_uid.tenant_description as tenant_uid_tenant_description    , _tenant_uid.start_date as tenant_uid_start_date    , _tenant_uid.end_date as tenant_uid_end_date    , _tenant_uid.is_internal as tenant_uid_is_internal    , _tenant_uid.is_system as tenant_uid_is_system    , _tenant_uid.is_test as tenant_uid_is_test    , _tenant_uid.account_uid as tenant_uid_account_uid
+    , _account_uid.account_name as account_uid_account_name    , _account_uid.tenant_uid as account_uid_tenant_uid    , _account_uid.account_type_uid as account_uid_account_type_uid    , _account_uid.account_title_uid as account_uid_account_title_uid    , _account_uid.account_division_uid as account_uid_account_division_uid    , _account_uid.account_group_uid as account_uid_account_group_uid    , _account_uid.auth_identity_uid as account_uid_auth_identity_uid    , _account_uid.account_email as account_uid_account_email    , _account_uid.display_name as account_uid_display_name    , _account_uid.is_system as account_uid_is_system
+    , _period_uid.period_name as period_uid_period_name    , _period_uid.period_number as period_uid_period_number    , _period_uid.period_type as period_uid_period_type    , _period_uid.period_start_time as period_uid_period_start_time    , _period_uid.period_end_time as period_uid_period_end_time    , _period_uid.period_year as period_uid_period_year    , _period_uid.period_quarter as period_uid_period_quarter    , _period_uid.period_month as period_uid_period_month    , _period_uid.period_week as period_uid_period_week    , _period_uid.period_day as period_uid_period_day
+    from time_submit
+    left join tenant _tenant_uid on time_submit.tenant_uid = _tenant_uid.tenant_uid
+    left join account _account_uid on time_submit.account_uid = _account_uid.account_uid
+    left join period _period_uid on time_submit.period_uid = _period_uid.period_uid
+  </createView>
+
+  <createView  viewName="v_rich_time_submit_type">
+    select time_submit_type.*
+    from time_submit_type
+  </createView>
+
+
+    </changeSet>
+
+</databaseChangeLog>

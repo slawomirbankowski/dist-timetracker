@@ -2,96 +2,745 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0002.xml">
+        logicalFilePath="conf/changelog0035_data.xml">
 
-    <changeSet id="0002 - dictionary data" author="slawomir.bankowski">
+    <changeSet id="0035 - dictionary data" author="slawomir.bankowski">
+
+        <!-- ____________________________ System table dictionary ____________________________ -->
 
         <sql splitStatements="false" stripComments="false">
-            insert into system_version(system_version_uid, version_description) values ('1.0.0', 'Initial version of application with all basic features.');
+            insert into system_version(system_version_uid, system_version_name, version_description)
+            values ('1.0.0', '1.0.0', 'Initial version of application with all basic features.');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('country', '1.0.0', 'Country', 'dictionary', 'country', 'country_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('currency', '1.0.0', 'Currency', 'dictionary', 'currency', 'currency_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('client_type', '1.0.0', 'Client Type', 'dictionary', 'client_type', 'client_type_uid', '');
+            insert into system_database(system_database_uid, system_database_name, db_url, db_host, db_name, db_user)
+            values ('timetracker', 'timetracker', '', '', '', '');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Default', '1.0.0', 'Default');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('System', '1.0.0', 'System');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Test', '1.0.0', 'Test');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Individual', '1.0.0', 'Individual');
-            insert into client_type(client_type_uid, system_version_uid, client_type_name) values ('Corporate', '1.0.0', 'Corporate');
+            insert into system_instance(system_instance_uid, system_instance_name, system_version_uid, host_name, host_ip, local_path, mode_name)
+            values ('1.0.0', '1.0.0', '1.0.0', '', '', '', 'PROD');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('system', 'XX', 'system', 'system', 'System client - default one', now(), 1, 1, 0);
-            insert into client_instance(client_instance_uid, country_uid, client_name, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('test', 'XX', 'test', 'test', 'Test client - just for testing purpose', now(), 1, 1, 1);
+            insert into system_object_type(system_object_type_uid, system_object_type_name, object_type_description)
+            values ( 'system', 'system', 'system');
+            insert into system_object_type(system_object_type_uid, system_object_type_name, object_type_description)
+            values ( 'dictionary', 'dictionary', 'dictionary');
+            insert into system_object_type(system_object_type_uid, system_object_type_name, object_type_description)
+            values ( 'data', 'data', 'data');
+            insert into system_object_type(system_object_type_uid, system_object_type_name, object_type_description)
+            values ( 'append', 'append', 'append');
+            insert into system_object_type(system_object_type_uid, system_object_type_name, object_type_description)
+            values ( 'm2m', 'm2m', 'm2m');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('System', '1.0.0', 'System', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Person', '1.0.0', 'Person', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Client', '1.0.0', 'Client', '');
-            insert into account_type(account_type_uid, system_version_uid, account_type_name, account_type_description) values ('Application', '1.0.0', 'Application', '');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_comment)
+            select t.table_name, t.table_name, concat(t.table_name, '_uid') as key_name, coalesce(tc.table_comment, '') as table_comment
+            from information_schema.tables t
+            	 left join (
+				 SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+					FROM information_schema.tables t
+					INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+					WHERE t.table_type='BASE TABLE'
+					AND t.table_schema='public'
+			 ) tc on t.table_name = tc.table_name
+            WHERE t.table_type='BASE TABLE' and t.table_schema='public' and t.table_name not in ('databasechangeloglock', 'databasechangelog');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CEO', '1.0.0', 'Chief Execution Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CFO', '1.0.0', 'Chief Financial Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CIO', '1.0.0', 'Chief Information Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CSO', '1.0.0', 'Chief Security Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CMO', '1.0.0', 'Chief Marketing Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('COO', '1.0.0', 'Chief Operating Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CTO', '1.0.0', 'Chief Technology Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CCO', '1.0.0', 'Chief Communications Officer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoE', '1.0.0', 'Head of Engineering', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoA', '1.0.0', 'Head of Analysis', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('HoC', '1.0.0', 'Head of Cloud', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DMgr', '1.0.0', 'Delivery Manager', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DE', '1.0.0', 'Data Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LDE', '1.0.0', 'Lead Data Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('CE', '1.0.0', 'Cloud Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LCE', '1.0.0', 'Lead Cloud Engineer', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DA', '1.0.0', 'Data Analyst', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('LDA', '1.0.0', 'Lead Data Analyst', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('ADM', '1.0.0', 'Administrator', '');
-            insert into account_title(account_title_uid, system_version_uid, title_name, title_description) values ('DEF', '1.0.0', 'Default', '');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account','account','account_uid', '', 'type=update;cardinality=100000;description=single instance of account - person or user or system user');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_division','account_division','account_division_uid', '', 'type=update;cardinality=1000;description=division of the account');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_division_template','account_division_template','account_division_template_uid', '', 'type=update;cardinality=100;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_group','account_group','account_group_uid', '', 'type=update;cardinality=10000;description=group of the accounts');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_hierarchy','account_hierarchy','account_hierarchy_uid', '', 'type=update;cardinality=100000;description=single instance of account - person or user or system user');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_rate','account_rate','account_rate_uid', '', 'type=update;cardinality=1000000;description=single instance of account - person or user or system user');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_skill','account_skill','account_skill_uid', '', 'type=dictionary;cardinality=100;description=skill owned by an account');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_team','account_team','account_team_uid', '', 'type=update;cardinality=1000;description=team of accounts');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_title','account_title','account_title_uid', '', 'type=dictionary,append;cardinality=100;description=title of the account connected with person role: Data Engineer, Data Analyst, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_title_responsibility','account_title_responsibility','account_title_responsibility_uid', '', 'type=dictionary,append;cardinality=1000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('account_type','account_type','account_type_uid', '', 'type=update;cardinality=10;description=type of the account: Person, Client, Contractor, Application');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('audit_change','audit_change','audit_change_uid', '', 'type=append;cardinality=10000000;description=changes to tables - updates, inserts, deletes');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('audit_type','audit_type','audit_type_uid', '', 'type=append;cardinality=10000000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_attempt','auth_attempt','auth_attempt_uid', '', 'type=update;cardinality=1000000;possible identity types with configuration');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_identity','auth_identity','auth_identity_uid', '', 'type=dictionary;cardinality=10;description=possible identity types');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_identity_tenant','auth_identity_tenant','auth_identity_tenant_uid', '', 'type=m2m;cardinality=1000;description=possible identity types with configuration');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_key','auth_key','auth_key_uid', '', 'type=full;cardinality=1000;description=key for encoding');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_key_type','auth_key_type','auth_key_type_uid', '', 'type=full;cardinality=1000;description=type of key: symmetric, asymmetric, signature, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_password','auth_password','auth_password_uid', '', 'type=update;cardinality=100000;description=password set by user - this is full history of passwords');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_password_current','auth_password_current','auth_password_current_uid', '', 'type=update;cardinality=10000;description=password set by user - only current valid password');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_password_rule','auth_password_rule','auth_password_rule_uid', '', '');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_permission','auth_permission','auth_permission_uid', '', 'type=update;cardinality=100000;permission assigned to account and role with optional project or client');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_request','auth_request','auth_request_uid', '', 'type=append;cardinality=100000;description=Request of reset or set new password for user');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_role','auth_role','auth_role_uid', '', 'type=update;cardinality=100;description=list of roles used in permissions');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_role_uri','auth_role_uri','auth_role_uri_uid', '', 'type=dictionary,update;cardinality=10000;description=mapping between role and URIs');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_session','auth_session','auth_session_uid', '', 'type=update;cardinality=1000000;description=UI sessions in browsers from UI application regarding connected accounts');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_sso','auth_sso','auth_sso_uid', '', 'type=full;cardinality=100;description=single sign on configuration');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('auth_token','auth_token','auth_token_uid', '', 'type=update;cardinality=1000000;description=single instance of token created for account');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_account','calendar_account','calendar_account_uid', '', 'type=m2m;cardinality=100000;description=calendar for account of given type');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_approval','calendar_approval','calendar_approval_uid', '', 'type=m2m;cardinality=100000;description=approval of calendar event');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_approval_type','calendar_approval_type','calendar_approval_type_uid', '', 'type=dictionary;cardinality=10;description=type of approvals for calendar event: approve, correction, disapprove, waiting');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_event','calendar_event','calendar_event_uid', '', 'type=full;cardinality=1000;description=single day event in calendar within a group of events, single row would be single day within holiday');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_event_group','calendar_event_group','calendar_event_group_uid', '', 'type=full;cardinality=1000;description=group of events in calendar with consistent period, one row could be holiday for 14 days for given person account');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_event_type','calendar_event_type','calendar_event_type_uid', '', 'type=dictionary;cardinality=1000;description=type of event in calendar for given client');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('calendar_type','calendar_type','calendar_type_uid', '', 'type=dictionary;cardinality=10;description=types of calendar: holiday, conference, sickness');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client','client','client_uid', '', 'type=dictionary,append;cardinality=100;description=single client of tenant');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_account','client_account','client_account_uid', '', 'type=dictionary;cardinality=100000;description=account assignment to client with given role');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_country','client_country','client_country_uid', '', 'type=dictionary;cardinality=1000;description=m2m between client and country to select countries that client operate');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_payment','client_payment','client_payment_uid', '', 'type=fk;cardinality=10000;description=payment of client for licenses connected with modules');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_role','client_role','client_role_uid', '', 'type=dictionary;cardinality=1000;description=roles of accounts in client');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_status','client_status','client_status_uid', '', 'type=dictionary,append;cardinality=10;description=status of client: New, Pending, Active, Closed');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('client_type','client_type','client_type_uid', '', 'type=dictionary;cardinality=10;description=type of client: System, Test, Corporate, Individual, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('connection_engine','connection_engine','connection_engine_uid', '', 'each connection engine is running on HTTP requests checking and acquiring statistics');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('connection_host','connection_host','connection_host_uid', '', 'list of hosts');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('connection_user','connection_user','connection_user_uid', '', 'user connected to HTTP API through web applications');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('country','country','country_uid', '', 'type=dictionary;description=country of account or client');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('currency','currency','currency_uid', '', 'type=dictionary;description=currency: EUR, USD, GBP, PLN, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_acknowledge','event_acknowledge','event_acknowledge_uid', '', 'acknowledge of given notification by user');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_channel','event_channel','event_channel_uid', '', 'type=update;cardinality=10;description=channel to deliver events');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_channel_type','event_channel_type','event_channel_type_uid', '', 'type=update;cardinality=10;description=type of channels');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_instance','event_instance','event_instance_uid', '', 'type=update;cardinality=1000000;description=event in system that can be published to listeners');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_notification','event_notification','event_notification_uid', '', 'type=update;cardinality=100000;description=notification sent to password requests and info messages to accounts');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_observer','event_observer','event_observer_uid', '', 'type=update;cardinality=100000;description=observer');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_subscription','event_subscription','event_subscription_uid', '', 'type=update;cardinality=1000000;description=subscriptions for events');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_template','event_template','event_template_uid', '', 'type=update;cardinality=1000;description=template of notification or event to be sent');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('event_type','event_type','event_type_uid', '', 'type=update;cardinality=10;description=type of events');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_action','invoice_action','invoice_action_uid', '', 'type=update;description=types of action for invoice like receive, confirm, approve, deny, correction, paying, paid, closed');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_action_type','invoice_action_type','invoice_action_type_uid', '', 'type=update;description=types of action for invoice');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_category','invoice_category','invoice_category_uid', '', 'type=dictionary;cardinality=1000;description=client category of invoice: Internal, Correction, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_entry','invoice_entry','invoice_entry_uid', '', 'type=update;description=entry assigned to invoice');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_flow','invoice_flow','invoice_flow_uid', '', 'type=full;cardinality=1000;description=pre-defined flow of invoice');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_flow_state','invoice_flow_state','invoice_flow_state_uid', '', 'type=full;cardinality=100000;description=states of invoice flow');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_instance','invoice_instance','invoice_instance_uid', '', 'type=update;description=invoices');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_status','invoice_status','invoice_status_uid', '', 'type=dictionary;cardinality=10;description=status of invoice: Created, Pending, OnHold, Approved, Rejected, Paid, Closed');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('invoice_type','invoice_type','invoice_type_uid', '', 'type=dictionary;cardinality=1000;description=type of invoice:');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('monitor','monitor','monitor_uid', '', 'type=full;cardinality=1000;description=monitor to check state of given items');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('monitor_run','monitor_run','monitor_run_uid', '', 'type=m2m;cardinality=100000;description=single run of monitor');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('monitor_type','monitor_type','monitor_type_uid', '', 'type=dictionary;cardinality=10;description=monitors in application to check status of item');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('period','period','period_uid', '', 'type=dictionary;description=period of time - daily, weekly, monthly, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('process','process','process_uid', '', 'type=m2m;cardinality=100000;description=calendar for account of given type');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('process_run','process_run','process_run_uid', '', 'type=m2m;cardinality=100000;description=calendar for account of given type');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('process_type','process_type','process_type_uid', '', 'type=dictionary;cardinality=10;description=types of processes');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_account','project_account','project_account_uid', '', 'project to bill time against');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_budget','project_budget','project_budget_uid', '', 'budget for projects');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_group','project_group','project_group_uid', '', 'type=full;cardinality=10000;description=group of projects');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_instance','project_instance','project_instance_uid', '', 'project to bill time against');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_milestone','project_milestone','project_milestone_uid', '', 'milestone of project like: Concept, Development, Architecture, Analysis, Support');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('project_type','project_type','project_type_uid', '', 'type=full;cardinality=100;description=type of project');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report','report','report_uid', '', 'type=m2m;cardinality=100000;description=calendar for account of given type');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report_content_type','report_content_type','report_content_type_uid', '', 'type=dictionary;cardinality=10;description=type of content for report');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report_format','report_format','report_format_uid', '', 'type=dictionary;cardinality=10;description=formats supported by report rendering');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report_run','report_run','report_run_uid', '', 'type=m2m;cardinality=100000;description=run of report by account');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report_status','report_status','report_status_uid', '', 'type=dictionary;cardinality=10;description=name of status for report');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('report_type','report_type','report_type_uid', '', 'type=dictionary;cardinality=10;description=types of report');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('storage','storage','storage_uid', '', 'type=full;cardinality=10000000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('storage_connection','storage_connection','storage_connection_uid', '', 'type=append;cardinality=10000000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('storage_query','storage_query','storage_query_uid', '', 'type=full;cardinality=100000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('storage_type','storage_type','storage_type_uid', '', 'type=dictionary;cardinality=10000000;description=type of storages: JDBC, Elasticsearch, Mongodb, Cassandra, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('synchronization','synchronization','synchronization_uid', '', 'description=synchronization with external system');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('synchronization_run','synchronization_run','synchronization_run_uid', '', 'single run of synchronization');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('synchronization_type','synchronization_type','synchronization_type_uid', '', 'type of synchronization: read, write');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_attribute','system_attribute','system_attribute_uid', '', 'type=full;cardinality=1000;description=attributes for objects in tables');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_database','system_database','system_database_uid', '', 'type=system; description=database with data for main common areas or database for clients, each database is having full schema of application and is controlled by Liquibase, application is connected to main database with common objects but also can use client-specific database for client data');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_exception','system_exception','system_exception_uid', '', 'type=system,append;cardinality=10000;description=exception or error thrown in backend or frontend application, it is for diagnostic, debugging and checking reasons');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_instance','system_instance','system_instance_uid', '', 'type=system,update;description=instance of running application on server - each process would be having one row in table');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_license','system_license','system_license_uid', '', 'type=system;description=license of given module');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_lock','system_lock','system_lock_uid', '', 'type=system,dictionary;cardinality=100000;description=lock');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_module','system_module','system_module_uid', '', 'type=system;cardinality=100;description=module of system that could be within license');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_object','system_object','system_object_uid', '', 'type=system;cardinality=100;description=system objects related to tables, many objects might be in the same table but with different rows');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_object_type','system_object_type','system_object_type_uid', '', 'type=system,update;cardinality=10;description=types and subtypes of objects: table, dictionary, m2m, ...');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_query','system_query','system_query_uid', '', 'SQL queries executed on database');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_request','system_request','system_request_uid', '', 'type=append;cardinality=1000000;description=HTTP request to application');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_setting','system_setting','system_setting_uid', '', 'type=system;cardinality=100;description=global settings for system');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_setting_account','system_setting_account','system_setting_account_uid', '', 'type=system;cardinality=100000;description=user settings for system');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_state','system_state','system_state_uid', '', 'type=system,dictionary;cardinality=100000;description=state of current application/system instance, each state contains diagnostic information about running process in memory');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_table','system_table','system_table_uid', '', 'type=system,dictionary;cardinality=100;description=tables managed by application');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_thread','system_thread','system_thread_uid', '', 'type=system,dictionary;description=thread managed by instance of application');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('system_version','system_version','system_version_uid', '', 'type=system; description=semantic version of application like 1.2.3, each version is introducing new features to application');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant','tenant','tenant_uid', '', 'type=dictionary,append;cardinality=100;description=single tenant - company that is using time tracker app, each tenant is independent and has separated accounts and clients');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_account','tenant_account','tenant_account_uid', '', 'type=dictionary;cardinality=100000;description=account assignment to tenant with given role');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_category','tenant_category','tenant_category_uid', '', 'type=dictionary,append;cardinality=10;description=category of tenant: Internal, External, Hybrid');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_country','tenant_country','tenant_country_uid', '', 'type=dictionary;cardinality=1000;description=m2m between tenant and country to select countries that tenant operate');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_license','tenant_license','tenant_license_uid', '', 'type=dictionary;cardinality=1000;description=license bought/paid by tenant');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_payment','tenant_payment','tenant_payment_uid', '', 'type=fk;cardinality=10000;description=payment of tenant for licenses connected with modules');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_payment_type','tenant_payment_type','tenant_payment_type_uid', '', 'type=dictionary,append;cardinality=10;description=type of payment');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_role','tenant_role','tenant_role_uid', '', 'type=dictionary;cardinality=1000;description=key roles of accounts in tenant: Owner, Administrator, Manger, Finance, User');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_status','tenant_status','tenant_status_uid', '', 'type=dictionary,append;cardinality=10;description=status of tenant: New, Pending, Active, Closed');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('tenant_type','tenant_type','tenant_type_uid', '', 'type=dictionary;cardinality=10;description=type of tenant: System, Test, Corporate, Individual');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_approval','time_approval','time_approval_uid', '', 'type=full;cardinality=1000000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_entry','time_entry','time_entry_uid', '', 'type=full;cardinality=1000000;description=time entered by account against project');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_entry_final','time_entry_final','time_entry_final_uid', '', 'type=full;cardinality=1000000;description=final time entered by account against project');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_entry_invoice','time_entry_invoice','time_entry_invoice_uid', '', 'type=m2m;cardinality=1000000;description=connection between time entry and invoice');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_rule','time_rule','time_rule_uid', '', 'type=full;cardinality=10000;description=');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_rule_client','time_rule_client','time_rule_client_uid', '', 'type=full;cardinality=1000000;description=applied rule of time submitting into one client');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_submit','time_submit','time_submit_uid', '', 'type=full;cardinality=1000000;description=single submit of time for selected account to many projects wihtin one period');
+            insert into system_table(system_table_uid, system_table_name, key_name, table_code, table_comment) values ('time_submit_type','time_submit_type','time_submit_type_uid', '', 'type=dictionary;cardinality=10;description=type of submitting time');
+        </sql>
+
+
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('dao_max_rows', 'dao_max_rows', '1000');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('db_pool_min_connections', 'db_pool_min_connections', '3');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('db_pool_max_connections', 'db_pool_max_connections', '30');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('system_email', 'system_email', '');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('test_email', 'test_email', '');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('administrator_email', 'administrator_email', '');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_group(account_group_uid, system_version_uid, account_group_name, account_group_description) values ('Default', '1.0.0', 'Default', '');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Main', 'Main', 'Main');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('TimeTracking', 'TimeTracking', 'TimeTracking');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Calendar', 'Calendar', 'Calendar');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Invoice', 'Invoice', 'Invoice');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Project', 'Project', 'Project');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_division(account_division_uid, system_version_uid, division_name, division_description) values ('Default', '1.0.0', 'Default', '');
+            insert into system_license(system_license_uid, system_license_name, license_description)
+            values ('Full', 'Full', 'Full license with all features');
+            insert into system_license(system_license_uid, system_license_name, license_description)
+            values ('Test', 'Test', 'Test license with limited features to test application');
+        </sql>
+
+        <!-- ____________________________ Audit table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Update', 'Update');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Delete', 'Delete');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Deactivate', 'Deactivate');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Insert', 'Insert');
+        </sql>
+
+        <!-- ____________________________ storage table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('HTTP', 'HTTP', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('FTP', 'FTP', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('LOCAL', 'LOCAL', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('JDBC', 'JDBC', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Elasticsearch', 'Elasticsearch', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Mongodb', 'Mongodb', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Cassandra', 'Cassandra', '', '');
+        </sql>
+
+        <!-- ____________________________ monitor table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('HTTP', '', '', '');
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('JDBC', '', '', '');
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('HOST', '', '', '');
+        </sql>
+
+        <!-- ____________________________ Event table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Create', 'Create', 'Create operation for object');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Update', 'Update', 'Update operation of any object');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Remove', 'Remove', 'Remove - logical delete');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Delete', 'Delete', 'Delete - physical delete');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Change', 'Change', 'Change - change of state in memory');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Action', 'Action', 'Action - any action in application');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Error', 'Error', 'Error - expected error due to outside action');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Exception', 'Exception', 'Exception');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('system', 'DEF', 'Default', 'Default', 'Internal', '${system_email}', 'system', 'System', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('test', 'DEF', 'Test', 'Test', 'Internal', '${test_email}', 'test', 'Test', 1);
-            insert into account_instance(account_instance_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_name, display_name, is_system)
-            values ('administrator', 'ADM', 'Default', 'Default', 'Internal', '${administrator_email}', 'Administrator', 'Administrator', 1);
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Notification', 'Notification', 'Notification');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Email', 'Email', 'Email');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Dashboard', 'Dashboard', 'Dashboard');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('SMS', 'SMS', 'SMS');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('HTTP', 'HTTP', 'HTTP');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('JDBC', 'JDBC', 'JDBC');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Kafka', 'Kafka', 'Kafka');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
+            insert into event_template(event_template_uid, event_template_name, tenant_uid, notification_type, notification_format, notification_format)
+            values ('AccountCreated', 'AccountCreated', 'System', 'Account created', 'TEXT', 'Account has been created');
+            insert into event_template(event_template_uid, event_template_name, tenant_uid, notification_type, notification_format, notification_format)
+            values ('AccountDeactivated', 'AccountDeactivated', 'System', 'Account Deactivated', 'TEXT', 'Account has been deactivated');
+        </sql>
+
+        <!-- ____________________________ tenant table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Default', 'Default');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('System', 'System');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Test', 'Test');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Individual', 'Individual');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Corporate', 'Corporate');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into auth_identity(auth_identity_uid, client_instance_uid, identity_name, identity_type) values ('Internal', 'test', 'Internal', 'Internal');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Internal', 'Internal');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('External', 'External');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Hybrid', 'Hybrid');
         </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('New', 'New');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Pending', 'Pending');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Active', 'Active');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closing', 'Closing');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'XX', 'System', 'Internal', 'system', 'system', 'System tenant - default one', now(), 1, 1, 0);
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'XX', 'Test', 'Internal', 'test', 'test', 'Test tenant - just for testing purpose', now(), 1, 1, 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'System');
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('System-Full', 'License for System tenant', 'System', 'Full', cast('2049-12-31' as timestamp), 1);
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('Test-Test', 'License for Test tenant', 'Test', 'Test', cast('2049-12-31' as timestamp), 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('HR', 'HR', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('User', 'User', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'System', 'system', 'Administrator');
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'Test', 'test', 'Administrator');
+        </sql>
+
+
+        <!-- ____________________________ xxx table dictionary ____________________________ -->
+
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <!-- ____________________________ Client table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_type(client_type_uid, client_type_name) values ('Default', 'Default');
+            insert into client_type(client_type_uid, client_type_name) values ('System', 'System');
+            insert into client_type(client_type_uid, client_type_name) values ('Test', 'Test');
+            insert into client_type(client_type_uid, client_type_name) values ('Individual', 'Individual');
+            insert into client_type(client_type_uid, client_type_name) values ('Corporate', 'Corporate');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_status(client_status_uid, client_status_name) values ('New', 'New');
+            insert into client_status(client_status_uid, client_status_name) values ('Pending', 'Pending');
+            insert into client_status(client_status_uid, client_status_name) values ('Active', 'Active');
+            insert into client_status(client_status_uid, client_status_name) values ('Closing', 'Closing');
+            insert into client_status(client_status_uid, client_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'System', 'System', 'XX', 'Internal', 'System', 'SYS', 'System client - default one', now(), 1, 1, 0);
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'Test', 'Test', 'XX', 'Internal', 'Test', 'TST', 'Test client - default one', now(), 1, 1, 0);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_country(country_uid, client_uid) values ('XX', 'System');
+            insert into client_country(country_uid, client_uid) values ('XX', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('HR', 'HR', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('User', 'User', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_account(client_account_name, role_description, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', '', 'System', 'system', 'Administrator');
+            insert into client_account(client_account_name, role_description, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', '', 'Test', 'test', 'Administrator');
+        </sql>
+
+        <!-- ____________________________ Account table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('System', 'System account for administrative actions', '');
+            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Person', 'Person account for people logging into application', '');
+            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Client', 'Client account for external API clients', '');
+            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Viewer', 'Viewer account for reporting and validation', '');
+            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Application', 'Application account for external applications', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CEO', 'Chief Execution Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CFO', 'Chief Financial Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CIO', 'Chief Information Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CSO', 'Chief Security Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CMO',  'Chief Marketing Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('COO', 'Chief Operating Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CTO', 'Chief Technology Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CCO', 'Chief Communications Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoE', 'Head of Engineering', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoA', 'Head of Analysis', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoC', 'Head of Cloud', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DMgr', 'Delivery Manager', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DE', 'Data Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LDE', 'Lead Data Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CE', 'Cloud Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LCE', 'Lead Cloud Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DA', 'Data Analyst', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LDA', 'Lead Data Analyst', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('ADM', 'Administrator', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DEF', 'Default', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'CEO', '', 10);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'CIO', '', 20);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'COO', '', 30);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'HoC', '', 40);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'HoA', '', 50);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('System', 'System', 'System', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Administrators', 'System', 'Administrators', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Default', 'System', 'Default', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Test', 'System', 'Test', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Everyone', 'System', 'Everyone', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, division_description)
+            values ('Default', 'Default', 'System', '');
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, division_description)
+            values ('Test', 'Test', 'System', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Administration', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Finance', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Sales', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Marketing', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Human Resources', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Operation', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Investment', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Product', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Technical', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Public Relations', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Quality Assurance', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Information Technology', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, account_uid, account_division_template_uid, division_description)
+            values ('System-Administration', 'System-Administration', 'System', 'system', 'Administration', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('system', 'system', 'System', 'System', 'ADM', 'Default', 'Everyone', 'Internal', '{system_email}', 'System account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('administrator', 'administrator', 'System', 'System', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator_email}', 'System account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_administrator', 'test_administrator', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test1_email}', 'Test 1 account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_manager', 'test_manager', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test2_email}', 'Test account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_user', 'test_user', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test3_email}', 'Test account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_viewer', 'test_viewer', 'system', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator2_email}', 'System account', 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_administrator-test_manager', '', 'Test', 'test_administrator', 'test_manager');
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_manager-test_user', '', 'Test', 'test_manager', 'test_user');
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_manager-test_viewer', '', 'Test', 'test_manager', 'test_viewer');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_rate(tenant_uid, account_uid, currency_uid, rate)
+            values ('Test', 'test_manager', 'EUR', 50.0);
+            insert into account_rate(tenant_uid, account_uid, currency_uid, rate)
+            values ('Test', 'test_user', 'USD', 40.0);
+            insert into account_rate(tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('Test', 'test_viewer', 'GBP', 20.0, '2000-01-01', '2024-01-01');
+            insert into account_rate(tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('Test', 'test_viewer', 'GBP', 22.0, '2024-01-01', '2024-05-01');
+            insert into account_rate(tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('Test', 'test_viewer', 'GBP', 24.0, '2024-05-01', '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_skill(account_skill_uid, account_skill_name, account_skill_description) values ('Java', 'Java', 'Java programming language');
+        </sql>
+
+        <!-- ____________________________ Auth table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Internal', 'Internal authentication - password is kept and managed within application', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('OneToken', 'OneToken authentication - generating token and sending to email for each login', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Google', 'Google authentication', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('AWS', 'AWS authentication', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Microsoft Azure AD', 'Microsoft Azure AD authentication', '{}');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('System-Internal', 'Internal authentication for system client', 'System', 'Internal');
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('Test-Internal', 'Internal authentication for test client', 'Test', 'Internal');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('symmetric', 'symmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('asymmetric', 'asymmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('signature', 'signature', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('client', 'client', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('custom', 'custom', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_type, key_public, key_private)
+            values ('system-main-asymmetric', 'Main asymmetric key for system client', 'System', 'system', '', 'RSA', '', '');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_type, key_public, key_private)
+            values ('system-main-symmetric', 'Main symmetric key for system client', 'System', 'system', '', 'AES', '', '');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_type, key_public, key_private)
+            values ('test-main-asymmetric', 'Main asymmetric key for test client', 'Test', 'test_administrator', '', 'RSA', '', '');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_type, key_public, key_private)
+            values ('test-main-symmetric', 'Main symmetric key for test client', 'Test', 'test_administrator', '', 'AES', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-GET', 'SystemAdministrator-GET', 'SystemAdministrator', 'GET:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-POST', 'SystemAdministrator-POST', 'SystemAdministrator', 'POST:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PUT', 'SystemAdministrator-PUT', 'SystemAdministrator', 'PUT:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PATCH', 'SystemAdministrator-PATCH', 'SystemAdministrator', 'PATCH:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-DELETE', 'SystemAdministrator-DELETE', 'SystemAdministrator', 'DELETE:/');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-system', 'SystemAdministrator role for system account', 'System', 'system', 'SystemAdministrator', now(), '2049-12-31');
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-test_administrator', 'SystemAdministrator role for test_administrator account', 'Test', 'test_administrator', 'ClientAdministrator', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password(auth_password_name, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for system account', 'system', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_administrator account', 'test_administrator', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password_current(auth_password_current_uid, auth_password_current_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('system', 'First initial password for system account', 'System', 'system', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+            insert into auth_password_current(auth_password_current_uid, auth_password_current_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('test_administrator', 'First initial password for test_administrator account', 'Test', 'test_administrator', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+        </sql>
+
+
+        <!-- ____________________________ Invoice table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Created', 'Created', 'Created');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Pending', 'Pending', 'Pending');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('OnHold', 'OnHold', 'OnHold');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Approved', 'Approved', 'Approved');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Rejected', 'Rejected', 'Rejected');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Paid', 'Paid', 'Paid');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Closed', 'Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('', '');
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('', '');
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('', '');
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_category(invoice_category_uid, invoice_category_name, client_uid, invoice_category_description)
+            values ('System-Normal', 'Normal', 'System', 'Normal invoice');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, client_uid, invoice_category_description)
+            values ('Test-Normal', 'Normal', 'Test', 'Normal invoice for Test client');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, client_uid, invoice_category_description)
+            values ('Test-Correction', 'Correction', 'Test', 'Correction invoice for Test client');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, client_uid, invoice_category_description)
+            values ('Test-Correction', 'Correction', 'Test', 'Correction invoice for Test client');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+        <!-- ____________________________ Project table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into project_group(project_group_uid, project_group_name, client_uid, project_group_description, system_version_uid)
+            values ('System', 'System', 'system', '', '1.0.0');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <!-- ____________________________ Time table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name) values ('', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name) values ('', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name) values ('', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <!-- ____________________________ Calendar table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Work', 'Work');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Holiday', 'Holiday');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Conference', 'Conference');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Sickness', 'Sickness');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Workshop', 'Workshop');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Waiting', 'Waiting');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Approve', 'Approve');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Correction', 'Correction');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Disapprove', 'Disapprove');
+        </sql>
+
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+
+
+        <!-- ____________________________ Common table dictionary ____________________________ -->
 
         <sql splitStatements="false" stripComments="false">
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain)
@@ -346,11 +995,6 @@
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zambia', 'ZM', 'ZMB', '894', '260', 'ZMW', 'Lusaka', 'Africa', 'Sub-Saharan Africa', '002', '-15', '30', 'Zambian Kwacha', '17300000', 'Bemba,Chewa,Lozi,Nsenga,Nyanja,Tongan', '752000', '-', '.zm');
             insert into country(continent_name, continent_code, country_name, country_uid, country_iso3, country_code, phone_code, currency_code, capital_name, region_name, subregion_name, region_code, latitude, longitude, currency_name, population, languages, area, bar_code, top_level_domain) values ('Africa', '', 'Zimbabwe', 'ZW', 'ZWE', '716', '263', 'ZWD', 'Harare', 'Africa', 'Sub-Saharan Africa', '002', '-20', '30', 'Zimbabwe Dollar', '14400000', 'English,Ndebele,Nyanja,Shona', '390000', '-', '.zw');
         </sql>
-
-        <sql splitStatements="false" stripComments="false">
-            insert into project_group(project_group_uid, project_group_name, project_group_description) values ('', '', '');
-        </sql>
-
 
     </changeSet>
 
