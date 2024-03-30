@@ -101,11 +101,11 @@ def test_daoconnection():
 def test_basedao():
     dao = base_dao()
     #dtos = dao.get_objects("select * from account_division")
-    dtos = dao.get_objects_by_params("select * from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
+    dtos = dao.get_objects("select * from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
     for dto in dtos:
         print(type(dto))
         print(dto)
-    vals = dao.get_column_by_params("select account_title_uid from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
+    vals = dao.get_column_values_all("select account_title_uid from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
     for dto in vals:
         print(type(dto))
         print(dto)
@@ -113,7 +113,7 @@ def test_basedao():
     print("row")
     print(type(row))
     print(row)
-    col_values = dao.get_column_all("select account_title_uid from account_title", 0)
+    col_values = dao.get_column_values_all("select account_title_uid from account_title", 0)
     print("col_values")
     print(type(col_values))
     print(col_values)
@@ -131,7 +131,7 @@ def test_base_dao_update():
     dao = base_dao()
     name = "Test Account"
     uid = "test"
-    res = dao.execute_query_with_params("update account_instance set display_name=%s where account_instance_uid=%s", (name, uid))
+    res = dao.execute_query("update account_instance set display_name=%s where account_instance_uid=%s", (name, uid))
     print(type(res))
     print(res)
 

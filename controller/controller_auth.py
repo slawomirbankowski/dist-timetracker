@@ -7,6 +7,7 @@ from service.services import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 import hashlib
 
+
 # Auth controller
 class AuthController(BaseController):
     #
@@ -14,7 +15,7 @@ class AuthController(BaseController):
         super().__init__()
 
     # get name of base object
-    def get_base_object_name(self) -> str:
+    def get_base_object_type(self) -> str:
         return "AuthController"
     # get name of base object
     def get_base_object_name(self) -> str:
@@ -26,16 +27,27 @@ class AuthController(BaseController):
         return ResponseSession(jsonify({'access_token': "abc123"}))
 
     def token(self, session: RequestSession) -> ResponseSession:
+        #session.when_auth()
+        #session.when_role("", lambda x: x)
+        #session.when_path("", lambda x: x)
+
         # session.request.data
         print("Token request")
         session.get_query_param("grant_type")
         session.get_query_param("username")
         session.get_query_param("password")
+        #services.login_service.
+        #services.login_service.object_id
         grant_type = session.request.args.getlist("grant_type")
         account_instance_uid = "system"
-        accinst = daos.account_instance_dao_instance.get_items_by_account_instance_uid(account_instance_uid)
-
-        accinst.dtos
+        accinst = daos.account_instance_dao_instance.get_items_by_account_instance_uid(account_instance_uid).get_first()
+        #daos.auth_role_dao_instance.get_items_by_is_client(1).group_by(lambda dto: dto.role_name);
+        token_hash = ""
+        token_salt = ""
+        auth_token_uid = ""
+        token_seq = 1
+        daos.auth_token_dao_instance.insert_row(auth_token_uid, accinst.account_instance_uid, daos.system_instance_uid, token_seq, token_hash, token_salt, None, None, 1)
+        #accinst.dtos
 
         if daos.auth_password_dao_instance.check_password("", ""):
             print("Authenticated")
@@ -48,14 +60,23 @@ class AuthController(BaseController):
         # session.request.data
         account_instance_uid = session.get_query_param("username")
         password = session.get_query_param("password")
-        password_salt = base_dto.get_random_uid()
-        password_salted = password_salt + password + password_salt
-        md5_hash = hashlib.md5()
-        md5_hash.update(password_salted.encode())
-        password_hash = md5_hash.hexdigest()
-        date_to = datetime.datetime.now() + datetime.timedelta(days=30)
-        daos.auth_password_dao_instance.insert_row_random_uid(account_instance_uid, daos.system_instance_dto.system_instance_uid, password_hash, password_salt, datetime.datetime.now(), date_to, 0)
-        return ResponseSession(jsonify({'status': "OK"}))
+        accinst = daos.account_instance_dao_instance.get_items_by_account_instance_uid(account_instance_uid).get_first()
+        if (accinst is not None):
+            password_salt = base_dto.get_random_uid()
+            password_salted = password_salt + password + password_salt
+            md5_hash = hashlib.md5()
+            md5_hash.update(password_salted.encode())
+            password_hash = md5_hash.hexdigest()
+            date_to = datetime.datetime.now() + datetime.timedelta(days=30)  # max valid time = 30 days
+            daos.auth_password_dao_instance.insert_row_random_uid(account_instance_uid,
+                                                                  daos.system_instance_dto.system_instance_uid,
+                                                                  password_hash, password_salt, datetime.datetime.now(),
+                                                                  date_to, 0)
+
+            return ResponseSession(jsonify({'status': "OK"}))
+        else:
+            return ResponseSession(jsonify({'status': "ERROR"}))
+
 
     def check_password(self, session: RequestSession) -> ResponseSession:
         # session.request.data
@@ -71,6 +92,9 @@ class AuthController(BaseController):
             passwords = daos.auth_password_dao_instance.get_items_by_account_instance_uid(accinst.account_instance_uid)
             passwords.for_each()
 
+            daos.auth_password_dao_instance.select_rows_by_query("select * from ")
+            daos.auth_password_dao_instance.get_single_row("", [])
+            daos.auth_password_dao_instance.insert_row()
             password_salt = base_dto.get_random_uid()
             password_salted = password_salt + password + password_salt
 

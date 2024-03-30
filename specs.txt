@@ -1,4 +1,74 @@
 
+  <include file="./changelog0002.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0003.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0004.xml" relativeToChangelogFile="true"/>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('country', '1.0.0', 'Country', 'dictionary', 'country', 'country_uid', '');
+            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('currency', '1.0.0', 'Currency', 'dictionary', 'currency', 'currency_uid', '');
+            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('client_type', '1.0.0', 'Client Type', 'dictionary', 'client_type', 'client_type_uid', '');
+        </sql>
+
+--------------------------------------------------------------------------------------------
+- base_model - add types to columns - DONE
+- base model - add FKs - DONE
+- base model - add description and type of table - DONE
+- DTO - name columns to tables t_name - that could be also _uid if no name is needed - DONE
+
+- DTO list add new methods find() sort() compare() max_by() ... - DONE
+
+- deploy rich tables to DB - DONE
+- RICH - create view on rich views - DONE
+- RICH - add rich DTOs - DONE
+- DAO methods change get_ to select_ - DONE
+
+
+- DB - add identity tables with assignment to account
+- DB - permission tables to keep authorization for account
+
+- DB - add project tables - DONE
+- DB - add HR tables
+
+
+- RICH - add DAO methods to rich - TO_DO
+- MODEL - add column names for global search concat(col1, col2, col3) like '%searchstr%'
+- DTO - add mask() method to mask/hide data to be shown to UI
+
+- add remarks to tables and columns
+- DAO DbConnection Wrapper - implementation for DAO classes for transactional items
+- DAO refactor - remove by_params methods
+- DAO - implement global search method for given table by string
+- Service - implement change status
+- Controller - implement request log insert
+
+- DB - add time tracking tables
+
+- DB - add system operation counter to count reads/writes/updates
+
+- authentication - setting and checking password
+- authentication - creating token
+- authentication - parsing token and producing account session object
+- authentication -
+- translator from read_dto into full_dto with all links to parent objects
+
+- create Controller to list objects by table and search string
+- create Service to get one full object by UID
+- create Controller to get one full object by UID
+
+--------------------------------------------------------------------------------------------
+ UI - React
+
+MENU:
+Time Tracking        | HR           | Objects        | Dictionaries         |            | Administration        | Settings    | My Account        |
+Enter time (user)    |              |                |
+Time reports         |              |                |
+Clients              |              |                |
+
+
+
+
+--------------------------------------------------------------------------------------------
+
 TABLES
 	y(y_uid)
 	z(z_uid)
@@ -63,58 +133,117 @@ system_instance     system_version_uid
 system_state        system_instance_uid
 system_exception    system_instance_uid
 system_object       system_version_uid
-system_change       account_instance_uid
-system_change       system_instance_uid
+system_change       account_instance_uid    system_instance_uid
 system_setting      account_instance_uid
 
 event_channel       system_version_uid
-event_subscription  event_channel_uid
-event_subscription  system_instance_uid
+event_subscription  event_channel_uid   system_instance_uid
 event_instance      system_instance_uid
 
 country
 currency
 
++++ client_category ???
+++ client_plan      ???
+++ client_billing      ???
 client_type         system_version_uid
-client_instance     client_type_uid
-client_instance     country_uid
+client_instance     client_type_uid     +++ country_uid
 
+account_type        system_version_uid
++++ account_title_set
++++ account_title_assignment
 account_title       system_version_uid
-account_group       system_version_uid
+
+account_group_type
+account_group       system_version_uid  account_group_type_uid
+
 account_division    system_version_uid
+account_division    account_division
+account_instance    client_instance_uid account_type_uid    account_title_uid account_division_uid account_group_uid auth_identity_uid
 
-account_instance    client_instance_uid
-account_instance    account_type_uid
-account_instance    account_title_uid
-account_instance    account_division_uid
-account_instance    account_group_uid
-account_instance    auth_identity_uid
+account_note_type
+account_note   account_instance_uid, account_note_type_uid, note_value
 
-auth_token          account_instance_uid
-auth_token          system_instance_uid
+account_instance_
 
-auth_role           parent_auth_role_uid
+calendar            calendar_uid, calendar_name, calendar_type
+calendar_entry      calendar_uid    calendar_date_start, calendar_date_end
+calendar_period_type    (Weekly, Monthly, Daily, Bi-Weekly),
 
-auth_permission     account_instance_uid
-auth_permission     auth_role_uid
-auth_permission     client_instance_uid
-auth_permission     project_instance_uid
-auth_permission
+calendar_period     calendar_period_type_uid,
 
-auth_password       system_instance_uid
-auth_password       account_instance_uid
+client_calendar     calendar_uid, client_instance_uid
+account_calendar    account_instance_uid, calendar_uid
 
-auth_request        by_account_instance_uid
-auth_request        account_instance_uid
+account_instance_group    account_instance_uid  account_group_uid   group_type
 
+auth_token          account_instance_uid    system_instance_uid
+auth_role           parent_auth_role_uid    system_version_uid      +++
+auth_permission     account_instance_uid    auth_role_uid   client_instance_uid     project_instance_uid
+
+auth_password       system_instance_uid     account_instance_uid
+auth_request        by_account_instance_uid account_instance_uid
 auth_identity       system_instance_uid
-
 notification_instance   account_instance_uid
+invoice_instance     client_instance_uid    account_instance_uid
 
-invoice_instance     client_instance_uid
-invoice_instance     account_instance_uid
+project_role            auth_role_uid
 
-project_group
+project_group           project_group_name, project_group_description
+project_instance        client_instance_uid, manager_account_instance_uid, project_group_uid, ,
+project_budget          project_instance_uid, budget_name, budget_currency, budget_value, is_current ++ budget_left_estimated
+
+project_account         project_instance_uid    account_instance_uid
+
+project_milestone       project_instance_uid, project_budget_uid, milestone_name, start_date, end_date, status_name
+
+time_entry_type
+time_entry_save
+time_entry_final
+
+
+entry_save              account_instance_uid, project_instance_uid, project_milestone_uid, invoice_instance_uid, entry_period, , , , , ,
+entry_final             , , , ,
+
+entry_
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------
+
+account_instance
+    account_name, email
+    client_instance_uid account_type_uid    account_title_uid account_division_uid account_group_uid auth_identity_uid
+    client_instance: object_thin
+    account_title: object_thin
+
+    object_thin(object_name=client_instance,
+            object_description=instance of client,
+            object_uid=client_instance_uid, object_link=http://
+            object_api_link=
+            )
+    parent: client_instance_uid, account_title_uid, account_division_uid, auth_identity_uid
+    children: account_calendar, auth_permission, auth_password (mask()), auth_request
+    m2m: account_instance_group -> account_group
+           auth_role ->
+
+account_instance
+
+
+get_object_full(object_uid):
+
+
+
+--------------------------------------------------------------------------------------------
 
 
 
@@ -141,6 +270,7 @@ system_version		system_version_uid  system_version_name
 
 system_instance     system_instance_uid (PK)    system_instance_name (NAME)
                     system_instance_type (FK-to-type)
+                    system_instance_
 
 system_instance     system_version_uid (FK)
 
@@ -154,7 +284,7 @@ system_exception	system_version_uid
 system_object       system_object_uid (PK)         system_object_name (NAME)
 system_object       system_version_uid
 system_object		parent_system_object_uid
-    system_object_name
+                    system_object_name
 
 system_attribute	system_object_uid
 system_attribute    system_version_uid
@@ -165,12 +295,11 @@ system_change		account_instance_uid
 system_change       system_version_uid
 
 system_setting		account_instance_uid
-    system_setting_name
+                    system_setting_name
 
 event_channel
 event_subscription	event_channel_uid
                     client_instance_uid (CLIENT_BASED)
-
 event_instance      client_instance_uid (CLIENT_BASED)
 
 country
@@ -178,8 +307,11 @@ currency
 
 client_country
                 country_uid
+                client_instance_uid
+
 client_currency
                 currency_uid
+                client_instance_uid
 
 +
 client_type
@@ -248,8 +380,6 @@ auth_permission		project_instance_uid
 auth_object		    auth_set_uid
 
 auth_set - permission set
-auth_set
-auth_set
            client_instance_uid (parent)
 
 auth_permission_set	    auth_set_uid

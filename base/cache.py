@@ -4,11 +4,12 @@ import threading
 import uuid
 from abc import abstractmethod
 from typing import Dict, Callable
-from base.base_objects import base_object, thread_base
+from base.base_objects import base_object, thread_base, CacheManagerBase, objects
 
 CACHE_MODE_TTL: int = 1
 CACHE_MODE_KEEP_FOREVER: int = 2
 CACHE_MODE_REFRESH: int = 3
+
 
 # wrapper for threads used in services
 class CacheItem:
@@ -50,14 +51,16 @@ class CacheItem:
             case _:
                 return False
 
+
 # Manager of all cache items
-class CacheManager(thread_base):
+class CacheManager(CacheManagerBase):
     created_date: datetime.datetime  # creation date of this manager with cache items
     cache_items: dict[str, CacheItem]
     def __init__(self):
         super().__init__()
+        objects.register_cache(self)
         self.created_date = datetime.datetime.now()
-        print("Creating object manager, creation time: " + str(self.created_date))
+        print("Creating cache manager, creation time: " + str(self.created_date))
         self.cache_items = {}
     def get_infos(self) -> list[dict]:
         return list(map(lambda x: x.get_info(), self.cache_items.values()))

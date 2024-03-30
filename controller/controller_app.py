@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, abort
+
+import base.base_objects
 from service.services import services
 from dao.daos_instances import *
 from dao.daos import daos
@@ -6,24 +8,7 @@ from controller.controllers import controllers
 from controller.controller_base import RequestSession
 
 # main Flask application
-httpflaskapp: Flask = Flask(__name__)
-
-
-#
-class FlaskApplicationWrapper(base_object):
-    httpflaskapp: Flask
-    def __init__(self, httpflaskapp: Flask):
-        super().__init__()
-        self.httpflaskapp = httpflaskapp
-    # get type of base object
-    def get_base_object_type(self) -> str:
-        return "FlaskApplicationWrapper"
-    # get name of base object
-    def get_base_object_name(self) -> str:
-        return "FlaskApplicationWrapper"
-
-
-flask_wrapper = FlaskApplicationWrapper(httpflaskapp)
+httpflaskapp: Flask = base.base_objects.httpflaskapp
 
 
 # auth route

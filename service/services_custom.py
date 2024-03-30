@@ -15,6 +15,6 @@ class SystemStateService(service_thread_base):
     def thread_work(self, tick: int) -> bool:
         process = psutil.Process()
         mi = process.memory_info()
-        daos.system_state_dao_instance.insert_row_random_uid(daos.system_instance_dto.system_instance_uid, mi.rss, mi.vms, len(objects.all_objects))
+        daos.system_state_dao_instance.insert_row_random_uid("", mi.rss, mi.vms, len(objects.all_objects), daos.system_instance_uid)
         daos.system_instance_dao_instance.update_touch_by_uid(daos.system_instance_dto.system_instance_uid)
         return True
