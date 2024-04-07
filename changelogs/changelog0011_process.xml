@@ -6,7 +6,7 @@
 
     <changeSet id="0011 - process tables" author="slawomir.bankowski">
 
-        <createTable tableName="process_type" remarks="type=dictionary;cardinality=10;description=types of processes" >
+        <createTable tableName="process_type" remarks="types of processes" >
             <column name="process_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="process_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -29,7 +29,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="process" remarks="type=m2m;cardinality=100000;description=calendar for account of given type" >
+        <createTable tableName="process" remarks="calendar for account of given type" >
             <column name="process_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="process_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -54,7 +54,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="process_run" remarks="type=m2m;cardinality=100000;description=single run of scheduled process" >
+        <createTable tableName="process_run" remarks="single run of scheduled process" >
             <column name="process_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="process_run_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

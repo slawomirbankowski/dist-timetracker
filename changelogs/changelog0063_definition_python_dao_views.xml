@@ -1,0 +1,243 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00062_definition_python_dto_list_views.xml">
+
+    <changeSet id="0062 - definition views" author="slawomir.bankowski">
+
+      <createView viewName="v_definition_python_daos_read">
+select x.table_name, x.ordinal_position, x.python
+from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_daos_read - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, 'from dto.dtos_full import *'
+	union all select '' as table_name, 11 as ordinal_position, 'from dto.dtos_rich import *'
+	union all select '' as table_name, 12 as ordinal_position, 'from dto.dtos_read_list import *'
+	union all select '' as table_name, 13 as ordinal_position, 'from dto.dtos_rich_list import *'
+	union all select '' as table_name, 14 as ordinal_position, 'from dto.dtos_thin_list import *'
+	union all select '' as table_name, 15 as ordinal_position, 'from dto.dtos_write_list import *'
+
+	union all select '' as table_name, 16 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 17 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 18 as ordinal_position, 'from base.base_objects import objects'
+	union all select '' as table_name, 19 as ordinal_position, 'from dao.dao_base import base_dao'
+	union all select '' as table_name, 20 as ordinal_position, ''
+	union all select '' as table_name, 21 as ordinal_position, ''
+
+	union all select table_name, 1000 as ordinal_position, concat('class ', table_name, '_dao(base_dao):') as python from v_definition_table_base_list
+union all select table_name, 1001 , concat('    def __init__(self):') from v_definition_table_base_list
+union all select table_name, 1002 , concat('        super().__init__()') from v_definition_table_base_list
+union all select table_name, 1003 , concat('    def get_model(self) -> db_model:') from v_definition_table_base_list
+union all select table_name, 1004 , concat('        return db_models.', table_name, '_model') from v_definition_table_base_list
+
+union all select table_name, 1010 , concat('    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1011 , concat('        return ', table_name, '_read_dtos(list(map(lambda r: ', table_name, '_read_dto(*r), self.get_objects(sql, params))))') from v_definition_table_base_list
+
+union all select table_name, 1021 , concat('    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+union all select table_name, 1022 , concat('        return ', table_name, '_write_dtos(list(map(lambda r: ', table_name, '_write_dto(*r), self.get_objects(sql, params))))') from v_definition_table_base_list
+
+union all select table_name, 1031 , concat('    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> ', table_name, '_thin_dtos:') from v_definition_table_base_list
+union all select table_name, 1032 , concat('        return ', table_name, '_thin_dtos(list(map(lambda r: ', table_name, '_thin_dto(*r), self.get_objects(sql, params))))') from v_definition_table_base_list
+
+union all select table_name, 1041 , concat('    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> ', table_name, '_rich_dtos:') from v_definition_table_base_list
+union all select table_name, 1042 , concat('        return ', table_name, '_rich_dtos(list(map(lambda r: ', table_name, '_rich_dto(*r), self.get_objects(sql, params))))') from v_definition_table_base_list
+
+union all select table_name, 1051 , concat('    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+union all select table_name, 1052 , concat('        return self.select_rows_read_by_query(sql, params).get_first()') from v_definition_table_base_list
+
+union all select table_name, 1061 , concat('    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1062 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)') from v_definition_table_base_list
+
+union all select table_name, 1071 , concat('    def select_rows_read_all(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1072 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1075 , concat('    def select_rows_read_active(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1076 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1081 , concat('    def select_rows_read_all_latest(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1082 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1091 , concat('    def select_rows_read_active_latest(self, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1092 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1111 , concat('    def select_rows_write_all(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+union all select table_name, 1112 , concat('        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1121 , concat('    def select_rows_write_active(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+union all select table_name, 1122 , concat('        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1131 , concat('    def select_rows_write_all_latest(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+union all select table_name, 1132 , concat('        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1141 , concat('    def select_rows_write_active_latest(self, n: int = 1000) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+union all select table_name, 1142 , concat('        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1151 , concat('    def select_row_read_by_uid(self, uid: str) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+union all select table_name, 1152 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()') from v_definition_table_base_list
+
+union all select table_name, 1161 , concat('    def select_row_read_by_id(self, id: int) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+union all select table_name, 1162 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()') from v_definition_table_base_list
+
+union all select table_name, 1171 , concat('    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1172 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))') from v_definition_table_base_list
+
+union all select table_name, 1181 , concat('    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 1182 , concat('        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)') from v_definition_table_base_list
+
+union all select table_name, 1191 , concat('    def select_rows_thin_all(self, n: int = 1000) -> ', table_name, '_thin_dtos:') from v_definition_table_base_list
+union all select table_name, 1192 , concat('        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))') from v_definition_table_base_list
+
+union all select table_name, 1301+ordinal_position*10 , concat('    def select_rows_read_by_', column_name, '(self, ', python_definition, ', n: int = 1000) -> ', table_name, '_read_dtos:') from v_definition_column_base_list where is_attribute=1
+union all select table_name, 1302+ordinal_position*10 , concat('        return self.select_rows_read_by_any_column(''', column_name,''', ', column_name, ', n)') from v_definition_column_base_list where is_attribute=1
+
+union all select table_name, 4401 , concat('    def insert_dto(self, dto: ', table_name, '_write_dto, created_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 4402 , concat('        return self.insert_single(dto, created_by)') from v_definition_table_base_list
+
+union all select table_name, 4430 as ordinal_position, concat('    def insert_row(self, ', attr_python_definition_defaults , ', created_by: str = objects.created_by_default) -> int:') as python from v_definition_table_column_base
+union all select table_name, 4431 as ordinal_position, concat('        return self.insert_single(', table_name, '_write_dto.new_write(', attr_column_list, '), created_by)') as python from v_definition_table_column_base
+
+union all select table_name, 4440 as ordinal_position, concat('    def insert_row_random_uid(self, ', attrnonkey_column_list_with_type , ', created_by: str = objects.created_by_default) -> int:') as python from v_definition_table_column_base
+union all select table_name, 4441 as ordinal_position, concat('        return self.insert_single(', table_name, '_write_dto.new_write_random_uid(', attrnonkey_column_list, '), created_by)') as python from v_definition_table_column_base
+
+union all select table_name, 4460 , concat('    def insert_dtos(self, dtos: list[', table_name, '_write_dto], created_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 4461 , concat('        return self.insert_many(dtos, created_by)') from v_definition_table_base_list
+
+union all select table_name, 4470 , concat('    def insert_write_dtos(self, dtos: ', table_name, '_write_dtos, created_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 4471 , concat('        return self.insert_dtos(dtos.dtos, created_by)') from v_definition_table_base_list
+
+union all select table_name, 4480 , concat('    def insert_read_dtos(self, dtos: ', table_name, '_read_dtos, created_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 4481 , concat('        return self.insert_dtos(dtos.get_write_dtos(), created_by)') from v_definition_table_base_list
+
+union all select table_name, 4490 , concat('    def insert_and_get(self, dto: ' , table_name, '_write_dto, created_by: str = objects.created_by_default) -> ' , table_name, '_read_dto | None:') from v_definition_table_base_list
+union all select table_name, 4491 , concat('        self.insert_single(dto, created_by)') from v_definition_table_base_list
+union all select table_name, 4492 , concat('        return self.select_row_read_by_uid(dto.get_uid())') from v_definition_table_base_list
+
+union all select table_name, 4495 , concat('    def insert_and_get_many(self, dtos: ', table_name, '_write_dtos, created_by: str = objects.created_by_default) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+union all select table_name, 4496 , concat('        return ', table_name, '_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))') from v_definition_table_base_list
+
+union all select table_name, 5530 as ordinal_position, concat('    def upsert_row(self, ', attr_column_list_with_type , ', updated_by: str=objects.created_by_default) -> int:') as python from v_definition_table_column_base
+union all select table_name, 5531 as ordinal_position, concat('        params = ', table_name, '_write_dto.new_write(', attr_column_list, ').get_list_write_insert(updated_by)') as python from v_definition_table_column_base
+union all select table_name, 5532 as ordinal_position, concat('        return self.execute_query(self.get_model().upsert_attrs_sql, params)') as python from v_definition_table_column_base
+
+union all select table_name, 5540 as ordinal_position, concat('    def upsert_row_and_get(self, ', attr_column_list_with_type , ', updated_by: str = objects.created_by_default) -> ', table_name, '_read_dto | None:') as python from v_definition_table_column_base
+union all select table_name, 5541 as ordinal_position, concat('        params = ', table_name, '_write_dto.new_write(', attr_column_list, ').get_list_write_insert(updated_by)') as python from v_definition_table_column_base
+union all select table_name, 5542 as ordinal_position, concat('        self.execute_query(self.get_model().upsert_attrs_sql, params)') as python from v_definition_table_column_base
+union all select table_name, 5543 as ordinal_position, concat('        return self.select_row_read_by_uid(', table_name, '_uid)') as python from v_definition_table_column_base
+
+union all select table_name, 6440 , concat('    def delete_logical_dtos(self, dtos: list[', table_name, '_write_dto], removed_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 6441 , concat('        uids = list(map(lambda dto: dto.get_uid(), dtos))') from v_definition_table_base_list
+union all select table_name, 6442 , concat('        return self.delete_logical_by_uids(uids, removed_by)') from v_definition_table_base_list
+
+union all select table_name, 6450 , concat('    def delete_logical_write_dtos(self, dtos: ', table_name, '_write_dtos, removed_by: str = objects.created_by_default) -> int:') from v_definition_table_base_list
+union all select table_name, 6451 , concat('        return self.delete_logical_dtos(dtos.dtos, removed_by)') from v_definition_table_base_list
+
+union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_thin_list - END' as python
+) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_daos_full">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_daos_full - START at ', cast(now() as text)) as python
+		union all select '' as table_name, 1 as ordinal_position, 'import dao.dao_connection'
+		union all select '' as table_name, 2 as ordinal_position, 'from typing import TypeVar, Generic, List, Iterable'
+		union all select '' as table_name, 3 as ordinal_position, 'from dao.dao_base import base_dao'
+		union all select '' as table_name, 4 as ordinal_position, 'from dao.daos_read import *'
+		union all select '' as table_name, 5 as ordinal_position, 'from dto.dtos_models import db_models'
+		union all select '' as table_name, 6 as ordinal_position, ''
+		union all select '' as table_name, 6 as ordinal_position, 'db_connections = dao.dao_connection.db_connections'
+		union all select '' as table_name, 20 as ordinal_position, ''
+		union all select '' as table_name, 21 as ordinal_position, ''
+
+		union all select table_name, 1000 as ordinal_position, concat('class ', table_name, '_full_dao(', table_name, '_dao):') as python from v_definition_table_base_list
+		union all select table_name, 1001 , concat('    def __init__(self):') from v_definition_table_base_list
+		union all select table_name, 1002 , concat('        super().__init__()') from v_definition_table_base_list
+		union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+		union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_daos_full - END' as python
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_dao_init">
+select table_name, 1 as ordinal_position, concat('    ', table_name, '_dao_instance = ', table_name,'_full_dao()') as python
+from v_definition_table_column_base
+order by table_name
+      </createView>
+
+      <createView viewName="v_definition_dao_register">
+select table_name, 1 as ordinal_position, concat('        self.all_daos["', table_name, '_dao"] = self.', table_name, '_dao_instance') as python
+from v_definition_table_column_base
+order by table_name
+      </createView>
+
+      <createView viewName="v_definition_python_daos_list">
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_daos_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 1 as ordinal_position, 'from dao.daos_full import *' as python
+	union all select '' as table_name, 1 as ordinal_position, '' as python
+	union all select '' as table_name, 1 as ordinal_position, '' as python
+	union all select '' as table_name, 1 as ordinal_position, 'class DaosList(base_object):' as python
+	union all select '' as table_name, 1 as ordinal_position, '    all_daos: dict[str, base_dao] = {}' as python
+	union all select table_name, ordinal_position, python from v_definition_dao_init
+	union all select '' as table_name, 1 as ordinal_position, '    def register_all_standard_daos(self):' as python
+	union all select table_name, ordinal_position, python from v_definition_dao_register
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_daos_list - END' as python
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,5 +1,7 @@
 import datetime
 import os
+import logging
+from logging import config
 import psycopg2
 import psycopg2.pool
 from pyliquibase import Pyliquibase
@@ -38,7 +40,7 @@ class DaoConnection(DaoConnectionBase):
         self.min_conns = min_conns
         self.max_conns = max_conns
         self.liquibase_prop_file = "./changelogs/liquibase." + self.db_name + ".properties"
-        print("Creating new DB connection pool, host: " + db_host + ", name: " + db_name + ", user: " + db_user)
+        logging.info("Creating new DB connection pool, host: " + db_host + ", name: " + db_name + ", user: " + db_user)
         self.db_pool = psycopg2.pool.SimpleConnectionPool(min_conns, max_conns, user=db_user, password=db_pass,
                                                           host=db_host, port='5432', database=db_name)
 
@@ -54,8 +56,8 @@ class DaoConnection(DaoConnectionBase):
             "db_pool_closed": self.db_pool.closed
         }
 
-    def save_liquibase_properties(self):
-        print("Saving Liquibase properties file")
+    def save_liquibase_properties(self) -> None:
+        logging.info("Saving Liquibase properties file")
         lpfile = open(self.liquibase_prop_file, "w")
         lpfile.writelines([
             "changeLogFile:./changelogs/masterchangelog.xml\n",
@@ -66,15 +68,16 @@ class DaoConnection(DaoConnectionBase):
         ])
         lpfile.close()
 
-    def delete_liquibase_properties(self):
+    def delete_liquibase_properties(self) -> None:
         os.remove(self.liquibase_prop_file)
 
-    def initialize_schema(self):
+    def initialize_schema(self) -> None:
         self.save_liquibase_properties()
         liquibase = Pyliquibase(defaultsFile=self.liquibase_prop_file, jdbcDriversDir="./lib")
-        print("Initializing Liquibase schema on database: " + self.db_url + ", file: " + self.liquibase_prop_file + ", version: " + liquibase.version)
-        liquibase.validate()
-        liquibase.update()
+        #logging.info("Initializing Liquibase schema on database: " + self.db_url + ", file: " + self.liquibase_prop_file + ", version: " + liquibase.version)
+        #liquibase.validate()
+        #logging.info("Updating schema - Liquibase")
+        #liquibase.update()
         self.delete_liquibase_properties()
 
     def get_connection(self):
@@ -112,8 +115,8 @@ class DaoConnections(DaoConnectionsBase):
     def get_base_object_type(self) -> str:
         return "Connections"
     # initialize DB connection to main database
-    def initialize_main_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
-        print("Initializing DaoConnections")
+    def initialize_main_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str) -> None:
+        logging.debug("Initializing DaoConnections: main connection, object_id: " + self.object_id)
         self.main_connection.initialize_connection(db_url, db_host, db_name, db_user, db_pass)
         self.main_connection.initialize_schema()
         self.is_initialized = True
@@ -124,9 +127,9 @@ class DaoConnections(DaoConnectionsBase):
         self.db_pass = db_pass
         self.initialization_time = datetime.datetime.now()
     # handler for closing application
-    def close_connections(self):
-        print("Closing ALL Connections")
-    def get_base_dict_custom_info(self):
+    def close_connections(self) -> None:
+        logging.info("Closing ALL Connections, object_id: " + self.object_id)
+    def get_base_dict_custom_info(self) -> dict:
         return {
             "is_initialized": self.is_initialized,
             "creation_time": self.creation_time,
@@ -141,7 +144,7 @@ class DaoConnections(DaoConnectionsBase):
 
     # create new connection to tenant database
     def create_tenant_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
-        print("Create tenant DB connection")
+        logging.info("Create tenant DB connection, object_id: " + self.object_id)
         tenant_connection = DaoConnection()
         tenant_connection.initialize_connection(db_url, db_host, db_name, db_user, db_pass)
         self.connections[db_name] = tenant_connection

@@ -6,7 +6,7 @@
 
     <changeSet id="0021 - client tables" author="slawomir.bankowski">
 
-        <createTable tableName="client_type" remarks="type=dictionary;cardinality=10;description=type of client: System, Test, Corporate, Individual, ..." >
+        <createTable tableName="client_type" remarks="type of client: System, Test, Corporate, Individual, ..." >
             <column name="client_type_uid" type="text" remarks="type=pk;description=type of client"><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_type_name" type="text" remarks="type=name;description=full friendly name of this client type"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -29,7 +29,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="client_status" remarks="type=dictionary,append;cardinality=10;description=status of client: New, Pending, Active, Closed" >
+        <createTable tableName="client_status" remarks="status of client: New, Pending, Active, Closed" >
             <column name="client_status_uid" type="text" remarks="type of client"><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_status_name" type="text" remarks="category of client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -52,7 +52,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="client" remarks="type=dictionary,append;cardinality=100;description=single client of tenant" >
+        <createTable tableName="client" remarks="single client of tenant; client is company that is cooperating with tenant through projects and initiatives, client might have accounts and invoices" >
             <column name="client_uid" type="text" remarks="type=pk;description=Unique ID of client - code or name of client"><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_name" type="text" remarks="type=name;description=full friendly name of this client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -88,7 +88,7 @@
         <createIndex indexName="idx_client_client_name" tableName="client" unique="true"><column name="client_name" /></createIndex>
         <createIndex indexName="idx_client_client_code" tableName="client" unique="true"><column name="client_code" /></createIndex>
 
-        <createTable tableName="client_country" remarks="type=dictionary;cardinality=1000;description=m2m between client and country to select countries that client operate">
+        <createTable tableName="client_country" remarks="m2m between client and country to select countries that client operate">
             <column name="client_country_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_country_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description="><constraints nullable="false"/></column>
            <!-- FKs -->
@@ -112,7 +112,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="client_payment" remarks="type=fk;cardinality=10000;description=payment of client for licenses connected with modules" >
+        <createTable tableName="client_payment" remarks="payment of client for licenses connected with modules" >
             <column name="client_payment_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description=Unique ID of client - code or name of client"><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_payment_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description=name of this payment"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -145,7 +145,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="client_role" remarks="type=dictionary;cardinality=1000;description=roles of accounts in client">
+        <createTable tableName="client_role" remarks="roles of accounts in client">
             <column name="client_role_uid" type="text" remarks="type=pk;description="><constraints nullable="false"/></column>
             <column name="client_role_name" type="text" remarks="type=name;description=name of this license"><constraints primaryKey="true" nullable="false"/></column>
             <!-- attribute columns -->
@@ -168,7 +168,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="client_account" remarks="type=dictionary;cardinality=100000;description=account assignment to client with given role">
+        <createTable tableName="client_account" remarks="account assignment to client with given role">
             <column name="client_account_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;cardinality=1000;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="client_account_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description=name of this license"><constraints nullable="false"/></column>
             <!-- FKs -->

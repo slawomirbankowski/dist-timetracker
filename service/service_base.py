@@ -1,4 +1,5 @@
 import datetime
+import logging
 import threading
 from abc import abstractmethod
 from time import sleep
@@ -15,8 +16,8 @@ class service_base(base_object):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "service_base"
-    def initialize(self):
-        print("")
+    def initialize(self) -> None:
+        logging.info("")
     # get type of base object
     def get_base_object_type(self) -> str:
         return "Service"
@@ -30,5 +31,5 @@ class service_thread_base(service_base, thread_base):
     def get_base_object_type(self) -> str:
         return "service_thread_base"
     # initialize this service
-    def initialize(self):
+    def initialize(self) -> None:
         self.initialize_thread()

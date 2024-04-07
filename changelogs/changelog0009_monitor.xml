@@ -6,7 +6,7 @@
 
     <changeSet id="0009 - monitor tables" author="slawomir.bankowski">
 
-        <createTable tableName="monitor_type" remarks="type=dictionary;cardinality=10;description=monitors in application to check status of item" >
+        <createTable tableName="monitor_type" remarks="monitors in application to check status of item" >
             <column name="monitor_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="monitor_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -30,7 +30,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="monitor" remarks="type=full;cardinality=1000;description=monitor to check state of given items" >
+        <createTable tableName="monitor" remarks="monitor to check state of given items" >
             <column name="monitor_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="monitor_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -64,7 +64,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="monitor_run" remarks="type=m2m;cardinality=100000;description=single run of monitor" >
+        <createTable tableName="monitor_run" remarks="single run of monitor" >
             <column name="monitor_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="monitor_run_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

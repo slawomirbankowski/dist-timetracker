@@ -6,7 +6,7 @@
 
     <changeSet id="0006 - audit" author="slawomir.bankowski">
 
-        <createTable tableName="audit_type" remarks="type=append;cardinality=10000000;description=" >
+        <createTable tableName="audit_type" remarks="types of audit in application" >
             <column name="audit_type_uid" type="text" remarks="type=pk;description=type of audit operations: Update, Delete, Insert"><constraints primaryKey="true" nullable="false"/></column>
             <column name="audit_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -27,9 +27,9 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="audit_change" remarks="type=append;cardinality=10000000;description=changes to tables - updates, inserts, deletes" >
-            <column name="system_change_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
-            <column name="system_change_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="audit_change" remarks="changes to tables - updates, inserts, deletes" >
+            <column name="audit_change_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
+            <column name="audit_change_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="account_uid" type="text" remarks="type=fk;description=FK to account that caused this change"><constraints nullable="false"/></column>
             <column name="audit_type_uid" type="text" remarks="type of audit"><constraints nullable="false"/></column>

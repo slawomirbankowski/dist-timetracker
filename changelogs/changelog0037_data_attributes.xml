@@ -1,0 +1,90 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0037_data_attributes.xml">
+
+    <changeSet id="0037 - data table attributes" author="slawomir.bankowski">
+
+        <sql splitStatements="false" stripComments="false">
+          INSERT INTO system_attribute(system_attribute_uid, system_attribute_name, system_table_uid, column_name, attribute_type, attribute_label,
+           attribute_description, ordinal_position, field_category, is_hidden, is_meta, is_secret, is_search, is_read_only, is_created)
+          select concat(t.table_name, '', a.system_attribute_name) as system_attribute_uid
+           , a.system_attribute_name
+           , t.table_name as system_table_uid
+           , a.system_attribute_name
+           , '' as attribute_type
+           , '' as attribute_label
+           , '' as attribute_description
+           , 100 as ordinal_position
+           , '' as field_category
+           , a.is_hidden as is_hidden
+           , a.is_meta as is_meta
+           , a.is_secret as is_secret
+           , a.is_search as is_search
+           , a.is_read_only as is_read_only
+           , 0 as is_created
+          from (
+          select 'row_instance' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 1 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'row_lock' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 2 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'row_owner' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 2 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'row_seq' as system_attribute_name, 'bigint' as attribute_type, '' as attribute_description, 3 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'row_guid' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 4 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'row_version' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 5 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'is_active' as system_attribute_name, 'bigint' as attribute_type, '' as attribute_description, 6 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'created_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 7 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'created_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 8 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'last_updated_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 9 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'last_updated_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 10 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'removed_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 11 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'removed_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 12 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          union all select 'custom_attributes' as system_attribute_name, 'test_json' as attribute_type, '' as attribute_description, 13 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+          ) a
+          join information_schema.tables t on 1=1
+          where t.table_name not in ('databasechangeloglock', 'databasechangelog')
+           and t.table_schema='public' and t.table_type='BASE TABLE'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+	    </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

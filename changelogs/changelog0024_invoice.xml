@@ -6,7 +6,7 @@
 
     <changeSet id="0024 - invoice tables" author="slawomir.bankowski">
 
-        <createTable tableName="invoice_flow" remarks="type=full;cardinality=1000;description=pre-defined flow of invoice" >
+        <createTable tableName="invoice_flow" remarks="pre-defined flow of invoice" >
             <column name="invoice_flow_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_flow_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -30,7 +30,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="invoice_flow_state" remarks="type=full;cardinality=100000;description=states of invoice flow" >
+        <createTable tableName="invoice_flow_state" remarks="states of invoice flow" >
             <column name="invoice_flow_state_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_flow_state_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -53,7 +53,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="invoice_status" remarks="type=dictionary;cardinality=10;description=status of invoice: Created, Pending, OnHold, Approved, Rejected, Paid, Closed" >
+        <createTable tableName="invoice_status" remarks="status of invoice: Created, Pending, OnHold, Approved, Rejected, Paid, Closed" >
             <column name="invoice_status_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_status_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -78,7 +78,7 @@
         </createTable>
         <createIndex indexName="idx_invoice_status_invoice_status_name" tableName="invoice_status" unique="true"><column name="invoice_status_name" /></createIndex>
 
-        <createTable tableName="invoice_type" remarks="type=dictionary;cardinality=1000;description=type of invoice: " >
+        <createTable tableName="invoice_type" remarks="type of invoice: Default, Draft, Template" >
             <column name="invoice_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -100,7 +100,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="invoice_category" remarks="type=dictionary;cardinality=1000;description=client category of invoice: Internal, Correction, ..." >
+        <createTable tableName="invoice_category" remarks="client category of invoice: Internal, Correction, ..." >
             <column name="invoice_category_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_category_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -124,7 +124,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="invoice_instance" remarks="type=update;description=invoices" >
+        <createTable tableName="invoice_instance" remarks="invoices" >
             <column name="invoice_instance_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_instance_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -160,7 +160,7 @@
         </createTable>
         <createIndex indexName="idx_invoice_instance_account_uid" tableName="invoice_instance" unique="false"><column name="account_uid" /></createIndex>
 
-        <createTable tableName="invoice_entry" remarks="type=update;description=entry assigned to invoice" >
+        <createTable tableName="invoice_entry" remarks="entry assigned to invoice" >
             <column name="invoice_entry_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_entry_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -191,7 +191,7 @@
         <createIndex indexName="idx_invoice_entry_tenant_uid" tableName="invoice_entry" unique="false"><column name="tenant_uid" /></createIndex>
         <createIndex indexName="idx_invoice_entry_invoice_instance_uid" tableName="invoice_entry" unique="false"><column name="invoice_instance_uid" /></createIndex>
 
-        <createTable tableName="invoice_action_type" remarks="type=update;description=types of action for invoice" >
+        <createTable tableName="invoice_action_type" remarks="types of action for invoice" >
             <column name="invoice_action_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_action_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -213,7 +213,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="invoice_action" remarks="type=update;description=types of action for invoice like receive, confirm, approve, deny, correction, paying, paid, closed" >
+        <createTable tableName="invoice_action" remarks="types of action for invoice like receive, confirm, approve, deny, correction, paying, paid, closed" >
             <column name="invoice_action_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_action_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

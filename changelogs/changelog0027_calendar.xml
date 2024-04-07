@@ -6,7 +6,7 @@
 
     <changeSet id="0026 - calendar tables for events like holiday, conference, sickness" author="slawomir.bankowski">
 
-        <createTable tableName="calendar_type" remarks="type=dictionary;cardinality=10;description=types of calendar: holiday, conference, sickness" >
+        <createTable tableName="calendar_type" remarks="types of calendar: holiday, conference, sickness" >
             <column name="calendar_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -26,7 +26,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_account" remarks="type=m2m;cardinality=100000;description=calendar for account of given type" >
+        <createTable tableName="calendar_account" remarks="calendar for account of given type" >
             <column name="calendar_account_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_account_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -52,7 +52,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_event_type" remarks="type=dictionary;cardinality=1000;description=type of event in calendar for given client" >
+        <createTable tableName="calendar_event_type" remarks="type of event in calendar for given client" >
             <column name="calendar_event_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_event_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -78,7 +78,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_event_group" remarks="type=full;cardinality=1000;description=group of events in calendar with consistent period, one row could be holiday for 14 days for given person account" >
+        <createTable tableName="calendar_event_group" remarks="group of events in calendar with consistent period, one row could be holiday for 14 days for given person account" >
             <column name="calendar_event_group_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_event_group_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -109,7 +109,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_event" remarks="type=full;cardinality=1000;description=single day event in calendar within a group of events, single row would be single day within holiday" >
+        <createTable tableName="calendar_event" remarks="single day event in calendar within a group of events, single row would be single day within holiday" >
             <column name="calendar_event_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_event_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -136,7 +136,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_approval_type" remarks="type=dictionary;cardinality=10;description=type of approvals for calendar event: approve, correction, disapprove, waiting" >
+        <createTable tableName="calendar_approval_type" remarks="type of approvals for calendar event: approve, correction, disapprove, waiting" >
             <column name="calendar_approval_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_approval_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -159,7 +159,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="calendar_approval" remarks="type=m2m;cardinality=100000;description=approval of calendar event" >
+        <createTable tableName="calendar_approval" remarks="approval of calendar event" >
             <column name="calendar_approval_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="calendar_approval_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

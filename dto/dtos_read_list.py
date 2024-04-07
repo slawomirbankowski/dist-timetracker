@@ -1,6 +1,8 @@
-# auto-generated - v_definition_python_dtos_read_list - START at 2024-03-29 22:24:35.212439+01
+# auto-generated - v_definition_python_dtos_read_list - START at 2024-03-30 17:20:33.248385+01
 from __future__ import annotations
 from datetime import datetime
+import logging
+from logging import config
 from abc import abstractmethod
 from dataclasses import dataclass
 from dto.dtos import *
@@ -8,8 +10,8 @@ from dto.dtos_thin import *
 from dto.dtos_write import *
 from dto.dtos_read import *
 import datetime
-
 from typing import Dict, Callable
+
 
 @dataclass(frozen=False)
 class account_read_dtos(base_read_dtos):
@@ -134,12 +136,12 @@ class account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_read_dto], int]) -> list[int]:
@@ -297,12 +299,12 @@ class account_division_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_division_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_division_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_division_read_dto], int]) -> list[int]:
@@ -445,12 +447,12 @@ class account_division_template_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_division_template_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_division_template_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_division_template_read_dto], int]) -> list[int]:
@@ -598,12 +600,12 @@ class account_group_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_group_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_group_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_group_read_dto], int]) -> list[int]:
@@ -756,12 +758,12 @@ class account_hierarchy_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_hierarchy_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_hierarchy_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_hierarchy_read_dto], int]) -> list[int]:
@@ -929,12 +931,12 @@ class account_rate_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_rate_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_rate_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_rate_read_dto], int]) -> list[int]:
@@ -1077,12 +1079,12 @@ class account_skill_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_skill_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_skill_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_skill_read_dto], int]) -> list[int]:
@@ -1245,12 +1247,12 @@ class account_team_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_team_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_team_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_team_read_dto], int]) -> list[int]:
@@ -1393,12 +1395,12 @@ class account_title_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_title_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_title_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_title_read_dto], int]) -> list[int]:
@@ -1556,12 +1558,12 @@ class account_title_responsibility_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_title_responsibility_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_title_responsibility_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_title_responsibility_read_dto], int]) -> list[int]:
@@ -1704,12 +1706,12 @@ class account_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[account_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[account_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[account_type_read_dto], int]) -> list[int]:
@@ -1867,12 +1869,12 @@ class audit_change_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[audit_change_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[audit_change_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[audit_change_read_dto], int]) -> list[int]:
@@ -2010,12 +2012,12 @@ class audit_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[audit_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[audit_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[audit_type_read_dto], int]) -> list[int]:
@@ -2183,12 +2185,12 @@ class auth_attempt_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_attempt_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_attempt_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_attempt_read_dto], int]) -> list[int]:
@@ -2336,12 +2338,12 @@ class auth_identity_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_identity_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_identity_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_identity_read_dto], int]) -> list[int]:
@@ -2504,12 +2506,12 @@ class auth_identity_tenant_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_identity_tenant_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_identity_tenant_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_identity_tenant_read_dto], int]) -> list[int]:
@@ -2692,12 +2694,12 @@ class auth_key_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_key_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_key_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_key_read_dto], int]) -> list[int]:
@@ -2840,12 +2842,12 @@ class auth_key_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_key_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_key_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_key_type_read_dto], int]) -> list[int]:
@@ -3018,12 +3020,12 @@ class auth_password_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_password_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_password_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_password_read_dto], int]) -> list[int]:
@@ -3196,12 +3198,12 @@ class auth_password_current_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_password_current_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_password_current_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_password_current_read_dto], int]) -> list[int]:
@@ -3354,12 +3356,12 @@ class auth_password_rule_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_password_rule_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_password_rule_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_password_rule_read_dto], int]) -> list[int]:
@@ -3532,12 +3534,12 @@ class auth_permission_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_permission_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_permission_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_permission_read_dto], int]) -> list[int]:
@@ -3740,12 +3742,12 @@ class auth_request_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_request_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_request_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_request_read_dto], int]) -> list[int]:
@@ -3923,12 +3925,12 @@ class auth_role_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_role_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_role_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_role_read_dto], int]) -> list[int]:
@@ -4076,12 +4078,12 @@ class auth_role_uri_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_role_uri_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_role_uri_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_role_uri_read_dto], int]) -> list[int]:
@@ -4244,12 +4246,12 @@ class auth_session_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_session_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_session_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_session_read_dto], int]) -> list[int]:
@@ -4437,12 +4439,12 @@ class auth_sso_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_sso_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_sso_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_sso_read_dto], int]) -> list[int]:
@@ -4620,12 +4622,12 @@ class auth_token_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[auth_token_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[auth_token_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[auth_token_read_dto], int]) -> list[int]:
@@ -4778,12 +4780,12 @@ class calendar_account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_account_read_dto], int]) -> list[int]:
@@ -4951,12 +4953,12 @@ class calendar_approval_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_approval_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_approval_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_approval_read_dto], int]) -> list[int]:
@@ -5094,12 +5096,12 @@ class calendar_approval_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_approval_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_approval_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_approval_type_read_dto], int]) -> list[int]:
@@ -5257,12 +5259,12 @@ class calendar_event_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_event_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_event_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_event_read_dto], int]) -> list[int]:
@@ -5440,12 +5442,12 @@ class calendar_event_group_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_event_group_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_event_group_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_event_group_read_dto], int]) -> list[int]:
@@ -5598,12 +5600,12 @@ class calendar_event_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_event_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_event_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_event_type_read_dto], int]) -> list[int]:
@@ -5741,12 +5743,12 @@ class calendar_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[calendar_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[calendar_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[calendar_type_read_dto], int]) -> list[int]:
@@ -5944,12 +5946,12 @@ class client_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_read_dto], int]) -> list[int]:
@@ -6107,12 +6109,12 @@ class client_account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_account_read_dto], int]) -> list[int]:
@@ -6265,12 +6267,12 @@ class client_country_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_country_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_country_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_country_read_dto], int]) -> list[int]:
@@ -6463,12 +6465,12 @@ class client_payment_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_payment_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_payment_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_payment_read_dto], int]) -> list[int]:
@@ -6611,12 +6613,12 @@ class client_role_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_role_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_role_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_role_read_dto], int]) -> list[int]:
@@ -6759,12 +6761,12 @@ class client_status_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_status_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_status_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_status_read_dto], int]) -> list[int]:
@@ -6907,12 +6909,12 @@ class client_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[client_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[client_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[client_type_read_dto], int]) -> list[int]:
@@ -7080,12 +7082,12 @@ class connection_engine_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[connection_engine_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[connection_engine_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[connection_engine_read_dto], int]) -> list[int]:
@@ -7258,12 +7260,12 @@ class connection_host_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[connection_host_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[connection_host_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[connection_host_read_dto], int]) -> list[int]:
@@ -7426,12 +7428,12 @@ class connection_user_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[connection_user_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[connection_user_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[connection_user_read_dto], int]) -> list[int]:
@@ -7664,12 +7666,12 @@ class country_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[country_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[country_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[country_read_dto], int]) -> list[int]:
@@ -7812,12 +7814,12 @@ class currency_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[currency_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[currency_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[currency_read_dto], int]) -> list[int]:
@@ -7970,12 +7972,12 @@ class event_acknowledge_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_acknowledge_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_acknowledge_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_acknowledge_read_dto], int]) -> list[int]:
@@ -8138,12 +8140,12 @@ class event_channel_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_channel_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_channel_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_channel_read_dto], int]) -> list[int]:
@@ -8286,12 +8288,12 @@ class event_channel_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_channel_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_channel_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_channel_type_read_dto], int]) -> list[int]:
@@ -8469,12 +8471,12 @@ class event_instance_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_instance_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_instance_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_instance_read_dto], int]) -> list[int]:
@@ -8647,12 +8649,12 @@ class event_notification_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_notification_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_notification_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_notification_read_dto], int]) -> list[int]:
@@ -8795,12 +8797,12 @@ class event_observer_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_observer_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_observer_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_observer_read_dto], int]) -> list[int]:
@@ -8968,12 +8970,12 @@ class event_subscription_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_subscription_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_subscription_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_subscription_read_dto], int]) -> list[int]:
@@ -9131,12 +9133,12 @@ class event_template_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_template_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_template_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_template_read_dto], int]) -> list[int]:
@@ -9279,12 +9281,12 @@ class event_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[event_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[event_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[event_type_read_dto], int]) -> list[int]:
@@ -9442,12 +9444,12 @@ class invoice_action_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_action_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_action_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_action_read_dto], int]) -> list[int]:
@@ -9585,12 +9587,12 @@ class invoice_action_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_action_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_action_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_action_type_read_dto], int]) -> list[int]:
@@ -9738,12 +9740,12 @@ class invoice_category_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_category_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_category_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_category_read_dto], int]) -> list[int]:
@@ -9916,12 +9918,12 @@ class invoice_entry_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_entry_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_entry_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_entry_read_dto], int]) -> list[int]:
@@ -10069,12 +10071,12 @@ class invoice_flow_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_flow_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_flow_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_flow_read_dto], int]) -> list[int]:
@@ -10217,12 +10219,12 @@ class invoice_flow_state_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_flow_state_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_flow_state_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_flow_state_read_dto], int]) -> list[int]:
@@ -10425,12 +10427,12 @@ class invoice_instance_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_instance_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_instance_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_instance_read_dto], int]) -> list[int]:
@@ -10573,12 +10575,12 @@ class invoice_status_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_status_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_status_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_status_read_dto], int]) -> list[int]:
@@ -10716,12 +10718,12 @@ class invoice_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[invoice_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[invoice_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[invoice_type_read_dto], int]) -> list[int]:
@@ -10919,12 +10921,12 @@ class monitor_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[monitor_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[monitor_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[monitor_read_dto], int]) -> list[int]:
@@ -11038,15 +11040,15 @@ class monitor_run_read_dtos(base_read_dtos):
         for dto in self.dtos:
             d[dto.get_uid()] = dto
         return d
-    def to_dict_by_process_run_uid(self) -> dict[str, monitor_run_read_dto]:
+    def to_dict_by_monitor_run_uid(self) -> dict[str, monitor_run_read_dto]:
         d = {}
         for dto in self.dtos:
-            d[dto.process_run_uid] = dto
+            d[dto.monitor_run_uid] = dto
         return d
-    def to_dict_by_process_run_name(self) -> dict[str, monitor_run_read_dto]:
+    def to_dict_by_monitor_run_name(self) -> dict[str, monitor_run_read_dto]:
         d = {}
         for dto in self.dtos:
-            d[dto.process_run_name] = dto
+            d[dto.monitor_run_name] = dto
         return d
     def to_dict_by_tenant_uid(self) -> dict[str, monitor_run_read_dto]:
         d = {}
@@ -11092,12 +11094,12 @@ class monitor_run_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[monitor_run_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[monitor_run_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[monitor_run_read_dto], int]) -> list[int]:
@@ -11245,12 +11247,12 @@ class monitor_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[monitor_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[monitor_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[monitor_type_read_dto], int]) -> list[int]:
@@ -11433,12 +11435,12 @@ class period_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[period_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[period_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[period_read_dto], int]) -> list[int]:
@@ -11591,12 +11593,12 @@ class process_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[process_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[process_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[process_read_dto], int]) -> list[int]:
@@ -11710,15 +11712,15 @@ class process_run_read_dtos(base_read_dtos):
         for dto in self.dtos:
             d[dto.get_uid()] = dto
         return d
-    def to_dict_by_report_run_uid(self) -> dict[str, process_run_read_dto]:
+    def to_dict_by_process_run_uid(self) -> dict[str, process_run_read_dto]:
         d = {}
         for dto in self.dtos:
-            d[dto.report_run_uid] = dto
+            d[dto.process_run_uid] = dto
         return d
-    def to_dict_by_report_run_name(self) -> dict[str, process_run_read_dto]:
+    def to_dict_by_process_run_name(self) -> dict[str, process_run_read_dto]:
         d = {}
         for dto in self.dtos:
-            d[dto.report_run_name] = dto
+            d[dto.process_run_name] = dto
         return d
     def to_dict_by_tenant_uid(self) -> dict[str, process_run_read_dto]:
         d = {}
@@ -11749,12 +11751,12 @@ class process_run_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[process_run_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[process_run_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[process_run_read_dto], int]) -> list[int]:
@@ -11897,12 +11899,12 @@ class process_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[process_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[process_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[process_type_read_dto], int]) -> list[int]:
@@ -12070,12 +12072,12 @@ class project_account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_account_read_dto], int]) -> list[int]:
@@ -12248,12 +12250,12 @@ class project_budget_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_budget_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_budget_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_budget_read_dto], int]) -> list[int]:
@@ -12401,12 +12403,12 @@ class project_group_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_group_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_group_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_group_read_dto], int]) -> list[int]:
@@ -12604,12 +12606,12 @@ class project_instance_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_instance_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_instance_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_instance_read_dto], int]) -> list[int]:
@@ -12782,12 +12784,12 @@ class project_milestone_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_milestone_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_milestone_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_milestone_read_dto], int]) -> list[int]:
@@ -12930,12 +12932,12 @@ class project_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[project_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[project_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[project_type_read_dto], int]) -> list[int]:
@@ -13098,12 +13100,12 @@ class report_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_read_dto], int]) -> list[int]:
@@ -13241,12 +13243,12 @@ class report_content_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_content_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_content_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_content_type_read_dto], int]) -> list[int]:
@@ -13384,12 +13386,12 @@ class report_format_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_format_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_format_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_format_read_dto], int]) -> list[int]:
@@ -13577,12 +13579,12 @@ class report_run_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_run_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_run_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_run_read_dto], int]) -> list[int]:
@@ -13720,12 +13722,12 @@ class report_status_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_status_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_status_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_status_read_dto], int]) -> list[int]:
@@ -13863,12 +13865,12 @@ class report_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[report_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[report_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[report_type_read_dto], int]) -> list[int]:
@@ -14016,12 +14018,12 @@ class storage_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[storage_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[storage_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[storage_read_dto], int]) -> list[int]:
@@ -14174,12 +14176,12 @@ class storage_connection_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[storage_connection_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[storage_connection_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[storage_connection_read_dto], int]) -> list[int]:
@@ -14327,12 +14329,12 @@ class storage_query_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[storage_query_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[storage_query_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[storage_query_read_dto], int]) -> list[int]:
@@ -14480,12 +14482,12 @@ class storage_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[storage_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[storage_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[storage_type_read_dto], int]) -> list[int]:
@@ -14668,12 +14670,12 @@ class synchronization_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[synchronization_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[synchronization_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[synchronization_read_dto], int]) -> list[int]:
@@ -14831,12 +14833,12 @@ class synchronization_run_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[synchronization_run_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[synchronization_run_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[synchronization_run_read_dto], int]) -> list[int]:
@@ -14984,12 +14986,12 @@ class synchronization_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[synchronization_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[synchronization_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[synchronization_type_read_dto], int]) -> list[int]:
@@ -15152,12 +15154,12 @@ class system_attribute_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_attribute_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_attribute_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_attribute_read_dto], int]) -> list[int]:
@@ -15315,12 +15317,12 @@ class system_database_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_database_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_database_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_database_read_dto], int]) -> list[int]:
@@ -15473,12 +15475,12 @@ class system_exception_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_exception_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_exception_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_exception_read_dto], int]) -> list[int]:
@@ -15646,12 +15648,12 @@ class system_instance_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_instance_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_instance_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_instance_read_dto], int]) -> list[int]:
@@ -15794,12 +15796,12 @@ class system_license_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_license_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_license_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_license_read_dto], int]) -> list[int]:
@@ -15947,12 +15949,12 @@ class system_lock_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_lock_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_lock_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_lock_read_dto], int]) -> list[int]:
@@ -16095,12 +16097,12 @@ class system_module_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_module_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_module_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_module_read_dto], int]) -> list[int]:
@@ -16263,12 +16265,12 @@ class system_object_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_object_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_object_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_object_read_dto], int]) -> list[int]:
@@ -16411,12 +16413,12 @@ class system_object_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_object_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_object_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_object_type_read_dto], int]) -> list[int]:
@@ -16609,12 +16611,12 @@ class system_query_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_query_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_query_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_query_read_dto], int]) -> list[int]:
@@ -16787,12 +16789,12 @@ class system_request_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_request_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_request_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_request_read_dto], int]) -> list[int]:
@@ -16935,12 +16937,12 @@ class system_setting_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_setting_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_setting_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_setting_read_dto], int]) -> list[int]:
@@ -17093,12 +17095,12 @@ class system_setting_account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_setting_account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_setting_account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_setting_account_read_dto], int]) -> list[int]:
@@ -17251,12 +17253,12 @@ class system_state_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_state_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_state_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_state_read_dto], int]) -> list[int]:
@@ -17414,12 +17416,12 @@ class system_table_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_table_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_table_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_table_read_dto], int]) -> list[int]:
@@ -17577,12 +17579,12 @@ class system_thread_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_thread_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_thread_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_thread_read_dto], int]) -> list[int]:
@@ -17725,12 +17727,12 @@ class system_version_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[system_version_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[system_version_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[system_version_read_dto], int]) -> list[int]:
@@ -17923,12 +17925,12 @@ class tenant_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_read_dto], int]) -> list[int]:
@@ -18081,12 +18083,12 @@ class tenant_account_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_account_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_account_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_account_read_dto], int]) -> list[int]:
@@ -18229,12 +18231,12 @@ class tenant_category_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_category_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_category_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_category_read_dto], int]) -> list[int]:
@@ -18387,12 +18389,12 @@ class tenant_country_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_country_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_country_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_country_read_dto], int]) -> list[int]:
@@ -18555,12 +18557,12 @@ class tenant_license_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_license_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_license_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_license_read_dto], int]) -> list[int]:
@@ -18748,12 +18750,12 @@ class tenant_payment_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_payment_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_payment_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_payment_read_dto], int]) -> list[int]:
@@ -18891,12 +18893,12 @@ class tenant_payment_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_payment_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_payment_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_payment_type_read_dto], int]) -> list[int]:
@@ -19039,12 +19041,12 @@ class tenant_role_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_role_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_role_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_role_read_dto], int]) -> list[int]:
@@ -19187,12 +19189,12 @@ class tenant_status_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_status_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_status_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_status_read_dto], int]) -> list[int]:
@@ -19335,12 +19337,12 @@ class tenant_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[tenant_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[tenant_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[tenant_type_read_dto], int]) -> list[int]:
@@ -19498,12 +19500,12 @@ class time_approval_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_approval_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_approval_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_approval_read_dto], int]) -> list[int]:
@@ -19711,12 +19713,12 @@ class time_entry_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_entry_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_entry_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_entry_read_dto], int]) -> list[int]:
@@ -19914,12 +19916,12 @@ class time_entry_final_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_entry_final_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_entry_final_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_entry_final_read_dto], int]) -> list[int]:
@@ -20132,12 +20134,12 @@ class time_entry_invoice_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_entry_invoice_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_entry_invoice_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_entry_invoice_read_dto], int]) -> list[int]:
@@ -20275,12 +20277,12 @@ class time_rule_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_rule_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_rule_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_rule_read_dto], int]) -> list[int]:
@@ -20423,12 +20425,12 @@ class time_rule_client_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_rule_client_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_rule_client_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_rule_client_read_dto], int]) -> list[int]:
@@ -20586,12 +20588,12 @@ class time_submit_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_submit_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_submit_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_submit_read_dto], int]) -> list[int]:
@@ -20734,12 +20736,12 @@ class time_submit_type_read_dtos(base_read_dtos):
         init = True
         for dto in self.dtos:
             init = init and check_method(dto)
-        return False
+        return init
     def check_any(self, check_method: Callable[[time_submit_type_read_dto], bool]) -> bool:
         init = False
         for dto in self.dtos:
             init = init or check_method(dto)
-        return False
+        return init
     def map_to_string(self, map_method: Callable[[time_submit_type_read_dto], str]) -> list[str]:
         return list(map(lambda dto:  map_method(dto), self.dtos))
     def map_to_int(self, map_method: Callable[[time_submit_type_read_dto], int]) -> list[int]:

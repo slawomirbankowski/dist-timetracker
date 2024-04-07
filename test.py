@@ -1,6 +1,7 @@
 import os
 import datetime
 import logging
+from logging import config
 from pyliquibase import Pyliquibase
 import psycopg2
 import psycopg2.pool
@@ -18,15 +19,15 @@ from controller.controllers import controllers
 
 
 def test_model_sqls():
-    print('Start')
+    logging.info('Start')
 
-    print(db_models.account_division_model.get_select_all_limit_sql())
-    print(db_models.account_division_model.get_key_column_name())
-    print(db_models.account_division_model.get_select_all_latest_sql())
-    print(db_models.account_division_model.get_select_all_keys())
-    print(db_models.account_division_model.get_select_all_keys(500))
-    print(db_models.account_division_model.get_select_count_all_sql())
-    print(db_models.account_division_model.get_select_count_active_sql())
+    logging.info(db_models.account_division_model.get_select_all_limit_sql())
+    logging.info(db_models.account_division_model.get_key_column_name())
+    logging.info(db_models.account_division_model.get_select_all_latest_sql())
+    logging.info(db_models.account_division_model.get_select_all_keys())
+    logging.info(db_models.account_division_model.get_select_all_keys(500))
+    logging.info(db_models.account_division_model.get_select_count_all_sql())
+    logging.info(db_models.account_division_model.get_select_count_active_sql())
 
 def test_cmp():
     print('Start')
@@ -35,33 +36,33 @@ def test_cmp():
     d2 = ["abc", "123", 333]
     d3 = ["abc", "1234", 333]
     if d1==d2:
-        print("OK")
+        logging.info("OK")
     if (d1 == d3):
-        print("NOT OK")
+        logging.info("NOT OK")
 
 def test_write_dtos():
-    print('Start')
+    logging.info('Start')
 
     adw = account_division_write_dto.default_write()
-    print(adw)
-    print(adw.to_json())
+    logging.info(adw)
+    logging.info(adw.to_json())
 
     adr1 = account_division_read_dto.random_read()
     adr2 = account_division_read_dto.random_read()
     adr3 = account_division_read_dto(0, "non-active", "", "", "", 0, 0, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
 
     adlist = account_division_read_dtos([adr1, adr2, adr3])
-    print(adlist.dtos)
+    logging.info(adlist.dtos)
     adlist.touch_all("me")
-    print("adlist.dtos")
-    print(adlist.dtos)
-    print("adlist.get_keys()")
-    print(adlist.get_keys())
-    print("adlist.get_active()")
-    print(adlist.get_active())
-    print("adlist.find_by_uid()")
-    print(adlist.find_by_uid(adr1.account_division_uid))
-    print(adlist.find_by_uid("not_existing"))
+    logging.info("adlist.dtos")
+    logging.info(adlist.dtos)
+    logging.info("adlist.get_keys()")
+    logging.info(adlist.get_keys())
+    logging.info("adlist.get_active()")
+    logging.info(adlist.get_active())
+    logging.info("adlist.find_by_uid()")
+    logging.info(adlist.find_by_uid(adr1.account_division_uid))
+    logging.info(adlist.find_by_uid("not_existing"))
     adlist.get_dtos()
     #account_division_read_dto("", "", "")
     #print(account_division_model.get_select_all_keys())
@@ -76,7 +77,7 @@ def test_conn():
         2, 4, user=db_user, password=db_pass,
         host='localhost', port='5432', database='disttimetracker')
     conn = db_pool.getconn()
-    print(conn)
+    logging.info(conn)
     conn.close()
     #liquibase = Pyliquibase(defaultsFile="./changelogs/liquibase.properties", jdbcDriversDir="./lib")
     #print(type(liquibase))
@@ -86,16 +87,16 @@ def test_conn():
 
 def test_liquibase():
     liquibase = Pyliquibase(defaultsFile="./changelogs/liquibase.properties", jdbcDriversDir="./lib")
-    print(type(liquibase))
-    print(liquibase.version)
+    logging.info(type(liquibase))
+    logging.info(liquibase.version)
     liquibase.validate()
     liquibase.update()
 
 def test_daoconnection():
     dc = dao.dao_connection.daoConn
-    print("try to connect")
+    logging.info("try to connect")
     conn = dc.getConnection()
-    print(conn)
+    logging.info(conn)
     conn.close()
 
 def test_basedao():
@@ -103,61 +104,61 @@ def test_basedao():
     #dtos = dao.get_objects("select * from account_division")
     dtos = dao.get_objects("select * from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
     for dto in dtos:
-        print(type(dto))
-        print(dto)
+        logging.info(type(dto))
+        logging.info(dto)
     vals = dao.get_column_values_all("select account_title_uid from account_title where id=%s and is_active=%s and account_title_uid=%s", (3,1, "CIO"))
     for dto in vals:
-        print(type(dto))
-        print(dto)
+        logging.info(type(dto))
+        logging.info(dto)
     row = dao.get_single_row("select * from account_title where id=1")
-    print("row")
-    print(type(row))
-    print(row)
+    logging.info("row")
+    logging.info(type(row))
+    logging.info(row)
     col_values = dao.get_column_values_all("select account_title_uid from account_title", 0)
-    print("col_values")
-    print(type(col_values))
-    print(col_values)
+    logging.info("col_values")
+    logging.info(type(col_values))
+    logging.info(col_values)
     value = dao.get_single_value("select account_title_uid from account_title where id=1")
-    print("value")
-    print(type(value))
-    print(value)
+    logging.info("value")
+    logging.info(type(value))
+    logging.info(value)
     cnt = dao.get_single_value_int_or_default("select count(*) from account_title")
-    print("cnt")
-    print(type(cnt))
-    print(cnt)
+    logging.info("cnt")
+    logging.info(type(cnt))
+    logging.info(cnt)
 
 def test_base_dao_update():
-    print("test update and delete")
+    logging.info("test update and delete")
     dao = base_dao()
     name = "Test Account"
     uid = "test"
     res = dao.execute_query("update account_instance set display_name=%s where account_instance_uid=%s", (name, uid))
-    print(type(res))
-    print(res)
+    logging.info(type(res))
+    logging.info(res)
 
 
 def test_customdao():
     cdao = account_division_dao()
-    print(cdao)
+    logging.info(cdao)
     dtos = cdao.get_items_all()
     for dto in dtos.dtos:
-        print(type(dto))
-        print(dto)
-        print(dto.to_write())
-        print(dto.to_write_dict())
+        logging.info(type(dto))
+        logging.info(dto)
+        logging.info(dto.to_write())
+        logging.info(dto.to_write_dict())
     cnt = cdao.count_all()
-    print("cnt")
-    print(cnt)
+    logging.info("cnt")
+    logging.info(cnt)
     cnt = cdao.count_active()
-    print("cntactive")
-    print(cnt)
-    print("get_items_by_any_column")
+    logging.info("cntactive")
+    logging.info(cnt)
+    logging.info("get_items_by_any_column")
     its = cdao.get_items_by_any_column("division_name", "Default")
     for dto in its.dtos:
-        print(type(dto))
-        print(dto)
-        print(dto.to_write())
-        print(dto.to_write_dict())
+        logging.info(type(dto))
+        logging.info(dto)
+        logging.info(dto.to_write())
+        logging.info(dto.to_write_dict())
 
     cdao.insert()
     acdiv1 = cdao.get_item_by_uid("Default")
@@ -166,7 +167,7 @@ def test_customdao():
 def test_customdao_insert():
     cdao = account_division_dao()
     ad1 = account_division_write_dto.random_write()
-    print(ad1)
+    logging.info(ad1)
     #cdao.insert_single(ad1)
     ads = []
     ads.append(account_division_write_dto.random_write())
@@ -178,7 +179,7 @@ def test_customdao_insert():
    # cdao.update_single_column_by_id(3, "division_description", "aaaaaaaa")
 
     dto = cdao.get_item_by_uid("2036ef7d-4caa-4341-9139-2cdefdfec9b5")
-    print(dto)
+    logging.info(dto)
     dto.division_description="new_desc3333"
     dto.division_name="new_name3333"
     #wdto = dto.to_write()
@@ -190,48 +191,48 @@ def test_customdao_insert():
 
 
 def test_model():
-    print(db_models.account_division_model.table_name)
-    print(db_models.account_division_model.key_column_name)
-    print(db_models.account_division_model.all_columns)
-    print("attr_columns")
-    print(db_models.account_division_model.attr_columns)
-    print("all_columns_list")
-    print(db_models.account_division_model.all_columns_list)
-    print("attr_columns_list")
-    print(db_models.account_division_model.attr_columns_list)
-    print("attr_no_uid_columns")
-    print(db_models.account_division_model.attr_no_uid_columns)
-    print("attr_no_uid_columns_list")
-    print(db_models.account_division_model.attr_no_uid_columns_list)
-    print("all_question_marks")
-    print(db_models.account_division_model.all_question_marks)
-    print("attr_question_marks")
-    print(db_models.account_division_model.attr_question_marks)
-    print("insert_attrs_sql")
-    print(db_models.account_division_model.insert_attrs_sql)
-    print("update_attrs_sql")
-    print(db_models.account_division_model.update_attrs_sql)
-    print("upsert_columns")
-    print(db_models.account_division_model.upsert_columns)
-    print("upsert_columns_exclude_list")
-    print(db_models.account_division_model.upsert_columns_exclude_list)
-    print("upsert_attrs_sql")
-    print(db_models.account_division_model.upsert_attrs_sql)
+    logging.info(db_models.account_division_model.table_name)
+    logging.info(db_models.account_division_model.key_column_name)
+    logging.info(db_models.account_division_model.all_columns)
+    logging.info("attr_columns")
+    logging.info(db_models.account_division_model.attr_columns)
+    logging.info("all_columns_list")
+    logging.info(db_models.account_division_model.all_columns_list)
+    logging.info("attr_columns_list")
+    logging.info(db_models.account_division_model.attr_columns_list)
+    logging.info("attr_no_uid_columns")
+    logging.info(db_models.account_division_model.attr_no_uid_columns)
+    logging.info("attr_no_uid_columns_list")
+    logging.info(db_models.account_division_model.attr_no_uid_columns_list)
+    logging.info("all_question_marks")
+    logging.info(db_models.account_division_model.all_question_marks)
+    logging.info("attr_question_marks")
+    logging.info(db_models.account_division_model.attr_question_marks)
+    logging.info("insert_attrs_sql")
+    logging.info(db_models.account_division_model.insert_attrs_sql)
+    logging.info("update_attrs_sql")
+    logging.info(db_models.account_division_model.update_attrs_sql)
+    logging.info("upsert_columns")
+    logging.info(db_models.account_division_model.upsert_columns)
+    logging.info("upsert_columns_exclude_list")
+    logging.info(db_models.account_division_model.upsert_columns_exclude_list)
+    logging.info("upsert_attrs_sql")
+    logging.info(db_models.account_division_model.upsert_attrs_sql)
 
 
 def testSomething():
-    print("Starting new Python application")
+    logging.info("Starting new Python application")
     #logging.log(2, "Some log")
     db_url = os.environ.get('JDBC_URL')
     db_host = os.environ.get('JDBC_HOST')
     db_name = "timetracker"  # os.environ.get('JDBC_NAME')
     db_user = "timetracker"  # os.environ.get('JDBC_USER')
     db_pass = "****************"  # os.environ.get('JDBC_PASS')
-    print("Main database URL =" + db_url)
-    print("Main database HOST=" + db_host)
-    print("Main database NAME=" + db_name)
-    print("Main database USER=" + db_user)
-    print("Main database PASS=" + db_pass)
+    logging.info("Main database URL =" + db_url)
+    logging.info("Main database HOST=" + db_host)
+    logging.info("Main database NAME=" + db_name)
+    logging.info("Main database USER=" + db_user)
+    logging.info("Main database PASS=" + db_pass)
     # initialize all models
     db_models.initialize()
     # initialize DB connections
@@ -243,4 +244,4 @@ def testSomething():
     start_http_listening()
 
 if __name__ == '__main__':
-    print("======================================= TEST")
+    logging.info("======================================= TEST")

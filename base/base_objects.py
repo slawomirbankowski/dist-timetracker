@@ -3,11 +3,19 @@ import os
 import string
 import threading
 import uuid
+from dataclasses import asdict
+from typing import Callable
+
+import base.base_utils
+import base.base_interfaces
+from base.base_interfaces import *
 from abc import abstractmethod
 from time import sleep
 from flask import Flask, jsonify, request, abort
+import logging
 
 httpflaskapp: Flask = Flask(__name__)
+
 
 # base object that will be registered in ObjectManager
 # every single object inside app that is not data should extend this class
@@ -20,7 +28,7 @@ class base_object:
         self.usage_count = 0
         self.object_id = str(type(self).__name__) + "_" + str(self.created_date)[:10].replace("-", "_") + "_" + str(uuid.uuid4())[:13].replace("-", "_")
         objects.register_object(self)
-        print("Creating new base object, UUID: " + self.object_id + ", created: " + str(self.created_date))
+        logging.debug("Creating new base object, UUID: " + self.object_id + ", created: " + str(self.created_date))
     # get type of base object
     @abstractmethod
     def get_base_object_type(self) -> str:
@@ -92,21 +100,21 @@ class thread_base(base_object):
         pass
     def get_thread_sleep_time(self) -> int:
         return 60
-    def thread_run(self):
-        print("Starting work in separated thread, UUID: " + self.object_id)
+    def thread_run(self) -> None:
+        logging.info("Starting work in separated thread, UUID: " + self.object_id)
         while (self.thread.is_working):
             tick = self.thread.tick()
             self.thread_work(tick)
-            print("..... thread working for object: " + self.object_id)
+            logging.debug("..... thread working for object: " + self.object_id)
             sleep(self.thread.sleep_time)
-        print("Thread ended: " + self.object_id)
+        logging.warning("Thread ended: " + self.object_id)
         self.thread.end_time = datetime.datetime.now()
 
     # initialize this service
-    def initialize_thread(self):
-        print("Initialize separated thread for object: " + self.object_id)
+    def initialize_thread(self) -> None:
         th = threading.Thread(target=self.thread_run,daemon=True)
         self.thread = ThreadWrapper(th, self, self.get_thread_sleep_time())
+        logging.info("Initialize separated thread for object: " + self.object_id + ", native_id: " + str(th.native_id) + ", name: " + th.name)
         th.start()
         objects.register_thread(self.thread)
 
@@ -116,10 +124,11 @@ class WatchDog(thread_base):
     threads: list[ThreadWrapper]
     def __init__(self, threads: list[ThreadWrapper]):
         super().__init__()
+        logging.info("Initializing new WatchDog, object_id: " + self.object_id + ", threads: " + str(len(threads)))
         self.threads = threads
         self.initialize_thread()
     def thread_work(self, tick: int) -> bool:
-        print("Watchdog is checking threads: " + str(len(self.threads)))
+        logging.debug("Watchdog is checking threads: " + str(len(self.threads)))
         return True
     def get_base_object_type(self) -> str:
         return "WatchDog"
@@ -127,14 +136,18 @@ class WatchDog(thread_base):
     def get_base_object_name(self) -> str:
         return "WatchDog"
 
+
+class Cleaner(thread_base):
+    clean_method: Callable[[int], bool]
+    def __init__(self, clean_method: Callable[[int], bool]):
+        self.clean_method = clean_method
+
 # main Flask application
-
-
-#
 class FlaskApplicationWrapper(base_object):
     httpflaskapp: Flask
     def __init__(self, httpflaskapp: Flask):
         super().__init__()
+        logging.info("Initializing Flask WRAPPER, object_id: " + self.object_id)
         self.httpflaskapp = httpflaskapp
     # get type of base object
     def get_base_object_type(self) -> str:
@@ -209,43 +222,112 @@ class base_model(base_object):
     thin_column_list: str
 
 
-# Manager of all objects and threads
-class ObjectManager:
+# session for account - mapping between token and account_uid with validation date, created date
+class AccountSessionBase:
+    session_id: str
     created_date: datetime.datetime
-    all_objects: dict[str, base_object]
-    threads: list[ThreadWrapper]
-    cache_managers: list[CacheManagerBase]
-    system_version_uid: str = "1.0.0"
-    system_instance_uid: str = "1.0.0"  # TODO: create instance UID
+    valid_till_date: datetime.datetime
+    tenant_uid: str
+    account_uid: str
+    token: str
+    token_salt: str
+    token_hash: str
+    def __init__(self, tenant_uid: str, account_uid: str, token: str, token_salt: str, token_hash: str, valid_till_date: datetime.datetime):
+        self.created_date = datetime.datetime.now()
+        self.session_id = base.base_utils.get_random_uid()
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        logging.debug("Initializing session for Account, session_id: " + self.session_id + ", account: " + self.account_uid + ", tenant: " + self.tenant_uid)
+        self.token = token
+        self.token_salt = token_salt
+        self.token_hash = token_hash
+        self.valid_till_date = valid_till_date
+    def is_valid(self) -> bool:
+        return datetime.datetime.now() > self.valid_till_date
+
+
+class AccountPermissionsBase:
+    created_date: datetime.datetime
+    valid_till_date: datetime.datetime
+    account_uid: str
+    account_dto: account_interface_dto
+    tenant_dto: tenant_interface_dto
+    roles: set[str]
+    def __init__(self, account_uid: str, account_dto: account_interface_dto, tenant_dto: tenant_interface_dto, roles: set[str]):
+        self.created_date = datetime.datetime.now()
+        self.account_uid = account_uid
+        self.account_dto = account_dto
+        self.tenant_dto = tenant_dto
+        self.roles = roles
+    def to_myself_dict(self) -> dict:
+        return {"account": asdict(self.account_dto.to_normal()),
+                "tenant": asdict(self.tenant_dto.to_normal()),
+                "roles": list(self.roles)}
+
+
+class RequestBase:
+    method_name: str
+    request_id: str
+    created_date: datetime.datetime
+    authorization_header: str
+    authorization_method: str
+    authorization_token: str
+    account_session: AccountSessionBase | None
+    account_permission: AccountPermissionsBase | None
+    body_as_text: str | None
+    body_as_dict: dict | None
+
+
+# Manager of all objects and threads in application
+class ObjectManager:
+    object_uid: str
+    created_date: datetime.datetime
+    all_objects: dict[str, base_object]  # all base objects registered
+    threads: list[ThreadWrapper]  # all threads registered
+    cache_managers: list[CacheManagerBase]  # all cache managers registered
+    system_version_uid: str = "1.0.0"  # UID of system version
+    system_instance_uid: str = base.base_utils.get_random_uid_with_prefix("SI")
     any_instance_value: str = "any_value"
-    created_by_default: str = "system"
-    dao_connections: DaoConnectionsBase
-    watchdogs = []
-    flask_wrapper: FlaskApplicationWrapper
+    http_port: int = 8080
+    created_by_default: str = "system"  # default account that is creating
+    account_sessions: dict[str, AccountSessionBase]  # sessions of user, key=token, value=session with user
+    account_permissions: dict[str, AccountPermissionsBase]  # set of permissions per account
+    dao_connections: DaoConnectionsBase  # DAO connections
+    watchdogs = []  # list of watchdogs
+    cleaners = []  # list of cleaners
+    flask_wrapper: FlaskApplicationWrapper  # flast wrapper
+    exception_handler: Callable[[Exception], bool]
+    thread_handler: Callable[[ThreadWrapper], bool]
+    request_handler: Callable[[RequestBase], bool]
 
     def __init__(self):
         self.created_date = datetime.datetime.now()
-        print("Creating object manager, creation time: " + str(self.created_date))
+        self.object_uid = base.base_utils.get_random_uid_with_prefix("SI")
+        logging.info("Creating ObjectManager, creation time: " + str(self.created_date) + ", object_id: " + self.object_uid + ", system_instance_uid: " + self.system_instance_uid)
         self.all_objects = {}
         self.threads = []
+        self.account_sessions = {}
+        self.account_permissions = {}
 
     # initialize
-    def initialize(self):
-        print("Initializing object manager")
+    def initialize(self) -> None:
+        logging.info("Initializing ObjectManager, version: " + self.system_version_uid + ", system_instance_uid: " + self.system_instance_uid)
         self.watchdogs.append(WatchDog(self.threads))
         self.watchdogs.append(WatchDog(self.threads))
         self.flask_wrapper = FlaskApplicationWrapper(httpflaskapp)
 
-    def register_object(self, obj: base_object):
+    def register_object(self, obj: base_object) -> None:
         self.all_objects[obj.object_id] = obj
-    def register_thread(self, thread: ThreadWrapper):
+    def register_thread(self, thread: ThreadWrapper) -> None:
+        logging.debug("Register Thread in Object Manager, parent: " + self.system_instance_uid + ", object: " + thread.object_id)
         self.threads.append(thread)
-    def register_event(self, event):
-        print("Register event ")
-    def register_cache(self, cm: CacheManagerBase):
+    def register_event(self, event) -> None:
+        logging.debug("Register event ")
+    def register_cache(self, cm: CacheManagerBase) -> None:
         #self.cache_managers.append(cm)
-        print("Register cache")
-    def register_connections(self, dao_connections: DaoConnectionsBase):
+        logging.debug("Register cache in Object Manager, parent: " + self.system_instance_uid + ", object: " + cm.object_id)
+    def register_connections(self, dao_connections: DaoConnectionsBase) -> None:
+        logging.debug("Register connections in Object Manager, parent: " + self.system_instance_uid + ", object: " + dao_connections.object_id)
         self.dao_connections = dao_connections
     def get_life_time_seconds(self):
         x = datetime.datetime.now() - self.created_date
@@ -258,7 +340,29 @@ class ObjectManager:
 
     def get_threads_infos(self) -> list[dict[str, any]]:
         return list(map(lambda o: o.get_base_dict_info(), self.threads))
-
+    # get account HTTP session by token
+    def get_account_session_by_token(self, token: str) -> AccountSessionBase | None:
+        return self.account_sessions.get(token)
+        # return self.account_sessions[token]
+    def create_user_session(self, tenant_uid: str, account_uid: str, token: str, token_salt: str, token_hash: str, valid_till_date: datetime.datetime) -> AccountSessionBase:
+        session = AccountSessionBase(tenant_uid, account_uid, token, token_salt, token_hash, valid_till_date)
+        self.account_sessions[token] = session
+        self.account_sessions[token_hash] = session
+        return session
+    def get_account_permission_by_account(self, account_uid: str) -> AccountPermissionsBase | None:
+        return self.account_permissions.get(account_uid)
+    def register_exception_handler(self, exception_handler: Callable[[Exception], bool]):
+        self.exception_handler = exception_handler
+    def register_thread_handler(self, thread_handler: Callable[[ThreadWrapper], bool]):
+        self.thread_handler = thread_handler
+    def register_request_handler(self, request_handler: Callable[[RequestBase], bool]):
+        self.request_handler = request_handler
+    def handle_exception(self, ex: Exception) -> bool:
+        return self.exception_handler(ex)
+    def handle_thread(self, ex: ThreadWrapper) -> bool:
+        return self.thread_handler(ex)
+    def handle_request(self, req: RequestBase) -> bool:
+        return self.request_handler(req)
 
 
 # all the most important objects in application

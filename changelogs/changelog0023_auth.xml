@@ -6,7 +6,7 @@
 
     <changeSet id="0023 - auth tables for authentication and authorization" author="slawomir.bankowski">
 
-        <createTable tableName="auth_identity" remarks="type=dictionary;cardinality=10;description=possible identity types" >
+        <createTable tableName="auth_identity" remarks="identity types to authenticate account: LDAP, OAuth, Azure AD, ..." >
             <column name="auth_identity_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_identity_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -30,7 +30,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="auth_identity_tenant" remarks="type=m2m;cardinality=1000;description=possible identity types with configuration" >
+        <createTable tableName="auth_identity_tenant" remarks="possible identity types for authentication with configuration parameters" >
             <column name="auth_identity_tenant_uid" type="text" defaultValueComputed="generate_uid('arat')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_identity_tenant_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -58,7 +58,7 @@
         </createTable>
         <createIndex indexName="idx_auth_identity_tenant_tenant_uid" tableName="auth_identity_tenant" unique="false"><column name="tenant_uid" /></createIndex>
 
-        <createTable tableName="auth_sso" remarks="type=full;cardinality=100;description=single sign on configuration" >
+        <createTable tableName="auth_sso" remarks="single sign on configuration" >
             <column name="auth_sso_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_sso_name" type="text" remarks="single sign on configuration"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -90,7 +90,7 @@
         </createTable>
         <createIndex indexName="idx_auth_sso_tenant_uid" tableName="auth_sso" unique="false"><column name="tenant_uid" /></createIndex>
 
-        <createTable tableName="auth_key_type" remarks="type=full;cardinality=1000;description=type of key: symmetric, asymmetric, signature, ..." >
+        <createTable tableName="auth_key_type" remarks="type of key: symmetric, asymmetric, signature, ..." >
             <column name="auth_key_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_key_type_name" type="text" remarks=""><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -113,7 +113,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="auth_key" remarks="type=full;cardinality=1000;description=key for encoding" >
+        <createTable tableName="auth_key" remarks="description=key for encoding" >
             <column name="auth_key_uid" type="text" defaultValueComputed="generate_uid('aukey')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_key_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -144,7 +144,7 @@
         </createTable>
         <createIndex indexName="idx_auth_key_tenant_uid" tableName="auth_key" unique="false"><column name="tenant_uid" /></createIndex>
 
-        <createTable tableName="auth_session" remarks="type=update;cardinality=1000000;description=UI sessions in browsers from UI application regarding connected accounts" >
+        <createTable tableName="auth_session" remarks="UI sessions in browsers from UI application regarding connected accounts" >
             <column name="auth_session_uid" type="text" defaultValueComputed="generate_uid('auses')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_session_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -173,7 +173,7 @@
         <createIndex indexName="idx_auth_session_tenant_uid" tableName="auth_session" unique="false"><column name="tenant_uid" /></createIndex>
         <createIndex indexName="idx_auth_session_account_uid" tableName="auth_session" unique="false"><column name="account_uid" /></createIndex>
 
-        <createTable tableName="auth_attempt" remarks="type=update;cardinality=1000000;possible identity types with configuration" >
+        <createTable tableName="auth_attempt" remarks="attempt to authenticate for account using identity provider" >
             <column name="auth_attempt_uid" type="text" defaultValueComputed="generate_uid('auat')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_attempt_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -202,7 +202,7 @@
         </createTable>
         <createIndex indexName="idx_auth_identity_auth_identity_name" tableName="auth_identity" unique="true"><column name="auth_identity_name" /></createIndex>
 
-        <createTable tableName="auth_token" remarks="type=update;cardinality=1000000;description=single instance of token created for account" >
+        <createTable tableName="auth_token" remarks="single instance of token created for account" >
             <column name="auth_token_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_token_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -234,7 +234,7 @@
         <createIndex indexName="idx_auth_token_account_uid" tableName="auth_token" unique="false"><column name="account_uid" /></createIndex>
         <createIndex indexName="idx_auth_token_token_hash" tableName="auth_token" unique="false"><column name="token_hash" /></createIndex>
 
-        <createTable tableName="auth_role" remarks="type=update;cardinality=100;description=list of roles used in permissions" >
+        <createTable tableName="auth_role" remarks="list of roles used in permissions" >
             <column name="auth_role_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_role_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -265,7 +265,7 @@
         </createTable>
         <createIndex indexName="idx_auth_role_auth_role_name" tableName="auth_role" unique="true"><column name="auth_role_name" /></createIndex>
 
-        <createTable tableName="auth_role_uri" remarks="type=dictionary,update;cardinality=10000;description=mapping between role and URIs" >
+        <createTable tableName="auth_role_uri" remarks="mapping between role and URIs" >
             <column name="auth_role_uri_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_role_uri_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -289,7 +289,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="auth_permission" remarks="type=update;cardinality=100000;permission assigned to account and role with optional project or client" >
+        <createTable tableName="auth_permission" remarks="permission assigned to account and role with optional project or client" >
             <column name="auth_permission_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_permission_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -345,7 +345,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="auth_password" remarks="type=update;cardinality=100000;description=password set by user - this is full history of passwords" >
+        <createTable tableName="auth_password" remarks="password set by user - this is full history of passwords" >
             <column name="auth_password_uid" type="text" defaultValueComputed="generate_uid('aupa')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_password_name" type="text" defaultValueComputed="generate_uid('aupa')"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -375,7 +375,7 @@
         </createTable>
         <createIndex indexName="idx_auth_password_account_uid" tableName="auth_password" unique="false"><column name="account_uid" /></createIndex>
 
-        <createTable tableName="auth_password_current" remarks="type=update;cardinality=10000;description=password set by user - only current valid password" >
+        <createTable tableName="auth_password_current" remarks="password set by user - only current valid password" >
             <column name="auth_password_current_uid" type="text" remarks="account UID" defaultValueComputed="generate_uid('aupc')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_password_current_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -405,7 +405,7 @@
         </createTable>
         <createIndex indexName="idx_auth_password_current_account_uid" tableName="auth_password_current" unique="false"><column name="account_uid" /></createIndex>
 
-        <createTable tableName="auth_request" remarks="type=append;cardinality=100000;description=Request of reset or set new password for user" >
+        <createTable tableName="auth_request" remarks="Request of reset or set new password for user" >
             <column name="auth_request_uid" type="text" defaultValueComputed="generate_uid('aure')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_request_name" type="text" defaultValueComputed="generate_uid('aure')"><constraints nullable="false"/></column>
             <!-- FKs -->

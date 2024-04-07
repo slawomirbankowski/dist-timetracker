@@ -6,7 +6,7 @@
 
     <changeSet id="0022 - account tables" author="slawomir.bankowski">
 
-        <createTable tableName="account_type" remarks="type=update;cardinality=10;description=type of the account: Person, Client, Contractor, Application" >
+        <createTable tableName="account_type" remarks="type of the account: Person, Client, Contractor, Application" >
             <column name="account_type_uid" type="text" remarks="Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_type_name" type="text" remarks="Type of account: Person, Client, Contractor, Application"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -30,7 +30,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account_title" remarks="type=dictionary,append;cardinality=100;description=title of the account connected with person role: Data Engineer, Data Analyst, ..." >
+        <createTable tableName="account_title" remarks="title of the account connected with person role: Data Engineer, Data Analyst, ..." >
             <column name="account_title_uid" type="text" remarks="type=pk;description=Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_title_name" type="text" remarks="Name of title like Data Engineer, Data Analyst, ..."><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -54,7 +54,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account_title_responsibility" remarks="type=dictionary,append;cardinality=1000;description=" >
+        <createTable tableName="account_title_responsibility" remarks="" >
             <column name="account_title_responsibility_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_title_responsibility_name" type="text" remarks=""><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -81,7 +81,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account_group" remarks="type=update;cardinality=10000;description=group of the accounts" >
+        <createTable tableName="account_group" remarks="group of the accounts" >
             <column name="account_group_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_group_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -107,7 +107,7 @@
         </createTable>
         <createIndex indexName="idx_account_group_account_group_name" tableName="account_group" unique="true"><column name="account_group_name" /></createIndex>
 
-        <createTable tableName="account_division_template" remarks="type=update;cardinality=100;description=" >
+        <createTable tableName="account_division_template" remarks="template of division for accounts to be used for tenants" >
             <column name="account_division_template_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_division_template_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -131,7 +131,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account_division" remarks="type=update;cardinality=1000;description=division of the account" >
+        <createTable tableName="account_division" remarks="division of the account based on template" >
             <column name="account_division_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_division_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -158,7 +158,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account" remarks="type=update;cardinality=100000;description=single instance of account - person or user or system user" >
+        <createTable tableName="account" remarks="single instance of account - person or user or system user" >
             <column name="account_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -192,7 +192,7 @@
         <createIndex indexName="idx_account_account_name" tableName="account" unique="false"><column name="account_name" /></createIndex>
         <createIndex indexName="idx_account_display_name" tableName="account" unique="false"><column name="display_name" /></createIndex>
 
-        <createTable tableName="account_hierarchy" remarks="type=update;cardinality=100000;description=single instance of account - person or user or system user" >
+        <createTable tableName="account_hierarchy" remarks="single instance of account - person or user or system user" >
             <column name="account_hierarchy_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_hierarchy_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -218,7 +218,7 @@
         </createTable>
         <createIndex indexName="idx_account_hierarchy_tenant_uid" tableName="account_hierarchy" unique="false"><column name="tenant_uid" /></createIndex>
 
-        <createTable tableName="account_team" remarks="type=update;cardinality=1000;description=team of accounts" >
+        <createTable tableName="account_team" remarks="team of accounts" >
             <column name="account_team_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_team_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -245,7 +245,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="account_rate" remarks="type=update;cardinality=1000000;description=single instance of account - person or user or system user" >
+        <createTable tableName="account_rate" remarks="single instance of account - person or user or system user" >
             <column name="account_rate_uid" type="text" defaultValueComputed="generate_uid('arat')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_rate_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -274,7 +274,7 @@
         </createTable>
         <createIndex indexName="idx_account_rate_account_uid" tableName="account_rate" unique="false"><column name="account_uid" /></createIndex>
 
-        <createTable tableName="account_skill" remarks="type=dictionary;cardinality=100;description=skill owned by an account" >
+        <createTable tableName="account_skill" remarks="skill owned by an account" >
             <column name="account_skill_uid" type="text" remarks="type=pk;description=Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
             <column name="account_skill_name" type="text" remarks="Name of title like Data Engineer, Data Analyst, ..."><constraints nullable="false"/></column>
             <!-- FKs -->

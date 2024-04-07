@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00062_definition_python_dto_list_views.xml">
+
+    <changeSet id="0062 - definition views" author="slawomir.bankowski">
+
+      <createView viewName="v_definition_python_services_object">
+	select x.table_name, x.ordinal_position as ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_services_object - START at ', cast(now() as text)) as python
+		union all select '' as table_name, 1 as ordinal_position, 'import dao.dao_connection'
+		union all select '' as table_name, 2 as ordinal_position, 'from typing import TypeVar, Generic, List, Iterable'
+		union all select '' as table_name, 3 as ordinal_position, 'from dao.dao_base import base_dao'
+		union all select '' as table_name, 4 as ordinal_position, 'from dao.daos_read import *'
+		union all select '' as table_name, 5 as ordinal_position, 'from dto.dtos_models import db_models'
+		union all select '' as table_name, 6 as ordinal_position, 'from service.service_base import service_base'
+		union all select '' as table_name, 7 as ordinal_position, 'from dao.daos import daos'
+		union all select '' as table_name, 8 as ordinal_position, 'from dao.daos_full import *'
+		union all select '' as table_name, 9 as ordinal_position, ''
+		union all select '' as table_name, 10 as ordinal_position, 'db_connections = dao.dao_connection.db_connections'
+		union all select '' as table_name, 11 as ordinal_position, ''
+		union all select '' as table_name, 12 as ordinal_position, ''
+
+		union all select table_name, 1000 as ordinal_position, concat('class ', table_name, '_service(service_base):') as python from v_definition_table_base_list
+		union all select table_name, 1001 , concat('    dao: ', table_name , '_full_dao = daos.', table_name , '_dao_instance') from v_definition_table_base_list
+		union all select table_name, 1002 , concat('    def __init__(self):') from v_definition_table_base_list
+		union all select table_name, 1003 , concat('        super().__init__()') from v_definition_table_base_list
+		union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+		union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_service_list">
+	select table_name, 1 as ordinal_position, concat('    ', table_name, '_service_inst = ', table_name, '_service()') as python
+	from v_definition_table_base_list order by table_name
+      </createView>
+
+      <createView viewName="v_definition_service_register">
+	select table_name, 1 as ordinal_position, concat('        self.all_services.append(self.', table_name, '_service_inst)')  as python
+	from v_definition_table_base_list
+	order by table_name
+      </createView>
+
+      <createView viewName="v_definition_python_services_list">
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_services_object - START at ', cast(now() as text)) as python
+		union all select '' as table_name, 1 as ordinal_position, 'from service.services_object import *'
+		union all select '' as table_name, 1 as ordinal_position, ''
+		union all select '' as table_name, 1 as ordinal_position, 'class service_list_base(base_object):'
+		union all select '' as table_name, 1 as ordinal_position, '    all_services: list[service_base] = []'
+		union all select table_name, ordinal_position,python  from v_definition_service_list
+		union all select '' as table_name, 1 as ordinal_position, '    def register_all_services(self):'
+		union all select table_name, ordinal_position,python from v_definition_service_register
+		union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_daos_list - END' as python
+      </createView>
+
+    </changeSet>
+
+</databaseChangeLog>

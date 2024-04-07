@@ -1,0 +1,85 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0041_data.xml">
+
+    <changeSet id="0041 - dictionary data" author="slawomir.bankowski">
+
+        <!-- ____________________________ Audit table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Update', 'Update');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Delete', 'Delete');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Deactivate', 'Deactivate');
+            insert into audit_type(audit_type_uid, audit_type_name) values ('Insert', 'Insert');
+        </sql>
+
+        <!-- ____________________________ storage table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('HTTP', 'HTTP', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('FTP', 'FTP', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('LOCAL', 'LOCAL', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('JDBC', 'JDBC', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Elasticsearch', 'Elasticsearch', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Mongodb', 'Mongodb', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Cassandra', 'Cassandra', '', '');
+        </sql>
+
+        <!-- ____________________________ monitor table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('HTTP', '', '', '');
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('JDBC', '', '', '');
+            insert into monitor_type(monitor_type_uid, monitor_type_name, class_name, parameters_json) values ('HOST', '', '', '');
+        </sql>
+
+        <!-- ____________________________ Event table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Create', 'Create', 'Create operation for object');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Update', 'Update', 'Update operation of any object');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Remove', 'Remove', 'Remove - logical delete');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Delete', 'Delete', 'Delete - physical delete');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Change', 'Change', 'Change - change of state in memory');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Action', 'Action', 'Action - any action in application');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Error', 'Error', 'Error - expected error due to outside action');
+            insert into event_type(event_type_uid, event_type_name, event_type_description)
+            values ('Exception', 'Exception', 'Exception');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Notification', 'Notification', 'Notification');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Email', 'Email', 'Email');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Dashboard', 'Dashboard', 'Dashboard');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('SMS', 'SMS', 'SMS');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('HTTP', 'HTTP', 'HTTP');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('JDBC', 'JDBC', 'JDBC');
+            insert into event_channel_type(event_channel_type_uid, event_channel_type_name, channel_type_description)
+            values ('Kafka', 'Kafka', 'Kafka');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into event_template(event_template_uid, event_template_name, tenant_uid, notification_type, notification_format, notification_topic)
+            values ('AccountCreated', 'AccountCreated', 'System', 'Account created', 'TEXT', 'Account has been created');
+            insert into event_template(event_template_uid, event_template_name, tenant_uid, notification_type, notification_format, notification_topic)
+            values ('AccountDeactivated', 'AccountDeactivated', 'System', 'Account Deactivated', 'TEXT', 'Account has been deactivated');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

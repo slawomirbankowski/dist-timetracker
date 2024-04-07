@@ -1,11 +1,12 @@
 import datetime
+import logging
+from logging import config
 from abc import abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import uuid
 import random
 from random import randrange, uniform, randint
 from typing import Iterable
-
 from base.base_objects import base_object, base_model
 from typing import Dict, Callable
 
@@ -50,9 +51,9 @@ class db_model(base_model):
         self.all_columns.append("id")
         for c in attr_columns:
             self.all_columns.append(c)
-        self.all_columns.append("system_instance_uid")
-        self.all_columns.append("system_lock_uid")
-        self.all_columns.append("owner_account_group_uid")
+        self.all_columns.append("row_instance")
+        self.all_columns.append("row_lock")
+        self.all_columns.append("row_owner")
         self.all_columns.append("row_seq")
         self.all_columns.append("row_guid")
         self.all_columns.append("row_version")
@@ -236,7 +237,7 @@ class base_custom_dto(base_dto):
 # base DTO to insert/write row into DB
 class base_write_dto(base_custom_dto):
     def __init__(self):
-        print("Creating new DTO")
+        logging.info("Creating new DTO")
     @abstractmethod
     def get_name(self) -> str:
         pass
@@ -415,7 +416,9 @@ class base_dtos:
         for dto in self.dtos:
             init_value = map_method(init_value, dto)
         return init_value
-
+    # map DTOs to list[dict] to be returned as JSON
+    def to_list_dict(self) -> list[dict]:
+        return list(map(lambda dto: asdict(dto), self.dtos))
 
 
 # helper class to store list of write items
@@ -439,10 +442,6 @@ class base_write_dtos(base_dtos):
         pass
 
 
-
-
-
-
 # helper class to store list of read items
 class base_read_dtos(base_write_dtos):
     dtos: list[base_read_dto]
@@ -455,7 +454,6 @@ class base_read_dtos(base_write_dtos):
     @abstractmethod
     def get_read_dicts(self) -> list[dict]:
         pass
-
 
 
 @dataclass(frozen=False)

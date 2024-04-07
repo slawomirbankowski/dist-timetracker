@@ -1,5 +1,7 @@
 #from __future__ import annotations
 from typing import Dict, Callable
+import logging
+from logging import config
 from flask import jsonify, abort, Request, Response
 from dao.daos_instances import *
 from dao.daos import daos
@@ -15,34 +17,34 @@ class ObjectController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "ObjectController"
-    def get_object_by_id(self, session: RequestSession) -> ResponseSession:
-        print("get_object_by_id")
-        # TODO: get any object by table name and UID
-        daos.account_group_dao_instance.count_by_table_all("")
-        return None
 
     def get_object_count(self, session: RequestSession) -> ResponseSession:
-        print("get_object_by_id")
-        # TODO: count of rows by table name
-        daos.account_group_dao_instance.count_by_table_all("")
-        return None
+        logging.info("get_object_by_id")
+        table_name: str = session.get_query_or_body_param("table_name").lower()
+        # TODO: NotFound when incorrect table_name
+        rows_count = daos.account_group_dao_instance.count_by_table_all(table_name)
+        return ResponseSession.ok(session, {"table_name": table_name, "rows_count": rows_count})
+
+    def get_object_by_uid(self, session: RequestSession) -> ResponseSession:
+        logging.info("get_object_by_id")
+        table_name: str = session.get_query_or_body_param("table_name")
+        uid: str = session.get_query_or_body_param("uid")
+        # TODO: get any object by table name and UID
+        dao = daos.get_dao_for_table(table_name)
+        obj = dao.select_row_read_by_uid(uid)
+        if obj is None:
+            logging.info("Non existing object for UID: " + uid)
+            return ResponseSession.not_found(session)
+        else:
+            logging.info("Got object for UID, obj: " + str(type(obj)))
+            return ResponseSession.ok(session, obj.to_read_dict())
+
+    def get_objects_list(self, session: RequestSession) -> ResponseSession:
+        # TODO: get any object by table name and UID
+        table_name: str = session.get_query_or_body_param("table_name")
+        objs = daos.get_dao_for_table(table_name).select_rows_read_active(100).to_list_dict()
+        return ResponseSession.ok(session, {"objects": objs})
 
     def auth(self):
-        print("Auth")
+        logging.info("Auth")
         # : dict[str, any]
-
-    routes: dict[str, any] = { # Callable[[ObjectController, Request], Response]
-        "get_object_by_id": get_object_by_id,
-        "get_object_count": get_object_count
-    }
-
-
-    def route(self, session: RequestSession) -> ResponseSession:
-        #session.request.method
-        print("Route with URL: " + session.request.url)
-        contr_method = self.routes.get(session.request.method + ":/" + session.method_name)
-        #print("Found method" + str(type(contr_method)))
-        if contr_method is not None:
-            return contr_method(self, session)
-        else:
-            return ResponseSession(abort(404))

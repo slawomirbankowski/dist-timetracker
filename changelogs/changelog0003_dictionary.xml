@@ -6,7 +6,7 @@
 
     <changeSet id="0003 - dictionaries" author="slawomir.bankowski">
 
-        <createTable tableName="currency" remarks="type=dictionary;description=currency: EUR, USD, GBP, PLN, ..." >
+        <createTable tableName="currency" remarks="currency: EUR, USD, GBP, PLN, ..." >
             <column name="currency_uid" type="text" remarks="type=pk;description=unique ID of currency"><constraints primaryKey="true" nullable="false"/></column>
             <column name="currency_name" type="text" remarks="type=name;description=name of currency - EUR, USD, "><constraints nullable="false"/></column>
             <!-- attribute columns -->
@@ -30,7 +30,7 @@
         </createTable>
         <createIndex indexName="idx_currency_currency_name" tableName="currency" unique="true"><column name="currency_name" /></createIndex>
 
-        <createTable tableName="period" remarks="type=dictionary;description=period of time - daily, weekly, monthly, ..." >
+        <createTable tableName="period" remarks="period of time - daily, weekly, monthly, ..." >
             <column name="period_uid" type="text" remarks="UID of period: Y2025, Q20241, M202408, W2024021, D20240405"><constraints primaryKey="true" nullable="false"/></column>
             <column name="period_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

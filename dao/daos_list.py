@@ -1,4 +1,6 @@
 # auto-generated - v_definition_python_daos_list - START at 2024-03-30 02:32:00.283524+01
+import logging
+from logging import config
 from dao.daos_full import *
 
 
