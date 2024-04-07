@@ -1,0 +1,429 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00061_definition_views.xml">
+
+    <changeSet id="0061 - definition views" author="slawomir.bankowski">
+
+      <createView viewName="v_definition_python_dtos_model_list">
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_model_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 1 as ordinal_position, 'from dto.dtos import db_model' as python
+	union all select '' as table_name, 1 as ordinal_position, 'from base.base_objects import base_model' as python
+	union all select '' as table_name, 1 as ordinal_position, '' as python
+	union all select '' as table_name, 1 as ordinal_position, 'class model_list_base:' as python
+	union all select '' as table_name, 1 as ordinal_position, '    all_models: dict[str, db_model] = {}' as python
+	union all select * from v_definition_models
+	union all select '' as table_name, 1 as ordinal_position, '    def initialize(self):' as python
+	union all select table_name, ordinal_position, python from v_definition_models_register
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_model_list - END'
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_write">
+	select table_name, ordinal_position, python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_write - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 4 as ordinal_position, 'from dataclasses import dataclass, asdict'
+	union all select '' as table_name, 5 as ordinal_position, 'import json'
+	union all select '' as table_name, 6 as ordinal_position, 'from base.base_objects import objects'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_models import *'
+	union all select '' as table_name, 9 as ordinal_position, ''
+	union all select '' as table_name, 10 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name, '_write_dto(base_write_dto):')  as python from v_definition_table_base_list
+	union all select table_name, 200+ordinal_position , concat('    ', python_definition) from v_definition_column_base_list where is_attribute=1
+
+	union all select table_name, 400 as ordinal_position, concat('    def __init__(self, ',  attr_column_list_with_type , ', custom_attributes: str = "{}"):') from v_definition_table_column_base
+	union all select table_name, 500+ordinal_position , self_set from v_definition_column_base_list where is_attribute=1
+	union all select table_name, 599 as ordinal_position, concat('        self.custom_attributes = custom_attributes') from v_definition_table_column_base
+	union all select table_name, 1110 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1120 as ordinal_position, '    def empty_write(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1130 as ordinal_position, concat('        return cls(', attr_python_empty_values, ')') as python from v_definition_table_column_base
+	union all select table_name, 1210 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1220 as ordinal_position, '    def default_write(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1230 as ordinal_position, concat('        return cls(', attr_python_default_values, ')') as python from v_definition_table_column_base
+	union all select table_name, 1310 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1320 as ordinal_position, '    def random_write(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1330 as ordinal_position, concat('        return cls(', attr_python_random_values, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1410 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1420 as ordinal_position, concat('    def new_write(cls, ', attr_column_list_with_type , '):') as python from v_definition_table_column_base
+	union all select table_name, 1430 as ordinal_position, concat('        return cls(', attr_column_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1441 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1442 as ordinal_position, concat('    def new_write_with_defaults(cls, ', attr_python_definition_defaults , '):') as python from v_definition_table_column_base
+	union all select table_name, 1443 as ordinal_position, concat('        return cls(', attr_column_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1510 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1520 as ordinal_position, concat('    def new_write_random_uid(cls, ', attrnonkey_column_list_with_type , '):') as python from v_definition_table_column_base
+	union all select table_name, 1530 as ordinal_position, concat('        return cls(base_dto.get_random_uid(), ', attrnonkey_column_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1810 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1811 as ordinal_position, '    def get_class_model(cls) -> base_model:' as python from v_definition_table_base_list
+	union all select table_name, 1812 as ordinal_position, concat('        return db_models.', table_name, '_model') as python from v_definition_table_base_list
+
+	union all select table_name, 1821 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1822 as ordinal_position, '    def from_dictionary(cls, d: dict[str, any]):' as python from v_definition_table_base_list
+	union all select table_name, 1823 as ordinal_position, concat('        return cls(', attr_column_dict_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1900 , concat('    def to_write_dict(self) -> dict:') from v_definition_table_base_list
+	union all select table_name, 1901 , concat('        return asdict(self)') from v_definition_table_base_list
+
+	union all select table_name, 2120 as ordinal_position, '    def clone_write(self):' as python from v_definition_table_base_list
+	union all select table_name, 2130 as ordinal_position, concat('        return ', dto_write_class_name , '(', attr_column_self_list, ', self.custom_attributes)') as python from v_definition_table_column_base
+	union all select table_name, 2210 as ordinal_position, '    def clone_write_new_uid(self):' as python from v_definition_table_base_list
+	union all select table_name, 2220 as ordinal_position, concat('        return ', dto_write_class_name , '(base_dto.get_random_uid(), ', attrnonkey_column_self_list, ', self.custom_attributes)') as python from v_definition_table_column_base
+	union all select table_name, 2310 as ordinal_position, '    def clone_with_uid(self, uid: str):' as python from v_definition_table_base_list
+	union all select table_name, 2320 as ordinal_position, concat('        return ', dto_write_class_name , '(uid, ', attrnonkey_column_self_list, ', self.custom_attributes)') as python from v_definition_table_column_base
+
+	union all select table_name, 3110 as ordinal_position, '    def get_model(self) -> base_model:' as python from v_definition_table_base_list
+	union all select table_name, 3111 as ordinal_position, concat('        return db_models.', table_name, '_model') as python from v_definition_table_base_list
+
+	union all select table_name, 3221 as ordinal_position, '    def get_uid(self) -> str:' as python from v_definition_table_base_list
+	union all select table_name, 3222 as ordinal_position, concat('        return self.', table_name, '_uid') as python from v_definition_table_base_list
+	union all select table_name, 3223 as ordinal_position, '    def get_name(self) -> str:' as python from v_definition_table_base_list
+	union all select table_name, 3224 as ordinal_position, concat('        return self.', table_name, '_name') as python from v_definition_table_base_list
+
+	union all select table_name, 3310 as ordinal_position, '    def get_list_values(self) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3311 as ordinal_position, concat('        return [', attr_column_self_list, ', self.custom_attributes]') as python from v_definition_table_column_base
+
+	union all select table_name, 3321 as ordinal_position, '    def get_list_values_no_custom(self) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3322 as ordinal_position, concat('        return [', attr_column_self_list, ']') as python from v_definition_table_column_base
+
+	union all select table_name, 3331 as ordinal_position, '    def get_list_write_update(self, updated_by: str) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3332 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes, updated_by, self.', table_name, '_uid]') as python from v_definition_table_column_base
+
+	union all select table_name, 3341 as ordinal_position, '    def get_list_write_insert(self, created_by: str) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3342 as ordinal_position, concat('        return [self.', table_name, '_uid, ', attrnonkey_column_self_list, ', created_by, created_by, self.custom_attributes]') as python from v_definition_table_column_base
+
+	union all select table_name, 3410 as ordinal_position, '    def get_nonkey_values(self) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3411 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ']') as python from v_definition_table_column_base
+
+	union all select table_name, 3420 as ordinal_position, '    def get_nonkey_values_with_custom(self) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 3421 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes]') as python from v_definition_table_column_base
+
+	union all select table_name, 3431 as ordinal_position, '    def to_json_write(self) -> str:' as python from v_definition_table_base_list
+	union all select table_name, 3432 as ordinal_position, concat('        return json.dumps(self.to_write_dict())') as python from v_definition_table_column_base
+
+	union all select table_name, 3510 as ordinal_position, '    def compare_uid(self, obj: base_write_dto) -> bool:' as python from v_definition_table_base_list
+	union all select table_name, 3520 as ordinal_position, concat('        return self.get_uid() == obj.get_uid()') as python from v_definition_table_column_base
+
+	union all select table_name, 4110 as ordinal_position, '    def update_uid(self, uid: str):' as python from v_definition_table_base_list
+	union all select table_name, 4111 as ordinal_position, concat('        self.', table_name ,'_uid = uid') as python from v_definition_table_base_list
+
+	union all select table_name, 4202 as ordinal_position, concat('    def update_uid_attributes(self, ', attr_column_list_with_type  , '):') as python from v_definition_table_column_base
+	union all select table_name, 4203+ordinal_position as ordinal_position, concat('        self.', column_name, ' = ', column_name , '') as python from v_definition_column_base_list where is_attribute=1
+
+	union all select table_name, 4302 as ordinal_position, concat('    def update_attributes(self, ', attrnonkey_column_list_with_type , '):') as python from v_definition_table_column_base
+	union all select table_name, 4303+ordinal_position as ordinal_position, concat('        self.', column_name, ' = ', column_name , '') as python from v_definition_column_base_list where is_non_key_attribute=1
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_write - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_thin">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_thin - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 4 as ordinal_position, 'from dataclasses import dataclass, asdict'
+	union all select '' as table_name, 5 as ordinal_position, 'import json'
+	union all select '' as table_name, 6 as ordinal_position, 'from base.base_objects import objects'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_models import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_thin_dto(base_dto):') as python from v_definition_table_base_list
+
+	union all select table_name, 201 , concat('    ', table_name , '_uid: str') from v_definition_table_base_list
+	union all select table_name, 202 , concat('    ', table_name , '_name: str') from v_definition_table_base_list
+	union all select table_name, 203 , concat('    created_date: datetime.datetime') from v_definition_table_base_list
+	union all select table_name, 204 , concat('    is_active: int') from v_definition_table_base_list
+	union all select table_name, 210 , concat('    def __init__(self, ', table_name , '_uid: str,', table_name , '_name: str, created_date: datetime.datetime, is_active: int):') from v_definition_table_base_list
+	union all select table_name, 211 , concat('        self.', table_name , '_uid = ', table_name , '_uid') from v_definition_table_base_list
+	union all select table_name, 212 , concat('        self.', table_name , '_name = ', table_name , '_name') from v_definition_table_base_list
+	union all select table_name, 213 , concat('        self.created_date = created_date') from v_definition_table_base_list
+	union all select table_name, 214 , concat('        self.is_active = is_active') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_thin - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+
+      <createView viewName="v_definition_python_dtos_normal">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_normal - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 4 as ordinal_position, 'from dataclasses import dataclass, asdict'
+	union all select '' as table_name, 5 as ordinal_position, 'import json'
+	union all select '' as table_name, 6 as ordinal_position, 'from base.base_objects import objects'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_models import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_normal_dto(base_read_dto, ', table_name, '_write_dto):') as python from v_definition_table_base_list
+
+	union all select table_name, 202+ordinal_position , concat('    ', python_definition , '') from v_definition_column_base_list where is_write=1 and column_name&lt;&gt;'custom_attributes'
+
+	union all select table_name, 303 , concat('    created_date: datetime.datetime') from v_definition_table_base_list
+	union all select table_name, 304 , concat('    created_by: str') from v_definition_table_base_list
+	union all select table_name, 310 , concat('    def __init__(self, ', attr_column_list_with_type , ', created_date: datetime.datetime, created_by: str):') from v_definition_table_column_base
+	union all select table_name, 311+ordinal_position , concat('        self.', column_name , ' = ', column_name , '') from v_definition_column_base_list where is_write=1 and column_name&lt;&gt;'custom_attributes'
+	union all select table_name, 413 , concat('        self.created_date = created_date') from v_definition_table_base_list
+	union all select table_name, 414 , concat('        self.created_by = created_by') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_normal - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_read">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_read - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 8 as ordinal_position, 'from base.base_interfaces import *'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name, '_read_dto(base_read_dto, ', table_name, '_write_dto, ', table_name, '_interface_dto):') as python from v_definition_table_base_list
+	union all select table_name, 200+ordinal_position , concat('    ', python_definition) from v_definition_column_base_list
+	union all select table_name, 400 as ordinal_position, all_init_definition from v_definition_table_column_base
+	union all select table_name, 500+ordinal_position , self_set from v_definition_column_base_list
+
+	union all select table_name, 1110 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1120 as ordinal_position, '    def empty_read(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1130 as ordinal_position, concat('        return cls(0, ', attr_python_empty_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_definition_table_column_base
+	union all select table_name, 1210 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1220 as ordinal_position, '    def default_read(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1230 as ordinal_position, concat('        return cls(0, ', attr_python_default_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_definition_table_column_base
+	union all select table_name, 1310 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1320 as ordinal_position, '    def random_read(cls):' as python from v_definition_table_base_list
+	union all select table_name, 1330 as ordinal_position, concat('        return cls(0, ', attr_python_random_values, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_definition_table_column_base
+
+	union all select table_name, 1410 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1420 as ordinal_position, concat('    def new_read_default(cls, ', attr_column_list_with_type , '):') as python from v_definition_table_column_base
+	union all select table_name, 1430 as ordinal_position, concat('        return cls(0, ', attr_column_list, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")') as python from v_definition_table_column_base
+
+	union all select table_name, 1510 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1520 as ordinal_position, concat('    def new_read_full(cls, ', all_column_list_with_type , '):') as python from v_definition_table_column_base
+	union all select table_name, 1530 as ordinal_position, concat('        return cls(', all_column_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1610 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1620 as ordinal_position, concat('    def from_write(cls, dto: ', dto_write_class_name, '):') as python from v_definition_table_base_list
+	union all select table_name, 1630 as ordinal_position, concat('        return cls(0, ', attr_column_dto_list, ', "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)') as python from v_definition_table_column_base
+
+	union all select table_name, 1710 as ordinal_position, '    def clone_read(self):' as python from v_definition_table_base_list
+	union all select table_name, 1711 as ordinal_position, concat('        return ', dto_read_class_name , '(', all_column_self_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1721 as ordinal_position, '    @classmethod' as python from v_definition_table_base_list
+	union all select table_name, 1722 as ordinal_position, '    def from_dictionary(cls, d: dict[str, any]):' as python from v_definition_table_base_list
+	union all select table_name, 1723 as ordinal_position, concat('        return cls(', all_column_dict_list, ')') as python from v_definition_table_column_base
+
+	union all select table_name, 1731 , concat('    def to_read_dict(self) -> dict:') from v_definition_table_base_list
+	union all select table_name, 1732 , concat('        return asdict(self)') from v_definition_table_base_list
+
+	union all select table_name, 1800 as ordinal_position, concat('    def to_write(self) -> ', dto_write_class_name, ':') as python from v_definition_table_base_list
+	union all select table_name, 1801 as ordinal_position, concat('        return ', dto_write_class_name, '(', attr_column_self_list, ', self.custom_attributes)') as python from v_definition_table_column_base
+
+	union all select table_name, 1810 as ordinal_position, concat('    def to_thin(self) -> ', table_name, '_thin_dto:') as python from v_definition_table_base_list
+	union all select table_name, 1811 as ordinal_position, concat('        return ', table_name, '_thin_dto(self.', table_name, '_uid, self.', table_name, '_name, self.created_date, self.is_active)') as python from v_definition_table_base_list
+
+	union all select table_name, 1820 as ordinal_position, concat('    def to_normal(self) -> ', table_name, '_normal_dto:') as python from v_definition_table_base_list
+	union all select table_name, 1821 as ordinal_position, concat('        return ', table_name, '_normal_dto(', attr_column_self_list, ', self.created_date, self.created_by)') as python from v_definition_table_column_base
+
+	union all select table_name, 1910 as ordinal_position, '    def touch(self, updated_by: str = "system"):' as python from v_definition_table_base_list
+	union all select table_name, 1911 as ordinal_position, concat('        self.last_updated_date = datetime.datetime.now()') as python from v_definition_table_base_list
+	union all select table_name, 1912 as ordinal_position, concat('        self.last_updated_by = updated_by') as python from v_definition_table_base_list
+	union all select table_name, 1913 as ordinal_position, concat('        self.row_version = self.row_version+1') as python from v_definition_table_base_list
+
+	union all select table_name, 2300 as ordinal_position, '    def get_list_all_values(self) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 2301 as ordinal_position, concat('        return ', all_column_dictionary, '') as python from v_definition_table_column_base
+
+	union all select table_name, 2310 as ordinal_position, '    def get_list_update_values(self, updated_by: str) -> list[any]:' as python from v_definition_table_base_list
+	union all select table_name, 2311 as ordinal_position, concat('        return [', attrnonkey_column_self_list, ', self.custom_attributes, updated_by, self.', table_name, '_uid]') as python from v_definition_table_column_base
+
+	union all select table_name, 2400 as ordinal_position, '    def is_older_than(self, dt: datetime.datetime) -> bool:' as python from v_definition_table_base_list
+	union all select table_name, 2410 as ordinal_position, concat('        return self.created_date &lt; dt') as python from v_definition_table_base_list
+	union all select table_name, 2500 as ordinal_position, '    def is_newer_than(self, dt: datetime.datetime) -> bool:' as python from v_definition_table_base_list
+	union all select table_name, 2510 as ordinal_position, concat('        return self.created_date > dt') as python from v_definition_table_base_list
+
+	union all select table_name, 2600 as ordinal_position, '    def to_json_read(self) -> str:' as python from v_definition_table_base_list
+	union all select table_name, 2610 as ordinal_position, concat('        return json.dumps(self.to_read_dict())') as python from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_read - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_base_interfaces_dto">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_base_interfaces_dto - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name, '_interface_dto:') as python from v_definition_table_base_list
+	union all select table_name, 200+ordinal_position , concat('    ', python_definition) from v_definition_column_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_base_interfaces_dto - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_rich">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_rich - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_read import *'
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_rich_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_rich_dto(', table_name, '_read_dto):') as python from v_definition_table_rich_list
+	union all select table_name, 200+ordinal_position , concat('    ', python_definition) from v_definition_column_rich_list
+	union all select table_name, 400 as ordinal_position, all_init_definition from v_definition_table_column_rich
+ 	union all select table_name, 500+ordinal_position , self_set from v_definition_column_rich_list
+
+	union all select table_name, 1731 , concat('    def to_rich_dict(self) -> dict:') from v_definition_table_rich_list
+	union all select table_name, 1732 , concat('        return asdict(self)') from v_definition_table_rich_list
+
+	union all select table_name, 2300 as ordinal_position, '    def get_rich_all_values(self) -> list[any]:' as python from v_definition_table_rich_list
+	union all select table_name, 2301 as ordinal_position, concat('        return ', all_column_dictionary, '') as python from v_definition_table_column_rich
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_rich_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_rich_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_rich - END'
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_full">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_full - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_full_dto(', table_name, '_read_dto):') as python from v_definition_table_base_list
+
+	union all select table_name, 204 , concat('    is_active: int') from v_definition_table_base_list
+	union all select table_name, 210 , concat('    def __init__(self):') from v_definition_table_base_list
+	union all select table_name, 214 , concat('        self.is_active = 1') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_full - END' as python
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+
+
+    </changeSet>
+
+</databaseChangeLog>

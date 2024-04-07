@@ -6,7 +6,7 @@
 
     <changeSet id="0012 - report tables" author="slawomir.bankowski">
 
-        <createTable tableName="report_type" remarks="type=dictionary;cardinality=10;description=types of report" >
+        <createTable tableName="report_type" remarks="types of report" >
             <column name="report_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -28,7 +28,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_format" remarks="type=dictionary;cardinality=10;description=formats supported by report rendering" >
+        <createTable tableName="report_format" remarks="formats supported by report rendering" >
             <column name="report_format_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_format_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -50,7 +50,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_status" remarks="type=dictionary;cardinality=10;description=name of status for report" >
+        <createTable tableName="report_status" remarks="name of status for report" >
             <column name="report_status_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_status_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -72,7 +72,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_content_type" remarks="type=dictionary;cardinality=10;description=type of content for report" >
+        <createTable tableName="report_content_type" remarks="type of content for report" >
             <column name="report_content_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_content_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -94,7 +94,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report" remarks="type=m2m;cardinality=100000;description=calendar for account of given type" >
+        <createTable tableName="report" remarks="calendar for account of given type" >
             <column name="report_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -121,7 +121,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_run" remarks="type=m2m;cardinality=100000;description=run of report by account" >
+        <createTable tableName="report_run" remarks="run of report by account" >
             <column name="report_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="report_run_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

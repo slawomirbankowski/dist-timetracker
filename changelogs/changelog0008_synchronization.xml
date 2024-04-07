@@ -6,7 +6,7 @@
 
     <changeSet id="0008 - synchronization and process" author="slawomir.bankowski">
 
-        <createTable tableName="synchronization_type" remarks="type of synchronization: read, write " >
+        <createTable tableName="synchronization_type" remarks="type of synchronization: read, write, check" >
             <column name="synchronization_type_uid" type="text" remarks="unique ID of engine"><constraints primaryKey="true" nullable="false"/></column>
             <column name="synchronization_type_name" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
@@ -29,7 +29,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="synchronization" remarks="description=synchronization with external system" >
+        <createTable tableName="synchronization" remarks="synchronization with external system" >
             <column name="synchronization_uid" type="text" remarks="unique ID of engine"><constraints primaryKey="true" nullable="false"/></column>
             <column name="synchronization_name" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->

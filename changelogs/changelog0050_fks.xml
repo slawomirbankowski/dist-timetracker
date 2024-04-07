@@ -182,9 +182,7 @@
         <addForeignKeyConstraint baseTableName="system_attribute" baseColumnNames="system_object_uid" constraintName="fk_system_attribute_system_object_uid" referencedTableName="system_object" referencedColumnNames="system_object_uid" />
         <addForeignKeyConstraint baseTableName="system_instance" baseColumnNames="system_version_uid" constraintName="fk_system_instance_system_version_uid" referencedTableName="system_version" referencedColumnNames="system_version_uid" />
         <addForeignKeyConstraint baseTableName="system_lock" baseColumnNames="lock_account_uid" constraintName="fk_system_lock_lock_account_uid" referencedTableName="account" referencedColumnNames="account_uid" />
-        <addForeignKeyConstraint baseTableName="system_object" baseColumnNames="system_version_uid" constraintName="fk_system_object_system_version_uid" referencedTableName="system_version" referencedColumnNames="system_version_uid" />
-        <addForeignKeyConstraint baseTableName="system_object" baseColumnNames="system_table_uid" constraintName="fk_system_object_system_table_uid" referencedTableName="system_table" referencedColumnNames="system_table_uid" />
-        <addForeignKeyConstraint baseTableName="system_object" baseColumnNames="system_object_type_uid" constraintName="fk_system_object_system_object_type_uid" referencedTableName="system_object_type" referencedColumnNames="system_object_type_uid" />
+
         <addForeignKeyConstraint baseTableName="system_request" baseColumnNames="account_uid" constraintName="fk_system_request_account_uid" referencedTableName="account" referencedColumnNames="account_uid" />
         <addForeignKeyConstraint baseTableName="system_setting_account" baseColumnNames="system_setting_account_uid" constraintName="fk_system_setting_account_system_setting_account_uid" referencedTableName="account" referencedColumnNames="account_uid" />
         <addForeignKeyConstraint baseTableName="system_setting_account" baseColumnNames="account_uid" constraintName="fk_system_setting_account_account_uid" referencedTableName="account" referencedColumnNames="account_uid" />

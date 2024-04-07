@@ -1,59 +1,85 @@
 
-  <include file="./changelog0002.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0003.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0004.xml" relativeToChangelogFile="true"/>
-
-        <sql splitStatements="false" stripComments="false">
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('country', '1.0.0', 'Country', 'dictionary', 'country', 'country_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('currency', '1.0.0', 'Currency', 'dictionary', 'currency', 'currency_uid', '');
-            insert into system_object(system_object_uid, system_version_uid, object_name, object_type, table_name, key_name, parent_system_object_uid) values ('client_type', '1.0.0', 'Client Type', 'dictionary', 'client_type', 'client_type_uid', '');
-        </sql>
-
 --------------------------------------------------------------------------------------------
 - base_model - add types to columns - DONE
 - base model - add FKs - DONE
 - base model - add description and type of table - DONE
 - DTO - name columns to tables t_name - that could be also _uid if no name is needed - DONE
-
 - DTO list add new methods find() sort() compare() max_by() ... - DONE
-
 - deploy rich tables to DB - DONE
 - RICH - create view on rich views - DONE
 - RICH - add rich DTOs - DONE
 - DAO methods change get_ to select_ - DONE
-
-
-- DB - add identity tables with assignment to account
-- DB - permission tables to keep authorization for account
-
+- DB - permission tables to keep authorization for account - DONE
 - DB - add project tables - DONE
-- DB - add HR tables
+- authentication - setting and checking password - DONE
+- authentication - creating token - DONE
+- authentication - parsing token and producing account session object - DONE
+- create Service to get one full object by UID - DONE
+- insert threads into system_thread - DONE
 
+- DB - system_table - add system tables
+
+- DB - system_attribute - ordinal_position, field_category, is_hidden, is_meta, is_secret, is_full_search, is_
+- DB - add HR tables
+- DB - add competency tables
+- DB - add competency tables
+- DB - auth_identity - URL
+
+- DB - perm_type to permission - global, tenant, client, table
+- DB - add time tracking tables
+- DB - add system operation counter to count reads/writes/updates
 
 - RICH - add DAO methods to rich - TO_DO
-- MODEL - add column names for global search concat(col1, col2, col3) like '%searchstr%'
+- MODEL - add column names for global search concat(col1, ' ',  col2, ' ', col3) like '%searchstr%'
 - DTO - add mask() method to mask/hide data to be shown to UI
+
+- DTO - implement custom attributes for read_dto classes
+
+- NORMAL DTOs - generate from DB
+- Implement Full DTOs with links and additional information around object with metadata
+- system_attribute with search columns - model with search generation
+- base_dto, base_read_dto, base_write_dto - move to base folder
+- load system_table and system_attribute as dictionaries into Daos
+- insert requests into system_request
+- DB - create system_session table for account sessions
+- read all tenants from DB to Daos as dictionaries
+
+- add local cache in memory
+- add Redis cache - global cache for objects
+
+- DTO - create DTO from dictionary and from JSON
+- DTOS - parse from JSON
+- DTO - get default value for given attribute - to create with defaults
+
+- fix system_instance.is_active to have only one active instance
+- check password expiration date when checking password
+- check token expiration date when checking token with session
+- remove inactive tokens and accounts
+
+- Object HTTP endpoint to add single row
+- Object HTTP endpoint to update single row
+- Object HTTP endpoint to remove single row by UID
+- Object HTTP endpoint to search for rows
+
+- Controller endpoint to add tenant
+- DB - add initial password for system/test accounts
+- DB - add more system accounts like administrator, synchronizer
+- Global value resolver Implementation
 
 - add remarks to tables and columns
 - DAO DbConnection Wrapper - implementation for DAO classes for transactional items
-- DAO refactor - remove by_params methods
 - DAO - implement global search method for given table by string
-- Service - implement change status
 - Controller - implement request log insert
-
-- DB - add time tracking tables
-
-- DB - add system operation counter to count reads/writes/updates
-
-- authentication - setting and checking password
-- authentication - creating token
-- authentication - parsing token and producing account session object
-- authentication -
 - translator from read_dto into full_dto with all links to parent objects
 
-- create Controller to list objects by table and search string
-- create Service to get one full object by UID
-- create Controller to get one full object by UID
+- account - register new account with email
+- account - reset password request
+- account -
+-
+- tenant - create new with accounts
+- tenant -
+
+
 
 --------------------------------------------------------------------------------------------
  UI - React
@@ -815,7 +841,27 @@ CACHE
 --------------------------------------------------------------------------------------------
 
 
+        <sql splitStatements="false" stripComments="false">
+            insert into system_table(system_table_uid, system_table_name, key_name, table_comment)
+            select t.table_name, t.table_name, concat(t.table_name, '_uid') as key_name, coalesce(tc.table_comment, '') as table_comment
+            from information_schema.tables t
+            	 left join (
+				 SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+					FROM information_schema.tables t
+					INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+					WHERE t.table_type='BASE TABLE'
+					AND t.table_schema='public'
+			 ) tc on t.table_name = tc.table_name
+            WHERE t.table_type='BASE TABLE' and t.table_schema='public' and t.table_name not in ('databasechangeloglock', 'databasechangelog');
+        </sql>
 
+
+
+        <sql splitStatements="false" stripComments="false">
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+            insert into project_type(project_type_uid, project_type_name, project_type_description) values ('', '', '');
+        </sql>
 
 
 

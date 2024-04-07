@@ -24,5 +24,6 @@
   <include file="./changelog0026_time.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0027_calendar.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0031_rich_views.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0035_data.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

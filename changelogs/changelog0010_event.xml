@@ -6,7 +6,7 @@
 
     <changeSet id="0010 - event tables" author="slawomir.bankowski">
 
-        <createTable tableName="event_type" remarks="type=update;cardinality=10;description=type of events" >
+        <createTable tableName="event_type" remarks="type of events" >
             <column name="event_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="event_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

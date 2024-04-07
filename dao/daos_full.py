@@ -1,6 +1,8 @@
 # auto-generated - v_definition_python_daos_full - START at 2024-03-29 22:52:27.127868+01
-import dao.dao_connection
 from typing import TypeVar, Generic, List, Iterable
+import logging
+from logging import config
+import dao.dao_connection
 from dao.dao_base import base_dao
 from dao.daos_read import *
 from dto.dtos_models import db_models
@@ -11,7 +13,7 @@ class account_full_dao(account_dao):
     def __init__(self):
         super().__init__()
     def get_account_by_name(self, username: str) -> account_read_dto | None:
-        return self.select_rows_read_by_query("select * from account_instance where account_instance_uid=%s or account_name=%s and account_email=%s order by created_date desc limit 1", [username, username, username]).get_first()
+        return self.select_rows_read_by_query("select * from account where account_uid=%s or account_name=%s or account_email=%s order by created_date desc limit 1", [username, username, username]).get_first()
 
 
 class account_division_full_dao(account_division_dao):
@@ -102,11 +104,11 @@ class auth_key_type_full_dao(auth_key_type_dao):
 class auth_password_full_dao(auth_password_dao):
     def __init__(self):
         super().__init__()
-    def set_password(self, system_instance_uid: str, account_instance_uid: str, password_hash: str, password_salt: str) -> int:
+    def set_password(self, tenant_uid: str, account_uid: str, password_hash: str, password_salt: str) -> int:
         #self.with_connection_commit()
         date_to = datetime.datetime.now() + datetime.timedelta(days=30)  # max valid time = 30 days
-        self.execute_query("update auth_password set is_active=0, removed_by='', removed_date=now() where account_instance_uid=%d", [account_instance_uid])
-        return self.insert_row_random_uid("", account_instance_uid, system_instance_uid,
+        self.execute_query("update auth_password set is_active=0, removed_by='', removed_date=now() where is_active=1 and account_uid=%d", [account_uid])
+        return self.insert_row_random_uid("name", tenant_uid, account_uid,
                                                                   password_hash, password_salt, datetime.datetime.now(),
                                                                   date_to, 0)
 

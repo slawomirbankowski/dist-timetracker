@@ -6,7 +6,7 @@
 
     <changeSet id="0026 - time tables" author="slawomir.bankowski">
 
-        <createTable tableName="time_submit_type" remarks="type=dictionary;cardinality=10;description=type of submitting time" >
+        <createTable tableName="time_submit_type" remarks="type of submitting time" >
             <column name="time_submit_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_submit_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -29,7 +29,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_submit" remarks="type=full;cardinality=1000000;description=single submit of time for selected account to many projects wihtin one period" >
+        <createTable tableName="time_submit" remarks="single submit of time for selected account to many projects wihtin one period" >
             <column name="time_submit_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_submit_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -56,7 +56,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_entry" remarks="type=full;cardinality=1000000;description=time entered by account against project" >
+        <createTable tableName="time_entry" remarks="time entered by account against project" >
             <column name="time_entry_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_entry_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -92,7 +92,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_entry_invoice" remarks="type=m2m;cardinality=1000000;description=connection between time entry and invoice" >
+        <createTable tableName="time_entry_invoice" remarks="connection between time entry and invoice" >
             <column name="time_entry_invoice_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_entry_invoice_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -129,7 +129,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_rule" remarks="type=full;cardinality=10000;description=" >
+        <createTable tableName="time_rule" remarks="" >
             <column name="time_rule_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_rule_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -151,7 +151,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_rule_client" remarks="type=full;cardinality=1000000;description=applied rule of time submitting into one client" >
+        <createTable tableName="time_rule_client" remarks="applied rule of time submitting into one client" >
             <column name="time_rule_client_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_rule_client_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -174,7 +174,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_entry_final" remarks="type=full;cardinality=1000000;description=final time entered by account against project" >
+        <createTable tableName="time_entry_final" remarks="final time entered by account against project" >
             <column name="time_entry_final_uid" type="text" remarks="UID of entry - final: account-project-date-row"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_entry_final_name" type="text" remarks=""><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -209,7 +209,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_approval" remarks="type=full;cardinality=1000000;description=" >
+        <createTable tableName="time_approval" remarks="approval of time entry" >
             <column name="time_approval_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_approval_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

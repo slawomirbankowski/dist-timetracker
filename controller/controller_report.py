@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, Request, Response
+import logging
+from logging import config
 from dao.daos_instances import *
 from dao.daos import daos
 from service.services import services
@@ -15,7 +17,3 @@ class ReportController(BaseController):
     def get_base_object_name(self) -> str:
         return "ReportController"
 
-    # route in Process controller - select method and run it
-    def route(self, session: RequestSession) -> ResponseSession:
-        print("Route from Flask: " + session.request.url)
-        return ResponseSession(jsonify({'access_token': "123456"}))

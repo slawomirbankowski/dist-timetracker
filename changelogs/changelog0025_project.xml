@@ -6,7 +6,7 @@
 
     <changeSet id="0025 - project tables" author="slawomir.bankowski">
 
-        <createTable tableName="project_group" remarks="type=full;cardinality=10000;description=group of projects" >
+        <createTable tableName="project_group" remarks="group of projects" >
             <column name="project_group_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="project_group_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->

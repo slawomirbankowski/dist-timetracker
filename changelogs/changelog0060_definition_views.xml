@@ -1,0 +1,365 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00060_definition_views.xml">
+
+    <changeSet id="0060 - definition views" author="slawomir.bankowski">
+
+      <createView  viewName="v_definition_table_all_list">
+	select t.table_name
+	, t.table_full_name
+	, replace(t.table_name, 'v_rich_', '') as full_name
+	, concat('class ', t.table_name, '_dtos(base_dto):') as dtos_class
+	, concat('', t.table_name, '_dtos') as dtos_class_name
+	, concat('class ', t.table_name, '_write_dto(base_write_dto):') as dto_write_class
+	, concat('', t.table_name, '_write_dto') as dto_write_class_name
+	, concat('list[', t.table_name, '_write_dto]') as dto_write_class_name_list
+	, concat('class ', t.table_name, '_read_dto(base_read_dto, ', t.table_name, '_write_dto):') as dto_read_class_definition
+	, concat('', t.table_name, '_read_dto') as dto_read_class_name
+	, concat('list[', t.table_name, '_read_dto]') as dto_read_class_name_list
+	, concat('', t.table_name, '_thin_dto') as dto_thin_class_name
+	, concat('class ', t.table_name, '_dao(base_dao):') as dao_class_definition
+	, concat('', t.table_name, '_dao') as dao_class_name
+	, concat('class ', t.table_name, '_service(base_service):') as service_class_definition
+	, concat('', t.table_name, '_service') as service_class_name
+	, concat('class ', t.table_name, '_controller(base_controller):') as controller_class_definition
+	, concat('', t.table_name, '_controller') as controller_class_name
+	, concat(t.table_name, '_model') as get_model_object_definition
+	, '' as empty_line_definition
+	, coalesce(tc.table_comment, '') as table_comment
+	, case when t.table_full_name not like 'v_%' and t.table_type='BASE TABLE' then 1 else 0 end as is_base
+	, case when t.table_full_name like 'v_rich_%' then 1 else 0 end as is_rich
+	, case when t.table_full_name like 'v_custom_%' then 1 else 0 end as is_custom
+	, case when t.table_full_name like 'v_definition_%' then 1 else 0 end as is_definition
+	from
+	 (select table_name as table_full_name, replace(table_name, 'v_rich_', '') as table_name, table_type from information_schema.tables where table_schema='public'  and table_name not in ('databasechangeloglock', 'databasechangelog')) t
+	 left join (
+		 SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+			FROM information_schema.tables t
+			INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+			WHERE t.table_type='BASE TABLE'
+			AND t.table_schema='public'
+	 ) tc on t.table_full_name = tc.table_name
+      </createView>
+
+      <createView viewName="v_definition_table_base_list">
+        select *
+        from v_definition_table_all_list
+        where is_base=1
+      </createView>
+
+
+      <createView viewName="v_definition_table_rich_list">
+        select *
+        from v_definition_table_all_list
+        where is_rich=1
+      </createView>
+
+
+      <createView viewName="v_definition_table_custom_list">
+        select *
+        from v_definition_table_all_list
+        where is_custom=1
+      </createView>
+
+      <createView viewName="v_definition_system_table_generation_list">
+	select 'insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)' as sql_line
+	union all select 'select ''databasechangelog'' as system_table_uid,''databasechangelog'' as system_table_name, ''databasechangelog'' as table_label, ''id'' as uid_name, ''liquibase'' as table_group, ''dbcl'' as table_code, ''liquibase'' as table_type, ''private'' as table_category, 1000 as cardinality, 0 as is_object, 0 as is_rich, 0 as is_tenant, 1 as is_local, ''Liquibase metadata table'' as table_comment'
+	union all select ' union all select ''databasechangeloglock'',''databasechangeloglock'',''databasechangeloglock'', ''id'', ''liquibase'' as table_group, ''dbcl'', ''liquibase'', ''private'' as table_category, 1000, 0, 0, 0, 1, ''semantic version of application like 1.2.3, each version is introducing new features to application'''
+	union all select x.sql_line
+	from (
+	select concat(' union all select ''', t.table_name, ''', ''', t.table_name, ''', ''', initcap(replace(t.table_name, '_', ' ')) , ''', ''',concat(t.table_name, '_uid'), ''', ''group'', ''code'', ''type'', ''category'', 1000, 1, 1, ', case when tenant.table_name is null then '0' else '1' end, ', 1, ''', tc.table_comment, '''') as sql_line
+	from information_schema.tables t
+	            	 left join (
+					 SELECT t.table_name, pg_catalog.obj_description(pgc.oid, 'pg_class') as table_comment
+						FROM information_schema.tables t
+						INNER JOIN pg_catalog.pg_class pgc ON t.table_name = pgc.relname
+						WHERE t.table_type='BASE TABLE'
+						AND t.table_schema='public'
+				 ) tc on t.table_name = tc.table_name
+	left join (
+		select table_name
+		from information_schema.columns
+		where column_name='tenant_uid'
+	) tenant on t.table_name=tenant.table_name
+	WHERE t.table_type='BASE TABLE' and t.table_schema='public' and t.table_name not in ('databasechangeloglock', 'databasechangelog')
+	order by t.table_name
+	) x
+      </createView>
+
+      <createView viewName="v_definition_system_attribute_generation_list">
+	select 'INSERT INTO system_attribute(system_attribute_uid, system_attribute_name, system_table_uid, column_name, attribute_type, attribute_label, attribute_description, ordinal_position, field_category, is_hidden, is_meta, is_secret, is_search, is_read_only, is_created)' as sql_line
+	union all select 'select ''databasechangelog.id'' as system_attribute_uid,''id'' as system_attribute_name,''databasechangelog'' as system_table_uid,  ''id'' as column_name, ''text'' as attribute_type, ''id'' as attribute_label, '''' as attribute_description, 1 as ordinal_position, '''' as field_category, 0 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only, 0 as is_created'
+	union all select x.sql_line from (
+	select concat('',
+	 ' union all select ''', concat(c.table_name, '.', c.column_name), ''',''', c.column_name, ''',''',c.table_name, ''',''', c.column_name, ''',''', c.data_type, ''',''', initcap(replace(c.column_name, '_', ' ')) , ''', '''', ', cast(c.ordinal_position as text), ', ''', case when c.column_name=concat(t.table_name, '_uid') then 'pk' when c.column_name like '%_uid' then 'fk' else 'attribute' end, ''', 0, 0, 0, 0, 0, 1  ') as sql_line
+	from information_schema.columns c
+	 join information_schema.tables t on c.table_name=t.table_name
+	WHERE c.table_name not in ('databasechangeloglock', 'databasechangelog')
+	 and c.table_name not like 'v%'
+	 and t.table_schema='public' and t.table_type='BASE TABLE'
+	 and c.column_name not in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes')
+	order by c.table_name, c.ordinal_position
+	) x
+      </createView>
+
+      <createView viewName="v_definition_system_attribute_generation_metadata_list">
+select concat(t.table_name, '', a.system_attribute_name) as system_attribute_uid
+ , a.system_attribute_name
+ , t.table_name as system_table_uid
+ , a.system_attribute_name
+ , '' as attribute_type
+ , '' as attribute_label
+ , '' as attribute_description
+ , 100 as ordinal_position
+ , '' as field_category
+ , 1 as is_hidden
+ , 1 as is_meta
+ , 0 as is_secret
+ , 0 as is_search
+ , 1 as is_read_only
+ , 0 as is_created
+from (
+select 'row_instance' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 1 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'row_lock' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 2 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'row_owner' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 2 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'row_seq' as system_attribute_name, 'bigint' as attribute_type, '' as attribute_description, 3 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'row_guid' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 4 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'row_version' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 5 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'is_active' as system_attribute_name, 'bigint' as attribute_type, '' as attribute_description, 6 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'created_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 7 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'created_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 8 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'last_updated_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 9 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'last_updated_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 10 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'removed_date' as system_attribute_name, 'timestamp' as attribute_type, '' as attribute_description, 11 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'removed_by' as system_attribute_name, 'text' as attribute_type, '' as attribute_description, 12 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+union all select 'custom_attributes' as system_attribute_name, 'test_json' as attribute_type, '' as attribute_description, 13 as ordinal_position, '' as field_category, 1 as is_hidden, 1 as is_meta, 0 as is_secret, 0 as is_search, 1 as is_read_only
+) a
+join information_schema.tables t on 1=1
+where t.table_name not in ('databasechangeloglock', 'databasechangelog')
+ and t.table_schema='public' and t.table_type='BASE TABLE'
+      </createView>
+
+      <createView viewName="v_definition_column_all_list">
+	select table_name as table_full_name
+	 , replace(replace(table_name, 'v_rich_', ''), 'v_custom', '') as table_name
+	 , column_name
+	 , case when column_default like '%replace%' then null else replace(replace(column_default, '::text', ''), 'now()', 'datetime.datetime.now()') end as column_default
+	 , concat('self.', column_name) as self_column_name
+	 , data_type
+	 , is_nullable
+	 , ordinal_position
+	 , cast(concat(case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then '| None' else '' end) as text) as python_type
+	 , cast(concat( column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition
+	 , cast(concat( column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end, ' = ',
+	    case when column_name='is_active' then '1' when column_name='custom_attributes' then '"{}"' when column_name='system_version_uid' then 'objects.system_version_uid' when column_name='system_instance_uid' then 'objects.system_instance_uid' when column_name='' then ''  when column_name='' then '' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_definition_default
+	 --, cast(concat('    ', column_name, ': ', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end) as text) as python_definition_class
+	 , cast(concat('"', column_name, '": "', case data_type when 'bigint' then 'int' when 'text' then 'str' when 'timestamp without time zone' then 'datetime.datetime' else 'str' end, '', case when is_nullable='YES' then ' | None' else '' end, '"') as text) as python_map_definition
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='custom_attributes' then '"{}"' when column_name='' then ''  when column_name='' then '' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_empty_value
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then '""' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_default_value
+	 , cast(concat(case when column_name='is_active' then '1' when column_name='created_by' then '"system"' when column_name='custom_attributes' then '"{}"' when column_name='' then '' when column_name=concat(table_name, '_uid') then 'base_dto.get_random_uid()' when data_type='bigint' then '0' when data_type='text' then 'base_dto.get_random_uid()' when data_type='timestamp without time zone' then 'datetime.datetime.now()' else '""' end) as text) as python_random_value
+	 , cast(concat('        self.', column_name, ' = ', column_name) as text) as self_set
+	 , case when column_name  in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_metadata
+	 , case when column_name  in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_value
+	 , case when column_name like '%_uid' and column_name &lt;&gt; concat(table_name, '_uid') then 1 else 0 end as is_fk
+	 , case when column_name = concat(table_name, '_name') and column_name &lt;&gt; concat(table_name, '_uid') then 1 else 0 end as is_name
+	 , case when column_name not in (concat(table_name, '_uid'), 'row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_non_key_attribute
+	 , case when column_name not in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by', 'custom_attributes') then 1 else 0 end as is_attribute
+	 , case when column_name not in ('row_instance', 'row_lock', 'row_owner', 'row_seq', 'row_guid', 'row_version', 'is_active', 'created_date', 'created_by', 'last_updated_date', 'last_updated_by', 'removed_date', 'removed_by') then 1 else 0 end as is_write
+	 , case when table_name not like 'v_%' then 1 else 0 end as is_base
+	 , case when table_name like 'v_rich_%' then 1 else 0 end as is_rich
+	 , case when table_name like 'v_custom_%' then 1 else 0 end as is_custom
+	 , case when table_name like 'v_definition_%' then 1 else 0 end as is_definition
+	from information_schema.columns
+	where table_schema='public' and table_name not in ('databasechangeloglock', 'databasechangelog')
+	order by ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_column_base_list">
+        select *
+        from v_definition_column_all_list
+        where is_base=1
+      </createView>
+
+      <createView viewName="v_definition_column_rich_list">
+        select *
+        from v_definition_column_all_list
+        where is_rich=1
+      </createView>
+
+      <createView viewName="v_definition_column_custom_list">
+        select *
+        from v_definition_column_all_list
+        where is_custom=1
+      </createView>
+
+      <createView viewName="v_definition_table_column_all">
+    select t.*
+    	-- all columns
+        , allcolls.column_list as all_column_list
+        , allcolls.column_names_list as all_column_names_list
+        , allcolls.column_list_with_type as all_column_list_with_type
+        , allcolls.column_dictionary as all_column_dictionary
+        , allcolls.column_self_list as all_column_self_list
+        , allcolls.column_dto_list as all_column_dto_list
+        , allcolls.column_dict_list as all_column_dict_list
+        , allcolls.cols_type_definition as all_cols_type_definition
+        , allcolls.init_definition as all_init_definition
+        , allcolls.python_empty_values as all_python_empty_values
+        , allcolls.python_default_values as all_python_default_values
+        , allcolls.python_random_values as all_python_random_values
+        , allcolls.python_definition_defaults as all_python_definition_defaults
+        , allcolls.python_map_definitions as all_python_map_definitions
+        -- attribute columns
+        , attrcols.column_list as attr_column_list
+        , attrcols.column_names_list as attr_column_names_list
+        , attrcols.column_list_with_type as attr_column_list_with_type
+        , attrcols.column_dictionary as attr_column_dictionary
+        , attrcols.column_self_list as attr_column_self_list
+        , attrcols.column_dto_list as attr_column_dto_list
+        , attrcols.column_dict_list as attr_column_dict_list
+        , attrcols.cols_type_definition as attr_cols_type_definition
+        , attrcols.init_definition as attr_init_definition
+        , attrcols.python_empty_values as attr_python_empty_values
+        , attrcols.python_default_values as attr_python_default_values
+        , attrcols.python_random_values as attr_python_random_values
+        , attrcols.python_definition_defaults as attr_python_definition_defaults
+        , attrcols.python_map_definitions as attr_python_map_definitions
+        -- attribute non key columns
+        , attrnonkeycols.column_list as attrnonkey_column_list
+        , attrnonkeycols.column_names_list as attrnonkey_column_names_list
+        , attrnonkeycols.column_list_with_type as attrnonkey_column_list_with_type
+        , attrnonkeycols.column_dictionary as attrnonkey_column_dictionary
+        , attrnonkeycols.column_self_list as attrnonkey_column_self_list
+        , attrnonkeycols.column_dto_list as attrnonkey_column_dto_list
+        , attrnonkeycols.column_dict_list as attrnonkey_column_dict_list
+        , attrnonkeycols.cols_type_definition as attrnonkey_cols_type_definition
+        , attrnonkeycols.init_definition as attrnonkey_init_definition
+        , attrnonkeycols.python_empty_values as attrnonkey_python_empty_values
+        , attrnonkeycols.python_default_values as attrnonkey_python_default_values
+        , attrnonkeycols.python_random_values as attrnonkey_python_random_values
+        , attrnonkeycols.python_definition_defaults as attrnonkey_python_definition_defaults
+        , attrnonkeycols.python_map_definitions as attrnonkey_python_map_definitions
+        , coalesce(fktbl.fk_definitions, '') as fk_columns_definition
+	from v_definition_table_all_list t
+	 join (
+	 	select table_name, table_full_name
+	 	 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+	 	 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+	 	 , string_agg(python_definition_default, ', ' order by ordinal_position) as python_definition_defaults
+	 	 , string_agg(python_map_definition, ', ' order by ordinal_position) as python_map_definitions
+		from v_definition_column_all_list
+	 	group by table_name, table_full_name
+	 ) allcolls on t.table_full_name = allcolls.table_full_name
+	 join (
+		select table_name, table_full_name
+		 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+		 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+	 	 , string_agg(python_definition_default, ', ' order by ordinal_position) as python_definition_defaults
+	 	 , string_agg(python_map_definition, ', ' order by ordinal_position) as python_map_definitions
+		from v_definition_column_all_list
+		where is_attribute=1
+		group by table_name, table_full_name
+	 ) attrcols on t.table_full_name = attrcols.table_full_name
+	 join (
+		select table_name, table_full_name
+		 , string_agg(column_name, ', ' order by ordinal_position) as column_list
+	 	 , string_agg(concat('''', column_name, ''''), ', ' order by ordinal_position) as column_names_list
+	 	 , string_agg(python_definition, ', ' order by ordinal_position) as column_list_with_type
+	 	 , concat('[', string_agg(self_column_name, ', ' order by ordinal_position), ']') as column_dictionary
+	 	 , concat(string_agg(self_column_name, ', ' order by ordinal_position)) as column_self_list
+	 	 , concat(string_agg(concat('dto.', column_name), ', ' order by ordinal_position)) as column_dto_list
+	 	 , concat(string_agg(concat('d["', column_name, '"]'), ', ' order by ordinal_position)) as column_dict_list
+	 	 , concat('(self, ', string_agg(python_definition, ', ' order by ordinal_position), ')') as cols_type_definition
+		 , concat('    def __init__(self, ', string_agg(python_definition, ', ' order by ordinal_position), '):') as init_definition
+	 	 , string_agg(python_empty_value, ', ' order by ordinal_position) as python_empty_values
+	 	 , string_agg(python_default_value, ', ' order by ordinal_position) as python_default_values
+	 	 , string_agg(python_random_value, ', ' order by ordinal_position) as python_random_values
+	 	 , string_agg(python_definition_default, ', ' order by ordinal_position) as python_definition_defaults
+	 	 , string_agg(python_map_definition, ', ' order by ordinal_position) as python_map_definitions
+		from v_definition_column_all_list
+		where is_non_key_attribute=1
+		group by table_name, table_full_name
+	 ) attrnonkeycols on t.table_full_name = attrnonkeycols.table_full_name
+	 left join (
+	 	select c.table_name, string_agg(concat('"', c.column_name, '": "', fkt.table_name, '"') , ', ' order by ordinal_position) as fk_definitions
+		 from v_definition_column_all_list c
+		 join v_definition_table_base_list fkt on  c.column_name like concat('%', fkt.table_name, '_uid')
+		where c.column_name like '%_uid' and c.table_name &lt;&gt; fkt.table_name
+		group by c.table_name
+	 ) fktbl on fktbl.table_name = t.table_full_name
+      </createView>
+
+      <createView viewName="v_definition_table_column_base">
+	select *
+	from v_definition_table_column_all
+	where is_base=1
+      </createView>
+
+      <createView viewName="v_definition_table_column_rich">
+	select *
+	from v_definition_table_column_all
+	where is_rich=1
+      </createView>
+
+      <createView viewName="v_definition_table_column_custom">
+	select *
+	from v_definition_table_column_all
+	where is_custom=1
+      </createView>
+
+      <createView viewName="v_definition_foreign_key">
+	select c.table_name, c.column_name, fkt.table_name as fk_table_name, concat(fkt.table_name, '_uid') as fk_column_uid,
+	 concat('&lt;addForeignKeyConstraint baseTableName="', c.table_name, '" baseColumnNames="', c.column_name, '" constraintName="fk_', c.table_name, '_', c.column_name, '" referencedTableName="', fkt.table_name , '" referencedColumnNames="', fkt.table_name , '_uid" /&gt;') as liquibase_definition
+	 from v_definition_column_base_list c
+	 join v_definition_table_base_list fkt on  c.column_name like concat('%', fkt.table_name, '_uid')
+	where c.column_name like '%_uid' and c.table_name &lt;&gt; fkt.table_name
+	order by c.table_name, c.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_foreign_key_existing">
+	select tc.table_schema, tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_schema AS foreign_table_schema, ccu.table_name AS foreign_table_name, ccu.column_name AS foreign_column_name
+	FROM information_schema.table_constraints AS tc
+	JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
+	JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+	where tc.table_schema='public' and tc.constraint_name like 'fk_%'
+      </createView>
+
+      <createView viewName="v_definition_models">
+	select t.table_name, 1 as ordinal_position,
+	 concat('    ', t.table_name, '_model: db_model = db_model(''', t.table_name, ''', [', t.attr_column_names_list, '], [', coalesce(r.attr_column_names_list, ''), '], {', t.attr_python_map_definitions, '}, {', t.fk_columns_definition ,'}, "', t.table_comment, '")') as python
+	from v_definition_table_column_base t
+	 left join v_definition_table_column_rich r on t.table_name = r.table_name
+	order by t.table_name
+      </createView>
+
+      <createView viewName="v_definition_models_register">
+	select table_name, 1 as ordinal_position,  concat('        self.all_models["', table_name ,'"] = self.', table_name, '_model') as python
+	from v_definition_table_column_base
+	order by table_name
+      </createView>
+
+    </changeSet>
+
+</databaseChangeLog>

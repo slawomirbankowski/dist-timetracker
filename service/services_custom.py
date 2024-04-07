@@ -1,7 +1,8 @@
 from base.base_objects import objects
 from service.service_base import service_base, service_thread_base
 from dao.daos import daos
-import os, psutil
+import psutil
+
 
 class SystemStateService(service_thread_base):
     def __init__(self):

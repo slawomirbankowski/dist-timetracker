@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, abort, Request, Response
-
+import logging
+from logging import config
 from base.base_objects import objects
 from base.cache import cache
 from dao.dao_connection import db_connections
@@ -17,56 +18,43 @@ class ServiceController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "ServiceController"
+
     def ping(self, session: RequestSession) -> ResponseSession:
-        print("Token")
-        return ResponseSession(jsonify({'ping': "pong"}))
+        logging.info("Token")
+        return ResponseSession.ok(session, {'ping': "pong"})
 
     def version(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(daos.system_instance_dto.to_read_dict()))
+        ver = {
+            "system_instance_uid": daos.system_instance_dto.system_instance_uid,
+            "system_instance_name": daos.system_instance_dto.system_instance_name,
+            "system_version_uid": daos.system_instance_dto.system_version_uid,
+            "object_manager_uid": objects.object_uid,
+            "created_date": str(daos.system_instance_dto.created_date),
+            "last_updated_date": str(daos.system_instance_dto.last_updated_date)
+        }
+        return ResponseSession.ok(session, ver)
 
     def dao(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(daos.get_base_dict_info()))
+        return ResponseSession.ok(session, daos.get_base_dict_info())
 
     def models(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(asdict(db_models)))
+        models = {
+            "models": db_models.all_models.values()
+        }
+        return ResponseSession.ok(session, models)
 
     def connections(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(db_connections.get_base_dict_info()))
+        return ResponseSession.ok(session, db_connections.get_base_dict_info())
 
     def objs(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(objects.get_base_object_infos()))
+        return ResponseSession.ok(session, objects.get_base_object_infos())
 
     def settings(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(daos.settings_by_name))
+        return ResponseSession.ok(session, daos.settings_by_name)
 
     def threads(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(objects.get_threads_infos()))
+        return ResponseSession.ok(session, objects.get_threads_infos())
 
     def caches(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession(jsonify(cache.get_infos()))
+        return ResponseSession.ok(session, cache.get_infos())
 
-    # defined routes for router
-    routes = {
-        "ping": ping,
-        "version": version,
-        "dao": dao,
-        "connections": connections,
-        "objects": objs,
-        "models": models,
-        "threads": threads,
-        "settings": settings,
-        "caches": caches
-    }
-
-    def route(self, session: RequestSession) -> ResponseSession:
-        print("Route OAuth with URL: " + session.request.url)
-        contr_method = self.routes.get(session.method_name)
-        # print("Found method" + str(type(contr_method)))
-        if contr_method is not None:
-            try:
-                return contr_method(self, session)
-            except:
-                #abort(404, )
-                return ResponseSession(jsonify({'status': "BAD_REQUEST"}))
-        else:
-            return ResponseSession(jsonify({'status': "NOT_FOUND"}))

@@ -6,7 +6,7 @@
 
     <changeSet id="0020 - tenant tables" author="slawomir.bankowski">
 
-        <createTable tableName="tenant_type" remarks="type=dictionary;cardinality=10;description=type of tenant: System, Test, Corporate, Individual" >
+        <createTable tableName="tenant_type" remarks="type of tenant: System, Test, Corporate, Individual" >
             <column name="tenant_type_uid" type="text" remarks="type=pk;description=type of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_type_name" type="text" remarks="type=name;description=full friendly name of this tenant type"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -29,7 +29,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_category" remarks="type=dictionary,append;cardinality=10;description=category of tenant: Internal, External, Hybrid" >
+        <createTable tableName="tenant_category" remarks="category of tenant: Internal, External, Hybrid" >
             <column name="tenant_category_uid" type="text" remarks="type of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_category_name" type="text" remarks="category of tenant"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -52,7 +52,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_status" remarks="type=dictionary,append;cardinality=10;description=status of tenant: New, Pending, Active, Closed" >
+        <createTable tableName="tenant_status" remarks="status of tenant: New, Pending, Active, Closed" >
             <column name="tenant_status_uid" type="text" remarks="type of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_status_name" type="text" remarks="category of tenant"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -76,7 +76,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant" remarks="type=dictionary,append;cardinality=100;description=single tenant - company that is using time tracker app, each tenant is independent and has separated accounts and clients" >
+        <createTable tableName="tenant" remarks="single tenant - company that is using time tracker app, each tenant is independent and has separated accounts and clients; tenants are separated" >
             <column name="tenant_uid" type="text" remarks="type=pk;description=Unique ID of tenant - code or name of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_name" type="text" remarks="type=name;description=full friendly name of this tenant"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -112,7 +112,7 @@
         <createIndex indexName="idx_tenant_tenant_name" tableName="tenant" unique="true"><column name="tenant_name" /></createIndex>
         <createIndex indexName="idx_tenant_tenant_code" tableName="tenant" unique="true"><column name="tenant_code" /></createIndex>
 
-        <createTable tableName="tenant_country" remarks="type=dictionary;cardinality=1000;description=m2m between tenant and country to select countries that tenant operate">
+        <createTable tableName="tenant_country" remarks="m2m between tenant and country to select countries that tenant operate">
             <column name="tenant_country_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_country_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description="><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -137,7 +137,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_payment_type" remarks="type=dictionary,append;cardinality=10;description=type of payment" >
+        <createTable tableName="tenant_payment_type" remarks="type of payment" >
             <column name="tenant_payment_type_uid" type="text" remarks="type of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_payment_type_name" type="text" remarks="category of tenant"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -159,7 +159,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_payment" remarks="type=fk;cardinality=10000;description=payment of tenant for licenses connected with modules" >
+        <createTable tableName="tenant_payment" remarks="payment of tenant for licenses connected with modules" >
             <column name="tenant_payment_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description=Unique ID of tenant - code or name of tenant"><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_payment_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description=name of this payment"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -191,7 +191,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_license" remarks="type=dictionary;cardinality=1000;description=license bought/paid by tenant">
+        <createTable tableName="tenant_license" remarks="license bought/paid by tenant">
             <column name="tenant_license_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;description="><constraints nullable="false"/></column>
             <column name="tenant_license_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description=name of this license"><constraints primaryKey="true" nullable="false"/></column>
            <!-- FKs -->
@@ -218,7 +218,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_role" remarks="type=dictionary;cardinality=1000;description=key roles of accounts in tenant: Owner, Administrator, Manger, Finance, User">
+        <createTable tableName="tenant_role" remarks="key roles of accounts in tenant: Owner, Administrator, Manger, Finance, User">
             <column name="tenant_role_uid" type="text" remarks="type=pk;description="><constraints nullable="false"/></column>
             <column name="tenant_role_name" type="text" remarks="type=name;description=name of this license"><constraints primaryKey="true" nullable="false"/></column>
             <!-- attribute columns -->
@@ -240,7 +240,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="tenant_account" remarks="type=dictionary;cardinality=100000;description=account assignment to tenant with given role">
+        <createTable tableName="tenant_account" remarks="account assignment to tenant with given role">
             <column name="tenant_account_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=pk;cardinality=1000;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="tenant_account_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks="type=name;description=name of this license"><constraints nullable="false"/></column>
             <!-- attribute columns -->

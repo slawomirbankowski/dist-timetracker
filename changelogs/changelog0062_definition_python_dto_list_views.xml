@@ -1,0 +1,737 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00062_definition_python_dto_list_views.xml">
+
+    <changeSet id="0062 - definition views" author="slawomir.bankowski">
+
+      <createView viewName="v_definition_python_dtos_read_list">
+	select x.table_name, x.ordinal_position, x.python
+	from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_read_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'import logging'
+	union all select '' as table_name, 5 as ordinal_position, 'from logging import config'
+	union all select '' as table_name, 6 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 7 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 10 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 11 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 12 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 13 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 14 as ordinal_position, ''
+	union all select '' as table_name, 15 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_read_dtos(base_read_dtos):') as python from v_definition_table_base_list
+	union all select table_name, 210 , concat('    dtos: list[', table_name , '_read_dto]') from v_definition_table_base_list
+	union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_read_dto]):') from v_definition_table_base_list
+	union all select table_name, 230 , '        super().__init__(dtos)' from v_definition_table_base_list
+	union all select table_name, 231 , '        self.dtos = dtos' from v_definition_table_base_list
+
+	union all select table_name, 300 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 301 , '    def empty_list(cls):' from v_definition_table_base_list
+	union all select table_name, 302 , '        return cls(list())' from v_definition_table_base_list
+
+	union all select table_name, 310 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_read_dto]):') from v_definition_table_base_list
+	union all select table_name, 312 , '        return cls(dtos)' from v_definition_table_base_list
+
+	union all select table_name, 320 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_read_dto):') from v_definition_table_base_list
+	union all select table_name, 322 , '        return cls(list([dto]))' from v_definition_table_base_list
+
+	union all select table_name, 330 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_read_dto], dtos2: list[', table_name , '_read_dto]):') from v_definition_table_base_list
+	union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_definition_table_base_list
+
+	union all select table_name, 501 , concat('    def get_active(self):') from v_definition_table_base_list
+	union all select table_name, 502 , concat('        return ', table_name, '_read_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 511 , concat('    def get_inactive(self):') from v_definition_table_base_list
+	union all select table_name, 512 , concat('        return ', table_name, '_read_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 521 , concat('    def get_write_dtos(self) -> list[', table_name , '_write_dto]:') from v_definition_table_base_list
+	union all select table_name, 522 , concat('        return list(map(lambda x: x.to_write(), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 531 , concat('    def get_write_dicts(self) -> list[dict]:') from v_definition_table_base_list
+	union all select table_name, 532 , concat('        return list(map(lambda x: x.to_write().to_write_dict(), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 541 , concat('    def get_read_dicts(self) -> list[dict]:') from v_definition_table_base_list
+	union all select table_name, 542 , concat('        return list(map(lambda x: x.to_write_dict(), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 551 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+	union all select table_name, 552 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_definition_table_base_list
+	union all select table_name, 553 , concat('        if (len(found_dtos)>0):') from v_definition_table_base_list
+	union all select table_name, 554 , concat('            return found_dtos[0]') from v_definition_table_base_list
+	union all select table_name, 555 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 556 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 1001 , concat('    def get_first(self) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+	union all select table_name, 1002 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 1003 , concat('            return self.dtos[0]') from v_definition_table_base_list
+	union all select table_name, 1004 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1005 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 1011 , concat('    def get_first_n(self, n: int) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+	union all select table_name, 1012 , concat('        if len(self.dtos) > n:') from v_definition_table_base_list
+	union all select table_name, 1013 , concat('            return ', table_name, '_read_dtos(self.dtos[:n])') from v_definition_table_base_list
+	union all select table_name, 1014 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1015 , concat('            return ', table_name, '_read_dtos(self.dtos)') from v_definition_table_base_list
+
+	union all select table_name, 1021 , concat('    def get_last(self) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+	union all select table_name, 1022 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 1023 , concat('            return self.dtos[-1]') from v_definition_table_base_list
+	union all select table_name, 1024 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1025 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 1091 , concat('    def to_dict_by_uid(self) -> dict[str, ', table_name, '_read_dto]:') from v_definition_table_base_list
+	union all select table_name, 1092 , concat('        d = {}') from v_definition_table_base_list
+	union all select table_name, 1093 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 1094 , concat('            d[dto.get_uid()] = dto') from v_definition_table_base_list
+	union all select table_name, 1095 , concat('        return d') from v_definition_table_base_list
+
+	union all select table_name, 1101+ordinal_position*10, concat('    def to_dict_by_', column_name , '(self) -> dict[str, ', table_name, '_read_dto]:') from v_definition_column_base_list where is_attribute = 1
+	union all select table_name, 1102+ordinal_position*10, concat('        d = {}') from v_definition_column_base_list where is_attribute = 1
+	union all select table_name, 1103+ordinal_position*10, concat('        for dto in self.dtos:') from v_definition_column_base_list where is_attribute = 1
+	union all select table_name, 1104+ordinal_position*10, concat('            d[dto.', column_name , '] = dto') from v_definition_column_base_list where is_attribute = 1
+	union all select table_name, 1105+ordinal_position*10, concat('        return d') from v_definition_column_base_list where is_attribute = 1
+
+	union all select table_name, 2011 , concat('    def for_each(self, do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2012 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2013 , concat('            do_method(dto)') from v_definition_table_base_list
+
+	union all select table_name, 2014 , concat('    def for_first(self, do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2015 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 2016 , concat('            return do_method(self.dtos[0])') from v_definition_table_base_list
+
+	union all select table_name, 2017 , concat('    def for_filter(self, check_method: Callable[[', table_name, '_read_dto], bool], do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2018 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2019 , concat('            if check_method(dto):') from v_definition_table_base_list
+	union all select table_name, 2020 , concat('                do_method(dto)') from v_definition_table_base_list
+
+	union all select table_name, 2021 , concat('    def check_all(self, check_method: Callable[[', table_name, '_read_dto], bool]) -> bool:') from v_definition_table_base_list
+	union all select table_name, 2022 , concat('        init = True') from v_definition_table_base_list
+	union all select table_name, 2023 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2024 , concat('            init = init and check_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2025 , concat('        return init') from v_definition_table_base_list
+
+	union all select table_name, 2031 , concat('    def check_any(self, check_method: Callable[[', table_name, '_read_dto], bool]) -> bool:') from v_definition_table_base_list
+	union all select table_name, 2032 , concat('        init = False') from v_definition_table_base_list
+	union all select table_name, 2033 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2034 , concat('            init = init or check_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2035 , concat('        return init') from v_definition_table_base_list
+
+	union all select table_name, 2041 , concat('    def map_to_string(self, map_method: Callable[[', table_name, '_read_dto], str]) -> list[str]:') from v_definition_table_base_list
+	union all select table_name, 2042 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+	union all select table_name, 2043 , concat('    def map_to_int(self, map_method: Callable[[', table_name, '_read_dto], int]) -> list[int]:') from v_definition_table_base_list
+	union all select table_name, 2044 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+	union all select table_name, 2045 , concat('    def map_to_float(self, map_method: Callable[[', table_name, '_read_dto], float]) -> list[float]:') from v_definition_table_base_list
+	union all select table_name, 2046 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 2051 , concat('    def aggregate_string(self, map_method: Callable[[str, ', table_name, '_read_dto], str], init: str = "") -> str:') from v_definition_table_base_list
+	union all select table_name, 2052 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2053 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2054 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2055 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2061 , concat('    def aggregate_int(self, map_method: Callable[[int, ', table_name, '_read_dto], int], init: int = 0) -> int:') from v_definition_table_base_list
+	union all select table_name, 2062 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2063 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2064 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2065 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2071 , concat('    def aggregate_float(self, map_method: Callable[[float, ', table_name, '_read_dto], float], init: float = 0) -> float:') from v_definition_table_base_list
+	union all select table_name, 2072 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2073 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2074 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2075 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2101 , concat('    def filter(self, filter_method: Callable[[', table_name, '_read_dto], bool]) -> ', table_name, '_read_dtos:') from v_definition_table_base_list
+	union all select table_name, 2102 , concat('        return ', table_name, '_read_dtos(list(filter(filter_method, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 2111 , concat('    def group_by(self, group_method: Callable[[', table_name, '_read_dto], str]) -> dict[str, ', table_name, '_read_dtos]:') from v_definition_table_base_list
+	union all select table_name, 2112 , concat('        grp_data: dict[str, ', table_name, '_read_dtos] = {}') from v_definition_table_base_list
+	union all select table_name, 2113 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2114 , concat('            key = group_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2115 , concat('            grp_list = grp_data[key]') from v_definition_table_base_list
+	union all select table_name, 2116 , concat('            if grp_list is None:') from v_definition_table_base_list
+	union all select table_name, 2117 , concat('                grp_list = ', table_name, '_read_dtos([])') from v_definition_table_base_list
+	union all select table_name, 2118 , concat('                grp_data[key] = grp_list') from v_definition_table_base_list
+	union all select table_name, 2119 , concat('            grp_list.dtos.append(dto)') from v_definition_table_base_list
+	union all select table_name, 2120 , concat('        return grp_data') from v_definition_table_base_list
+
+	union all select table_name, 2131 , concat('    def aggregate_by(self, group_method: Callable[[', table_name, '_read_dto], str], agg_method: Callable[[', table_name, '_read_dtos], any]) -> dict[str, any]:') from v_definition_table_base_list
+	union all select table_name, 2132 , concat('        grp_data: dict[str, ', table_name, '_read_dtos] = self.group_by(group_method)') from v_definition_table_base_list
+	union all select table_name, 2133 , concat('        res: dict[str, any] = {}') from v_definition_table_base_list
+	union all select table_name, 2134 , concat('        for key in grp_data:') from v_definition_table_base_list
+	union all select table_name, 2135 , concat('            value = agg_method(grp_data[key])') from v_definition_table_base_list
+	union all select table_name, 2136 , concat('            res[key] = value') from v_definition_table_base_list
+	union all select table_name, 2137 , concat('        return res') from v_definition_table_base_list
+
+	union all select table_name, 2201 , concat('    def find(self, check_method: Callable[[', table_name, '_read_dto], bool]) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+	union all select table_name, 2202 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2203 , concat('            if check_method(dto):') from v_definition_table_base_list
+	union all select table_name, 2204 , concat('                return dto') from v_definition_table_base_list
+	union all select table_name, 2205 , concat('        return None') from v_definition_table_base_list
+
+	union all select table_name, 2301 , concat('    def compare_by(self, value_method: Callable[[', table_name, '_read_dto], any], compare_method: Callable[[any, any], bool]) -> ', table_name, '_read_dto | None:') from v_definition_table_base_list
+	union all select table_name, 2302 , concat('        if len(self.dtos) == 0:') from v_definition_table_base_list
+	union all select table_name, 2303 , concat('            return None') from v_definition_table_base_list
+	union all select table_name, 2304 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 2305 , concat('            max_value = value_method(self.dtos[0])') from v_definition_table_base_list
+	union all select table_name, 2306 , concat('            max_elem = self.dtos[0]') from v_definition_table_base_list
+	union all select table_name, 2307 , concat('            for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2308 , concat('                next_value = value_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2309 , concat('                if compare_method(next_value, max_value):') from v_definition_table_base_list
+	union all select table_name, 2310 , concat('                    max_value = next_value') from v_definition_table_base_list
+	union all select table_name, 2311 , concat('                    max_elem = dto') from v_definition_table_base_list
+	union all select table_name, 2312 , concat('            return max_elem') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_read_list - END' as python
+	) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_write_list">
+select x.table_name, x.ordinal_position, x.python
+from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_write_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 11 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 10 as ordinal_position, ''
+	union all select '' as table_name, 11 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_write_dtos(base_write_dtos):') as python from v_definition_table_base_list
+	union all select table_name, 210 , concat('    dtos: list[', table_name , '_write_dto]') from v_definition_table_base_list
+	union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_write_dto]):') from v_definition_table_base_list
+	union all select table_name, 230 , '        super().__init__(dtos)' from v_definition_table_base_list
+	union all select table_name, 231 , '        self.dtos = dtos' from v_definition_table_base_list
+
+	union all select table_name, 300 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 301 , '    def empty_list(cls):' from v_definition_table_base_list
+	union all select table_name, 302 , '        return cls(list())' from v_definition_table_base_list
+
+	union all select table_name, 310 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_write_dto]):') from v_definition_table_base_list
+	union all select table_name, 312 , '        return cls(dtos)' from v_definition_table_base_list
+
+	union all select table_name, 320 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_write_dto):') from v_definition_table_base_list
+	union all select table_name, 322 , '        return cls([dto])' from v_definition_table_base_list
+
+	union all select table_name, 330 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_write_dto], dtos2: list[', table_name , '_write_dto]):') from v_definition_table_base_list
+	union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_definition_table_base_list
+
+	union all select table_name, 431 , concat('    def get_write_dicts(self) -> list[dict]:') from v_definition_table_base_list
+	union all select table_name, 432 , concat('        return list(map(lambda x: x.to_write_dict(), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 451 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_write_dto | None:') from v_definition_table_base_list
+	union all select table_name, 452 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_definition_table_base_list
+	union all select table_name, 453 , concat('        if (len(found_dtos)>0):') from v_definition_table_base_list
+	union all select table_name, 454 , concat('            return found_dtos[0]') from v_definition_table_base_list
+	union all select table_name, 455 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 456 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 461 , concat('    def map_by_uid(self) -> dict[str, ', table_name , '_write_dto]:') from v_definition_table_base_list
+	union all select table_name, 462 , concat('        res = {}') from v_definition_table_base_list
+	union all select table_name, 463 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 464 , concat('            res[dto.', table_name , '_uid] = dto') from v_definition_table_base_list
+	union all select table_name, 465 , concat('        return res') from v_definition_table_base_list
+
+
+	union all select table_name, 501 , concat('    def get_active(self):') from v_definition_table_base_list
+	union all select table_name, 502 , concat('        return ', table_name, '_write_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 511 , concat('    def get_inactive(self):') from v_definition_table_base_list
+	union all select table_name, 512 , concat('        return ', table_name, '_write_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 1001 , concat('    def get_first(self) -> ', table_name, '_write_dto | None:') from v_definition_table_base_list
+	union all select table_name, 1002 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 1003 , concat('            return self.dtos[0]') from v_definition_table_base_list
+	union all select table_name, 1004 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1005 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 1011 , concat('    def get_first_n(self, n: int) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+	union all select table_name, 1012 , concat('        if len(self.dtos) > n:') from v_definition_table_base_list
+	union all select table_name, 1013 , concat('            return ', table_name, '_write_dtos(self.dtos[:n])') from v_definition_table_base_list
+	union all select table_name, 1014 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1015 , concat('            return ', table_name, '_write_dtos(self.dtos)') from v_definition_table_base_list
+
+	union all select table_name, 1021 , concat('    def get_last(self) -> ', table_name, '_write_dto | None:') from v_definition_table_base_list
+	union all select table_name, 1022 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 1023 , concat('            return self.dtos[-1]') from v_definition_table_base_list
+	union all select table_name, 1024 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 1025 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 1091 , concat('    def to_dict_by_uid(self) -> dict[str, ', table_name, '_write_dto]:') from v_definition_table_base_list
+	union all select table_name, 1092 , concat('        d = {}') from v_definition_table_base_list
+	union all select table_name, 1093 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 1094 , concat('            d[dto.get_uid()] = dto') from v_definition_table_base_list
+	union all select table_name, 1095 , concat('        return d') from v_definition_table_base_list
+
+	union all select table_name, 2011 , concat('    def for_each(self, do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2012 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2013 , concat('            do_method(dto)') from v_definition_table_base_list
+
+	union all select table_name, 2014 , concat('    def for_first(self, do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2015 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+	union all select table_name, 2016 , concat('            return do_method(self.dtos[0])') from v_definition_table_base_list
+
+	union all select table_name, 2017 , concat('    def for_filter(self, check_method: Callable[[', table_name, '_write_dto], bool], do_method: Callable):') from v_definition_table_base_list
+	union all select table_name, 2018 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2019 , concat('            if check_method(dto):') from v_definition_table_base_list
+	union all select table_name, 2020 , concat('                do_method(dto)') from v_definition_table_base_list
+
+	union all select table_name, 2021 , concat('    def check_all(self, check_method: Callable[[', table_name, '_write_dto], bool]) -> bool:') from v_definition_table_base_list
+	union all select table_name, 2022 , concat('        init = True') from v_definition_table_base_list
+	union all select table_name, 2023 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2024 , concat('            init = init and check_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2025 , concat('        return False') from v_definition_table_base_list
+
+	union all select table_name, 2031 , concat('    def check_any(self, check_method: Callable[[', table_name, '_write_dto], bool]) -> bool:') from v_definition_table_base_list
+	union all select table_name, 2032 , concat('        init = False') from v_definition_table_base_list
+	union all select table_name, 2033 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2034 , concat('            init = init or check_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2035 , concat('        return False') from v_definition_table_base_list
+
+	union all select table_name, 2041 , concat('    def map_to_string(self, map_method: Callable[[', table_name, '_write_dto], str]) -> list[str]:') from v_definition_table_base_list
+	union all select table_name, 2042 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+	union all select table_name, 2043 , concat('    def map_to_int(self, map_method: Callable[[', table_name, '_write_dto], int]) -> list[int]:') from v_definition_table_base_list
+	union all select table_name, 2044 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+	union all select table_name, 2045 , concat('    def map_to_float(self, map_method: Callable[[', table_name, '_write_dto], float]) -> list[float]:') from v_definition_table_base_list
+	union all select table_name, 2046 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+
+	union all select table_name, 2051 , concat('    def aggregate_string(self, map_method: Callable[[str, ', table_name, '_write_dto], str], init: str = "") -> str:') from v_definition_table_base_list
+	union all select table_name, 2052 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2053 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2054 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2055 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2061 , concat('    def aggregate_int(self, map_method: Callable[[int, ', table_name, '_write_dto], int], init: int = 0) -> int:') from v_definition_table_base_list
+	union all select table_name, 2062 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2063 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2064 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2065 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2071 , concat('    def aggregate_float(self, map_method: Callable[[float, ', table_name, '_write_dto], float], init: float = 0) -> float:') from v_definition_table_base_list
+	union all select table_name, 2072 , concat('        init_value = init') from v_definition_table_base_list
+	union all select table_name, 2073 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2074 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+	union all select table_name, 2075 , concat('        return init_value') from v_definition_table_base_list
+
+	union all select table_name, 2101 , concat('    def filter(self, filter_method: Callable[[', table_name, '_write_dto], bool]) -> ', table_name, '_write_dtos:') from v_definition_table_base_list
+	union all select table_name, 2102 , concat('        return ', table_name, '_write_dtos(list(filter(filter_method, self.dtos)))') from v_definition_table_base_list
+
+	union all select table_name, 2111 , concat('    def group_by(self, group_method: Callable[[', table_name, '_write_dto], str]) -> dict[str, ', table_name, '_write_dtos]:') from v_definition_table_base_list
+	union all select table_name, 2112 , concat('        grp_data: dict[str, ', table_name, '_write_dtos] = {}') from v_definition_table_base_list
+	union all select table_name, 2113 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2114 , concat('            key = group_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2115 , concat('            grp_list = grp_data[key]') from v_definition_table_base_list
+	union all select table_name, 2116 , concat('            if grp_list is None:') from v_definition_table_base_list
+	union all select table_name, 2117 , concat('                grp_list = ', table_name, '_write_dtos([])') from v_definition_table_base_list
+	union all select table_name, 2118 , concat('                grp_data[key] = grp_list') from v_definition_table_base_list
+	union all select table_name, 2119 , concat('            grp_list.dtos.append(dto)') from v_definition_table_base_list
+	union all select table_name, 2120 , concat('        return grp_data') from v_definition_table_base_list
+
+	union all select table_name, 2131 , concat('    def aggregate_by(self, group_method: Callable[[', table_name, '_write_dto], str], agg_method: Callable[[', table_name, '_write_dtos], any]) -> dict[str, any]:') from v_definition_table_base_list
+	union all select table_name, 2132 , concat('        grp_data: dict[str, ', table_name, '_write_dtos] = self.group_by(group_method)') from v_definition_table_base_list
+	union all select table_name, 2133 , concat('        res: dict[str, any] = {}') from v_definition_table_base_list
+	union all select table_name, 2134 , concat('        for key in grp_data:') from v_definition_table_base_list
+	union all select table_name, 2135 , concat('            value = agg_method(grp_data[key])') from v_definition_table_base_list
+	union all select table_name, 2136 , concat('            res[key] = value') from v_definition_table_base_list
+	union all select table_name, 2137 , concat('        return res') from v_definition_table_base_list
+
+	union all select table_name, 2201 , concat('    def find(self, check_method: Callable[[', table_name, '_write_dto], bool]) -> ', table_name, '_write_dto | None:') from v_definition_table_base_list
+	union all select table_name, 2202 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2203 , concat('            if check_method(dto):') from v_definition_table_base_list
+	union all select table_name, 2204 , concat('                return dto') from v_definition_table_base_list
+	union all select table_name, 2205 , concat('        return None') from v_definition_table_base_list
+
+	union all select table_name, 2301 , concat('    def compare_by(self, value_method: Callable[[', table_name, '_write_dto], any], compare_method: Callable[[any, any], bool]) -> ', table_name, '_write_dto | None:') from v_definition_table_base_list
+	union all select table_name, 2302 , concat('        if len(self.dtos) == 0:') from v_definition_table_base_list
+	union all select table_name, 2303 , concat('            return None') from v_definition_table_base_list
+	union all select table_name, 2304 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 2305 , concat('            max_value = value_method(self.dtos[0])') from v_definition_table_base_list
+	union all select table_name, 2306 , concat('            max_elem = self.dtos[0]') from v_definition_table_base_list
+	union all select table_name, 2307 , concat('            for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 2308 , concat('                next_value = value_method(dto)') from v_definition_table_base_list
+	union all select table_name, 2309 , concat('                if compare_method(next_value, max_value):') from v_definition_table_base_list
+	union all select table_name, 2310 , concat('                    max_value = next_value') from v_definition_table_base_list
+	union all select table_name, 2311 , concat('                    max_elem = dto') from v_definition_table_base_list
+	union all select table_name, 2312 , concat('            return max_elem') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_write_list - END' as python
+) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_full_list">
+select x.table_name, x.ordinal_position, x.python
+from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_full_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, 'from dto.dtos_full import *'
+	union all select '' as table_name, 11 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 12 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 13 as ordinal_position, ''
+	union all select '' as table_name, 14 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_full_dtos(base_dtos):') as python from v_definition_table_base_list
+union all select table_name, 210 , concat('    dtos: list[', table_name , '_full_dto]') from v_definition_table_base_list
+union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_full_dto]):') from v_definition_table_base_list
+
+union all select table_name, 230 , '        super().__init__(dtos)' from v_definition_table_base_list
+union all select table_name, 231 , '        self.dtos = dtos' from v_definition_table_base_list
+
+union all select table_name, 300 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 301 , '    def empty_list(cls):' from v_definition_table_base_list
+union all select table_name, 302 , '        return cls(list())' from v_definition_table_base_list
+
+union all select table_name, 310 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_full_dto]):') from v_definition_table_base_list
+union all select table_name, 312 , '        return cls(dtos)' from v_definition_table_base_list
+
+union all select table_name, 320 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_full_dto):') from v_definition_table_base_list
+union all select table_name, 322 , '        return cls([dto])' from v_definition_table_base_list
+
+union all select table_name, 330 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_full_dto], dtos2: list[', table_name , '_full_dto]):') from v_definition_table_base_list
+union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_definition_table_base_list
+
+union all select table_name, 551 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_full_dto | None:') from v_definition_table_base_list
+union all select table_name, 552 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_definition_table_base_list
+union all select table_name, 553 , concat('        if (len(found_dtos)>0):') from v_definition_table_base_list
+union all select table_name, 554 , concat('            return found_dtos[0]') from v_definition_table_base_list
+union all select table_name, 555 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 556 , concat('            return None') from v_definition_table_base_list
+
+union all select table_name, 561 , concat('    def map_by_uid(self) -> dict[str, ', table_name , '_full_dto]:') from v_definition_table_base_list
+union all select table_name, 562 , concat('        res = {}') from v_definition_table_base_list
+union all select table_name, 563 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 564 , concat('            res[dto.', table_name , '_uid] = dto') from v_definition_table_base_list
+union all select table_name, 565 , concat('        return res') from v_definition_table_base_list
+
+union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_full_list - END' as python
+) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_rich_list">
+select x.table_name, x.ordinal_position, x.python
+from (
+select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_rich_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, 'from dto.dtos_full import *'
+	union all select '' as table_name, 11 as ordinal_position, 'from dto.dtos_rich import *'
+
+	union all select '' as table_name, 12 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 13 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 14 as ordinal_position, ''
+	union all select '' as table_name, 15 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_rich_dtos(base_dtos):') as python from v_definition_table_base_list
+union all select table_name, 210 , concat('    dtos: list[', table_name , '_rich_dto]') from v_definition_table_base_list
+union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_rich_dto]):') from v_definition_table_base_list
+union all select table_name, 230 , '        super().__init__(dtos)' from v_definition_table_base_list
+union all select table_name, 231 , '        self.dtos = dtos' from v_definition_table_base_list
+
+union all select table_name, 300 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 301 , '    def empty_list(cls):' from v_definition_table_base_list
+union all select table_name, 302 , '        return cls(list())' from v_definition_table_base_list
+
+union all select table_name, 310 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_rich_dto]):') from v_definition_table_base_list
+union all select table_name, 312 , '        return cls(dtos)' from v_definition_table_base_list
+
+union all select table_name, 320 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_rich_dto):') from v_definition_table_base_list
+union all select table_name, 322 , '        return cls([dto])' from v_definition_table_base_list
+
+union all select table_name, 330 , '    @classmethod' from v_definition_table_base_list
+union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_rich_dto], dtos2: list[', table_name , '_rich_dto]):') from v_definition_table_base_list
+union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_definition_table_base_list
+
+union all select table_name, 451 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_rich_dto | None:') from v_definition_table_base_list
+union all select table_name, 452 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_definition_table_base_list
+union all select table_name, 453 , concat('        if (len(found_dtos)>0):') from v_definition_table_base_list
+union all select table_name, 454 , concat('            return found_dtos[0]') from v_definition_table_base_list
+union all select table_name, 455 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 456 , concat('            return None') from v_definition_table_base_list
+
+union all select table_name, 461 , concat('    def map_by_uid(self) -> dict[str, ', table_name , '_rich_dto]:') from v_definition_table_base_list
+union all select table_name, 462 , concat('        res = {}') from v_definition_table_base_list
+union all select table_name, 463 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 464 , concat('            res[dto.', table_name , '_uid] = dto') from v_definition_table_base_list
+union all select table_name, 465 , concat('        return res') from v_definition_table_base_list
+
+union all select table_name, 501 , concat('    def get_active(self) -> ', table_name, '_rich_dtos:') from v_definition_table_base_list
+union all select table_name, 502 , concat('        return ', table_name, '_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))') from v_definition_table_base_list
+
+union all select table_name, 511 , concat('    def get_inactive(self) -> ', table_name, '_rich_dtos:') from v_definition_table_base_list
+union all select table_name, 512 , concat('        return ', table_name, '_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))') from v_definition_table_base_list
+
+union all select table_name, 1001 , concat('    def get_first(self) -> ', table_name, '_rich_dto | None:') from v_definition_table_base_list
+union all select table_name, 1002 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+union all select table_name, 1003 , concat('            return self.dtos[0]') from v_definition_table_base_list
+union all select table_name, 1004 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 1005 , concat('            return None') from v_definition_table_base_list
+
+union all select table_name, 1011 , concat('    def get_first_n(self, n: int) -> ', table_name, '_rich_dtos:') from v_definition_table_base_list
+union all select table_name, 1012 , concat('        if len(self.dtos) > n:') from v_definition_table_base_list
+union all select table_name, 1013 , concat('            return ', table_name, '_rich_dtos(self.dtos[:n])') from v_definition_table_base_list
+union all select table_name, 1014 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 1015 , concat('            return ', table_name, '_rich_dtos(self.dtos)') from v_definition_table_base_list
+
+union all select table_name, 1021 , concat('    def get_last(self) -> ', table_name, '_rich_dto | None:') from v_definition_table_base_list
+union all select table_name, 1022 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+union all select table_name, 1023 , concat('            return self.dtos[-1]') from v_definition_table_base_list
+union all select table_name, 1024 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 1025 , concat('            return None') from v_definition_table_base_list
+
+union all select table_name, 1091 , concat('    def to_dict_by_uid(self) -> dict[str, ', table_name, '_rich_dto]:') from v_definition_table_base_list
+union all select table_name, 1092 , concat('        d = {}') from v_definition_table_base_list
+union all select table_name, 1093 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 1094 , concat('            d[dto.get_uid()] = dto') from v_definition_table_base_list
+union all select table_name, 1095 , concat('        return d') from v_definition_table_base_list
+
+union all select table_name, 2011 , concat('    def for_each(self, do_method: Callable):') from v_definition_table_base_list
+union all select table_name, 2012 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2013 , concat('            do_method(dto)') from v_definition_table_base_list
+
+union all select table_name, 2014 , concat('    def for_first(self, do_method: Callable):') from v_definition_table_base_list
+union all select table_name, 2015 , concat('        if len(self.dtos) > 0:') from v_definition_table_base_list
+union all select table_name, 2016 , concat('            return do_method(self.dtos[0])') from v_definition_table_base_list
+
+union all select table_name, 2017 , concat('    def for_filter(self, check_method: Callable[[', table_name, '_rich_dto], bool], do_method: Callable):') from v_definition_table_base_list
+union all select table_name, 2018 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2019 , concat('            if check_method(dto):') from v_definition_table_base_list
+union all select table_name, 2020 , concat('                do_method(dto)') from v_definition_table_base_list
+
+union all select table_name, 2021 , concat('    def check_all(self, check_method: Callable[[', table_name, '_rich_dto], bool]) -> bool:') from v_definition_table_base_list
+union all select table_name, 2022 , concat('        init = True') from v_definition_table_base_list
+union all select table_name, 2023 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2024 , concat('            init = init and check_method(dto)') from v_definition_table_base_list
+union all select table_name, 2025 , concat('        return False') from v_definition_table_base_list
+
+union all select table_name, 2031 , concat('    def check_any(self, check_method: Callable[[', table_name, '_rich_dto], bool]) -> bool:') from v_definition_table_base_list
+union all select table_name, 2032 , concat('        init = False') from v_definition_table_base_list
+union all select table_name, 2033 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2034 , concat('            init = init or check_method(dto)') from v_definition_table_base_list
+union all select table_name, 2035 , concat('        return False') from v_definition_table_base_list
+
+union all select table_name, 2041 , concat('    def map_to_string(self, map_method: Callable[[', table_name, '_rich_dto], str]) -> list[str]:') from v_definition_table_base_list
+union all select table_name, 2042 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+union all select table_name, 2043 , concat('    def map_to_int(self, map_method: Callable[[', table_name, '_rich_dto], int]) -> list[int]:') from v_definition_table_base_list
+union all select table_name, 2044 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+union all select table_name, 2045 , concat('    def map_to_float(self, map_method: Callable[[', table_name, '_rich_dto], float]) -> list[float]:') from v_definition_table_base_list
+union all select table_name, 2046 , concat('        return list(map(lambda dto:  map_method(dto), self.dtos))') from v_definition_table_base_list
+
+union all select table_name, 2051 , concat('    def aggregate_string(self, map_method: Callable[[str, ', table_name, '_rich_dto], str], init: str = "") -> str:') from v_definition_table_base_list
+union all select table_name, 2052 , concat('        init_value = init') from v_definition_table_base_list
+union all select table_name, 2053 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2054 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+union all select table_name, 2055 , concat('        return init_value') from v_definition_table_base_list
+
+union all select table_name, 2061 , concat('    def aggregate_int(self, map_method: Callable[[int, ', table_name, '_rich_dto], int], init: int = 0) -> int:') from v_definition_table_base_list
+union all select table_name, 2062 , concat('        init_value = init') from v_definition_table_base_list
+union all select table_name, 2063 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2064 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+union all select table_name, 2065 , concat('        return init_value') from v_definition_table_base_list
+
+union all select table_name, 2071 , concat('    def aggregate_float(self, map_method: Callable[[float, ', table_name, '_rich_dto], float], init: float = 0) -> float:') from v_definition_table_base_list
+union all select table_name, 2072 , concat('        init_value = init') from v_definition_table_base_list
+union all select table_name, 2073 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2074 , concat('            init_value = map_method(init_value, dto)') from v_definition_table_base_list
+union all select table_name, 2075 , concat('        return init_value') from v_definition_table_base_list
+
+union all select table_name, 2101 , concat('    def filter(self, filter_method: Callable[[', table_name, '_rich_dto], bool]) -> ', table_name, '_rich_dtos:') from v_definition_table_base_list
+union all select table_name, 2102 , concat('        return ', table_name, '_rich_dtos(list(filter(filter_method, self.dtos)))') from v_definition_table_base_list
+
+union all select table_name, 2111 , concat('    def group_by(self, group_method: Callable[[', table_name, '_rich_dto], str]) -> dict[str, ', table_name, '_rich_dtos]:') from v_definition_table_base_list
+union all select table_name, 2112 , concat('        grp_data: dict[str, ', table_name, '_rich_dtos] = {}') from v_definition_table_base_list
+union all select table_name, 2113 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2114 , concat('            key = group_method(dto)') from v_definition_table_base_list
+union all select table_name, 2115 , concat('            grp_list = grp_data[key]') from v_definition_table_base_list
+union all select table_name, 2116 , concat('            if grp_list is None:') from v_definition_table_base_list
+union all select table_name, 2117 , concat('                grp_list = ', table_name, '_rich_dtos([])') from v_definition_table_base_list
+union all select table_name, 2118 , concat('                grp_data[key] = grp_list') from v_definition_table_base_list
+union all select table_name, 2119 , concat('            grp_list.dtos.append(dto)') from v_definition_table_base_list
+union all select table_name, 2120 , concat('        return grp_data') from v_definition_table_base_list
+
+union all select table_name, 2131 , concat('    def aggregate_by(self, group_method: Callable[[', table_name, '_rich_dto], str], agg_method: Callable[[', table_name, '_rich_dtos], any]) -> dict[str, any]:') from v_definition_table_base_list
+union all select table_name, 2132 , concat('        grp_data: dict[str, ', table_name, '_rich_dtos] = self.group_by(group_method)') from v_definition_table_base_list
+union all select table_name, 2133 , concat('        res: dict[str, any] = {}') from v_definition_table_base_list
+union all select table_name, 2134 , concat('        for key in grp_data:') from v_definition_table_base_list
+union all select table_name, 2135 , concat('            value = agg_method(grp_data[key])') from v_definition_table_base_list
+union all select table_name, 2136 , concat('            res[key] = value') from v_definition_table_base_list
+union all select table_name, 2137 , concat('        return res') from v_definition_table_base_list
+
+union all select table_name, 2201 , concat('    def find(self, check_method: Callable[[', table_name, '_rich_dto], bool]) -> ', table_name, '_rich_dto | None:') from v_definition_table_base_list
+union all select table_name, 2202 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2203 , concat('            if check_method(dto):') from v_definition_table_base_list
+union all select table_name, 2204 , concat('                return dto') from v_definition_table_base_list
+union all select table_name, 2205 , concat('        return None') from v_definition_table_base_list
+
+union all select table_name, 2301 , concat('    def compare_by(self, value_method: Callable[[', table_name, '_rich_dto], any], compare_method: Callable[[any, any], bool]) -> ', table_name, '_rich_dto | None:') from v_definition_table_base_list
+union all select table_name, 2302 , concat('        if len(self.dtos) == 0:') from v_definition_table_base_list
+union all select table_name, 2303 , concat('            return None') from v_definition_table_base_list
+union all select table_name, 2304 , concat('        else:') from v_definition_table_base_list
+union all select table_name, 2305 , concat('            max_value = value_method(self.dtos[0])') from v_definition_table_base_list
+union all select table_name, 2306 , concat('            max_elem = self.dtos[0]') from v_definition_table_base_list
+union all select table_name, 2307 , concat('            for dto in self.dtos:') from v_definition_table_base_list
+union all select table_name, 2308 , concat('                next_value = value_method(dto)') from v_definition_table_base_list
+union all select table_name, 2309 , concat('                if compare_method(next_value, max_value):') from v_definition_table_base_list
+union all select table_name, 2310 , concat('                    max_value = next_value') from v_definition_table_base_list
+union all select table_name, 2311 , concat('                    max_elem = dto') from v_definition_table_base_list
+union all select table_name, 2312 , concat('            return max_elem') from v_definition_table_base_list
+
+union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_full_list - END' as python
+) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="v_definition_python_dtos_thin_list">
+select x.table_name, x.ordinal_position, x.python
+from (
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_thin_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 2 as ordinal_position, 'from __future__ import annotations'
+	union all select '' as table_name, 3 as ordinal_position, 'from datetime import datetime'
+	union all select '' as table_name, 4 as ordinal_position, 'from abc import abstractmethod'
+	union all select '' as table_name, 5 as ordinal_position, 'from dataclasses import dataclass'
+	union all select '' as table_name, 6 as ordinal_position, 'from dto.dtos import *'
+	union all select '' as table_name, 7 as ordinal_position, 'from dto.dtos_thin import *'
+	union all select '' as table_name, 8 as ordinal_position, 'from dto.dtos_write import *'
+	union all select '' as table_name, 9 as ordinal_position, 'from dto.dtos_read import *'
+	union all select '' as table_name, 10 as ordinal_position, 'from dto.dtos_full import *'
+	union all select '' as table_name, 11 as ordinal_position, 'from dto.dtos_rich import *'
+
+	union all select '' as table_name, 12 as ordinal_position, 'import datetime'
+	union all select '' as table_name, 13 as ordinal_position, 'from typing import Dict, Callable'
+	union all select '' as table_name, 14 as ordinal_position, ''
+	union all select '' as table_name, 15 as ordinal_position, ''
+
+	union all select table_name, 100 as ordinal_position, '@dataclass(frozen=False)' as python from v_definition_table_base_list
+	union all select table_name, 110 as ordinal_position, concat('class ', table_name , '_thin_dtos(base_dtos):') as python from v_definition_table_base_list
+	union all select table_name, 210 , concat('    dtos: list[', table_name , '_thin_dto]') from v_definition_table_base_list
+	union all select table_name, 220 , concat('    def __init__(self, dtos: list[', table_name , '_thin_dto]):') from v_definition_table_base_list
+	union all select table_name, 230 , '        super().__init__(dtos)' from v_definition_table_base_list
+	union all select table_name, 231 , '        self.dtos = dtos' from v_definition_table_base_list
+
+	union all select table_name, 300 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 301 , '    def empty_list(cls):' from v_definition_table_base_list
+	union all select table_name, 302 , '        return cls(list())' from v_definition_table_base_list
+
+	union all select table_name, 310 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 311 , concat('    def from_list(cls, dtos: list[', table_name , '_thin_dto]):') from v_definition_table_base_list
+	union all select table_name, 312 , '        return cls(dtos)' from v_definition_table_base_list
+
+	union all select table_name, 320 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 321 , concat('    def from_object(cls, dto: ', table_name , '_thin_dto):') from v_definition_table_base_list
+	union all select table_name, 322 , '        return cls([dto])' from v_definition_table_base_list
+
+	union all select table_name, 330 , '    @classmethod' from v_definition_table_base_list
+	union all select table_name, 331 , concat('    def from_lists(cls, dtos1: list[', table_name , '_thin_dto], dtos2: list[', table_name , '_thin_dto]):') from v_definition_table_base_list
+	union all select table_name, 332 , '        return cls(dtos1 + dtos2)' from v_definition_table_base_list
+
+	union all select table_name, 551 , concat('    def find_by_uid(self, uid: str) -> ', table_name, '_thin_dto | None:') from v_definition_table_base_list
+	union all select table_name, 552 , concat('        found_dtos = list(filter(lambda x: x.', table_name, '_uid == uid, self.dtos))') from v_definition_table_base_list
+	union all select table_name, 553 , concat('        if len(found_dtos)>0:') from v_definition_table_base_list
+	union all select table_name, 554 , concat('            return found_dtos[0]') from v_definition_table_base_list
+	union all select table_name, 555 , concat('        else:') from v_definition_table_base_list
+	union all select table_name, 556 , concat('            return None') from v_definition_table_base_list
+
+	union all select table_name, 561 , concat('    def map_by_uid(self) -> dict[str, ', table_name , '_thin_dto]:') from v_definition_table_base_list
+	union all select table_name, 562 , concat('        res = {}') from v_definition_table_base_list
+	union all select table_name, 563 , concat('        for dto in self.dtos:') from v_definition_table_base_list
+	union all select table_name, 564 , concat('            res[dto.', table_name , '_uid] = dto') from v_definition_table_base_list
+	union all select table_name, 565 , concat('        return res') from v_definition_table_base_list
+
+	union all select table_name, 99900 , empty_line_definition from v_definition_table_base_list
+	union all select table_name, 99901 , empty_line_definition from v_definition_table_base_list
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_thin_list - END' as python
+) x order by x.table_name, x.ordinal_position
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,5 +1,7 @@
-import dao.dao_connection
 from typing import TypeVar, Generic, List, Iterable, Any, Callable, Dict
+import logging
+from logging import config
+import dao.dao_connection
 from dto.dtos import *
 from dto.dtos_read import *
 from dto.dtos_write import *
@@ -59,7 +61,7 @@ class base_dao(base_object):
         return result
 
     def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
-        print("Executing SQL query on database, Q=" + query)
+        logging.debug("Executing SQL query on database, Q=" + query)
         conn = db_connections.get_connection()
         cursor = conn.cursor()
         cursor.execute(query, params)
@@ -69,7 +71,7 @@ class base_dao(base_object):
         return results
 
     def execute_query(self, query: str, params: Iterable = []) -> int:
-        print("Executing SQL query on database with parameters, Q=" + query)
+        logging.debug("Executing SQL query on database with parameters, Q=" + query)
         #self.with_connection_commit(lambda conn, curs: cursor.execute(query, params))
         conn = db_connections.get_connection()
         cursor = conn.cursor()
@@ -81,7 +83,7 @@ class base_dao(base_object):
         return results
 
     def execute_queries(self, query: str, params: list[Iterable]) -> int:
-        print("Executing SQL queries on database with many parameters, Q=" + query)
+        logging.debug("Executing SQL queries on database with many parameters, Q=" + query)
         conn = db_connections.get_connection()
         cursor = conn.cursor()
         for param in params:
@@ -251,3 +253,62 @@ class base_dao(base_object):
         m = self.get_model()
         params = list(map(lambda dto: dto.get_list_write_insert(updated_by), dtos))
         return self.execute_queries(m.upsert_attrs_sql, params)
+
+    @abstractmethod
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> base_dtos:
+        pass
+    @abstractmethod
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> account_read_dto | None:
+        pass
+    @abstractmethod
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_read_all(self, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_read_active(self, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_read_all_latest(self, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_read_active_latest(self, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_write_all(self, n: int = 1000) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_rows_write_active(self, n: int = 1000) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_rows_write_all_latest(self, n: int = 1000) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_rows_write_active_latest(self, n: int = 1000) -> base_write_dtos:
+        pass
+    @abstractmethod
+    def select_row_read_by_uid(self, uid: str) -> account_read_dto | None:
+        pass
+    @abstractmethod
+    def select_row_read_by_id(self, id: int) -> account_read_dto | None:
+        pass
+    @abstractmethod
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> base_read_dtos:
+        pass
+    @abstractmethod
+    def select_rows_thin_all(self, n: int = 1000) -> base_dtos:
+        pass
+

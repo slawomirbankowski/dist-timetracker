@@ -6,7 +6,7 @@
 
     <changeSet id="0007 - storage" author="slawomir.bankowski">
 
-        <createTable tableName="storage_type" remarks="type=dictionary;cardinality=10000000;description=type of storages: JDBC, Elasticsearch, Mongodb, Cassandra, ..." >
+        <createTable tableName="storage_type" remarks="type of storages: JDBC, Elasticsearch, Mongodb, Cassandra, ..." >
             <column name="storage_type_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="storage_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -31,7 +31,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="storage" remarks="type=full;cardinality=10000000;description=" >
+        <createTable tableName="storage" remarks="single storage with external data for application" >
             <column name="storage_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="storage_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -56,7 +56,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="storage_connection" remarks="type=append;cardinality=10000000;description=" >
+        <createTable tableName="storage_connection" remarks="connection to external storage" >
             <column name="storage_connection_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
             <column name="storage_connection_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -81,9 +81,9 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="storage_query" remarks="type=full;cardinality=100000;description=" >
-            <column name="storage_connection_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
-            <column name="storage_connection_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="storage_query" remarks="query done on external storage" >
+            <column name="storage_query_uid" type="text" remarks="type=pk;description="><constraints primaryKey="true" nullable="false"/></column>
+            <column name="storage_query_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
             <column name="storage_uid" type="text" defaultValue="update" remarks="type=fk;description="><constraints nullable="false"/></column>

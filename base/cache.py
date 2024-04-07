@@ -5,6 +5,9 @@ import uuid
 from abc import abstractmethod
 from typing import Dict, Callable
 from base.base_objects import base_object, thread_base, CacheManagerBase, objects
+import logging
+from logging import config
+from functools import lru_cache
 
 CACHE_MODE_TTL: int = 1
 CACHE_MODE_KEEP_FOREVER: int = 2
@@ -60,7 +63,7 @@ class CacheManager(CacheManagerBase):
         super().__init__()
         objects.register_cache(self)
         self.created_date = datetime.datetime.now()
-        print("Creating cache manager, creation time: " + str(self.created_date))
+        logging.info("Creating CacheManager, creation time: " + str(self.created_date))
         self.cache_items = {}
     def get_infos(self) -> list[dict]:
         return list(map(lambda x: x.get_info(), self.cache_items.values()))
@@ -70,7 +73,7 @@ class CacheManager(CacheManagerBase):
     def get_base_object_name(self) -> str:
         return "CacheManager"
     def initialize(self):
-        print("Initializing CacheManager")
+        logging.info("Initializing CacheManager, object_id: " + self.object_id)
         self.initialize_thread()
     # put cache item into cache storage
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
@@ -84,7 +87,7 @@ class CacheManager(CacheManagerBase):
             return item
     # work in separated thread
     def thread_work(self, tick: int) -> bool:
-        # check inactive cache items
+        # TODO: check inactive cache items
         return True
     def with_cache(self, key: str, method: Callable, ttl: int = 60) -> any:
         item: CacheItem | None = self.get(key)
