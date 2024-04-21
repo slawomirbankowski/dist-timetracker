@@ -4,10 +4,19 @@ from flask import Flask, jsonify, request, abort, Request, Response
 from typing import Dict, Callable
 
 from base.base_objects import AccountPermissionsBase, AccountSessionBase
-from service.services_auth import *
-from service.services_custom import SystemStateService
-from service.service_base_list import service_list_base
-from service.services_object import *
+from service.service_account import AccountService
+from service.service_calendar import CalendarService
+from service.service_client import ClientService
+from service.service_competency import CompetencyService
+from service.service_connection import ConnectionService
+from service.service_event import EventService
+from service.service_invoice import InvoiceService
+from service.service_key import KeyService
+from service.service_login import *
+from service.service_permission import PermissionService
+from service.service_system_state import SystemStateService
+from service.services_base_list import service_list_base
+from service.service_object import *
 from controller.controller_base import RequestSession, ResponseSession
 
 
@@ -15,9 +24,16 @@ from controller.controller_base import RequestSession, ResponseSession
 class service_list(service_list_base):
     all_services: list[service_base] = []
     # custom services
+    account_service = AccountService()
+    calendar_service = CalendarService()
+    client_service = ClientService()
+    competecy_service = CompetencyService()
+    connection_service = ConnectionService()
+    event_service = EventService()
+    invoice_service = InvoiceService()
+    key_service = KeyService()
     login_service = LoginService()
     permission_service = PermissionService()
-    key_service = KeyService()
     state_service = SystemStateService()
     def __init__(self):
         super().__init__()
@@ -28,7 +44,7 @@ class service_list(service_list_base):
     def get_base_object_name(self) -> str:
         return "service_list"
     # initialize all services
-    def initialize_services(self) -> None:
+    def initialize(self) -> None:
         logging.debug("Initializing services after DB connections")
         self.login_service.initialize()
         self.permission_service.initialize()
@@ -55,7 +71,7 @@ class service_list(service_list_base):
             roles = perms.filter(lambda dto: dto.is_active == 1).map_to_string(lambda dto: dto.auth_role_uid)
             account_permission = AccountPermissionsBase(account_session.account_uid, account_dto, tenant_dto, set(roles))
         else:
-            logging.info("Got permissions in memory for account: " + account_session.account_uid)
+            logging.debug("Got permissions in memory for account: " + account_session.account_uid)
         return account_permission
 
     def create_session_from_request(self, req: Request, controller_name: str, method_name: str) -> RequestSession:
@@ -84,7 +100,7 @@ class service_list(service_list_base):
         if account_session is not None:
             permission_session = self.read_account_permission(account_session)
             session.set_account_permission(permission_session)
-            logging.info("GOT FULL SESSION WITH PERMISSIONS !!!!! account: " + account_session.account_uid + ", tenant: " + permission_session.tenant_dto.tenant_uid)
+            logging.debug("GOT FULL SESSION WITH PERMISSIONS !!!!! account: " + account_session.account_uid + ", tenant: " + permission_session.tenant_dto.tenant_uid)
         return session
 
 

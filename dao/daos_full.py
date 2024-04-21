@@ -31,6 +31,11 @@ class account_group_full_dao(account_group_dao):
         super().__init__()
 
 
+class account_group_assignment_full_dao(account_group_assignment_dao):
+    def __init__(self):
+        super().__init__()
+
+
 class account_hierarchy_full_dao(account_hierarchy_dao):
     def __init__(self):
         super().__init__()
@@ -508,16 +513,6 @@ class system_module_full_dao(system_module_dao):
         super().__init__()
 
 
-class system_object_full_dao(system_object_dao):
-    def __init__(self):
-        super().__init__()
-
-
-class system_object_type_full_dao(system_object_type_dao):
-    def __init__(self):
-        super().__init__()
-
-
 class system_query_full_dao(system_query_dao):
     def __init__(self):
         super().__init__()
@@ -647,3 +642,36 @@ class time_submit_type_full_dao(time_submit_type_dao):
     def __init__(self):
         super().__init__()
 
+
+class account_group_role_full_dao(account_group_role_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class account_title_assignment_full_dao(account_title_assignment_dao):
+    def __init__(self):
+        super().__init__()
+
+class connection_tenant_full_dao(connection_tenant_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class location_postal_code_full_dao(location_postal_code_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class location_territory_full_dao(location_territory_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class storage_category_full_dao(storage_category_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class system_constraint_full_dao(system_constraint_dao):
+    def __init__(self):
+        super().__init__()

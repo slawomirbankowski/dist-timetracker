@@ -18,6 +18,9 @@ class EventController(BaseController):
     def get_base_object_name(self) -> str:
         return "EventController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_event(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
 

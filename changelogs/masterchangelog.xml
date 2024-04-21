@@ -23,7 +23,15 @@
   <include file="./changelog0025_project.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0026_time.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0027_calendar.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0031_rich_views.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0035_data.xml" relativeToChangelogFile="true"/>
+  <!--include file="./changelog0028_competency.xml" relativeToChangelogFile="true"/-->
+  <!--include file="./changelog0029_recrutation.xml" relativeToChangelogFile="true"/-->
+  <!--include file="./changelog0031_rich_views.xml" relativeToChangelogFile="true"/-->
+  <include file="./changelog0036_data_tables.xml" relativeToChangelogFile="true"/>
+  <!--include file="./changelog0037_data_attributes.xml" relativeToChangelogFile="true"/-->
+  <include file="./changelog0040_data_system.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0041_data.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0042_data.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0043_data_geo.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0050_fks.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

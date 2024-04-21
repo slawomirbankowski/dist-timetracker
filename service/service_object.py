@@ -4,7 +4,7 @@ from typing import TypeVar, Generic, List, Iterable
 from dao.dao_base import base_dao
 from dao.daos_read import *
 from dto.dtos_models import db_models
-from service.service_base import service_base
+from service.services_base import service_base
 from dao.daos import daos
 from dao.daos_full import *
 
@@ -599,18 +599,6 @@ class system_module_service(service_base):
         super().__init__()
 
 
-class system_object_service(service_base):
-    dao: system_object_full_dao = daos.system_object_dao_instance
-    def __init__(self):
-        super().__init__()
-
-
-class system_object_type_service(service_base):
-    dao: system_object_type_full_dao = daos.system_object_type_dao_instance
-    def __init__(self):
-        super().__init__()
-
-
 class system_query_service(service_base):
     dao: system_query_full_dao = daos.system_query_dao_instance
     def __init__(self):
@@ -753,6 +741,7 @@ class time_rule_client_service(service_base):
     dao: time_rule_client_full_dao = daos.time_rule_client_dao_instance
     def __init__(self):
         super().__init__()
+
 
 
 class time_submit_service(service_base):

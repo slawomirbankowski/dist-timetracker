@@ -21,7 +21,7 @@
 
 - DB - system_attribute - ordinal_position, field_category, is_hidden, is_meta, is_secret, is_full_search, is_
 - DB - add HR tables
-- DB - add competency tables
+- DB - add competency tables -
 - DB - add competency tables
 - DB - auth_identity - URL
 

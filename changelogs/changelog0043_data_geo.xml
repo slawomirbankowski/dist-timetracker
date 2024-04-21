@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0036_data_geo.xml">
+        logicalFilePath="conf/changelog0043_data_geo.xml">
 
-    <changeSet id="0036 - data geo" author="slawomir.bankowski">
+    <changeSet id="0043 - data geo" author="slawomir.bankowski">
 
         <!-- ____________________________ Common table dictionary ____________________________ -->
 

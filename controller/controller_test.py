@@ -10,23 +10,21 @@ from controller.controller_base import RequestSession, ResponseSession, BaseCont
 import hashlib
 
 
-# Auth controller
-class AuthController(BaseController):
+# Test controller
+class TestController(BaseController):
     #
     def __init__(self):
         super().__init__()
 
     # get name of base object
     def get_base_object_type(self) -> str:
-        return "AuthController"
+        return "TestController"
     # get name of base object
     def get_base_object_name(self) -> str:
-        return "AuthController"
+        return "TestController"
 
-    def get_auth_method(self, session: RequestSession) -> ResponseSession:
-        account_instance_uid = ""
-        daos.account_instance_dao_instance.get_item_by_uid(account_instance_uid)
-        return ResponseSession.ok_status(session, "OK")
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def test(self, session: RequestSession) -> ResponseSession:
         request = session.request

@@ -18,13 +18,13 @@
         <!-- ____________________________ storage table dictionary ____________________________ -->
 
         <sql splitStatements="false" stripComments="false">
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('HTTP', 'HTTP', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('FTP', 'FTP', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('LOCAL', 'LOCAL', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('JDBC', 'JDBC', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Elasticsearch', 'Elasticsearch', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Mongodb', 'Mongodb', '', '');
-            insert into storage_type(storage_type_uid, storage_type_name, storage_class, storage_parameters_json) values ('Cassandra', 'Cassandra', '', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('HTTP', 'HTTP', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('FTP', 'FTP', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('LOCAL', 'LOCAL', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('JDBC', 'JDBC', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('Elasticsearch', 'Elasticsearch', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('Mongodb', 'Mongodb', '');
+            insert into storage_type(storage_type_uid, storage_type_name, storage_class) values ('Cassandra', 'Cassandra', '');
         </sql>
 
         <!-- ____________________________ monitor table dictionary ____________________________ -->

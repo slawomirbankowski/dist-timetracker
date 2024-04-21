@@ -44,15 +44,15 @@
       </createView>
 
       <createView viewName="v_definition_python_services_list">
-	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_services_object - START at ', cast(now() as text)) as python
-		union all select '' as table_name, 1 as ordinal_position, 'from service.services_object import *'
-		union all select '' as table_name, 1 as ordinal_position, ''
-		union all select '' as table_name, 1 as ordinal_position, 'class service_list_base(base_object):'
-		union all select '' as table_name, 1 as ordinal_position, '    all_services: list[service_base] = []'
-		union all select table_name, ordinal_position,python  from v_definition_service_list
-		union all select '' as table_name, 1 as ordinal_position, '    def register_all_services(self):'
-		union all select table_name, ordinal_position,python from v_definition_service_register
-		union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_daos_list - END' as python
+	select 'aaa' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_services_object - START at ', cast(now() as text)) as python
+		union all select 'aaa' as table_name, 1 as ordinal_position, 'from service.services_object import *'
+		union all select 'aaa' as table_name, 1 as ordinal_position, ''
+		union all select 'aaa' as table_name, 1 as ordinal_position, 'class service_list_base(base_object):'
+		union all select 'aaa' as table_name, 1 as ordinal_position, '    all_services: list[service_base] = []'
+		union all select concat('bbb_', table_name), ordinal_position,python  from v_definition_service_list
+		union all select 'ccc' as table_name, 1 as ordinal_position, '    def register_all_services(self):'
+		union all select concat('ddd_', table_name), ordinal_position,python from v_definition_service_register
+		union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_services_object - END' as python
       </createView>
 
     </changeSet>

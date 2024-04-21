@@ -9,14 +9,17 @@ from service.services import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 
-# account controller to
+# tenant controller to manage tenants
 class TenantController(BaseController):
     #
     def __init__(self):
         super().__init__()
     # get name of base object
     def get_base_object_name(self) -> str:
-        return "AccountController"
+        return "TenantController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def create_tenant(self, session: RequestSession) -> ResponseSession:
         logging.info("get_object_by_id")

@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_rich_list - START at 2024-03-29 22:27:15.108978+01
+# auto-generated - v_definition_python_dtos_rich_list - START at 2024-04-21 14:57:22.279961+02
 from __future__ import annotations
 from datetime import datetime
 from abc import abstractmethod
@@ -528,6 +528,270 @@ class account_group_rich_dtos(base_dtos):
                 return dto
         return None
     def compare_by(self, value_method: Callable[[account_group_rich_dto], any], compare_method: Callable[[any, any], bool]) -> account_group_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
+class account_group_assignment_rich_dtos(base_dtos):
+    dtos: list[account_group_assignment_rich_dto]
+    def __init__(self, dtos: list[account_group_assignment_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_group_assignment_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_group_assignment_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[account_group_assignment_rich_dto], dtos2: list[account_group_assignment_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> account_group_assignment_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.account_group_assignment_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_group_assignment_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_group_assignment_uid] = dto
+        return res
+    def get_active(self) -> account_group_assignment_rich_dtos:
+        return account_group_assignment_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> account_group_assignment_rich_dtos:
+        return account_group_assignment_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> account_group_assignment_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> account_group_assignment_rich_dtos:
+        if len(self.dtos) > n:
+            return account_group_assignment_rich_dtos(self.dtos[:n])
+        else:
+            return account_group_assignment_rich_dtos(self.dtos)
+    def get_last(self) -> account_group_assignment_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, account_group_assignment_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[account_group_assignment_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[account_group_assignment_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[account_group_assignment_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[account_group_assignment_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[account_group_assignment_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[account_group_assignment_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, account_group_assignment_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, account_group_assignment_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, account_group_assignment_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[account_group_assignment_rich_dto], bool]) -> account_group_assignment_rich_dtos:
+        return account_group_assignment_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[account_group_assignment_rich_dto], str]) -> dict[str, account_group_assignment_rich_dtos]:
+        grp_data: dict[str, account_group_assignment_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = account_group_assignment_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[account_group_assignment_rich_dto], str], agg_method: Callable[[account_group_assignment_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, account_group_assignment_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[account_group_assignment_rich_dto], bool]) -> account_group_assignment_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[account_group_assignment_rich_dto], any], compare_method: Callable[[any, any], bool]) -> account_group_assignment_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
+class account_group_role_rich_dtos(base_dtos):
+    dtos: list[account_group_role_rich_dto]
+    def __init__(self, dtos: list[account_group_role_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_group_role_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_group_role_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[account_group_role_rich_dto], dtos2: list[account_group_role_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> account_group_role_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.account_group_role_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_group_role_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_group_role_uid] = dto
+        return res
+    def get_active(self) -> account_group_role_rich_dtos:
+        return account_group_role_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> account_group_role_rich_dtos:
+        return account_group_role_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> account_group_role_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> account_group_role_rich_dtos:
+        if len(self.dtos) > n:
+            return account_group_role_rich_dtos(self.dtos[:n])
+        else:
+            return account_group_role_rich_dtos(self.dtos)
+    def get_last(self) -> account_group_role_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, account_group_role_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[account_group_role_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[account_group_role_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[account_group_role_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[account_group_role_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[account_group_role_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[account_group_role_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, account_group_role_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, account_group_role_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, account_group_role_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[account_group_role_rich_dto], bool]) -> account_group_role_rich_dtos:
+        return account_group_role_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[account_group_role_rich_dto], str]) -> dict[str, account_group_role_rich_dtos]:
+        grp_data: dict[str, account_group_role_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = account_group_role_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[account_group_role_rich_dto], str], agg_method: Callable[[account_group_role_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, account_group_role_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[account_group_role_rich_dto], bool]) -> account_group_role_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[account_group_role_rich_dto], any], compare_method: Callable[[any, any], bool]) -> account_group_role_rich_dto | None:
         if len(self.dtos) == 0:
             return None
         else:
@@ -1188,6 +1452,138 @@ class account_title_rich_dtos(base_dtos):
                 return dto
         return None
     def compare_by(self, value_method: Callable[[account_title_rich_dto], any], compare_method: Callable[[any, any], bool]) -> account_title_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
+class account_title_assignment_rich_dtos(base_dtos):
+    dtos: list[account_title_assignment_rich_dto]
+    def __init__(self, dtos: list[account_title_assignment_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_title_assignment_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_title_assignment_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[account_title_assignment_rich_dto], dtos2: list[account_title_assignment_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> account_title_assignment_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.account_title_assignment_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_title_assignment_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_title_assignment_uid] = dto
+        return res
+    def get_active(self) -> account_title_assignment_rich_dtos:
+        return account_title_assignment_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> account_title_assignment_rich_dtos:
+        return account_title_assignment_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> account_title_assignment_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> account_title_assignment_rich_dtos:
+        if len(self.dtos) > n:
+            return account_title_assignment_rich_dtos(self.dtos[:n])
+        else:
+            return account_title_assignment_rich_dtos(self.dtos)
+    def get_last(self) -> account_title_assignment_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, account_title_assignment_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[account_title_assignment_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[account_title_assignment_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[account_title_assignment_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[account_title_assignment_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[account_title_assignment_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[account_title_assignment_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, account_title_assignment_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, account_title_assignment_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, account_title_assignment_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[account_title_assignment_rich_dto], bool]) -> account_title_assignment_rich_dtos:
+        return account_title_assignment_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[account_title_assignment_rich_dto], str]) -> dict[str, account_title_assignment_rich_dtos]:
+        grp_data: dict[str, account_title_assignment_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = account_title_assignment_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[account_title_assignment_rich_dto], str], agg_method: Callable[[account_title_assignment_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, account_title_assignment_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[account_title_assignment_rich_dto], bool]) -> account_title_assignment_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[account_title_assignment_rich_dto], any], compare_method: Callable[[any, any], bool]) -> account_title_assignment_rich_dto | None:
         if len(self.dtos) == 0:
             return None
         else:
@@ -5822,6 +6218,138 @@ class connection_host_rich_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class connection_tenant_rich_dtos(base_dtos):
+    dtos: list[connection_tenant_rich_dto]
+    def __init__(self, dtos: list[connection_tenant_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[connection_tenant_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: connection_tenant_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[connection_tenant_rich_dto], dtos2: list[connection_tenant_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> connection_tenant_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.connection_tenant_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, connection_tenant_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.connection_tenant_uid] = dto
+        return res
+    def get_active(self) -> connection_tenant_rich_dtos:
+        return connection_tenant_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> connection_tenant_rich_dtos:
+        return connection_tenant_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> connection_tenant_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> connection_tenant_rich_dtos:
+        if len(self.dtos) > n:
+            return connection_tenant_rich_dtos(self.dtos[:n])
+        else:
+            return connection_tenant_rich_dtos(self.dtos)
+    def get_last(self) -> connection_tenant_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, connection_tenant_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[connection_tenant_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[connection_tenant_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[connection_tenant_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[connection_tenant_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[connection_tenant_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[connection_tenant_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, connection_tenant_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, connection_tenant_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, connection_tenant_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[connection_tenant_rich_dto], bool]) -> connection_tenant_rich_dtos:
+        return connection_tenant_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[connection_tenant_rich_dto], str]) -> dict[str, connection_tenant_rich_dtos]:
+        grp_data: dict[str, connection_tenant_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = connection_tenant_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[connection_tenant_rich_dto], str], agg_method: Callable[[connection_tenant_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, connection_tenant_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[connection_tenant_rich_dto], bool]) -> connection_tenant_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[connection_tenant_rich_dto], any], compare_method: Callable[[any, any], bool]) -> connection_tenant_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
 class connection_user_rich_dtos(base_dtos):
     dtos: list[connection_user_rich_dto]
     def __init__(self, dtos: list[connection_user_rich_dto]):
@@ -8594,6 +9122,270 @@ class invoice_type_rich_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class location_postal_code_rich_dtos(base_dtos):
+    dtos: list[location_postal_code_rich_dto]
+    def __init__(self, dtos: list[location_postal_code_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[location_postal_code_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: location_postal_code_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[location_postal_code_rich_dto], dtos2: list[location_postal_code_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> location_postal_code_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.location_postal_code_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, location_postal_code_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.location_postal_code_uid] = dto
+        return res
+    def get_active(self) -> location_postal_code_rich_dtos:
+        return location_postal_code_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> location_postal_code_rich_dtos:
+        return location_postal_code_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> location_postal_code_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> location_postal_code_rich_dtos:
+        if len(self.dtos) > n:
+            return location_postal_code_rich_dtos(self.dtos[:n])
+        else:
+            return location_postal_code_rich_dtos(self.dtos)
+    def get_last(self) -> location_postal_code_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, location_postal_code_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[location_postal_code_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[location_postal_code_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[location_postal_code_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[location_postal_code_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[location_postal_code_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[location_postal_code_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, location_postal_code_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, location_postal_code_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, location_postal_code_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[location_postal_code_rich_dto], bool]) -> location_postal_code_rich_dtos:
+        return location_postal_code_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[location_postal_code_rich_dto], str]) -> dict[str, location_postal_code_rich_dtos]:
+        grp_data: dict[str, location_postal_code_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = location_postal_code_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[location_postal_code_rich_dto], str], agg_method: Callable[[location_postal_code_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, location_postal_code_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[location_postal_code_rich_dto], bool]) -> location_postal_code_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[location_postal_code_rich_dto], any], compare_method: Callable[[any, any], bool]) -> location_postal_code_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
+class location_territory_rich_dtos(base_dtos):
+    dtos: list[location_territory_rich_dto]
+    def __init__(self, dtos: list[location_territory_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[location_territory_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: location_territory_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[location_territory_rich_dto], dtos2: list[location_territory_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> location_territory_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.location_territory_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, location_territory_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.location_territory_uid] = dto
+        return res
+    def get_active(self) -> location_territory_rich_dtos:
+        return location_territory_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> location_territory_rich_dtos:
+        return location_territory_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> location_territory_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> location_territory_rich_dtos:
+        if len(self.dtos) > n:
+            return location_territory_rich_dtos(self.dtos[:n])
+        else:
+            return location_territory_rich_dtos(self.dtos)
+    def get_last(self) -> location_territory_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, location_territory_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[location_territory_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[location_territory_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[location_territory_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[location_territory_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[location_territory_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[location_territory_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, location_territory_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, location_territory_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, location_territory_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[location_territory_rich_dto], bool]) -> location_territory_rich_dtos:
+        return location_territory_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[location_territory_rich_dto], str]) -> dict[str, location_territory_rich_dtos]:
+        grp_data: dict[str, location_territory_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = location_territory_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[location_territory_rich_dto], str], agg_method: Callable[[location_territory_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, location_territory_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[location_territory_rich_dto], bool]) -> location_territory_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[location_territory_rich_dto], any], compare_method: Callable[[any, any], bool]) -> location_territory_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
 class monitor_rich_dtos(base_dtos):
     dtos: list[monitor_rich_dto]
     def __init__(self, dtos: list[monitor_rich_dto]):
@@ -11234,6 +12026,138 @@ class storage_rich_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class storage_category_rich_dtos(base_dtos):
+    dtos: list[storage_category_rich_dto]
+    def __init__(self, dtos: list[storage_category_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[storage_category_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: storage_category_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[storage_category_rich_dto], dtos2: list[storage_category_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> storage_category_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.storage_category_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, storage_category_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.storage_category_uid] = dto
+        return res
+    def get_active(self) -> storage_category_rich_dtos:
+        return storage_category_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> storage_category_rich_dtos:
+        return storage_category_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> storage_category_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> storage_category_rich_dtos:
+        if len(self.dtos) > n:
+            return storage_category_rich_dtos(self.dtos[:n])
+        else:
+            return storage_category_rich_dtos(self.dtos)
+    def get_last(self) -> storage_category_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, storage_category_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[storage_category_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[storage_category_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[storage_category_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[storage_category_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[storage_category_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[storage_category_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, storage_category_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, storage_category_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, storage_category_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[storage_category_rich_dto], bool]) -> storage_category_rich_dtos:
+        return storage_category_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[storage_category_rich_dto], str]) -> dict[str, storage_category_rich_dtos]:
+        grp_data: dict[str, storage_category_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = storage_category_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[storage_category_rich_dto], str], agg_method: Callable[[storage_category_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, storage_category_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[storage_category_rich_dto], bool]) -> storage_category_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[storage_category_rich_dto], any], compare_method: Callable[[any, any], bool]) -> storage_category_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
 class storage_connection_rich_dtos(base_dtos):
     dtos: list[storage_connection_rich_dto]
     def __init__(self, dtos: list[storage_connection_rich_dto]):
@@ -12158,6 +13082,138 @@ class system_attribute_rich_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class system_constraint_rich_dtos(base_dtos):
+    dtos: list[system_constraint_rich_dto]
+    def __init__(self, dtos: list[system_constraint_rich_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[system_constraint_rich_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: system_constraint_rich_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[system_constraint_rich_dto], dtos2: list[system_constraint_rich_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> system_constraint_rich_dto | None:
+        found_dtos = list(filter(lambda x: x.system_constraint_uid == uid, self.dtos))
+        if (len(found_dtos)>0):
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, system_constraint_rich_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.system_constraint_uid] = dto
+        return res
+    def get_active(self) -> system_constraint_rich_dtos:
+        return system_constraint_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
+    def get_inactive(self) -> system_constraint_rich_dtos:
+        return system_constraint_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
+    def get_first(self) -> system_constraint_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_first_n(self, n: int) -> system_constraint_rich_dtos:
+        if len(self.dtos) > n:
+            return system_constraint_rich_dtos(self.dtos[:n])
+        else:
+            return system_constraint_rich_dtos(self.dtos)
+    def get_last(self) -> system_constraint_rich_dto | None:
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def to_dict_by_uid(self) -> dict[str, system_constraint_rich_dto]:
+        d = {}
+        for dto in self.dtos:
+            d[dto.get_uid()] = dto
+        return d
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable[[system_constraint_rich_dto], bool], do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def check_all(self, check_method: Callable[[system_constraint_rich_dto], bool]) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable[[system_constraint_rich_dto], bool]) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def map_to_string(self, map_method: Callable[[system_constraint_rich_dto], str]) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable[[system_constraint_rich_dto], int]) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable[[system_constraint_rich_dto], float]) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def aggregate_string(self, map_method: Callable[[str, system_constraint_rich_dto], str], init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_int(self, map_method: Callable[[int, system_constraint_rich_dto], int], init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable[[float, system_constraint_rich_dto], float], init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def filter(self, filter_method: Callable[[system_constraint_rich_dto], bool]) -> system_constraint_rich_dtos:
+        return system_constraint_rich_dtos(list(filter(filter_method, self.dtos)))
+    def group_by(self, group_method: Callable[[system_constraint_rich_dto], str]) -> dict[str, system_constraint_rich_dtos]:
+        grp_data: dict[str, system_constraint_rich_dtos] = {}
+        for dto in self.dtos:
+            key = group_method(dto)
+            grp_list = grp_data[key]
+            if grp_list is None:
+                grp_list = system_constraint_rich_dtos([])
+                grp_data[key] = grp_list
+            grp_list.dtos.append(dto)
+        return grp_data
+    def aggregate_by(self, group_method: Callable[[system_constraint_rich_dto], str], agg_method: Callable[[system_constraint_rich_dtos], any]) -> dict[str, any]:
+        grp_data: dict[str, system_constraint_rich_dtos] = self.group_by(group_method)
+        res: dict[str, any] = {}
+        for key in grp_data:
+            value = agg_method(grp_data[key])
+            res[key] = value
+        return res
+    def find(self, check_method: Callable[[system_constraint_rich_dto], bool]) -> system_constraint_rich_dto | None:
+        for dto in self.dtos:
+            if check_method(dto):
+                return dto
+        return None
+    def compare_by(self, value_method: Callable[[system_constraint_rich_dto], any], compare_method: Callable[[any, any], bool]) -> system_constraint_rich_dto | None:
+        if len(self.dtos) == 0:
+            return None
+        else:
+            max_value = value_method(self.dtos[0])
+            max_elem = self.dtos[0]
+            for dto in self.dtos:
+                next_value = value_method(dto)
+                if compare_method(next_value, max_value):
+                    max_value = next_value
+                    max_elem = dto
+            return max_elem
+
+
+@dataclass(frozen=False)
 class system_database_rich_dtos(base_dtos):
     dtos: list[system_database_rich_dto]
     def __init__(self, dtos: list[system_database_rich_dto]):
@@ -12936,270 +13992,6 @@ class system_module_rich_dtos(base_dtos):
                 return dto
         return None
     def compare_by(self, value_method: Callable[[system_module_rich_dto], any], compare_method: Callable[[any, any], bool]) -> system_module_rich_dto | None:
-        if len(self.dtos) == 0:
-            return None
-        else:
-            max_value = value_method(self.dtos[0])
-            max_elem = self.dtos[0]
-            for dto in self.dtos:
-                next_value = value_method(dto)
-                if compare_method(next_value, max_value):
-                    max_value = next_value
-                    max_elem = dto
-            return max_elem
-
-
-@dataclass(frozen=False)
-class system_object_rich_dtos(base_dtos):
-    dtos: list[system_object_rich_dto]
-    def __init__(self, dtos: list[system_object_rich_dto]):
-        super().__init__(dtos)
-        self.dtos = dtos
-    @classmethod
-    def empty_list(cls):
-        return cls(list())
-    @classmethod
-    def from_list(cls, dtos: list[system_object_rich_dto]):
-        return cls(dtos)
-    @classmethod
-    def from_object(cls, dto: system_object_rich_dto):
-        return cls([dto])
-    @classmethod
-    def from_lists(cls, dtos1: list[system_object_rich_dto], dtos2: list[system_object_rich_dto]):
-        return cls(dtos1 + dtos2)
-    def find_by_uid(self, uid: str) -> system_object_rich_dto | None:
-        found_dtos = list(filter(lambda x: x.system_object_uid == uid, self.dtos))
-        if (len(found_dtos)>0):
-            return found_dtos[0]
-        else:
-            return None
-    def map_by_uid(self) -> dict[str, system_object_rich_dto]:
-        res = {}
-        for dto in self.dtos:
-            res[dto.system_object_uid] = dto
-        return res
-    def get_active(self) -> system_object_rich_dtos:
-        return system_object_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
-    def get_inactive(self) -> system_object_rich_dtos:
-        return system_object_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
-    def get_first(self) -> system_object_rich_dto | None:
-        if len(self.dtos) > 0:
-            return self.dtos[0]
-        else:
-            return None
-    def get_first_n(self, n: int) -> system_object_rich_dtos:
-        if len(self.dtos) > n:
-            return system_object_rich_dtos(self.dtos[:n])
-        else:
-            return system_object_rich_dtos(self.dtos)
-    def get_last(self) -> system_object_rich_dto | None:
-        if len(self.dtos) > 0:
-            return self.dtos[-1]
-        else:
-            return None
-    def to_dict_by_uid(self) -> dict[str, system_object_rich_dto]:
-        d = {}
-        for dto in self.dtos:
-            d[dto.get_uid()] = dto
-        return d
-    def for_each(self, do_method: Callable):
-        for dto in self.dtos:
-            do_method(dto)
-    def for_first(self, do_method: Callable):
-        if len(self.dtos) > 0:
-            return do_method(self.dtos[0])
-    def for_filter(self, check_method: Callable[[system_object_rich_dto], bool], do_method: Callable):
-        for dto in self.dtos:
-            if check_method(dto):
-                do_method(dto)
-    def check_all(self, check_method: Callable[[system_object_rich_dto], bool]) -> bool:
-        init = True
-        for dto in self.dtos:
-            init = init and check_method(dto)
-        return False
-    def check_any(self, check_method: Callable[[system_object_rich_dto], bool]) -> bool:
-        init = False
-        for dto in self.dtos:
-            init = init or check_method(dto)
-        return False
-    def map_to_string(self, map_method: Callable[[system_object_rich_dto], str]) -> list[str]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def map_to_int(self, map_method: Callable[[system_object_rich_dto], int]) -> list[int]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def map_to_float(self, map_method: Callable[[system_object_rich_dto], float]) -> list[float]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def aggregate_string(self, map_method: Callable[[str, system_object_rich_dto], str], init: str = "") -> str:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def aggregate_int(self, map_method: Callable[[int, system_object_rich_dto], int], init: int = 0) -> int:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def aggregate_float(self, map_method: Callable[[float, system_object_rich_dto], float], init: float = 0) -> float:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def filter(self, filter_method: Callable[[system_object_rich_dto], bool]) -> system_object_rich_dtos:
-        return system_object_rich_dtos(list(filter(filter_method, self.dtos)))
-    def group_by(self, group_method: Callable[[system_object_rich_dto], str]) -> dict[str, system_object_rich_dtos]:
-        grp_data: dict[str, system_object_rich_dtos] = {}
-        for dto in self.dtos:
-            key = group_method(dto)
-            grp_list = grp_data[key]
-            if grp_list is None:
-                grp_list = system_object_rich_dtos([])
-                grp_data[key] = grp_list
-            grp_list.dtos.append(dto)
-        return grp_data
-    def aggregate_by(self, group_method: Callable[[system_object_rich_dto], str], agg_method: Callable[[system_object_rich_dtos], any]) -> dict[str, any]:
-        grp_data: dict[str, system_object_rich_dtos] = self.group_by(group_method)
-        res: dict[str, any] = {}
-        for key in grp_data:
-            value = agg_method(grp_data[key])
-            res[key] = value
-        return res
-    def find(self, check_method: Callable[[system_object_rich_dto], bool]) -> system_object_rich_dto | None:
-        for dto in self.dtos:
-            if check_method(dto):
-                return dto
-        return None
-    def compare_by(self, value_method: Callable[[system_object_rich_dto], any], compare_method: Callable[[any, any], bool]) -> system_object_rich_dto | None:
-        if len(self.dtos) == 0:
-            return None
-        else:
-            max_value = value_method(self.dtos[0])
-            max_elem = self.dtos[0]
-            for dto in self.dtos:
-                next_value = value_method(dto)
-                if compare_method(next_value, max_value):
-                    max_value = next_value
-                    max_elem = dto
-            return max_elem
-
-
-@dataclass(frozen=False)
-class system_object_type_rich_dtos(base_dtos):
-    dtos: list[system_object_type_rich_dto]
-    def __init__(self, dtos: list[system_object_type_rich_dto]):
-        super().__init__(dtos)
-        self.dtos = dtos
-    @classmethod
-    def empty_list(cls):
-        return cls(list())
-    @classmethod
-    def from_list(cls, dtos: list[system_object_type_rich_dto]):
-        return cls(dtos)
-    @classmethod
-    def from_object(cls, dto: system_object_type_rich_dto):
-        return cls([dto])
-    @classmethod
-    def from_lists(cls, dtos1: list[system_object_type_rich_dto], dtos2: list[system_object_type_rich_dto]):
-        return cls(dtos1 + dtos2)
-    def find_by_uid(self, uid: str) -> system_object_type_rich_dto | None:
-        found_dtos = list(filter(lambda x: x.system_object_type_uid == uid, self.dtos))
-        if (len(found_dtos)>0):
-            return found_dtos[0]
-        else:
-            return None
-    def map_by_uid(self) -> dict[str, system_object_type_rich_dto]:
-        res = {}
-        for dto in self.dtos:
-            res[dto.system_object_type_uid] = dto
-        return res
-    def get_active(self) -> system_object_type_rich_dtos:
-        return system_object_type_rich_dtos(list(filter(lambda x: x.is_active == 1, self.dtos)))
-    def get_inactive(self) -> system_object_type_rich_dtos:
-        return system_object_type_rich_dtos(list(filter(lambda x: x.is_active != 1, self.dtos)))
-    def get_first(self) -> system_object_type_rich_dto | None:
-        if len(self.dtos) > 0:
-            return self.dtos[0]
-        else:
-            return None
-    def get_first_n(self, n: int) -> system_object_type_rich_dtos:
-        if len(self.dtos) > n:
-            return system_object_type_rich_dtos(self.dtos[:n])
-        else:
-            return system_object_type_rich_dtos(self.dtos)
-    def get_last(self) -> system_object_type_rich_dto | None:
-        if len(self.dtos) > 0:
-            return self.dtos[-1]
-        else:
-            return None
-    def to_dict_by_uid(self) -> dict[str, system_object_type_rich_dto]:
-        d = {}
-        for dto in self.dtos:
-            d[dto.get_uid()] = dto
-        return d
-    def for_each(self, do_method: Callable):
-        for dto in self.dtos:
-            do_method(dto)
-    def for_first(self, do_method: Callable):
-        if len(self.dtos) > 0:
-            return do_method(self.dtos[0])
-    def for_filter(self, check_method: Callable[[system_object_type_rich_dto], bool], do_method: Callable):
-        for dto in self.dtos:
-            if check_method(dto):
-                do_method(dto)
-    def check_all(self, check_method: Callable[[system_object_type_rich_dto], bool]) -> bool:
-        init = True
-        for dto in self.dtos:
-            init = init and check_method(dto)
-        return False
-    def check_any(self, check_method: Callable[[system_object_type_rich_dto], bool]) -> bool:
-        init = False
-        for dto in self.dtos:
-            init = init or check_method(dto)
-        return False
-    def map_to_string(self, map_method: Callable[[system_object_type_rich_dto], str]) -> list[str]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def map_to_int(self, map_method: Callable[[system_object_type_rich_dto], int]) -> list[int]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def map_to_float(self, map_method: Callable[[system_object_type_rich_dto], float]) -> list[float]:
-        return list(map(lambda dto:  map_method(dto), self.dtos))
-    def aggregate_string(self, map_method: Callable[[str, system_object_type_rich_dto], str], init: str = "") -> str:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def aggregate_int(self, map_method: Callable[[int, system_object_type_rich_dto], int], init: int = 0) -> int:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def aggregate_float(self, map_method: Callable[[float, system_object_type_rich_dto], float], init: float = 0) -> float:
-        init_value = init
-        for dto in self.dtos:
-            init_value = map_method(init_value, dto)
-        return init_value
-    def filter(self, filter_method: Callable[[system_object_type_rich_dto], bool]) -> system_object_type_rich_dtos:
-        return system_object_type_rich_dtos(list(filter(filter_method, self.dtos)))
-    def group_by(self, group_method: Callable[[system_object_type_rich_dto], str]) -> dict[str, system_object_type_rich_dtos]:
-        grp_data: dict[str, system_object_type_rich_dtos] = {}
-        for dto in self.dtos:
-            key = group_method(dto)
-            grp_list = grp_data[key]
-            if grp_list is None:
-                grp_list = system_object_type_rich_dtos([])
-                grp_data[key] = grp_list
-            grp_list.dtos.append(dto)
-        return grp_data
-    def aggregate_by(self, group_method: Callable[[system_object_type_rich_dto], str], agg_method: Callable[[system_object_type_rich_dtos], any]) -> dict[str, any]:
-        grp_data: dict[str, system_object_type_rich_dtos] = self.group_by(group_method)
-        res: dict[str, any] = {}
-        for key in grp_data:
-            value = agg_method(grp_data[key])
-            res[key] = value
-        return res
-    def find(self, check_method: Callable[[system_object_type_rich_dto], bool]) -> system_object_type_rich_dto | None:
-        for dto in self.dtos:
-            if check_method(dto):
-                return dto
-        return None
-    def compare_by(self, value_method: Callable[[system_object_type_rich_dto], any], compare_method: Callable[[any, any], bool]) -> system_object_type_rich_dto | None:
         if len(self.dtos) == 0:
             return None
         else:

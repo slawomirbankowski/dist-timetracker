@@ -18,6 +18,9 @@ class InvoiceController(BaseController):
     def get_base_object_name(self) -> str:
         return "InvoiceController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_invoice(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
 

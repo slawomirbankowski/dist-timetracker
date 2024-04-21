@@ -18,6 +18,9 @@ class ConnectionController(BaseController):
     def get_base_object_name(self) -> str:
         return "ConnectionController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_connection(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
 

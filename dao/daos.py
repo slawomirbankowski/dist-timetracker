@@ -4,7 +4,7 @@ import logging
 from logging import config
 from typing import TypeVar, Generic, List, Iterable, Any
 import dao.dao_connection
-from base.base_objects import ThreadWrapper, RequestBase
+from base.base_objects import ThreadWrapper, RequestBase, ResponseBase
 from dao.daos_list import DaosList
 from dao.daos_read import *
 from dao.daos_full import *
@@ -58,19 +58,21 @@ class Daos(DaosList):
         }
 
     def handle_exception(self, ex: Exception) -> bool:
-        self.system_exception_dao_instance.insert_row_random_uid("", "class", "msg", "stack")
+        self.system_exception_dao_instance.insert_row_random_uid(ex.__cause__, type(ex).__name__, ex.__module__, str(ex.args))
         return True
     def handle_thread(self, th: ThreadWrapper) -> bool:
+        self.system_thread_dao_instance.insert_row_random_uid("", th.thread.name, th.thread.native_id, th.object_id, th.ticks_count, th.is_thread_active(), th.sleep_time)
         return True
-    def handle_request(self, req: RequestBase) -> bool:
-        #self.system_request_dao_instance.insert_row_random_uid("", "", "", req.url, 222, "", 111, 222, )
+    def handle_request(self, resp: ResponseBase) -> bool:
+        self.system_request_dao_instance.insert_row_random_uid(resp.req_session.request_id, resp.req_session.get_account_uid(), resp.req_session.method_name, resp.req_session.url, -1, "host", 2000, resp.code)
         return True
 
     def initialize_daos(self) -> None:
+        """initialize all DAOs classes and main objects"""
         siw = system_instance_write_dto(self.system_instance_uid, self.system_instance_uid, "1.0.0", self.host_name, self.host_ip, self.local_path, "DEV", 0)
         # system_instance_uid: str, system_instance_name: str, system_version_uid: str, host_name: str, host_ip: str, local_path: str, mode_name: str, ticks_count: int, custom_attributes: str = "{}"
         self.system_instance_dto = self.system_instance_dao_instance.insert_and_get(siw, "system")
-        self.system_database_dto = self.system_database_dao_instance.upsert_row_and_get("main", "", db_connections.db_url, "", "", "", objects.system_instance_uid)
+        #self.system_database_dto = self.system_database_dao_instance.upsert_row_and_get("main", "", db_connections.db_url, "", "", "", objects.system_instance_uid)
         #elf.settings_by_name = self.system_setting_dao_instance.get_items_active().to_dict_by_setting_name()
         self.register_all_standard_daos()
         # register handlers to
@@ -78,6 +80,7 @@ class Daos(DaosList):
         objects.register_thread_handler(self.handle_thread)
         objects.register_request_handler(self.handle_request)
         logging.debug("End of DAOs initialization, system instance: " + self.system_instance_dto.system_instance_uid)
+
     def read_dictionaries(self) -> None:
         self.account_skills = self.account_skill_dao_instance.select_rows_read_all()
         self.account_titles = self.account_title_dao_instance.select_rows_read_all()

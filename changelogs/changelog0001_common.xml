@@ -10,7 +10,7 @@
     <property name="nowdate" value="CURRENT TIMESTAMP" dbms="db2"/>
     <property name="nowdate" value="sysdate" dbms="oracle"/>
     <property name="nowdate" value="CURRENT_TIMESTAMP()" dbms="h2"/>
-    <property name="uuid" value="replace(concat('test02_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')" dbms="postgresql"/>
+    <property name="uuid" value="replace(concat('test02_v01_')" dbms="postgresql"/>
 
     <changeSet id="0001 - common objects" author="slawomir.bankowski">
 

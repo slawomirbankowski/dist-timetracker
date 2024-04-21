@@ -16,6 +16,10 @@ class ProcessController(BaseController):
     def get_base_object_name(self) -> str:
         return "ProcessController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def check_process(self, session: RequestSession) -> ResponseSession:
         logging.debug("Auth")
         return ResponseSession.not_implemented(session)
+
