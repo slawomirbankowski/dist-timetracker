@@ -10,7 +10,7 @@ from dao.daos import daos
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 
-# service controller to
+# service controller to manage internal endpoints like ping, version
 class ServiceController(BaseController):
     #
     def __init__(self):
@@ -18,6 +18,9 @@ class ServiceController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "ServiceController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def ping(self, session: RequestSession) -> ResponseSession:
         logging.info("Token")

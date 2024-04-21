@@ -18,6 +18,9 @@ class ProjectController(BaseController):
     def get_base_object_name(self) -> str:
         return "ProjectController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_project(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
 

@@ -9,7 +9,7 @@ from base.base_utils import get_random_uid
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
-from service.service_base import service_base, service_thread_base
+from service.services_base import service_base, service_thread_base
 from dao.daos import daos
 
 
@@ -87,6 +87,10 @@ class LoginService(service_thread_base):
             md5_hash.update(token_salted.encode())
             token_hash = md5_hash.hexdigest()
             valid_till_date = datetime.datetime.now() + datetime.timedelta(1.0)
+            remote_addr = session.request.remote_addr
+            host_name = session.request.host
+            cookie_session = session.request.cookies.get("ttsession", None)
+
             user_session = objects.create_user_session(accinst.tenant_uid, accinst.account_uid, token, token_salt, token_hash, valid_till_date)
             logging.debug("Created user session for ID: " + user_session.session_id)
             daos.auth_token_dao_instance.insert_row(token, user_session.session_id, accinst.tenant_uid, accinst.account_uid, 100, token_hash, token_salt, valid_till_date, None, 1)
@@ -107,29 +111,3 @@ class LoginService(service_thread_base):
     def thread_work(self, tick: int) -> bool:
         return True
 
-
-class PermissionService(service_thread_base):
-    def __init__(self):
-        super().__init__()
-    # get name of base object
-    def get_base_object_name(self) -> str:
-        return "PermissionService"
-    def get_permissions(self):
-        logging.info("Permissions")
-
-    # work in separated thread
-    def thread_work(self, tick: int) -> bool:
-        return True
-
-
-class KeyService(service_thread_base):
-    def __init__(self):
-        super().__init__()
-    # get name of base object
-    def get_base_object_name(self) -> str:
-        return "KeyService"
-    # work in separated thread
-    def thread_work(self, tick: int) -> bool:
-        return True
-    def get_keys(self):
-        logging.info("Login")

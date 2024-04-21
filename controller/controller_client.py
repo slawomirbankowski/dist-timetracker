@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 from typing import Dict, Callable
 import logging
 from logging import config
@@ -17,6 +17,9 @@ class ClientController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "ClientController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def create_client(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)

@@ -7,8 +7,9 @@ from functools import wraps
 from typing import Callable
 
 from flask import Flask, jsonify, request, abort, Request, Response
-from base.base_objects import base_object, AccountSessionBase, objects, AccountPermissionsBase, RequestBase
-from base.base_utils import get_random_uid_with_prefix
+from base.base_objects import base_object, AccountSessionBase, objects, AccountPermissionsBase, RequestBase, \
+    ResponseBase
+from base.base_utils import get_random_uid_with_prefix, get_random_uid_long_with_prefix
 
 
 #
@@ -26,6 +27,7 @@ class ResponseSessionError:
     error: str
 
 
+# request HTTP
 class RequestSession(RequestBase):
     request: Request
     url: str
@@ -43,9 +45,10 @@ class RequestSession(RequestBase):
 
     def __init__(self, request: Request, controller_name: str, method_name: str):
         self.request = request
+        #self.request.remote_addr
         self.created_date = datetime.datetime.now()
         self.url = request.url
-        self.request_id = get_random_uid_with_prefix("REQ")
+        self.request_id = get_random_uid_long_with_prefix("REQ")
         self.controller_name = controller_name
         self.method_name = method_name
         if request.authorization is None:
@@ -157,9 +160,19 @@ class RequestSession(RequestBase):
             return False
         return not self.account_permission.roles.isdisjoint(required_roles)
 
+    def to_myself_dict(self) -> dict:
+        return {"account": asdict(self.account_permission.account_dto.to_thin()),
+                "tenant": asdict(self.account_permission.tenant_dto.to_thin()),
+                "created_date": str(self.account_permission.created_date),
+                "roles": list(self.account_permission.roles),
+                "session_load_date": str(self.account_session.session_load_date),
+                "permission_load_date": str(self.account_permission.permission_load_date),
+                "valid_till_date": str(self.account_session.valid_till_date),
+                "session_id": self.account_session.session_id}
 
-# full response
-class ResponseSession:
+
+# full HTTP response
+class ResponseSession(ResponseBase):
     code: int = 200
     req_session: RequestSession
     obj: dict[str, any] | None

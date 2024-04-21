@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 from typing import Dict, Callable
 import logging
 from logging import config
@@ -18,11 +18,12 @@ class AccountController(BaseController):
     def get_base_object_name(self) -> str:
         return "AccountController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_account(self, session: RequestSession) -> ResponseSession:
-        table_name: str = session.get_query_or_body_param("table_name").lower()
-        # TODO: NotFound when incorrect table_name
-        rows_count = daos.account_group_dao_instance.count_by_table_all(table_name)
-        return ResponseSession.ok(session, {"table_name": table_name, "rows_count": rows_count})
+
+        return ResponseSession.ok(session, {"table_name": "", "rows_count": 0})
 
     def list_accounts(self, session: RequestSession) -> ResponseSession:
         #

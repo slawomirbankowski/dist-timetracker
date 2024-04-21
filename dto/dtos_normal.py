@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_normal - START at 2024-04-07 12:05:58.840686+02
+# auto-generated - v_definition_python_dtos_normal - START at 2024-04-21 14:47:40.729107+02
 import datetime
 from abc import abstractmethod
 from dataclasses import dataclass, asdict
@@ -21,10 +21,12 @@ class account_normal_dto(base_read_dto, account_write_dto):
     auth_identity_uid: str
     account_email: str
     display_name: str
+    account_address: str
+    is_verified: int
     is_system: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, account_uid: str, account_name: str, tenant_uid: str, account_type_uid: str, account_title_uid: str, account_division_uid: str, account_group_uid: str, auth_identity_uid: str, account_email: str, display_name: str, is_system: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, account_uid: str, account_name: str, tenant_uid: str, account_type_uid: str, account_title_uid: str, account_division_uid: str, account_group_uid: str, auth_identity_uid: str, account_email: str, display_name: str, account_address: str, is_verified: int, is_system: int, created_date: datetime.datetime, created_by: str):
         self.account_uid = account_uid
         self.account_name = account_name
         self.tenant_uid = tenant_uid
@@ -35,6 +37,8 @@ class account_normal_dto(base_read_dto, account_write_dto):
         self.auth_identity_uid = auth_identity_uid
         self.account_email = account_email
         self.display_name = display_name
+        self.account_address = account_address
+        self.is_verified = is_verified
         self.is_system = is_system
         self.created_date = created_date
         self.created_by = created_by
@@ -89,6 +93,44 @@ class account_group_normal_dto(base_read_dto, account_group_write_dto):
         self.account_group_name = account_group_name
         self.tenant_uid = tenant_uid
         self.account_group_description = account_group_description
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class account_group_assignment_normal_dto(base_read_dto, account_group_assignment_write_dto):
+    account_group_assignment_uid: str
+    account_group_assignment_name: str
+    tenant_uid: str
+    account_group_uid: str
+    account_uid: str
+    account_group_role_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, account_group_assignment_uid: str, account_group_assignment_name: str, tenant_uid: str, account_group_uid: str, account_uid: str, account_group_role_uid: str, start_date: datetime.datetime, end_date: datetime.datetime, created_date: datetime.datetime, created_by: str):
+        self.account_group_assignment_uid = account_group_assignment_uid
+        self.account_group_assignment_name = account_group_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_group_uid = account_group_uid
+        self.account_uid = account_uid
+        self.account_group_role_uid = account_group_role_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class account_group_role_normal_dto(base_read_dto, account_group_role_write_dto):
+    account_group_role_uid: str
+    account_group_role_name: str
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, account_group_role_uid: str, account_group_role_name: str, created_date: datetime.datetime, created_by: str):
+        self.account_group_role_uid = account_group_role_uid
+        self.account_group_role_name = account_group_role_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -191,20 +233,45 @@ class account_title_normal_dto(base_read_dto, account_title_write_dto):
 
 
 @dataclass(frozen=False)
+class account_title_assignment_normal_dto(base_read_dto, account_title_assignment_write_dto):
+    account_title_assignment_uid: str
+    account_title_assignment_name: str
+    tenant_uid: str
+    account_title_uid: str
+    account_title_responsibility_uid: str
+    responsibility_description: str
+    responsibility_priority: int
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, account_title_assignment_uid: str, account_title_assignment_name: str, tenant_uid: str, account_title_uid: str, account_title_responsibility_uid: str, responsibility_description: str, responsibility_priority: int, created_date: datetime.datetime, created_by: str):
+        self.account_title_assignment_uid = account_title_assignment_uid
+        self.account_title_assignment_name = account_title_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_title_uid = account_title_uid
+        self.account_title_responsibility_uid = account_title_responsibility_uid
+        self.responsibility_description = responsibility_description
+        self.responsibility_priority = responsibility_priority
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
 class account_title_responsibility_normal_dto(base_read_dto, account_title_responsibility_write_dto):
     account_title_responsibility_uid: str
     account_title_responsibility_name: str
     tenant_uid: str
     account_title_uid: str
+    responsibility_group: str
     responsibility_description: str
     responsibility_priority: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, account_title_responsibility_uid: str, account_title_responsibility_name: str, tenant_uid: str, account_title_uid: str, responsibility_description: str, responsibility_priority: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, account_title_responsibility_uid: str, account_title_responsibility_name: str, tenant_uid: str, account_title_uid: str, responsibility_group: str, responsibility_description: str, responsibility_priority: int, created_date: datetime.datetime, created_by: str):
         self.account_title_responsibility_uid = account_title_responsibility_uid
         self.account_title_responsibility_name = account_title_responsibility_name
         self.tenant_uid = tenant_uid
         self.account_title_uid = account_title_uid
+        self.responsibility_group = responsibility_group
         self.responsibility_description = responsibility_description
         self.responsibility_priority = responsibility_priority
         self.created_date = created_date
@@ -215,12 +282,14 @@ class account_title_responsibility_normal_dto(base_read_dto, account_title_respo
 class account_type_normal_dto(base_read_dto, account_type_write_dto):
     account_type_uid: str
     account_type_name: str
+    class_name: str
     account_type_description: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, account_type_uid: str, account_type_name: str, account_type_description: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, account_type_uid: str, account_type_name: str, class_name: str, account_type_description: str, created_date: datetime.datetime, created_by: str):
         self.account_type_uid = account_type_uid
         self.account_type_name = account_type_name
+        self.class_name = class_name
         self.account_type_description = account_type_description
         self.created_date = created_date
         self.created_by = created_by
@@ -228,17 +297,17 @@ class account_type_normal_dto(base_read_dto, account_type_write_dto):
 
 @dataclass(frozen=False)
 class audit_change_normal_dto(base_read_dto, audit_change_write_dto):
-    system_change_uid: str
-    system_change_name: str
+    audit_change_uid: str
+    audit_change_name: str
     account_uid: str
     audit_type_uid: str
     change_type: str
     change_json: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_change_uid: str, system_change_name: str, account_uid: str, audit_type_uid: str, change_type: str, change_json: str, created_date: datetime.datetime, created_by: str):
-        self.system_change_uid = system_change_uid
-        self.system_change_name = system_change_name
+    def __init__(self, audit_change_uid: str, audit_change_name: str, account_uid: str, audit_type_uid: str, change_type: str, change_json: str, created_date: datetime.datetime, created_by: str):
+        self.audit_change_uid = audit_change_uid
+        self.audit_change_name = audit_change_name
         self.account_uid = account_uid
         self.audit_type_uid = audit_type_uid
         self.change_type = change_type
@@ -564,17 +633,19 @@ class auth_session_normal_dto(base_read_dto, auth_session_write_dto):
     account_uid: str | None
     session_token: str
     browser_name: str
-    browser_: str
+    browser_description: str
+    host_name: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, auth_session_uid: str, auth_session_name: str, tenant_uid: str | None, account_uid: str | None, session_token: str, browser_name: str, browser_: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, auth_session_uid: str, auth_session_name: str, tenant_uid: str | None, account_uid: str | None, session_token: str, browser_name: str, browser_description: str, host_name: str, created_date: datetime.datetime, created_by: str):
         self.auth_session_uid = auth_session_uid
         self.auth_session_name = auth_session_name
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.session_token = session_token
         self.browser_name = browser_name
-        self.browser_ = browser_
+        self.browser_description = browser_description
+        self.host_name = host_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -825,15 +896,17 @@ class client_account_normal_dto(base_read_dto, client_account_write_dto):
     client_uid: str
     account_uid: str
     client_role_uid: str
+    role_comment: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, client_account_uid: str, client_account_name: str, tenant_uid: str, client_uid: str, account_uid: str, client_role_uid: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, client_account_uid: str, client_account_name: str, tenant_uid: str, client_uid: str, account_uid: str, client_role_uid: str, role_comment: str, created_date: datetime.datetime, created_by: str):
         self.client_account_uid = client_account_uid
         self.client_account_name = client_account_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.account_uid = account_uid
         self.client_role_uid = client_role_uid
+        self.role_comment = role_comment
         self.created_date = created_date
         self.created_by = created_by
 
@@ -845,14 +918,18 @@ class client_country_normal_dto(base_read_dto, client_country_write_dto):
     tenant_uid: str
     client_uid: str
     country_uid: str
+    country_priority: int
+    country_comment: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, client_country_uid: str, client_country_name: str, tenant_uid: str, client_uid: str, country_uid: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, client_country_uid: str, client_country_name: str, tenant_uid: str, client_uid: str, country_uid: str, country_priority: int, country_comment: str, created_date: datetime.datetime, created_by: str):
         self.client_country_uid = client_country_uid
         self.client_country_name = client_country_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.country_uid = country_uid
+        self.country_priority = country_priority
+        self.country_comment = country_comment
         self.created_date = created_date
         self.created_by = created_by
 
@@ -990,6 +1067,29 @@ class connection_host_normal_dto(base_read_dto, connection_host_write_dto):
 
 
 @dataclass(frozen=False)
+class connection_tenant_normal_dto(base_read_dto, connection_tenant_write_dto):
+    connection_tenant_uid: str
+    connection_tenant_name: str
+    tenant_uid: str
+    calls_count: int
+    items_count: int
+    request_size: int
+    response_size: int
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, connection_tenant_uid: str, connection_tenant_name: str, tenant_uid: str, calls_count: int, items_count: int, request_size: int, response_size: int, created_date: datetime.datetime, created_by: str):
+        self.connection_tenant_uid = connection_tenant_uid
+        self.connection_tenant_name = connection_tenant_name
+        self.tenant_uid = tenant_uid
+        self.calls_count = calls_count
+        self.items_count = items_count
+        self.request_size = request_size
+        self.response_size = response_size
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
 class connection_user_normal_dto(base_read_dto, connection_user_write_dto):
     connection_user_uid: str
     connection_user_name: str
@@ -1068,12 +1168,14 @@ class currency_normal_dto(base_read_dto, currency_write_dto):
     currency_uid: str
     currency_name: str
     is_focused: int
+    priority: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, currency_uid: str, currency_name: str, is_focused: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, currency_uid: str, currency_name: str, is_focused: int, priority: int, created_date: datetime.datetime, created_by: str):
         self.currency_uid = currency_uid
         self.currency_name = currency_name
         self.is_focused = is_focused
+        self.priority = priority
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1139,7 +1241,7 @@ class event_channel_type_normal_dto(base_read_dto, event_channel_type_write_dto)
 class event_instance_normal_dto(base_read_dto, event_instance_write_dto):
     event_instance_uid: str
     event_instance_name: str
-    client_uid: str
+    tenant_uid: str
     event_type: str
     event_object: str
     event_method: str
@@ -1149,10 +1251,10 @@ class event_instance_normal_dto(base_read_dto, event_instance_write_dto):
     published_count: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, event_instance_uid: str, event_instance_name: str, client_uid: str, event_type: str, event_object: str, event_method: str, event_parameters: str, event_signature: str, event_date: datetime.datetime, published_count: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, event_instance_uid: str, event_instance_name: str, tenant_uid: str, event_type: str, event_object: str, event_method: str, event_parameters: str, event_signature: str, event_date: datetime.datetime, published_count: int, created_date: datetime.datetime, created_by: str):
         self.event_instance_uid = event_instance_uid
         self.event_instance_name = event_instance_name
-        self.client_uid = client_uid
+        self.tenant_uid = tenant_uid
         self.event_type = event_type
         self.event_object = event_object
         self.event_method = event_method
@@ -1196,12 +1298,14 @@ class event_observer_normal_dto(base_read_dto, event_observer_write_dto):
     event_observer_uid: str
     event_observer_name: str
     event_observer_definition: str
+    action_definition: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, event_observer_uid: str, event_observer_name: str, event_observer_definition: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, event_observer_uid: str, event_observer_name: str, event_observer_definition: str, action_definition: str, created_date: datetime.datetime, created_by: str):
         self.event_observer_uid = event_observer_uid
         self.event_observer_name = event_observer_name
         self.event_observer_definition = event_observer_definition
+        self.action_definition = action_definition
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1349,13 +1453,15 @@ class invoice_entry_normal_dto(base_read_dto, invoice_entry_write_dto):
 class invoice_flow_normal_dto(base_read_dto, invoice_flow_write_dto):
     invoice_flow_uid: str
     invoice_flow_name: str
+    class_name: str
     flow_description: str
     flow_definition_json: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, invoice_flow_uid: str, invoice_flow_name: str, flow_description: str, flow_definition_json: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, invoice_flow_uid: str, invoice_flow_name: str, class_name: str, flow_description: str, flow_definition_json: str, created_date: datetime.datetime, created_by: str):
         self.invoice_flow_uid = invoice_flow_uid
         self.invoice_flow_name = invoice_flow_name
+        self.class_name = class_name
         self.flow_description = flow_description
         self.flow_definition_json = flow_definition_json
         self.created_date = created_date
@@ -1367,12 +1473,14 @@ class invoice_flow_state_normal_dto(base_read_dto, invoice_flow_state_write_dto)
     invoice_flow_state_uid: str
     invoice_flow_state_name: str
     invoice_flow_uid: str
+    state_definition_json: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, invoice_flow_state_uid: str, invoice_flow_state_name: str, invoice_flow_uid: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, invoice_flow_state_uid: str, invoice_flow_state_name: str, invoice_flow_uid: str, state_definition_json: str, created_date: datetime.datetime, created_by: str):
         self.invoice_flow_state_uid = invoice_flow_state_uid
         self.invoice_flow_state_name = invoice_flow_state_name
         self.invoice_flow_uid = invoice_flow_uid
+        self.state_definition_json = state_definition_json
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1440,6 +1548,56 @@ class invoice_type_normal_dto(base_read_dto, invoice_type_write_dto):
     def __init__(self, invoice_type_uid: str, invoice_type_name: str, created_date: datetime.datetime, created_by: str):
         self.invoice_type_uid = invoice_type_uid
         self.invoice_type_name = invoice_type_name
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class location_postal_code_normal_dto(base_read_dto, location_postal_code_write_dto):
+    location_postal_code_uid: str
+    location_postal_code_name: str
+    country_uid: str
+    postal_code: str
+    street_name: str
+    city_name: str
+    county_name: str
+    state_name: str
+    region_name: str
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, location_postal_code_uid: str, location_postal_code_name: str, country_uid: str, postal_code: str, street_name: str, city_name: str, county_name: str, state_name: str, region_name: str, created_date: datetime.datetime, created_by: str):
+        self.location_postal_code_uid = location_postal_code_uid
+        self.location_postal_code_name = location_postal_code_name
+        self.country_uid = country_uid
+        self.postal_code = postal_code
+        self.street_name = street_name
+        self.city_name = city_name
+        self.county_name = county_name
+        self.state_name = state_name
+        self.region_name = region_name
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class location_territory_normal_dto(base_read_dto, location_territory_write_dto):
+    location_territory_uid: str
+    location_territory_name: str
+    tenant_uid: str
+    location_postal_code_uid: str
+    territory_latitude: str
+    territory_longitude: str
+    territory_description: str
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, location_territory_uid: str, location_territory_name: str, tenant_uid: str, location_postal_code_uid: str, territory_latitude: str, territory_longitude: str, territory_description: str, created_date: datetime.datetime, created_by: str):
+        self.location_territory_uid = location_territory_uid
+        self.location_territory_name = location_territory_name
+        self.tenant_uid = tenant_uid
+        self.location_postal_code_uid = location_postal_code_uid
+        self.territory_latitude = territory_latitude
+        self.territory_longitude = territory_longitude
+        self.territory_description = territory_description
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1561,14 +1719,16 @@ class process_normal_dto(base_read_dto, process_write_dto):
     tenant_uid: str
     account_uid: str
     process_type_uid: str
+    status_name: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, process_uid: str, process_name: str, tenant_uid: str, account_uid: str, process_type_uid: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, process_uid: str, process_name: str, tenant_uid: str, account_uid: str, process_type_uid: str, status_name: str, created_date: datetime.datetime, created_by: str):
         self.process_uid = process_uid
         self.process_name = process_name
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.process_type_uid = process_type_uid
+        self.status_name = status_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1580,14 +1740,18 @@ class process_run_normal_dto(base_read_dto, process_run_write_dto):
     tenant_uid: str
     account_uid: str
     process_uid: str
+    status_name: str
+    run_time: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, process_run_uid: str, process_run_name: str, tenant_uid: str, account_uid: str, process_uid: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, process_run_uid: str, process_run_name: str, tenant_uid: str, account_uid: str, process_uid: str, status_name: str, run_time: int, created_date: datetime.datetime, created_by: str):
         self.process_run_uid = process_run_uid
         self.process_run_name = process_run_name
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.process_uid = process_uid
+        self.status_name = status_name
+        self.run_time = run_time
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1795,11 +1959,13 @@ class report_content_type_normal_dto(base_read_dto, report_content_type_write_dt
 class report_format_normal_dto(base_read_dto, report_format_write_dto):
     report_format_uid: str
     report_format_name: str
+    class_name: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, report_format_uid: str, report_format_name: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, report_format_uid: str, report_format_name: str, class_name: str, created_date: datetime.datetime, created_by: str):
         self.report_format_uid = report_format_uid
         self.report_format_name = report_format_name
+        self.class_name = class_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1867,15 +2033,34 @@ class report_type_normal_dto(base_read_dto, report_type_write_dto):
 class storage_normal_dto(base_read_dto, storage_write_dto):
     storage_uid: str
     storage_name: str
-    storage_class: str
+    tenant_uid: str
+    account_uid: str
+    storage_type_uid: str
+    storage_category_uid: str
     storage_parameters_json: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, storage_uid: str, storage_name: str, storage_class: str, storage_parameters_json: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, storage_uid: str, storage_name: str, tenant_uid: str, account_uid: str, storage_type_uid: str, storage_category_uid: str, storage_parameters_json: str, created_date: datetime.datetime, created_by: str):
         self.storage_uid = storage_uid
         self.storage_name = storage_name
-        self.storage_class = storage_class
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.storage_type_uid = storage_type_uid
+        self.storage_category_uid = storage_category_uid
         self.storage_parameters_json = storage_parameters_json
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class storage_category_normal_dto(base_read_dto, storage_category_write_dto):
+    storage_category_uid: str
+    storage_category_name: str
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, storage_category_uid: str, storage_category_name: str, created_date: datetime.datetime, created_by: str):
+        self.storage_category_uid = storage_category_uid
+        self.storage_category_name = storage_category_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1901,17 +2086,25 @@ class storage_connection_normal_dto(base_read_dto, storage_connection_write_dto)
 
 @dataclass(frozen=False)
 class storage_query_normal_dto(base_read_dto, storage_query_write_dto):
-    storage_connection_uid: str
-    storage_connection_name: str
+    storage_query_uid: str
+    storage_query_name: str
     storage_uid: str
-    storage_parameters_json: str
+    query_content: str
+    query_parameters_json: str
+    execution_status: str
+    execution_time: int | None
+    execution_rows: int | None
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, storage_connection_uid: str, storage_connection_name: str, storage_uid: str, storage_parameters_json: str, created_date: datetime.datetime, created_by: str):
-        self.storage_connection_uid = storage_connection_uid
-        self.storage_connection_name = storage_connection_name
+    def __init__(self, storage_query_uid: str, storage_query_name: str, storage_uid: str, query_content: str, query_parameters_json: str, execution_status: str, execution_time: int | None, execution_rows: int | None, created_date: datetime.datetime, created_by: str):
+        self.storage_query_uid = storage_query_uid
+        self.storage_query_name = storage_query_name
         self.storage_uid = storage_uid
-        self.storage_parameters_json = storage_parameters_json
+        self.query_content = query_content
+        self.query_parameters_json = query_parameters_json
+        self.execution_status = execution_status
+        self.execution_time = execution_time
+        self.execution_rows = execution_rows
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1921,14 +2114,12 @@ class storage_type_normal_dto(base_read_dto, storage_type_write_dto):
     storage_type_uid: str
     storage_type_name: str
     storage_class: str
-    storage_parameters_json: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, storage_type_uid: str, storage_type_name: str, storage_class: str, storage_parameters_json: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, storage_type_uid: str, storage_type_name: str, storage_class: str, created_date: datetime.datetime, created_by: str):
         self.storage_type_uid = storage_type_uid
         self.storage_type_name = storage_type_name
         self.storage_class = storage_class
-        self.storage_parameters_json = storage_parameters_json
         self.created_date = created_date
         self.created_by = created_by
 
@@ -1990,14 +2181,14 @@ class synchronization_type_normal_dto(base_read_dto, synchronization_type_write_
     synchronization_type_uid: str
     synchronization_type_name: str
     sync_type: str
-    sync_class_came: str
+    sync_class_name: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, synchronization_type_uid: str, synchronization_type_name: str, sync_type: str, sync_class_came: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, synchronization_type_uid: str, synchronization_type_name: str, sync_type: str, sync_class_name: str, created_date: datetime.datetime, created_by: str):
         self.synchronization_type_uid = synchronization_type_uid
         self.synchronization_type_name = synchronization_type_name
         self.sync_type = sync_type
-        self.sync_class_came = sync_class_came
+        self.sync_class_name = sync_class_name
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2006,21 +2197,56 @@ class synchronization_type_normal_dto(base_read_dto, synchronization_type_write_
 class system_attribute_normal_dto(base_read_dto, system_attribute_write_dto):
     system_attribute_uid: str
     system_attribute_name: str
-    system_object_uid: str
+    system_table_uid: str
     column_name: str
     attribute_type: str
+    attribute_category: str
     attribute_label: str
     attribute_description: str
+    ordinal_position: int
+    is_hidden: int
+    is_meta: int
+    is_secret: int
+    is_full_search: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_attribute_uid: str, system_attribute_name: str, system_object_uid: str, column_name: str, attribute_type: str, attribute_label: str, attribute_description: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_attribute_uid: str, system_attribute_name: str, system_table_uid: str, column_name: str, attribute_type: str, attribute_category: str, attribute_label: str, attribute_description: str, ordinal_position: int, is_hidden: int, is_meta: int, is_secret: int, is_full_search: int, created_date: datetime.datetime, created_by: str):
         self.system_attribute_uid = system_attribute_uid
         self.system_attribute_name = system_attribute_name
-        self.system_object_uid = system_object_uid
+        self.system_table_uid = system_table_uid
         self.column_name = column_name
         self.attribute_type = attribute_type
+        self.attribute_category = attribute_category
         self.attribute_label = attribute_label
         self.attribute_description = attribute_description
+        self.ordinal_position = ordinal_position
+        self.is_hidden = is_hidden
+        self.is_meta = is_meta
+        self.is_secret = is_secret
+        self.is_full_search = is_full_search
+        self.created_date = created_date
+        self.created_by = created_by
+
+
+@dataclass(frozen=False)
+class system_constraint_normal_dto(base_read_dto, system_constraint_write_dto):
+    system_constraint_uid: str
+    system_constraint_name: str
+    system_table_uid: str
+    system_attribute_uid: str
+    tenant_uid: str
+    constraint_class: str
+    constraint_params_json: str
+    created_date: datetime.datetime
+    created_by: str
+    def __init__(self, system_constraint_uid: str, system_constraint_name: str, system_table_uid: str, system_attribute_uid: str, tenant_uid: str, constraint_class: str, constraint_params_json: str, created_date: datetime.datetime, created_by: str):
+        self.system_constraint_uid = system_constraint_uid
+        self.system_constraint_name = system_constraint_name
+        self.system_table_uid = system_table_uid
+        self.system_attribute_uid = system_attribute_uid
+        self.tenant_uid = tenant_uid
+        self.constraint_class = constraint_class
+        self.constraint_params_json = constraint_params_json
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2033,15 +2259,19 @@ class system_database_normal_dto(base_read_dto, system_database_write_dto):
     db_host: str
     db_name: str
     db_user: str
+    last_status_name: str
+    last_db_size: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_date: datetime.datetime, created_by: str):
         self.system_database_uid = system_database_uid
         self.system_database_name = system_database_name
         self.db_url = db_url
         self.db_host = db_host
         self.db_name = db_name
         self.db_user = db_user
+        self.last_status_name = last_status_name
+        self.last_db_size = last_db_size
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2094,12 +2324,14 @@ class system_instance_normal_dto(base_read_dto, system_instance_write_dto):
 class system_license_normal_dto(base_read_dto, system_license_write_dto):
     system_license_uid: str
     system_license_name: str
+    class_name: str
     license_description: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_license_uid: str, system_license_name: str, license_description: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, created_date: datetime.datetime, created_by: str):
         self.system_license_uid = system_license_uid
         self.system_license_name = system_license_name
+        self.class_name = class_name
         self.license_description = license_description
         self.created_date = created_date
         self.created_by = created_by
@@ -2111,13 +2343,15 @@ class system_lock_normal_dto(base_read_dto, system_lock_write_dto):
     system_lock_name: str
     lock_account_uid: str
     lock_comment: str
+    lock_reason: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_lock_uid: str, system_lock_name: str, lock_account_uid: str, lock_comment: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_lock_uid: str, system_lock_name: str, lock_account_uid: str, lock_comment: str, lock_reason: str, created_date: datetime.datetime, created_by: str):
         self.system_lock_uid = system_lock_uid
         self.system_lock_name = system_lock_name
         self.lock_account_uid = lock_account_uid
         self.lock_comment = lock_comment
+        self.lock_reason = lock_reason
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2133,44 +2367,6 @@ class system_module_normal_dto(base_read_dto, system_module_write_dto):
         self.system_module_uid = system_module_uid
         self.system_module_name = system_module_name
         self.system_module_description = system_module_description
-        self.created_date = created_date
-        self.created_by = created_by
-
-
-@dataclass(frozen=False)
-class system_object_normal_dto(base_read_dto, system_object_write_dto):
-    system_object_uid: str
-    system_object_name: str
-    system_version_uid: str
-    system_table_uid: str
-    system_object_type_uid: str
-    parent_system_object_uid: str | None
-    object_type: str
-    created_date: datetime.datetime
-    created_by: str
-    def __init__(self, system_object_uid: str, system_object_name: str, system_version_uid: str, system_table_uid: str, system_object_type_uid: str, parent_system_object_uid: str | None, object_type: str, created_date: datetime.datetime, created_by: str):
-        self.system_object_uid = system_object_uid
-        self.system_object_name = system_object_name
-        self.system_version_uid = system_version_uid
-        self.system_table_uid = system_table_uid
-        self.system_object_type_uid = system_object_type_uid
-        self.parent_system_object_uid = parent_system_object_uid
-        self.object_type = object_type
-        self.created_date = created_date
-        self.created_by = created_by
-
-
-@dataclass(frozen=False)
-class system_object_type_normal_dto(base_read_dto, system_object_type_write_dto):
-    system_object_type_uid: str
-    system_object_type_name: str
-    object_type_description: str
-    created_date: datetime.datetime
-    created_by: str
-    def __init__(self, system_object_type_uid: str, system_object_type_name: str, object_type_description: str, created_date: datetime.datetime, created_by: str):
-        self.system_object_type_uid = system_object_type_uid
-        self.system_object_type_name = system_object_type_name
-        self.object_type_description = object_type_description
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2242,12 +2438,16 @@ class system_setting_normal_dto(base_read_dto, system_setting_write_dto):
     system_setting_uid: str
     system_setting_name: str
     setting_value: str
+    setting_type: str
+    is_public: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_setting_uid: str, system_setting_name: str, setting_value: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_setting_uid: str, system_setting_name: str, setting_value: str, setting_type: str, is_public: int, created_date: datetime.datetime, created_by: str):
         self.system_setting_uid = system_setting_uid
         self.system_setting_name = system_setting_name
         self.setting_value = setting_value
+        self.setting_type = setting_type
+        self.is_public = is_public
         self.created_date = created_date
         self.created_by = created_by
 
@@ -2295,17 +2495,35 @@ class system_table_normal_dto(base_read_dto, system_table_write_dto):
     system_table_uid: str
     system_table_name: str
     parent_system_table_uid: str | None
-    key_name: str
+    table_label: str
+    uid_name: str
+    table_group: str
     table_code: str
+    table_type: str
+    table_category: str
+    cardinality: int
+    is_object: int
+    is_rich: int
+    is_tenant: int
+    is_local: int
     table_comment: str
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_table_uid: str, system_table_name: str, parent_system_table_uid: str | None, key_name: str, table_code: str, table_comment: str, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_table_uid: str, system_table_name: str, parent_system_table_uid: str | None, table_label: str, uid_name: str, table_group: str, table_code: str, table_type: str, table_category: str, cardinality: int, is_object: int, is_rich: int, is_tenant: int, is_local: int, table_comment: str, created_date: datetime.datetime, created_by: str):
         self.system_table_uid = system_table_uid
         self.system_table_name = system_table_name
         self.parent_system_table_uid = parent_system_table_uid
-        self.key_name = key_name
+        self.table_label = table_label
+        self.uid_name = uid_name
+        self.table_group = table_group
         self.table_code = table_code
+        self.table_type = table_type
+        self.table_category = table_category
+        self.cardinality = cardinality
+        self.is_object = is_object
+        self.is_rich = is_rich
+        self.is_tenant = is_tenant
+        self.is_local = is_local
         self.table_comment = table_comment
         self.created_date = created_date
         self.created_by = created_by
@@ -2316,17 +2534,21 @@ class system_thread_normal_dto(base_read_dto, system_thread_write_dto):
     system_thread_uid: str
     system_thread_name: str
     thread_name: str
+    thread_id: int
     parent_object: str
     ticks_count: int
+    is_alive: int
     sleep_time: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, system_thread_uid: str, system_thread_name: str, thread_name: str, parent_object: str, ticks_count: int, sleep_time: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, system_thread_uid: str, system_thread_name: str, thread_name: str, thread_id: int, parent_object: str, ticks_count: int, is_alive: int, sleep_time: int, created_date: datetime.datetime, created_by: str):
         self.system_thread_uid = system_thread_uid
         self.system_thread_name = system_thread_name
         self.thread_name = thread_name
+        self.thread_id = thread_id
         self.parent_object = parent_object
         self.ticks_count = ticks_count
+        self.is_alive = is_alive
         self.sleep_time = sleep_time
         self.created_date = created_date
         self.created_by = created_by
@@ -2443,16 +2665,18 @@ class tenant_license_normal_dto(base_read_dto, tenant_license_write_dto):
     system_license_uid: str
     start_date: datetime.datetime
     end_date: datetime.datetime
+    accounts_count: int
     is_approved: int
     created_date: datetime.datetime
     created_by: str
-    def __init__(self, tenant_license_uid: str, tenant_license_name: str, tenant_uid: str, system_license_uid: str, start_date: datetime.datetime, end_date: datetime.datetime, is_approved: int, created_date: datetime.datetime, created_by: str):
+    def __init__(self, tenant_license_uid: str, tenant_license_name: str, tenant_uid: str, system_license_uid: str, start_date: datetime.datetime, end_date: datetime.datetime, accounts_count: int, is_approved: int, created_date: datetime.datetime, created_by: str):
         self.tenant_license_uid = tenant_license_uid
         self.tenant_license_name = tenant_license_name
         self.tenant_uid = tenant_uid
         self.system_license_uid = system_license_uid
         self.start_date = start_date
         self.end_date = end_date
+        self.accounts_count = accounts_count
         self.is_approved = is_approved
         self.created_date = created_date
         self.created_by = created_by

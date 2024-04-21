@@ -20,11 +20,11 @@ class AuthController(BaseController):
         super().__init__()
 
     # get name of base object
-    def get_base_object_type(self) -> str:
-        return "AuthController"
-    # get name of base object
     def get_base_object_name(self) -> str:
         return "AuthController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def get_auth_method(self, session: RequestSession) -> ResponseSession:
         username = session.get_query_or_body_param("username")
@@ -74,11 +74,11 @@ class AuthController(BaseController):
         return services.login_service.produce_hash(session, password)
 
     def myself(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession.ok(session, session.account_permission.to_myself_dict())
+        #session.account_permission
+        return ResponseSession.ok(session, session.to_myself_dict())
 
     def permission_add(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
-
 
     def userinfo(self, session: RequestSession) -> ResponseSession:
         return self.myself(session)

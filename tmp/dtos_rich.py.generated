@@ -1,0 +1,10 @@
+# auto-generated - v_definition_python_dtos_rich - START at 2024-04-21 11:58:41.422031+00
+import datetime
+from datetime import datetime
+from abc import abstractmethod
+from dataclasses import dataclass
+from dto.dtos import *
+from dto.dtos_thin import *
+from dto.dtos_write import *
+from dto.dtos_read import *
+# auto-generated - v_definition_python_dtos_rich - END

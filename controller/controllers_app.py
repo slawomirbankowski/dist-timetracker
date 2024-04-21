@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request, abort, Request, Response
 import logging
 from logging import config
 import base.base_objects
-from base.base_utils import application_start_date
+from base.base_constants import application_start_date
 from service.services import services
 from dao.daos_instances import *
 from dao.daos import daos
@@ -31,7 +31,7 @@ routes_list: list[ControllerRoute] = [
     # service routes
     ControllerRoute("GET:/service/ping", "Just ping to check", controllers.service_controller.ping),
     ControllerRoute("GET:/service/version", "Check version of current application", controllers.service_controller.version),
-    ControllerRoute("GET:/service/dao", "Get DAO", controllers.service_controller.dao, True,{"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/service/dao", "Get DAO", controllers.service_controller.dao, True, {"SystemAdministrator", "ClientAdministrator"}),
     ControllerRoute("GET:/service/connections", "", controllers.service_controller.connections, True),
     ControllerRoute("GET:/service/objects", "", controllers.service_controller.objs, True),
     ControllerRoute("GET:/service/models", "List models", controllers.service_controller.models, True),
@@ -42,6 +42,7 @@ routes_list: list[ControllerRoute] = [
     ControllerRoute("GET:/service/settings-system", "", controllers.service_controller.settings),
 
     # object routes
+    ControllerRoute("GET:/object/info", "", controllers.object_controller.info, True),
     ControllerRoute("GET:/object/count", "", controllers.object_controller.get_object_count, True),
     ControllerRoute("GET:/object/get_list", "", controllers.object_controller.get_objects_list, True),
     ControllerRoute("GET:/object/get_by_uid", "", controllers.object_controller.get_object_by_uid, True),
@@ -72,61 +73,63 @@ routes_list: list[ControllerRoute] = [
     ControllerRoute("GET:/auth/userinfo", "", controllers.auth_controller.userinfo, True),
 
     # client routes
-    ControllerRoute("POST:/client/create", "", controllers.client_controller.create_client, True),
-    ControllerRoute("GET:/client/list", "", controllers.tenant_controller.list_clients, True),
+    ControllerRoute("POST:/client/info", "", controllers.client_controller.info, True),
+    # ControllerRoute("GET:/client/list", "", controllers.client_controller.list_clients, True),
+
+    # competency routes
+    # ControllerRoute("POST:/competency/info", "", controllers.competency_controller.info, True),
+    # ControllerRoute("GET:/competency/list", "", controllers.competency_controller.list_connections(), True),
 
     # connection routes
-    ControllerRoute("POST:/connection/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/connection/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/connection/info", "", controllers.connection_controller.info, True),
+    # ControllerRoute("GET:/connection/list", "", controllers.connection_controller.list_connections, True),
 
     # event routes
-    ControllerRoute("POST:/event/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/event/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/event/info", "", controllers.event_controller.info, True),
+    # ControllerRoute("GET:/event/list", "", controllers.event_controller.list_events, True),
 
     # invoice routes
-    ControllerRoute("POST:/invoice/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/invoice/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/invoice/info", "", controllers.invoice_controller.info, True),
+    #ControllerRoute("GET:/invoice/list", "", controllers.invoice_controller.list_tenants, True),
 
     # monitor routes
-    ControllerRoute("POST:/monitor/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/monitor/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/monitor/info", "", controllers.monitor_controller.info, True),
+    #ControllerRoute("GET:/monitor/list", "", controllers.monitor_controller.list_tenants, True),
 
     # process routes
-    ControllerRoute("POST:/process/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/process/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/process/info", "", controllers.process_controller.info, True),
+    # ControllerRoute("GET:/process/list", "", controllers.process_controller.list_tenants, True),
 
     # project routes
-    ControllerRoute("POST:/project/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/project/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/project/info", "", controllers.project_controller.info, True),
+    # ControllerRoute("GET:/project/list", "", controllers.project_controller.list_tenants, True),
 
     # report routes
-    ControllerRoute("POST:/report/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/report/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/report/info", "", controllers.report_controller.info, True),
+    # ControllerRoute("GET:/report/list", "", controllers.report_controller.list_tenants, True),
 
     # storage routes
-    ControllerRoute("POST:/storage/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/storage/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/storage/info", "", controllers.storage_controller.info, True),
+    # ControllerRoute("GET:/storage/list", "", controllers.storage_controller.list_tenants, True),
 
     # synchronization routes
-    ControllerRoute("POST:/synchronization/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/synchronization/list", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/synchronization/info", "", controllers.synchronization_controller.info, True),
+    # ControllerRoute("GET:/synchronization/list", "", controllers.synchronization_controller.list_tenants, True),
 
     # system routes
-    ControllerRoute("GET:/system/tables_list", "", controllers.auth_controller.userinfo, True),
-    ControllerRoute("GET:/system/table_info", "", controllers.auth_controller.userinfo, True),
+    ControllerRoute("GET:/system/info", "", controllers.system_controller.info, True),
+    # ControllerRoute("GET:/system/table_info", "", controllers.system_controller.userinfo, True),
 
     # tenant routes
-    ControllerRoute("POST:/tenant/create", "", controllers.tenant_controller.create_tenant, True),
-    ControllerRoute("GET:/tenant/register-account", "", controllers.tenant_controller.list_tenants, True),
+    ControllerRoute("POST:/tenant/info", "", controllers.tenant_controller.info, True),
 
     # time routes
-    ControllerRoute("GET:/time/create", "", controllers.auth_controller.userinfo, True),
-    ControllerRoute("GET:/time/create", "", controllers.auth_controller.userinfo, True)
+    ControllerRoute("GET:/time/info", "", controllers.time_controller.info, True)
 ]
 
 # adding routes from list to map
 for route in routes_list:
-    logging.info("-----> Adding route, key: " + route.key)
+    logging.info(f"-----> Adding route, key: {route.key}")
     routes[route.key] = route
 
 
@@ -139,7 +142,7 @@ def route_logic(controller_name: str, method_name: str, http_route: ControllerRo
             request_session = services.create_session_from_request(request, controller_name, method_name)
             if http_route.require_account:
                 if request_session.account_session is None:
-                    return ResponseSession.unauthorized_request(request_session,{"status": "INCORRECT_EXPIRED_OR_NO_TOKEN"})
+                    return ResponseSession.unauthorized_request(request_session, {"status": "INCORRECT_EXPIRED_OR_NO_TOKEN"})
                 else:
                     logging.info("Controller Method with authorization")
                     if request_session.has_roles(http_route.roles):
@@ -162,10 +165,15 @@ def route_logic(controller_name: str, method_name: str, http_route: ControllerRo
 # main route - handle all HTTP endpoints in this application
 @httpflaskapp.route('/api/<controller_name>/<method_name>', methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 def route(controller_name: str, method_name: str) -> Response:
+    # route key is made if method, controller name and method name, example: GET:/auth/token
     key = request.method + ":/" + controller_name + "/" + method_name
     # logging.debug("************************* Finding route for name: " + key + ", routes: " + str(len(routes)) + ", lists: " + str(len(routes_list)) + "keys: " + str(routes.keys()))
     http_route = routes.get(key)
+    # run routing logic
     http_response = route_logic(controller_name, method_name, http_route, request)
+    # just to insert route into DB to table system_request
+    objects.handle_request(http_response)
+    # return full response
     return http_response.get_final_response()
 
 

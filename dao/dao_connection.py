@@ -1,6 +1,8 @@
 import datetime
 import os
 import logging
+from typing import TypeVar, Generic, List, Iterable, Any, Callable, Dict
+from psycopg2.extensions import connection
 from logging import config
 import psycopg2
 import psycopg2.pool
@@ -32,6 +34,7 @@ class DaoConnection(DaoConnectionBase):
         return self.db_name
     def initialize_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str,
                               min_conns: int = 2, max_conns: int = 20):
+        """initialize new DB connection and connect to given URL, host, name with user and password; this is creating new connection pool"""
         self.db_url = db_url
         self.db_host = db_host
         self.db_name = db_name
@@ -72,22 +75,56 @@ class DaoConnection(DaoConnectionBase):
         os.remove(self.liquibase_prop_file)
 
     def initialize_schema(self) -> None:
+        """initialize new Liquibase schema with validating and updating"""
         self.save_liquibase_properties()
         liquibase = Pyliquibase(defaultsFile=self.liquibase_prop_file, jdbcDriversDir="./lib")
-        #logging.info("Initializing Liquibase schema on database: " + self.db_url + ", file: " + self.liquibase_prop_file + ", version: " + liquibase.version)
-        #liquibase.validate()
-        #logging.info("Updating schema - Liquibase")
-        #liquibase.update()
+        logging.info("Initializing Liquibase schema on database: " + self.db_url + ", file: " + self.liquibase_prop_file + ", version: " + liquibase.version)
+        liquibase.validate()
+        logging.info("Updating schema - Liquibase")
+        liquibase.update()
         self.delete_liquibase_properties()
 
-    def get_connection(self):
+    def get_connection(self) -> connection:
+        """get new DB connection; consider using with_connection instead"""
         return self.db_pool.getconn()
 
-    def close(self, db_conn):
+    def close(self, db_conn) -> None:
+        """close this connection; consider using with_connection instead"""
         self.db_pool.putconn(db_conn)
 
-    def get_url(self):
+    def get_url(self) -> str:
+        """get JDBC URL to this DB connection"""
         return self.db_url
+    def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
+        """execute query with parameters and get list of rows as tuples"""
+        logging.debug("Executing SQL query on database, Q=" + query)
+        conn = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        db_cursor.execute(query, params)
+        results = db_cursor.fetchall()
+        db_connections.close(conn)
+        #self.executed_queries = self.executed_queries+1
+        return results
+    def with_connection(self, exec: Callable[[connection], any]) -> any:
+        """execute exec method with connection"""
+        conn = self.get_connection()
+        res = exec(conn)
+        self.close(conn)
+        return res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # DAO connections to main database and all other client databases
@@ -126,6 +163,20 @@ class DaoConnections(DaoConnectionsBase):
         self.db_user = db_user
         self.db_pass = db_pass
         self.initialization_time = datetime.datetime.now()
+    def initialize_main_connection_from_env(self) -> None:
+        db_url = os.environ.get('JDBC_URL')
+        db_host = os.environ.get('JDBC_HOST')
+        db_name = os.environ.get('JDBC_NAME')
+        db_user = os.environ.get('JDBC_USER')
+        db_pass = os.environ.get('JDBC_PASS')
+        logging.info(f"Main database URL ={db_url}, HOST={db_host}, NAME={db_name}, USER={db_user}" )
+        self.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
+
+    def read_python_code(self) -> str | None:
+        self.main_connection.get_connection()
+
+        return ""
+
     # handler for closing application
     def close_connections(self) -> None:
         logging.info("Closing ALL Connections, object_id: " + self.object_id)

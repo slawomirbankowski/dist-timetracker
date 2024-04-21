@@ -14,7 +14,7 @@ from dto.dtos_models import db_models
 from dto.dtos_read import account_division_read_dto
 from dto.dtos_write import account_division_write_dto
 from service.services import services
-from controller.controller_app import start_http_listening
+from controller.controllers_app import start_http_listening
 from controller.controllers import controllers
 
 
@@ -175,8 +175,8 @@ def test_customdao_insert():
     ads.append(account_division_write_dto.random_write())
     #cdao.insert_many(ads)
     #cdao.delete_logical_by_uid("bbb2f039-1c93-464a-9e2a-cb2ae9fd53b0", "me")
-   # cdao.update_single_column_by_uid("29b627a1-9dd3-40ec-b561-7cfb2b9b6cda", "division_description", "NEW DIVISION")
-   # cdao.update_single_column_by_id(3, "division_description", "aaaaaaaa")
+    # cdao.update_single_column_by_uid("29b627a1-9dd3-40ec-b561-7cfb2b9b6cda", "division_description", "NEW DIVISION")
+    # cdao.update_single_column_by_id(3, "division_description", "aaaaaaaa")
 
     dto = cdao.get_item_by_uid("2036ef7d-4caa-4341-9139-2cdefdfec9b5")
     logging.info(dto)
@@ -239,7 +239,7 @@ def testSomething():
     dao.dao_connection.db_connections.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
     # initialize services
     daos.initialize_daos()
-    services.initialize_services()
+    services.initialize()
     controllers.initialize_controllers()
     start_http_listening()
 

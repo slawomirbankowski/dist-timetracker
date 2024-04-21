@@ -17,9 +17,8 @@ import logging
 httpflaskapp: Flask = Flask(__name__)
 
 
-# base object that will be registered in ObjectManager
-# every single object inside app that is not data should extend this class
 class base_object:
+    """base object that will be registered in ObjectManager; every single object inside app that is not data should extend this class"""
     object_id: str
     usage_count: int
     created_date: datetime.datetime
@@ -32,17 +31,20 @@ class base_object:
     # get type of base object
     @abstractmethod
     def get_base_object_type(self) -> str:
+        """get type of this object - that is logical type name like DTO, Dao, Service, Controller"""
         pass
     # get name of base object
     @abstractmethod
     def get_base_object_name(self) -> str:
+        """get friendly name of this object; friendly name is a simple name to identify that object"""
         pass
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {}
     def has_name(self, name: str) -> bool:
         return name == "" or name == type(self).__name__ or name == self.object_id or name == self.get_base_object_type() or name == self.get_base_object_name()
-    # get base information about this object
+
     def get_base_dict_info(self) -> dict[str, any]:
+        """get base information about this object as dictionary with class name, object_id, usages count and many other values"""
         d = {
             "class_name": type(self).__name__,
             "class_qual_name": type(self).__qualname__,
@@ -54,6 +56,7 @@ class base_object:
         }
         d.update(self.get_base_dict_custom_info())
         return d
+
 
 # wrapper for threads used in threading classes
 class ThreadWrapper(base_object):
@@ -74,6 +77,7 @@ class ThreadWrapper(base_object):
     def get_base_object_name(self) -> str:
         return self.object.get_base_object_name()
     def tick(self) -> int:
+        """increment ticks in current thread, ticks are counters per thread to see how many times thread executed runnable funcion"""
         self.ticks_count = self.ticks_count + 1
         return self.ticks_count
     def get_base_dict_custom_info(self) -> dict[str, any]:
@@ -86,6 +90,8 @@ class ThreadWrapper(base_object):
             "ticks_count": self.ticks_count,
             "sleep_time": self.sleep_time
         }
+    def is_thread_active(self) -> int:
+        return 1
 
 
 # base class for all services
@@ -140,7 +146,17 @@ class WatchDog(thread_base):
 class Cleaner(thread_base):
     clean_method: Callable[[int], bool]
     def __init__(self, clean_method: Callable[[int], bool]):
+        super().__init__()
         self.clean_method = clean_method
+    def thread_work(self, tick: int) -> bool:
+        logging.debug("Cleaner is cleaning")
+        return True
+    def get_base_object_type(self) -> str:
+        return "Cleaner"
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return "Cleaner"
+
 
 # main Flask application
 class FlaskApplicationWrapper(base_object):
@@ -162,6 +178,13 @@ class CacheManagerBase(thread_base):
         pass
     def get(self, key: str):
         pass
+    # get type of base object
+    def get_base_object_type(self) -> str:
+        return "CacheManagerBase"
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return "CacheManagerBase"
+
 
 class DaoConnectionBase(base_object):
     def initialize_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str,
@@ -180,7 +203,6 @@ class DaoConnectionsBase(base_object):
     def create_tenant_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
         pass
     def get_connection(self):
-
         pass
     def close_connections(self):
         pass
@@ -232,6 +254,7 @@ class AccountSessionBase:
     token: str
     token_salt: str
     token_hash: str
+    session_load_date: datetime.datetime
     def __init__(self, tenant_uid: str, account_uid: str, token: str, token_salt: str, token_hash: str, valid_till_date: datetime.datetime):
         self.created_date = datetime.datetime.now()
         self.session_id = base.base_utils.get_random_uid()
@@ -242,30 +265,30 @@ class AccountSessionBase:
         self.token_salt = token_salt
         self.token_hash = token_hash
         self.valid_till_date = valid_till_date
+        self.session_load_date = datetime.datetime.now()
+
     def is_valid(self) -> bool:
         return datetime.datetime.now() > self.valid_till_date
 
 
 class AccountPermissionsBase:
     created_date: datetime.datetime
-    valid_till_date: datetime.datetime
     account_uid: str
     account_dto: account_interface_dto
     tenant_dto: tenant_interface_dto
     roles: set[str]
+    permission_load_date: datetime.datetime
     def __init__(self, account_uid: str, account_dto: account_interface_dto, tenant_dto: tenant_interface_dto, roles: set[str]):
         self.created_date = datetime.datetime.now()
         self.account_uid = account_uid
         self.account_dto = account_dto
         self.tenant_dto = tenant_dto
         self.roles = roles
-    def to_myself_dict(self) -> dict:
-        return {"account": asdict(self.account_dto.to_normal()),
-                "tenant": asdict(self.tenant_dto.to_normal()),
-                "roles": list(self.roles)}
+        self.permission_load_date = datetime.datetime.now()
 
 
 class RequestBase:
+    url: str
     method_name: str
     request_id: str
     created_date: datetime.datetime
@@ -276,7 +299,21 @@ class RequestBase:
     account_permission: AccountPermissionsBase | None
     body_as_text: str | None
     body_as_dict: dict | None
+    def get_account_uid(self) -> str | None:
+        if self.account_session is None:
+            return None
+        else:
+            return self.account_session.account_uid
 
+
+class ResponseBase:
+    code: int = 200
+    req_session: RequestBase
+    obj: dict[str, any] | None
+    end_time: datetime.datetime | None
+    error_message: str
+    def request_time_seconds(self) -> float:
+        return (self.req_session.created_date - self.end_time).total_seconds()
 
 # Manager of all objects and threads in application
 class ObjectManager:
@@ -298,7 +335,7 @@ class ObjectManager:
     flask_wrapper: FlaskApplicationWrapper  # flast wrapper
     exception_handler: Callable[[Exception], bool]
     thread_handler: Callable[[ThreadWrapper], bool]
-    request_handler: Callable[[RequestBase], bool]
+    request_handler: Callable[[ResponseBase], bool]
 
     def __init__(self):
         self.created_date = datetime.datetime.now()
@@ -321,6 +358,7 @@ class ObjectManager:
     def register_thread(self, thread: ThreadWrapper) -> None:
         logging.debug("Register Thread in Object Manager, parent: " + self.system_instance_uid + ", object: " + thread.object_id)
         self.threads.append(thread)
+        self.handle_thread(thread)
     def register_event(self, event) -> None:
         logging.debug("Register event ")
     def register_cache(self, cm: CacheManagerBase) -> None:
@@ -355,14 +393,26 @@ class ObjectManager:
         self.exception_handler = exception_handler
     def register_thread_handler(self, thread_handler: Callable[[ThreadWrapper], bool]):
         self.thread_handler = thread_handler
-    def register_request_handler(self, request_handler: Callable[[RequestBase], bool]):
+    def register_request_handler(self, request_handler: Callable[[ResponseBase], bool]):
         self.request_handler = request_handler
     def handle_exception(self, ex: Exception) -> bool:
-        return self.exception_handler(ex)
+        try:
+            return self.exception_handler(ex)
+        except:
+            logging.error("Cannot handle Exception")
+            return False
     def handle_thread(self, ex: ThreadWrapper) -> bool:
-        return self.thread_handler(ex)
-    def handle_request(self, req: RequestBase) -> bool:
-        return self.request_handler(req)
+        try:
+            return self.thread_handler(ex)
+        except:
+            logging.error("Cannot handle Thread")
+            return False
+    def handle_request(self, req: ResponseBase) -> bool:
+        try:
+            return self.request_handler(req)
+        except:
+            logging.error("Cannot handle request")
+            return False
 
 
 # all the most important objects in application

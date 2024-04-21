@@ -126,7 +126,8 @@ class db_model(base_model):
 
     def get_insert_sql(self) -> str:
         return self.insert_attrs_sql
-
+    def get_rich_view_name(self) -> str:
+        return "v_rich_" + self.table_name
     def get_select_all_limit_sql(self, max_rows: int = 1000) -> str:
         return "select * from " + self.table_name + " limit " + str(max_rows)
     def get_select_active_limit_sql(self, max_rows: int = 1000) -> str:
@@ -432,7 +433,7 @@ class base_write_dtos(base_dtos):
     def get_active_dtos(self):
         return list(filter(lambda x: x.is_active == 1, self.dtos))
     # count number of rows in this collection
-    def count_active_only(self):
+    def count_active_only(self) -> int:
         return len(self.get_active_dtos())
     @abstractmethod
     def get_write_dicts(self) -> list[dict]:
@@ -448,7 +449,7 @@ class base_read_dtos(base_write_dtos):
     def __init__(self, dtos: list[base_read_dto]):
         super().__init__(dtos)
         self.dtos = dtos
-    def touch_all(self, updated_by: str = "system"):
+    def touch_all(self, updated_by: str = "system") -> None:
         for dto in self.dtos:
             dto.touch(updated_by)
     @abstractmethod

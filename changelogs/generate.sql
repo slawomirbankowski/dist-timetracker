@@ -1768,7 +1768,7 @@ group by column_name
             <column name="" type="text" />
             <column name="" type="text" defaultValue="System"><constraints nullable="false"/></column>
             <column name="" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_budget_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('project_budget_v01_')"><constraints nullable="false"/></column>
             <column name="" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
             <column name="" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>

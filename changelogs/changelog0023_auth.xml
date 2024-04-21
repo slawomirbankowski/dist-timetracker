@@ -11,16 +11,16 @@
             <column name="auth_identity_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
-            <column name="class_name" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="class_name" type="text" defaultValue=""><constraints nullable="false"/></column>
             <column name="default_parameters_json" type="text" remarks="" defaultValue="{}"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auid_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auid_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -34,7 +34,7 @@
             <column name="auth_identity_tenant_uid" type="text" defaultValueComputed="generate_uid('arat')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_identity_tenant_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="auth_identity_uid" type="text"><constraints nullable="false"/></column>
             <column name="auth_sso_uid" type="text" />
             <!-- attribute columns -->
@@ -42,12 +42,12 @@
             <column name="last_status_name" type="text" defaultValue="Unknown"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auid_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auid_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -60,10 +60,11 @@
 
         <createTable tableName="auth_sso" remarks="single sign on configuration" >
             <column name="auth_sso_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="auth_sso_name" type="text" remarks="single sign on configuration"><constraints nullable="false"/></column>
+            <column name="auth_sso_name" type="text" remarks="single sign on configuration name"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="owner_account_uid" type="text" />
+            <!-- attribute columns -->
             <column name="sso_name" type="text"><constraints nullable="false"/></column>
             <column name="sso_url" type="text"><constraints nullable="false"/></column>
             <column name="sso_key" type="text"><constraints nullable="false"/></column>
@@ -74,12 +75,12 @@
             <column name="callback_url" type="text" />
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auid_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auid_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -95,15 +96,15 @@
             <column name="auth_key_type_name" type="text" remarks=""><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
-            <column name="class_name" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="class_name" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auid_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auid_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -113,11 +114,11 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="auth_key" remarks="description=key for encoding" >
-            <column name="auth_key_uid" type="text" defaultValueComputed="generate_uid('aukey')"><constraints primaryKey="true" nullable="false"/></column>
+        <createTable tableName="auth_key" remarks="key for encoding, decoding, encryption, signatures, ..." >
+            <column name="auth_key_uid" type="text" defaultValueComputed="generate_uid('auke')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_key_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="owner_account_uid" type="text" />
             <column name="auth_key_type_uid" type="text" defaultValue="asymmetric"><constraints nullable="false"/></column>
             <column name="key_private" type="text"><constraints nullable="false"/></column>
@@ -128,12 +129,12 @@
             <column name="key_parameters_json" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aukey_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auke')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -145,23 +146,24 @@
         <createIndex indexName="idx_auth_key_tenant_uid" tableName="auth_key" unique="false"><column name="tenant_uid" /></createIndex>
 
         <createTable tableName="auth_session" remarks="UI sessions in browsers from UI application regarding connected accounts" >
-            <column name="auth_session_uid" type="text" defaultValueComputed="generate_uid('auses')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_session_uid" type="text" defaultValueComputed="generate_uid('ause')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_session_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID" />
+            <column name="tenant_uid" type="text" remarks="tenant UID" />
             <column name="account_uid" type="text" />
             <!-- attribute columns -->
             <column name="session_token" type="text"><constraints nullable="false"/></column>
             <column name="browser_name" type="text"><constraints nullable="false"/></column>
-            <column name="browser_" type="text"><constraints nullable="false"/></column>
+            <column name="browser_description" type="text"><constraints nullable="false"/></column>
+            <column name="host_name" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auses_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('ause')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -177,8 +179,8 @@
             <column name="auth_attempt_uid" type="text" defaultValueComputed="generate_uid('auat')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_attempt_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID" />
-            <column name="account_uid" type="text" />
+            <column name="tenant_uid" type="text" remarks="tenant UID" />
+            <column name="account_uid" type="text" remarks="account UID if found for user name" />
             <!-- attribute columns -->
             <column name="account_login" type="text"><constraints nullable="false"/></column>
             <column name="identity_type" type="text" remarks="type of identity to be translated into class name"><constraints nullable="false"/></column>
@@ -186,12 +188,12 @@
             <column name="last_status_name" type="text" defaultValue="Unknown"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auat_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auat')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -206,7 +208,7 @@
             <column name="auth_token_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_token_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this token"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="token_seq" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
@@ -217,12 +219,12 @@
             <column name="is_last" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auto_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auto_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -239,7 +241,7 @@
             <column name="auth_role_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="parent_auth_role_uid" type="text" remarks="type=fk,parent;description=" />
-            <column name="tenant_uid" type="text" remarks="type=fk;description=optional tenant UID" />
+            <column name="tenant_uid" type="text" remarks="optional tenant UID" />
             <!-- attribute columns -->
             <column name="role_description" type="text" defaultValue=""><constraints nullable="false"/></column>
             <column name="access_uris" type="text" defaultValue=""><constraints nullable="false"/></column>
@@ -249,12 +251,12 @@
             <column name="is_custom" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auro_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auro_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -274,12 +276,12 @@
             <column name="uri" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('auro_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auro_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -304,12 +306,12 @@
             <!-- FKs -->
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aupe_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupe_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -330,12 +332,12 @@
             <column name="user_scope" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aupr_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupr_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -349,7 +351,7 @@
             <column name="auth_password_uid" type="text" defaultValueComputed="generate_uid('aupa')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_password_name" type="text" defaultValueComputed="generate_uid('aupa')"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="password_hash" type="text" remarks="type=secret;description=hash of password including salt"><constraints nullable="false"/></column>
@@ -359,12 +361,12 @@
             <column name="usage_count" type="bigint" defaultValueNumeric="0" remarks="numer of password usages"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aupa_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupa_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -379,7 +381,7 @@
             <column name="auth_password_current_uid" type="text" remarks="account UID" defaultValueComputed="generate_uid('aupc')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_password_current_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="password_hash" type="text" remarks="type=secret;description=hash of password including salt"><constraints nullable="false"/></column>
@@ -389,12 +391,12 @@
             <column name="usage_count" type="bigint" defaultValueNumeric="0" remarks="numer of password usages"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aupc_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupc_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
@@ -409,7 +411,7 @@
             <column name="auth_request_uid" type="text" defaultValueComputed="generate_uid('aure')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_request_name" type="text" defaultValueComputed="generate_uid('aure')"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="type=fk;description=tenant UID"><constraints nullable="false"/></column>
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="requestor_email" type="text"><constraints nullable="false"/></column>
@@ -425,12 +427,12 @@
             <column name="event_notification_uid" type="text" remarks="notification connected to this request" />
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" />
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="replace(concat('aure_v01_', substring(cast(now() as text), 1, 10), '_', substring(cast(uuid_generate_v4() as text), 1, 13)), '-', '_')"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aure_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
             <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
             <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>

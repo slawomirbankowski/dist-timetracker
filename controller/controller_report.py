@@ -17,3 +17,6 @@ class ReportController(BaseController):
     def get_base_object_name(self) -> str:
         return "ReportController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+

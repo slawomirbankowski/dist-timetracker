@@ -9,7 +9,7 @@ from service.services import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 
-# object controller to
+# object controller to table endpoints
 class ObjectController(BaseController):
     #
     def __init__(self):
@@ -17,6 +17,9 @@ class ObjectController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "ObjectController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def get_object_count(self, session: RequestSession) -> ResponseSession:
         logging.info("get_object_by_id")
@@ -44,7 +47,3 @@ class ObjectController(BaseController):
         table_name: str = session.get_query_or_body_param("table_name")
         objs = daos.get_dao_for_table(table_name).select_rows_read_active(100).to_list_dict()
         return ResponseSession.ok(session, {"objects": objs})
-
-    def auth(self):
-        logging.info("Auth")
-        # : dict[str, any]

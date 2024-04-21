@@ -65,7 +65,7 @@
             insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
             values ('Assignment of Administrator role to system tenant', 'System', 'system', 'Administrator');
             insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
-            values ('Assignment of Administrator role to system tenant', 'Test', 'test', 'Administrator');
+            values ('Assignment of Administrator role to system tenant', 'Test', 'test_user', 'Administrator');
         </sql>
 
         <!-- ____________________________ Client table dictionary ____________________________ -->
@@ -88,9 +88,9 @@
 
         <sql splitStatements="false" stripComments="false">
             insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('System', 'System', 'System', 'XX', 'Internal', 'System', 'SYS', 'System client - default one', now(), 1, 1, 0);
+            values ('System', 'System', 'System', 'XX', 'System', 'System', 'SYS', 'System client - default one', now(), 1, 1, 0);
             insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
-            values ('Test', 'Test', 'Test', 'XX', 'Internal', 'Test', 'TST', 'Test client - default one', now(), 1, 1, 0);
+            values ('Test', 'Test', 'Test', 'XX', 'Test', 'Test', 'TST', 'Test client - default one', now(), 1, 1, 0);
         </sql>
 
         <sql splitStatements="false" stripComments="false">
@@ -112,19 +112,20 @@
 
         <sql splitStatements="false" stripComments="false">
             insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
-            values ('Assignment of Administrator role to system client', '', 'System', 'system', 'Administrator');
+            values ('Assignment of Administrator role to system client', 'System', 'System', 'system', 'Administrator');
             insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
-            values ('Assignment of Administrator role to system client', '', 'Test', 'test', 'Administrator');
+            values ('Assignment of Administrator role to system client', 'Test', 'Test', 'test_user', 'Administrator');
         </sql>
 
         <!-- ____________________________ Account table dictionary ____________________________ -->
 
         <sql splitStatements="false" stripComments="false">
-            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('System', 'System account for administrative actions', '');
-            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Person', 'Person account for people logging into application', '');
-            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Client', 'Client account for external API clients', '');
-            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Viewer', 'Viewer account for reporting and validation', '');
-            insert into account_type(account_type_uid, account_type_name, account_type_description) values ('Application', 'Application account for external applications', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('System', 'System account for administrative actions', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Test', 'Test account', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Person', 'Person account for people logging into application', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Client', 'Client account for external API clients', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Viewer', 'Viewer account for reporting and validation', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Application', 'Application account for external applications', '', '');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
@@ -227,7 +228,7 @@
             insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
             values ('test_user', 'test_user', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test3_email}', 'Test account', 1);
             insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
-            values ('test_viewer', 'test_viewer', 'system', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator2_email}', 'System account', 1);
+            values ('test_viewer', 'test_viewer', 'System', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator2_email}', 'System account', 1);
         </sql>
 
         <sql splitStatements="false" stripComments="false">
@@ -288,24 +289,69 @@
 
         <sql splitStatements="false" stripComments="false">
             insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
-            values ('system-main-asymmetric', 'Main asymmetric key for system client', 'System', 'system', 'RSA', '', '', '{}');
+            values ('system-main-asymmetric', 'Main asymmetric key for system client', 'System', 'system', 'asymmetric', '', '', '{}');
             insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
-            values ('system-main-symmetric', 'Main symmetric key for system client', 'System', 'system', 'AES', '', '', '{}');
+            values ('system-main-symmetric', 'Main symmetric key for system client', 'System', 'system', 'asymmetric', '', '', '{}');
             insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
-            values ('test-main-asymmetric', 'Main asymmetric key for test client', 'Test', 'test_administrator', 'RSA', '', '', '{}');
+            values ('test-main-asymmetric', 'Main asymmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '', '', '{}');
             insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
-            values ('test-main-symmetric', 'Main symmetric key for test client', 'Test', 'test_administrator', 'AES', '', '', '{}');
+            values ('test-main-symmetric', 'Main symmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '', '', '{}');
         </sql>
 
         <sql splitStatements="false" stripComments="false">
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ReportManager', 'ReportManager', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('StandardUser', 'StandardUser', '', '', '', 0, 0, 0);
-            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_client, is_custom) values ('Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0);
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_tenant, is_client, is_custom)
+            select 'SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'StandardUser', 'StandardUser', '', '', '', 0, 0, 0, 0
+            union all select 'Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0, 0
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_tenant, is_client, is_custom)
+            select 'AccountAdministrator', 'AccountAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountManager', 'AccountManager', 'manager of , able to perform all possible actions except assigning managers', 'AccountAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountSupervisor', 'AccountSupervisor', 'supervisor of , able to create, edit and delete objects', 'AccountManager', '', 0, 0, 0, 0
+            union all select 'AccountOperator', 'AccountOperator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountCreator', 'AccountCreator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountEditor', 'AccountEditor', 'editor of - able to edit existing objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountViewer', 'AccountViewer', 'viewer of - able to view objects', 'AccountSupervisor', '', 0, 0, 0, 0
+
+            union all select 'AuthAdministrator', 'AuthAdministrator', 'administrator of authentication and authorization, able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthManager', 'AuthManager', 'manager of authentication and authorization, able to perform all possible actions except assigning managers', 'AuthAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthSupervisor', 'AuthSupervisor', 'supervisor of authentication and authorization, able to create, edit and delete objects', 'AuthManager', '', 0, 0, 0, 0
+            union all select 'AuthOperator', 'AuthOperator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthCreator', 'AuthCreator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthEditor', 'AuthEditor', 'editor of authentication and authorization - able to edit existing objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthViewer', 'AuthViewer', 'viewer of authentication and authorization - able to view objects', 'AuthSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ReportAdministrator', 'ReportAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportManager', 'ReportManager', '', 'ReportAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportSupervisor', 'ReportSupervisor', '', 'ReportManager', '', 0, 0, 0, 0
+            union all select 'ReportCreator', 'ReportCreator', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportEditor', 'ReportEditor', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportViewer', 'ReportViewer', '', 'ReportSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'ClientManager', 'ClientManager', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'ClientSupervisor', 'ClientSupervisor', '', 'ClientManager', '', 0, 0, 0, 0
+
+            union all select 'TenantAdministrator', 'TenantAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'TenantManager', 'TenantManager', 'manager of , able to perform all possible actions except assigning managers', 'TenantAdministrator', '', 0, 0, 0, 0
+            union all select 'TenantSupervisor', 'TenantSupervisor', 'supervisor of , able to create, edit and delete objects', 'TenantManager', '', 0, 0, 0, 0
+            union all select 'TenantOperator', 'TenantOperator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantCreator', 'TenantCreator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantEditor', 'TenantEditor', 'editor of - able to edit existing objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantViewer', 'TenantViewer', 'viewer of - able to view objects', 'TenantSupervisor', '', 0, 0, 0, 0
+
+            union all select 'InvoiceAdministrator', 'InvoiceAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'InvoiceManager', 'InvoiceManager', 'manager of , able to perform all possible actions except assigning managers', 'Administrator', '', 0, 0, 0, 0
+            union all select 'InvoiceSupervisor', 'InvoiceSupervisor', 'supervisor of , able to create, edit and delete objects', 'Manager', '', 0, 0, 0, 0
+            union all select 'InvoiceOperator', 'InvoiceOperator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceCreator', 'InvoiceCreator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceEditor', 'InvoiceEditor', 'editor of - able to edit existing objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceViewer', 'InvoiceViewer', 'viewer of - able to view objects', 'Supervisor', '', 0, 0, 0, 0
         </sql>
 
         <sql splitStatements="false" stripComments="false">
@@ -377,7 +423,7 @@
 
         <sql splitStatements="false" stripComments="false">
             insert into project_group(project_group_uid, project_group_name, tenant_uid, project_group_description)
-            values ('System', 'System', 'system', '');
+            values ('System', 'System', 'System', '');
         </sql>
 
         <!-- ____________________________ Time table dictionary ____________________________ -->

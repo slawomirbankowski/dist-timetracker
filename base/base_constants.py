@@ -1,7 +1,13 @@
 import datetime
 import uuid
 import random
+import logging
+from logging import config
 
+application_start_date = datetime.datetime.now()
+logging.config.fileConfig('logging.conf')
+logging.info(f"=================================================== STARTING at {str(application_start_date)} ")
+logging.info("Initializing Logging in application")
 
 class SystemVersions:
     FirstVersion: str = "1.0.0"

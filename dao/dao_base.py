@@ -1,7 +1,9 @@
 from typing import TypeVar, Generic, List, Iterable, Any, Callable, Dict
 import logging
 from logging import config
+from psycopg2.extensions import connection, cursor
 import dao.dao_connection
+from base.base_utils import tuple_to_dict
 from dto.dtos import *
 from dto.dtos_read import *
 from dto.dtos_write import *
@@ -9,12 +11,14 @@ from base.base_objects import base_object
 
 db_connections = dao.dao_connection.db_connections
 
+
 class ConnectionCursorWrapper:
-    db_connection: any
-    cursor: any
-    def __init__(self, db_connection: any, cursor: any):
+    db_connection: connection
+    db_cursor: cursor
+    def __init__(self, db_connection: connection, db_cursor: cursor):
         self.db_connection = db_connection
-        self.cursor = cursor
+        self.db_cursor = db_cursor
+
 
 class QueryWithParams:
     query: str
@@ -22,12 +26,147 @@ class QueryWithParams:
     def __init__(self, query: str, params: Iterable = []):
         self.query = query
         self.params = params
+
+
 class QueriesWithParams:
         queries: list[QueryWithParams]
 
 
+class simple_dao(base_object):
+    executed_queries: int  # number of executed queries in this DAO
+    def __init__(self):
+        super().__init__()
+        self.executed_queries = 0
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return "simple_dao"
+    # get type of base object
+    def get_base_object_type(self) -> str:
+        return "Dao"
+    def with_connection_commit(self, execution: Callable[[ConnectionCursorWrapper], any]) -> any:
+        conn = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        wrp = ConnectionCursorWrapper(conn, db_cursor)
+        result = execution(wrp)
+        conn.commit()
+        db_connections.close(conn)
+        return result
+
+    def with_connection_select(self, execution: Callable[[ConnectionCursorWrapper], any]) -> any:
+        conn = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        wrp = ConnectionCursorWrapper(conn, db_cursor)
+        result = execution(wrp)
+        db_connections.close(conn)
+        return result
+
+    def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
+        logging.debug("Executing SQL query on database, Q=" + query)
+        conn = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        db_cursor.execute(query, params)
+        # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        # print(str(type(db_cursor)))
+        # print(str(type(db_cursor).__name__))
+        results = db_cursor.fetchall()
+        db_connections.close(conn)
+        self.executed_queries = self.executed_queries+1
+        return results
+
+    def execute_query(self, query: str, params: Iterable = []) -> int:
+        logging.debug("Executing SQL query on database with parameters, Q=" + query)
+        #self.with_connection_commit(lambda conn, curs: cursor.execute(query, params))
+        conn = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        db_cursor.execute(query, params)
+        conn.commit()
+        results = db_cursor.rowcount
+        db_connections.close(conn)
+        self.executed_queries = self.executed_queries+1
+        return results
+
+    def execute_queries(self, query: str, params: list[Iterable]) -> int:
+        logging.debug("Executing SQL queries on database with many parameters, Q=" + query)
+        conn: connection = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        for param in params:
+            db_cursor.execute(query, param)
+        conn.commit()
+        results = db_cursor.rowcount
+        db_connections.close(conn)
+        # self.executed_queries = self.executed_queries+1
+        return results
+
+    def execute_queries_no_params(self, queries: list[str], do_commit: bool = False) -> int:
+        logging.debug("Executing SQL queries on database without parameters, cnt=" + str(len(queries)))
+        conn: connection = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        for query in queries:
+            logging.info("Executing NEXT query: \n" + query)
+            db_cursor.execute(query)
+        if do_commit:
+            conn.commit()
+        results = db_cursor.rowcount
+        db_connections.close(conn)
+        # self.executed_queries = self.executed_queries+1
+        return results
+
+    def get_single_row(self, query: str, params: Iterable = []) -> tuple | None:
+        tuples = self.get_objects(query, params)
+        if len(tuples)>0:
+            return tuples[0]
+        else:
+            return None
+    def get_single_row_as_dict(self, query: str, params: Iterable = []) -> dict | None:
+        row = self.get_single_row(query, params)
+        if row is None:
+            return None
+        else:
+            return tuple_to_dict(row)
+
+    def get_single_value_int_or_default(self, query: str, default_value: int = 0, params: Iterable = [], col_num: int=0) -> int:
+        t: tuple = self.get_single_row(query, params)
+        if t is None:
+            return default_value
+        else:
+            return int(t[col_num])
+    def get_single_value(self, query: str, col_num: int=0) -> Any | None:
+        t: tuple = self.get_single_row(query)
+        if t is None:
+            return None
+        else:
+            return t[col_num]
+    # get single column
+    def get_column_values_by_params(self, query: str, params: Iterable = [], col_num: int = 0) -> list[str]:
+        tuples = self.get_objects(query, params)
+        return list(map(lambda x: str(x[col_num]), tuples))
+    # get all values for given query and column number
+    def get_column_values_all(self, query: str, params: Iterable = [], col_num: int = 0) -> list[any]:
+        tuples = self.get_objects(query, params)
+        return list(map(lambda x: str(x[col_num]), tuples))
+    def get_single_value_or_default(self, query: str, default_value: any, params: Iterable = [], col_num: int=0) -> Any:
+        t: tuple = self.get_single_row(query, params)
+        if t is None:
+            return default_value
+        else:
+            return t[col_num]
+
+    def create_rich_views(self) -> None:
+        """create rich views in main database - rich views are from objects and foreign tables"""
+        logging.info("Applying RICH views SQL DDL to database")
+        views_ddls = db_models.generate_all_rich_views_sql_ddl()
+        self.execute_queries_no_params(views_ddls, True)
+    def drop_rich_views(self) -> None:
+        drop_ddls = db_models.generate_rich_view_drops()
+        logging.info("Dropping RICH views SQL DDL on database")
+        self.execute_queries_no_params(drop_ddls, True)
+    def replace_rich_views(self) -> None:
+        logging.info("Replacing RICH views SQL DDL on database - DROP then CREATE")
+        self.drop_rich_views()
+        self.create_rich_views()
+
 # base DAO class for all DAOs
-class base_dao(base_object):
+class base_dao(simple_dao):
     executed_queries: int  # number of executed queries in this DAO
     def __init__(self):
         super().__init__()
@@ -42,90 +181,6 @@ class base_dao(base_object):
     @abstractmethod
     def get_model(self) -> db_model:
         pass
-
-    def with_connection_commit(self, execution: Callable[[any, any], any]):
-        conn = db_connections.get_connection()
-        cursor = conn.cursor()
-        ConnectionCursorWrapper(conn, cursor)
-
-        result = execution(conn, cursor)
-        conn.commit()
-        db_connections.close(conn)
-        return result
-    def with_connection_select(self, execution: Callable[[any, any], any]):
-        conn = db_connections.get_connection()
-        cursor = conn.cursor()
-        result = execution(conn, cursor)
-        conn.commit()
-        db_connections.close(conn)
-        return result
-
-    def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
-        logging.debug("Executing SQL query on database, Q=" + query)
-        conn = db_connections.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        results = cursor.fetchall()
-        db_connections.close(conn)
-        #self.executed_queries = self.executed_queries+1
-        return results
-
-    def execute_query(self, query: str, params: Iterable = []) -> int:
-        logging.debug("Executing SQL query on database with parameters, Q=" + query)
-        #self.with_connection_commit(lambda conn, curs: cursor.execute(query, params))
-        conn = db_connections.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        conn.commit()
-        results = cursor.rowcount
-        db_connections.close(conn)
-       # self.executed_queries = self.executed_queries+1
-        return results
-
-    def execute_queries(self, query: str, params: list[Iterable]) -> int:
-        logging.debug("Executing SQL queries on database with many parameters, Q=" + query)
-        conn = db_connections.get_connection()
-        cursor = conn.cursor()
-        for param in params:
-            cursor.execute(query, param)
-        conn.commit()
-        results = cursor.rowcount
-        db_connections.close(conn)
-       # self.executed_queries = self.executed_queries+1
-        return results
-
-    def get_single_row(self, query: str, params: Iterable = []) -> tuple | None:
-        tuples = self.get_objects(query, params)
-        if len(tuples)>0:
-            return tuples[0]
-        else:
-            return None
-    def get_single_value_int_or_default(self, query: str, default_value: int = 0, params: Iterable = [], col_num: int=0) -> int:
-        tuple = self.get_single_row(query, params)
-        if tuple is None:
-            return default_value
-        else:
-            return int(tuple[col_num])
-    def get_single_value(self, query: str, col_num: int=0) -> Any | None:
-        tuple = self.get_single_row(query)
-        if tuple is None:
-            return None
-        else:
-            return tuple[col_num]
-    # get single column
-    def get_column_values_by_params(self, query: str, params: Iterable, col_num: int=0) -> list[str]:
-        tuples = self.get_objects(query, params)
-        return list(map(lambda x: str(x[col_num]), tuples))
-    # get all values for given query and column number
-    def get_column_values_all(self, query: str, params: Iterable=[], col_num: int=0) -> list[any]:
-        tuples = self.get_objects(query, params)
-        return list(map(lambda x: str(x[col_num]), tuples))
-    def get_single_value_or_default(self, query: str, default_value: any, params: Iterable = [], col_num: int=0) -> Any:
-        tuple = self.get_single_row(query, params)
-        if tuple is None:
-            return default_value
-        else:
-            return tuple[col_num]
 
     def select_uids_all(self, n: int = 1000) -> list[str]:
         return self.get_column_values_all(self.get_model().get_select_all_uids(n))

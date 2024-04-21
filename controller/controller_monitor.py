@@ -18,6 +18,9 @@ class MonitorController(BaseController):
     def get_base_object_name(self) -> str:
         return "MonitorController"
 
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
+
     def create_monitor(self, session: RequestSession) -> ResponseSession:
         return ResponseSession.not_implemented(session)
 
