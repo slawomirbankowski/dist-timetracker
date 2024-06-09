@@ -12,15 +12,6 @@ from base.base_objects import base_object, AccountSessionBase, objects, AccountP
 from base.base_utils import get_random_uid_with_prefix, get_random_uid_long_with_prefix
 
 
-#
-class BaseController(base_object):
-    def __init__(self):
-        super().__init__()
-    # get type of base object
-    def get_base_object_type(self) -> str:
-        return "Controller"
-
-
 @dataclass(frozen=False)
 class ResponseSessionError:
     code: int
@@ -29,6 +20,7 @@ class ResponseSessionError:
 
 # request HTTP
 class RequestSession(RequestBase):
+    """full HTTP request object with url, headers, cookies, parameters, body"""
     request: Request
     url: str
     controller_name: str
@@ -171,13 +163,13 @@ class RequestSession(RequestBase):
                 "session_id": self.account_session.session_id}
 
 
-# full HTTP response
 class ResponseSession(ResponseBase):
-    code: int = 200
-    req_session: RequestSession
-    obj: dict[str, any] | None
-    end_time: datetime.datetime | None
-    error_message: str
+    """full HTTP response"""
+    code: int = 200  # full HTTP code of response
+    req_session: RequestSession  # connected request session object
+    obj: dict[str, any] | None  # object to be returned
+    end_time: datetime.datetime | None  # end time of that response
+    error_message: str  # test error message
 
     def __init__(self, req_session: RequestSession, obj: dict[str, any] | None = None, code: int = 200, error_message: str = ""):
         self.req_session = req_session
@@ -202,10 +194,6 @@ class ResponseSession(ResponseBase):
         res = jsonify(final_obj)
         res.status_code = self.code
         return res
-        #if self.code >=200 and self.code<300:
-        #    return jsonify(final_obj)
-        #else:
-        #   return res
 
     @classmethod
     def ok(cls, req_session: RequestSession, obj: dict[str, any] = {}):
@@ -245,13 +233,39 @@ class ResponseSession(ResponseBase):
     def set_end_time(self):
         self.end_time = datetime.datetime.now()
 
+class BaseController(base_object):
+    """base class for controllers to have HTTP endpoints"""
+    requests_count: int
+    last_use_date = datetime.datetime
+    def __init__(self):
+        super().__init__()
+        self.requests_count = 0
+        self.last_use_date = datetime.datetime.now()
+    # get type of base object
+    def get_base_object_type(self) -> str:
+        return "Controller"
+
+    def use(self) -> None:
+        """"""
+        self.requests_count += 1
+        self.last_use_date = datetime.datetime.now()
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        i = self.get_base_dict_info()
+        i.update({
+            "requests_count": self.requests_count,
+            "last_use_date": str(self.last_use_date)
+        })
+        return ResponseSession.ok(session, i)
+
 
 class ControllerRoute(base_object):
-    key: str
-    route_description: str
-    controller_method: Callable[[RequestSession], ResponseSession]
-    require_account: bool
-    roles: set[str]
+    """single route to be executed in controllers - route has key, description and method to be executed; authorization might be required with list of roles"""
+    key: str  # key for request like GET:/auth/login
+    route_description: str  # friendly description of this route
+    controller_method: Callable[[RequestSession], ResponseSession]  # controller method to be run
+    require_account: bool  # if that route requires valid token representing an account
+    roles: set[str]  # list of high-level roles needed to run this method
     def __init__(self, key: str, route_description: str, controller_method: Callable[[RequestSession], ResponseSession], require_account: bool = False, roles: set[str] = []):
         super().__init__()
         self.key = key

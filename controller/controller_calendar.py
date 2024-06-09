@@ -9,9 +9,8 @@ from service.services import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 
-# calendar controller
 class CalendarController(BaseController):
-    #
+    """calendar controller"""
     def __init__(self):
         super().__init__()
     # get name of base object

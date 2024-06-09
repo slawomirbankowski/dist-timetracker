@@ -3,13 +3,15 @@ import datetime
 from datetime import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
+
+from base.base_interfaces import *
 from dto.dtos import *
 from dto.dtos_thin import *
 from dto.dtos_write import *
 
 
 @dataclass(frozen=False)
-class account_read_dto(base_read_dto, account_write_dto):
+class account_read_dto(base_read_dto, account_write_dto, account_interface_dto):
     account_uid: str
     account_name: str
     tenant_uid: str

@@ -3,7 +3,7 @@ import logging
 from logging import config
 from psycopg2.extensions import connection, cursor
 import dao.dao_connection
-from base.base_utils import tuple_to_dict
+from base.base_utils import tuple_to_dict, create_empty_list
 from dto.dtos import *
 from dto.dtos_read import *
 from dto.dtos_write import *
@@ -13,6 +13,7 @@ db_connections = dao.dao_connection.db_connections
 
 
 class ConnectionCursorWrapper:
+    """wrapper class over connection with cursor to DB"""
     db_connection: connection
     db_cursor: cursor
     def __init__(self, db_connection: connection, db_cursor: cursor):
@@ -21,6 +22,7 @@ class ConnectionCursorWrapper:
 
 
 class QueryWithParams:
+    """single query with parameters to be executed on database"""
     query: str
     params: Iterable
     def __init__(self, query: str, params: Iterable = []):
@@ -29,10 +31,12 @@ class QueryWithParams:
 
 
 class QueriesWithParams:
-        queries: list[QueryWithParams]
+    """many queries with parameters on database"""
+    queries: list[QueryWithParams]
 
 
 class simple_dao(base_object):
+    """simple dao without any model defined, to run queries"""
     executed_queries: int  # number of executed queries in this DAO
     def __init__(self):
         super().__init__()
@@ -44,6 +48,7 @@ class simple_dao(base_object):
     def get_base_object_type(self) -> str:
         return "Dao"
     def with_connection_commit(self, execution: Callable[[ConnectionCursorWrapper], any]) -> any:
+        """execute method with connection - before execution connection is opened and after execution connection is closed"""
         conn = db_connections.get_connection()
         db_cursor = conn.cursor()
         wrp = ConnectionCursorWrapper(conn, db_cursor)
@@ -61,6 +66,7 @@ class simple_dao(base_object):
         return result
 
     def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
+        """get list of tuples from database for given query and parameters"""
         logging.debug("Executing SQL query on database, Q=" + query)
         conn = db_connections.get_connection()
         db_cursor = conn.cursor()
@@ -73,7 +79,8 @@ class simple_dao(base_object):
         self.executed_queries = self.executed_queries+1
         return results
 
-    def execute_query(self, query: str, params: Iterable = []) -> int:
+    def execute_query(self, query: str, params: Iterable = ()) -> int:
+        """execute single query """
         logging.debug("Executing SQL query on database with parameters, Q=" + query)
         #self.with_connection_commit(lambda conn, curs: cursor.execute(query, params))
         conn = db_connections.get_connection()
@@ -86,11 +93,25 @@ class simple_dao(base_object):
         return results
 
     def execute_queries(self, query: str, params: list[Iterable]) -> int:
+        """execute query with list of parameter sets """
         logging.debug("Executing SQL queries on database with many parameters, Q=" + query)
         conn: connection = db_connections.get_connection()
         db_cursor = conn.cursor()
         for param in params:
             db_cursor.execute(query, param)
+        conn.commit()
+        results = db_cursor.rowcount
+        db_connections.close(conn)
+        # self.executed_queries = self.executed_queries+1
+        return results
+
+    def execute_queries_many(self, queries: list[QueryWithParams]) -> int:
+        """execute many queries - each with different query and parameters"""
+        logging.debug("Executing SQL queries on database with many parameters")
+        conn: connection = db_connections.get_connection()
+        db_cursor = conn.cursor()
+        for qp in queries:
+            db_cursor.execute(qp.query, qp.params)
         conn.commit()
         results = db_cursor.rowcount
         db_connections.close(conn)
@@ -165,8 +186,9 @@ class simple_dao(base_object):
         self.drop_rich_views()
         self.create_rich_views()
 
-# base DAO class for all DAOs
+
 class base_dao(simple_dao):
+    """base DAO class for all DAOs"""
     executed_queries: int  # number of executed queries in this DAO
     def __init__(self):
         super().__init__()

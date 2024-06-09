@@ -80,19 +80,19 @@ class CacheManager(CacheManagerBase):
         item = CacheItem(key, obj, ttl_seconds, method)
         self.cache_items[key] = item
     def get(self, key: str) -> CacheItem | None:
-        item = self.cache_items[key]
-        if item is None:
-            return None
+        if self.cache_items.__contains__(key):
+            return  self.cache_items[key]
         else:
-            return item
+            return None
+
     # work in separated thread
     def thread_work(self, tick: int) -> bool:
         # TODO: check inactive cache items
         return True
-    def with_cache(self, key: str, method: Callable, ttl: int = 60) -> any:
+    def with_cache(self, key: str, method: Callable[[str], any], ttl: int = 60) -> any:
         item: CacheItem | None = self.get(key)
         if item is None or item.is_old():
-            obj = method()
+            obj = method(key)
             self.put(key, obj, method, ttl)
             return obj
         else:
@@ -100,3 +100,4 @@ class CacheManager(CacheManagerBase):
 
 
 cache = CacheManager()
+# cache.with_cache("", lambda x: x*2)

@@ -16,9 +16,11 @@ from dao.daos import daos
 class PermissionService(service_thread_base):
     def __init__(self):
         super().__init__()
+
     # get name of base object
     def get_base_object_name(self) -> str:
         return "PermissionService"
+
     def get_permissions(self):
         logging.info("Permissions")
 

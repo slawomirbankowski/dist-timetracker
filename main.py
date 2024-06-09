@@ -15,6 +15,9 @@ from dto.dtos_models import db_models
 from service.services import services
 from controller.controllers_app import start_http_listening
 from controller.controllers import controllers
+from custom.identity_type import *
+from custom.identity_type import identity_types
+import custom
 
 
 def main_application() -> None:
@@ -56,41 +59,60 @@ def generate_files() -> None:
         f.close()
         daos.dao.create_rich_views()
 
+
 def rich_views_replace():
     dao.dao_connection.db_connections.initialize_main_connection_from_env()
     daos.dao.replace_rich_views()
 
+
+class MyTestClass:
+    def __init__(self):
+        print("START CLASS MY TEST CLASS")
+
+
 def test():
     print("TEST")
+
+    #x = globals()[]
+    x = type("MyTestClass")
+    z = x()
+
+    print(str(type(x)))
+    print(str(type(x).__name__))
+    print(str(x.__name__))
+
+    print(str(type(z)))
+    print(str(type(z).__name__))
+
+    c = globals()["MyTestClass"]
+    print(str(type(c)))
+    print(str(type(c).__name__))
+    cc = c()
+    print(str(type(cc)))
+    print(str(type(cc).__name__))
+
+    v = eval("MyTestClass()")
+    print(str(type(v)))
+    print(str(type(v).__name__))
+
+    aa = getattr(custom.identity_type.identity_types, "IdentityTypeOAuth")
+    aaa = aa()
+
+    print(str(type(aa)))
+    print(str(type(aa).__name__))
+
+    print(str(type(aaa)))
+    print(str(type(aaa).__name__))
+
+    #  cache.with_cache("ddd", lambda y: y*1)
+    #for k in globals():
+    #    logging.info("Key= " + k)
 
 
 if __name__ == '__main__':
     print("START")
-    main_application()
-
-    # logging.info("Info log")
-    # logging.debug("Debug log log")
-    # logging.warning("Warning log log")
-    # objects.initialize()
-    # cache.initialize()
-    # db_models.initialize()
-    # db_models.generate_rich_view(db_models.account_instance_model)
-    # db_models.print_all_rich_views()
-    # conn = dao.dao_connection.db_connections.get_connection()
     #generate_files()
-    #dao.dao_connection.db_connections.initialize_main_connection_from_env()
-    #daos.dao.replace_rich_views()
-
-
-    # daos.dao.with_connection_select(lambda wrp: wrp.)
-    # print(str(type(conn)))
-    # print(str(type(conn).__name__))
-    #
-    #dao.dao_connection.db_connections.get_connection()
-    #row = daos.dao.get_single_row("select * from system_instance limit 1")
-    # daos.dao.with_connection_select()
-    #print(len(rows))
-    #dao.dao_connection.db_connections.read_python_code("select python from v_definition_python_dtos_write")
+    main_application()
 
 
 def exit_handler():

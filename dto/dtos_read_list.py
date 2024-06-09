@@ -19,6 +19,7 @@ class account_read_dtos(base_read_dtos):
     def __init__(self, dtos: list[account_read_dto]):
         super().__init__(dtos)
         self.dtos = dtos
+
     @classmethod
     def empty_list(cls):
         return cls(list())

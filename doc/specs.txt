@@ -16,8 +16,17 @@
 - authentication - parsing token and producing account session object - DONE
 - create Service to get one full object by UID - DONE
 - insert threads into system_thread - DONE
+- DB - system_table - add system tables - DONE
 
-- DB - system_table - add system tables
+- Tenant REST endpoints - TO_DO
+- Account REST endpoints - TO_DO
+- Auth REST endpoints - TO_DO
+
+
+http://localhost/app/* -> UI
+http://localhost/auth/* -> login page
+http://localhost/api/* -> backend
+http://localhost/ -> redirection to /
 
 - DB - system_attribute - ordinal_position, field_category, is_hidden, is_meta, is_secret, is_full_search, is_
 - DB - add HR tables
@@ -34,8 +43,9 @@
 - DTO - add mask() method to mask/hide data to be shown to UI
 
 - DTO - implement custom attributes for read_dto classes
-
 - NORMAL DTOs - generate from DB
+
+
 - Implement Full DTOs with links and additional information around object with metadata
 - system_attribute with search columns - model with search generation
 - base_dto, base_read_dto, base_write_dto - move to base folder
@@ -141,6 +151,7 @@ get_custom_attributes_dict(): dict[str, any]
     t_service
 
     t_controller
+
 
 
 

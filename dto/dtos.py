@@ -441,6 +441,25 @@ class base_write_dtos(base_dtos):
     @abstractmethod
     def find_by_uid(self, uid: str):
         pass
+    # convert DTO into dictionary based on key and name attributes
+    def to_dict_by_key_name(self, key: str, name: str) -> dict[str, str]:
+        d = {}
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d[dd[key]] = dd[name]
+        return d
+    def to_list_by_name(self, name: str) -> list[str]:
+        d = []
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d.append(dd[name])
+        return d
+    def to_set_by_name(self, name: str) -> set[str]:
+        d = set()
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d.add( dd[name])
+        return d
 
 
 # helper class to store list of read items

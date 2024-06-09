@@ -14,6 +14,7 @@ from service.service_invoice import InvoiceService
 from service.service_key import KeyService
 from service.service_login import *
 from service.service_permission import PermissionService
+from service.service_role import RoleService
 from service.service_system_state import SystemStateService
 from service.services_base_list import service_list_base
 from service.service_object import *
@@ -27,14 +28,16 @@ class service_list(service_list_base):
     account_service = AccountService()
     calendar_service = CalendarService()
     client_service = ClientService()
-    competecy_service = CompetencyService()
+    competency_service = CompetencyService()
     connection_service = ConnectionService()
     event_service = EventService()
     invoice_service = InvoiceService()
     key_service = KeyService()
     login_service = LoginService()
+    role_service = RoleService()
     permission_service = PermissionService()
     state_service = SystemStateService()
+
     def __init__(self):
         super().__init__()
     # get type of base object
@@ -43,18 +46,27 @@ class service_list(service_list_base):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "service_list"
+
     # initialize all services
     def initialize(self) -> None:
         logging.debug("Initializing services after DB connections")
+        self.account_service.initialize_thread()
+        self.calendar_service.initialize_thread()
+        self.client_service.initialize_thread()
+        self.competency_service.initialize_thread()
+        self.connection_service.initialize_thread()
         self.login_service.initialize()
         self.permission_service.initialize()
         self.key_service.initialize()
         self.state_service.initialize()
+        self.role_service.initialize()
         self.register_all_services()
+        # TODO: roles with hierarchy
 
     # handler for closing application
     def close(self) -> None:
         logging.info("Closing services")
+        # self.login_service.close()
 
     def get_permissions_by_account(self, account_uid: str) -> AccountPermissionsBase:
         perm_set = AccountPermissionsBase(account_uid)
@@ -67,8 +79,10 @@ class service_list(service_list_base):
             account_dto = daos.account_dao_instance.select_row_read_by_uid(account_session.account_uid)
             tenant_dto = daos.tenant_dao_instance.select_row_read_by_uid(account_session.tenant_uid)
             perms = daos.auth_permission_dao_instance.select_rows_read_by_account_uid(account_session.account_uid)
+
             # perms.dtos
             roles = perms.filter(lambda dto: dto.is_active == 1).map_to_string(lambda dto: dto.auth_role_uid)
+
             account_permission = AccountPermissionsBase(account_session.account_uid, account_dto, tenant_dto, set(roles))
         else:
             logging.debug("Got permissions in memory for account: " + account_session.account_uid)
