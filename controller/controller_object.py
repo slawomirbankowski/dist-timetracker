@@ -19,6 +19,7 @@ class ObjectController(BaseController):
         return "ObjectController"
 
     def info(self, session: RequestSession) -> ResponseSession:
+
         return ResponseSession.not_implemented(session)
 
     def get_object_count(self, session: RequestSession) -> ResponseSession:

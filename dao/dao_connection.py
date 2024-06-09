@@ -11,8 +11,8 @@ from pyliquibase import Pyliquibase
 from base.base_objects import base_object, DaoConnectionBase, DaoConnectionsBase, objects
 
 
-# DaoConnection with DBCP to Postgres database
 class DaoConnection(DaoConnectionBase):
+    """DaoConnection with DBCP to Postgres database"""
     db_url: str
     db_host: str
     db_name: str = "timetracker"
@@ -28,7 +28,6 @@ class DaoConnection(DaoConnectionBase):
     # get type of base object
     def get_base_object_type(self) -> str:
         return "Connection"
-
     # get name of base object
     def get_base_object_name(self) -> str:
         return self.db_name
@@ -148,9 +147,11 @@ class DaoConnections(DaoConnectionsBase):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "DaoConnections"
+
     # get type of base object
     def get_base_object_type(self) -> str:
         return "Connections"
+
     # initialize DB connection to main database
     def initialize_main_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str) -> None:
         logging.debug("Initializing DaoConnections: main connection, object_id: " + self.object_id)
@@ -163,6 +164,7 @@ class DaoConnections(DaoConnectionsBase):
         self.db_user = db_user
         self.db_pass = db_pass
         self.initialization_time = datetime.datetime.now()
+
     def initialize_main_connection_from_env(self) -> None:
         db_url = os.environ.get('JDBC_URL')
         db_host = os.environ.get('JDBC_HOST')

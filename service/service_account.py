@@ -16,6 +16,7 @@ from dao.daos import daos
 class AccountService(service_thread_base):
     def __init__(self):
         super().__init__()
+
     # get name of base object
     def get_base_object_name(self) -> str:
         return "AccountService"

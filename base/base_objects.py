@@ -1,3 +1,4 @@
+from __future__ import annotations
 import datetime
 import os
 import string
@@ -8,6 +9,7 @@ from typing import Callable
 
 import base.base_utils
 import base.base_interfaces
+from base.base_constants import Roles
 from base.base_interfaces import *
 from abc import abstractmethod
 from time import sleep
@@ -39,6 +41,7 @@ class base_object:
         """get friendly name of this object; friendly name is a simple name to identify that object"""
         pass
     def get_base_dict_custom_info(self) -> dict[str, any]:
+        """to be overridden by any class - returning custom specific info """
         return {}
     def has_name(self, name: str) -> bool:
         return name == "" or name == type(self).__name__ or name == self.object_id or name == self.get_base_object_type() or name == self.get_base_object_name()
@@ -58,8 +61,27 @@ class base_object:
         return d
 
 
-# wrapper for threads used in threading classes
+class DictOfList(dict[str, list[str]]):
+    def add(self, key: str, value: str) -> None:
+        values = self.get(key)
+        if values is None:
+            values = []
+            self[key] = values
+        values.append(value)
+    def get_or_empty(self, key: str) -> list[str]:
+        value = self[key]
+        if value:
+            return value
+        else:
+            return []
+
+
+class DictOfDict(dict[str, dict[str, str]]):
+    pass
+
+
 class ThreadWrapper(base_object):
+    """wrapper for threads used in threading classes"""
     thread: threading.Thread
     object: base_object
     is_working: bool = True
@@ -72,6 +94,7 @@ class ThreadWrapper(base_object):
         self.object = object
         self.sleep_time = sleep_time
     def get_base_object_type(self) -> str:
+        """get type of this class"""
         return "ThreadWrapper"
     # get name of base object
     def get_base_object_name(self) -> str:
@@ -81,6 +104,7 @@ class ThreadWrapper(base_object):
         self.ticks_count = self.ticks_count + 1
         return self.ticks_count
     def get_base_dict_custom_info(self) -> dict[str, any]:
+        """get custom dictionary information with thread specific values"""
         return {
             "object_id": self.object_id,
             "created_date": self.created_date,
@@ -91,22 +115,27 @@ class ThreadWrapper(base_object):
             "sleep_time": self.sleep_time
         }
     def is_thread_active(self) -> int:
+        """returns 1 if thread is still active or 0 is inactive"""
+        # TODO: implement this
         return 1
 
 
 # base class for all services
 class thread_base(base_object):
+    """base class for any thread class with thread_work method executed in separated dedicated thread"""
     thread: ThreadWrapper
     def __init__(self):
         super().__init__()
 
-    # work in separated thread
     @abstractmethod
     def thread_work(self, tick: int) -> bool:
+        """work in separated thread - to be overridden"""
         pass
     def get_thread_sleep_time(self) -> int:
+        """get sleep time in seconds"""
         return 60
     def thread_run(self) -> None:
+        """running thread and executing thread_work method, then sleep for thread sleep time, works until thread_is_working"""
         logging.info("Starting work in separated thread, UUID: " + self.object_id)
         while (self.thread.is_working):
             tick = self.thread.tick()
@@ -116,8 +145,8 @@ class thread_base(base_object):
         logging.warning("Thread ended: " + self.object_id)
         self.thread.end_time = datetime.datetime.now()
 
-    # initialize this service
     def initialize_thread(self) -> None:
+        """initialize this thread, make is a daemon and register thread in object manager"""
         th = threading.Thread(target=self.thread_run,daemon=True)
         self.thread = ThreadWrapper(th, self, self.get_thread_sleep_time())
         logging.info("Initialize separated thread for object: " + self.object_id + ", native_id: " + str(th.native_id) + ", name: " + th.name)
@@ -127,6 +156,7 @@ class thread_base(base_object):
 
 # watch dogs
 class WatchDog(thread_base):
+    """class to watch for threads, objects, other processes, able to restart killed threads"""
     threads: list[ThreadWrapper]
     def __init__(self, threads: list[ThreadWrapper]):
         super().__init__()
@@ -134,6 +164,8 @@ class WatchDog(thread_base):
         self.threads = threads
         self.initialize_thread()
     def thread_work(self, tick: int) -> bool:
+        """separated thread to """
+        # TODO: implement checking threads in ObjectManager and processes
         logging.debug("Watchdog is checking threads: " + str(len(self.threads)))
         return True
     def get_base_object_type(self) -> str:
@@ -144,6 +176,7 @@ class WatchDog(thread_base):
 
 
 class Cleaner(thread_base):
+    """cleaner class to clean after processes, remove old rows, create backups and copies"""
     clean_method: Callable[[int], bool]
     def __init__(self, clean_method: Callable[[int], bool]):
         super().__init__()
@@ -160,6 +193,7 @@ class Cleaner(thread_base):
 
 # main Flask application
 class FlaskApplicationWrapper(base_object):
+    """wrapper class for Flask application to have HTTP endpoints"""
     httpflaskapp: Flask
     def __init__(self, httpflaskapp: Flask):
         super().__init__()
@@ -174,6 +208,7 @@ class FlaskApplicationWrapper(base_object):
 
 
 class CacheManagerBase(thread_base):
+    """base class for CacheManager"""
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
         pass
     def get(self, key: str):
@@ -187,6 +222,7 @@ class CacheManagerBase(thread_base):
 
 
 class DaoConnectionBase(base_object):
+    """base class for DAOConnection"""
     def initialize_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str,
                               min_conns: int = 2, max_conns: int = 20):
         pass
@@ -200,6 +236,7 @@ class DaoConnectionBase(base_object):
 
 # DAO connections to main database and all other client databases
 class DaoConnectionsBase(base_object):
+    """base class for DaoConnections - """
     def create_tenant_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
         pass
     def get_connection(self):
@@ -215,6 +252,7 @@ class DaoConnectionsBase(base_object):
 
 
 class base_model(base_object):
+    """model class for given table - contains all metadata info about model in database"""
     table_name: str  # name of table in database
     key_column_name: str  # name of UID column, typically it is table_uid
     all_columns: list[str]  # list od all column names
@@ -246,6 +284,7 @@ class base_model(base_object):
 
 # session for account - mapping between token and account_uid with validation date, created date
 class AccountSessionBase:
+    """base class for session account - connecting token with account"""
     session_id: str
     created_date: datetime.datetime
     valid_till_date: datetime.datetime
@@ -272,6 +311,7 @@ class AccountSessionBase:
 
 
 class AccountPermissionsBase:
+    """base class for permission class connecting account with tenant and permissions"""
     created_date: datetime.datetime
     account_uid: str
     account_dto: account_interface_dto
@@ -288,6 +328,7 @@ class AccountPermissionsBase:
 
 
 class RequestBase:
+    """base class for request - single request is representing HTTP request"""
     url: str
     method_name: str
     request_id: str
@@ -307,6 +348,7 @@ class RequestBase:
 
 
 class ResponseBase:
+    """base class for HTTP response; each response is directly connected with request; response could be successfull (2xx) or failure (4xx, 5xx)"""
     code: int = 200
     req_session: RequestBase
     obj: dict[str, any] | None
@@ -315,8 +357,52 @@ class ResponseBase:
     def request_time_seconds(self) -> float:
         return (self.req_session.created_date - self.end_time).total_seconds()
 
-# Manager of all objects and threads in application
+
+#
+@dataclass(frozen=False)
+class AppMenuItem:
+    """single item of menu"""
+    menu_name: str
+    menu_url: str
+    menu_roles: set[str]
+    menu_subitems: list[AppMenuItem]
+    def __init__(self, name: str, url: str, roles: set[str], submenus: list[AppMenuItem]):
+        self.menu_name = name
+        self.menu_url = url
+        self.menu_roles = roles
+        self.menu_roles = roles
+
+
+class AppMenuItems:
+
+    def get_menu(self, ) -> list[AppMenuItem]:
+        return [
+            AppMenuItem("Tenant", "/app/tenant", {Roles.TenantViewer}, []),
+            AppMenuItem("Client", "/app/tenant", {Roles.ClientSupervisor}, []),
+            AppMenuItem("Account", "/app/account", {Roles.AccountViewer}, []),
+            AppMenuItem("Time", "/app/time", {Roles.AccountViewer}, [
+                AppMenuItem("Entry", "/app/time-entry", {Roles.AccountViewer}, []),
+                AppMenuItem("Approval", "/app/time-approval", {Roles.AccountViewer}, []),
+                AppMenuItem("Summary", "/app/time-summary", {Roles.AccountViewer}, []),
+                AppMenuItem("Report", "/app/time-report", {Roles.AccountViewer}, [])
+            ]),
+            AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, []),
+            AppMenuItem("HR", "/app/hr", {Roles.AccountViewer}, []),
+            AppMenuItem("Calendar", "/app/calendar", {Roles.AccountViewer}, [
+                AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, []),
+                AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, [])
+            ]),
+            AppMenuItem("Administration", "/app/hr", {Roles.AccountViewer}, [
+                AppMenuItem("Reports", "/app/report", {Roles.AccountViewer}, []),
+                AppMenuItem("Synchronization", "/app/sync", {Roles.AccountViewer}, []),
+                AppMenuItem("Licenses", "/app/license", {Roles.AccountViewer}, [])
+            ]),
+            AppMenuItem("My", "/app/myself", {Roles.AccountViewer}, [])
+        ]
+
+
 class ObjectManager:
+    """Manager of all objects and threads in application"""
     object_uid: str
     created_date: datetime.datetime
     all_objects: dict[str, base_object]  # all base objects registered
@@ -336,6 +422,8 @@ class ObjectManager:
     exception_handler: Callable[[Exception], bool]
     thread_handler: Callable[[ThreadWrapper], bool]
     request_handler: Callable[[ResponseBase], bool]
+    requests_count: int
+    menu: AppMenuItems
 
     def __init__(self):
         self.created_date = datetime.datetime.now()
@@ -345,6 +433,8 @@ class ObjectManager:
         self.threads = []
         self.account_sessions = {}
         self.account_permissions = {}
+        self.requests_count = 0
+        self.menu = AppMenuItems()
 
     # initialize
     def initialize(self) -> None:
@@ -396,22 +486,25 @@ class ObjectManager:
     def register_request_handler(self, request_handler: Callable[[ResponseBase], bool]):
         self.request_handler = request_handler
     def handle_exception(self, ex: Exception) -> bool:
+        """handle any exception inside application, log it to DB table and create an event from it"""
         try:
             return self.exception_handler(ex)
-        except:
-            logging.error("Cannot handle Exception")
+        except Exception as ex:
+            logging.error(f"Cannot handle Exception, reason: {ex}")
             return False
     def handle_thread(self, ex: ThreadWrapper) -> bool:
+        """handle thread change inside application, log it to DB table and create an event from it"""
         try:
             return self.thread_handler(ex)
-        except:
-            logging.error("Cannot handle Thread")
+        except Exception as ex:
+            logging.error(f"Cannot handle Thread, reason: {ex}")
             return False
     def handle_request(self, req: ResponseBase) -> bool:
         try:
+            self.requests_count += 1
             return self.request_handler(req)
-        except:
-            logging.error("Cannot handle request")
+        except Exception as ex:
+            logging.error(f"Cannot handle request, reason: {ex}")
             return False
 
 

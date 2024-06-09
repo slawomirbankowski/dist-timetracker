@@ -22,21 +22,27 @@ class TenantController(BaseController):
         return ResponseSession.not_implemented(session)
 
     def create_tenant(self, session: RequestSession) -> ResponseSession:
-        logging.info("get_object_by_id")
-        table_name: str = session.get_query_or_body_param("table_name").lower()
-        # TODO: NotFound when incorrect table_name
-        rows_count = daos.account_group_dao_instance.count_by_table_all(table_name)
-        return ResponseSession.ok(session, {"table_name": table_name, "rows_count": rows_count})
+        logging.info("create_tenant")
+        tenant_data = session.get_body_as_dict()
+        tenant_uid = tenant_data.get("tenant_uid", "")
+        tenant_name = tenant_data.get("tenant_name", "")
+        country_uid = tenant_data.get("country_uid", "")
+        tenant_type_uid = tenant_data.get("tenant_type_uid", "")
+        tenant_category_uid = tenant_data.get("tenant_category_uid", "")
+        tenant_code = tenant_data.get("tenant_code", "")
+        tenant_description = tenant_data.get("tenant_description", "")
+        start_date = datetime.datetime.now()
+        dto = tenant_write_dto(tenant_uid, tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, None, 1, 0, 0, None, "{}")
+        read_dto = daos.tenant_dao_instance.insert_and_get(dto)
+        return ResponseSession.ok(session, {"write_dto": dto, "read_dto": read_dto})
 
     def list_tenants(self, session: RequestSession) -> ResponseSession:
-        logging.info("get_object_by_id")
-        #
-        # session.account_permission.roles
-        table_name: str = session.get_query_or_body_param("table_name").lower()
-        # TODO: NotFound when incorrect table_name
-        rows_count = daos.account_group_dao_instance.count_by_table_all(table_name)
+        logging.info("list_tenants")
+        tenants: tenant_read_dtos = daos.tenant_dao_instance.select_rows_read_all()
+        return ResponseSession.ok(session, {"tenants": tenants.dtos})
 
-        daos.account_dao_instance.select_rows_read_by_tenant_uid(session.account_session.tenant_uid)
-
-        return ResponseSession.ok(session, {"table_name": table_name, "rows_count": rows_count})
+    def list_tenants_thin(self, session: RequestSession) -> ResponseSession:
+        logging.info("list_tenants_thin")
+        tenants = daos.tenant_dao_instance.select_rows_thin_all()
+        return ResponseSession.ok(session, {"tenants": tenants.dtos})
 

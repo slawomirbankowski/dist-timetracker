@@ -33,3 +33,6 @@ class service_thread_base(service_base, thread_base):
     # initialize this service
     def initialize(self) -> None:
         self.initialize_thread()
+        self.on_initialize()
+    def on_initialize(self) -> None:
+        pass

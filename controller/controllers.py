@@ -22,8 +22,8 @@ from controller.controller_system import SystemController
 from controller.controller_tenant import TenantController
 
 
-# class with all controllers
 class Controllers(base_object):
+    """class with all controllers"""
     all_controllers: list[BaseController] = []
     account_controller = AccountController()
     auth_controller = AuthController()
@@ -55,6 +55,7 @@ class Controllers(base_object):
     def get_base_object_type(self) -> str:
         return "Controllers"
     def initialize_controllers(self) -> None:
+        """initialize all controllers and add to all_controllers"""
         logging.debug("Initialization of Controller classes, object_id: " + self.object_id)
         self.all_controllers.append(self.account_controller)
         self.all_controllers.append(self.auth_controller)

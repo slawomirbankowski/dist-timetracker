@@ -15,6 +15,7 @@ db_connections = dao.dao_connection.db_connections
 
 # DAOs
 class Daos(DaosList):
+    """class to have all DAO objects and basic data initialized in DB"""
     # constant values initialized
     system_instance_uid: str = base_dto.get_random_uid_with_name("SI")
     host_name: str = socket.gethostname()
@@ -23,7 +24,7 @@ class Daos(DaosList):
     app_version = "1.0.0"
     system_instance_dto: system_instance_read_dto | None
     system_database_dto: system_database_read_dto | None
-    settings_by_name: dict[str, system_setting_read_dto]
+    settings_by_name: dict[str, str]
     account_skills: account_skill_read_dtos
     account_titles: account_title_read_dtos
 
@@ -73,7 +74,7 @@ class Daos(DaosList):
         # system_instance_uid: str, system_instance_name: str, system_version_uid: str, host_name: str, host_ip: str, local_path: str, mode_name: str, ticks_count: int, custom_attributes: str = "{}"
         self.system_instance_dto = self.system_instance_dao_instance.insert_and_get(siw, "system")
         #self.system_database_dto = self.system_database_dao_instance.upsert_row_and_get("main", "", db_connections.db_url, "", "", "", objects.system_instance_uid)
-        #elf.settings_by_name = self.system_setting_dao_instance.get_items_active().to_dict_by_setting_name()
+        self.settings_by_name = self.system_setting_dao_instance.select_rows_read_active().to_dict_by_key_name("system_setting_name", "setting_value")
         self.register_all_standard_daos()
         # register handlers to
         objects.register_exception_handler(self.handle_exception)
@@ -91,5 +92,5 @@ class Daos(DaosList):
         logging.info("Closing DAOs")
 
 
-# instance of Daos with all DAOs instances
+# instance of Daos with all DAOs custom
 daos = Daos()

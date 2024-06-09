@@ -82,3 +82,20 @@ class AuthController(BaseController):
 
     def userinfo(self, session: RequestSession) -> ResponseSession:
         return self.myself(session)
+
+    def roles_list(self, session: RequestSession) -> ResponseSession:
+        roles = daos.auth_role_dao_instance.select_rows_write_active()
+        return ResponseSession.ok(session, {"roles": roles.dtos})
+
+    def roles_list_thin(self, session: RequestSession) -> ResponseSession:
+        daos.auth_role_dao_instance.select_rows_write_active()
+        roles = daos.auth_role_dao_instance.select_rows_read_active().to_list_by_name("auth_role_uid")
+        return ResponseSession.ok(session, {"roles": roles})
+
+    def roles_hierarchy(self, session: RequestSession) -> ResponseSession:
+        #
+        #
+        return ResponseSession.ok(session, {"roles": services.role_service.all_roles.dtos})
+
+
+

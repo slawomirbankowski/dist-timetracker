@@ -18,11 +18,10 @@ class AccountController(BaseController):
     def get_base_object_name(self) -> str:
         return "AccountController"
 
-    def info(self, session: RequestSession) -> ResponseSession:
-        return ResponseSession.not_implemented(session)
-
     def create_account(self, session: RequestSession) -> ResponseSession:
-
+        self.use()
+        session.get_body_as_dict()
+        #account_write_dto.from_dictionary()
         return ResponseSession.ok(session, {"table_name": "", "rows_count": 0})
 
     def list_accounts(self, session: RequestSession) -> ResponseSession:
@@ -31,8 +30,6 @@ class AccountController(BaseController):
         table_name: str = session.get_query_or_body_param("table_name").lower()
         # TODO: NotFound when incorrect table_name
         rows_count = daos.account_group_dao_instance.count_by_table_all(table_name)
-
-        daos.account_dao_instance.select_rows_read_by_tenant_uid(session.account_session.tenant_uid)
-
-        return ResponseSession.ok(session, {"table_name": table_name, "rows_count": rows_count})
+        objs = daos.account_dao_instance.select_rows_read_by_tenant_uid(session.account_session.tenant_uid)
+        return ResponseSession.ok(session, {"table_name": table_name, "objects": objs})
 
