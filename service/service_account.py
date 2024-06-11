@@ -9,11 +9,11 @@ from base.base_utils import get_random_uid
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
-from service.services_base import service_base, service_thread_base
+from service.services_base import service_base, service_threadBase
 from dao.daos import daos
 
 
-class AccountService(service_thread_base):
+class AccountService(service_threadBase):
     def __init__(self):
         super().__init__()
 

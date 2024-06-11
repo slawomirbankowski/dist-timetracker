@@ -22,6 +22,7 @@ class ProjectController(BaseController):
         return ResponseSession.not_implemented(session)
 
     def create_project(self, session: RequestSession) -> ResponseSession:
+        # TODO: create new project
         return ResponseSession.not_implemented(session)
 
     def list_projects(self, session: RequestSession) -> ResponseSession:

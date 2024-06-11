@@ -17,11 +17,7 @@ db_connections = dao.dao_connection.db_connections
 class Daos(DaosList):
     """class to have all DAO objects and basic data initialized in DB"""
     # constant values initialized
-    system_instance_uid: str = base_dto.get_random_uid_with_name("SI")
-    host_name: str = socket.gethostname()
-    host_ip: str = socket.gethostname()
-    local_path = os.path.dirname(os.path.realpath(__file__))
-    app_version = "1.0.0"
+    system_instance_uid: str = objects.system_instance_uid
     system_instance_dto: system_instance_read_dto | None
     system_database_dto: system_database_read_dto | None
     settings_by_name: dict[str, str]
@@ -30,6 +26,8 @@ class Daos(DaosList):
 
     def __init__(self):
         super().__init__()
+        # objects.host_name
+        #
 
     def get_dao_for_table(self, table_name: str) -> base_dao | None:
         return self.all_daos.get(table_name + "_dao")
@@ -51,11 +49,11 @@ class Daos(DaosList):
         return "Daos"
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {
-            "system_instance_uid": self.system_instance_uid,
-            "host_name": self.host_name,
-            "host_ip": self.host_ip,
-            "local_path": self.local_path,
-            "app_version": self.app_version
+            "system_instance_uid": objects.system_instance_uid,
+            "host_name": objects.host_name,
+            "host_ip": objects.host_ip,
+            "local_path": objects.local_path,
+            "app_version": objects.app_version
         }
 
     def handle_exception(self, ex: Exception) -> bool:
@@ -68,18 +66,23 @@ class Daos(DaosList):
         self.system_request_dao_instance.insert_row_random_uid(resp.req_session.request_id, resp.req_session.get_account_uid(), resp.req_session.method_name, resp.req_session.url, -1, "host", 2000, resp.code)
         return True
 
+    def read_settings(self) -> dict[str, str]:
+        return self.system_setting_dao_instance.select_rows_read_active().to_dict_by_key_name("system_setting_name", "setting_value")
+
     def initialize_daos(self) -> None:
         """initialize all DAOs classes and main objects"""
-        siw = system_instance_write_dto(self.system_instance_uid, self.system_instance_uid, "1.0.0", self.host_name, self.host_ip, self.local_path, "DEV", 0)
+        siw = system_instance_write_dto(objects.system_instance_uid, objects.system_instance_uid, "1.0.0", objects.host_name, objects.host_ip, objects.local_path, "DEV", 0)
         # system_instance_uid: str, system_instance_name: str, system_version_uid: str, host_name: str, host_ip: str, local_path: str, mode_name: str, ticks_count: int, custom_attributes: str = "{}"
         self.system_instance_dto = self.system_instance_dao_instance.insert_and_get(siw, "system")
         #self.system_database_dto = self.system_database_dao_instance.upsert_row_and_get("main", "", db_connections.db_url, "", "", "", objects.system_instance_uid)
-        self.settings_by_name = self.system_setting_dao_instance.select_rows_read_active().to_dict_by_key_name("system_setting_name", "setting_value")
+        self.settings_by_name = self.read_settings()
         self.register_all_standard_daos()
         # register handlers to
+        objects.register_settings(self.settings_by_name)
         objects.register_exception_handler(self.handle_exception)
         objects.register_thread_handler(self.handle_thread)
         objects.register_request_handler(self.handle_request)
+        objects.register_roles(self.auth_role_dao_instance.select_rows_read_all())
         logging.debug("End of DAOs initialization, system instance: " + self.system_instance_dto.system_instance_uid)
 
     def read_dictionaries(self) -> None:

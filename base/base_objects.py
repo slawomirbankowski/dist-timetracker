@@ -1,6 +1,7 @@
 from __future__ import annotations
 import datetime
 import os
+import socket
 import string
 import threading
 import uuid
@@ -62,6 +63,7 @@ class base_object:
 
 
 class DictOfList(dict[str, list[str]]):
+    """dictionary with list as values"""
     def add(self, key: str, value: str) -> None:
         values = self.get(key)
         if values is None:
@@ -77,7 +79,81 @@ class DictOfList(dict[str, list[str]]):
 
 
 class DictOfDict(dict[str, dict[str, str]]):
+    def add(self, key1: str, key2: str, value: str) -> None:
+        values = self.get(key1)
+        if values is None:
+            values = {}
+            self[key1] = values
+        values[key2] = value
     pass
+
+
+class AccountRole:
+    """single role within hierarchy"""
+    role: auth_role_interface_dto  # role
+    parent: AccountRole | None  # parent role
+    children: dict[str, AccountRole]  # children roles
+    roles_below: set[str]
+    level: int = 0  # level in hierarchy
+    def __init__(self, r: auth_role_interface_dto):
+        self.role = r
+        self.parent = None
+        self.children = {}
+        self.roles_below = set()
+        self.level = 0
+    def calculate_roles_below(self) -> set[str]:
+        below_roles = set()
+        for r in self.children:
+            for b in self.children[r].calculate_roles_below():
+                below_roles.add(b)
+        self.roles_below = below_roles
+        return below_roles
+    def to_hierarchy(self) -> dict[str, dict]:
+        if len(self.children) == 0:
+            return {self.role.auth_role_uid: {}}
+        else:
+            h = {}
+
+            # TODO: finish returning hierarchy of roles
+            return {self.role.auth_role_uid: h}
+
+
+class AccountRolesHierarchy:
+    """hierarchy of roles"""
+    all_roles: list[auth_role_interface_dto]
+    roles_dict: dict[str, AccountRole]
+    roles_list: list[AccountRole]
+    root: AccountRole
+
+    def __init__(self, roles: list[auth_role_interface_dto]):
+        self.all_roles = roles
+        self.roles_dict = {}
+        self.roles_list = []
+        logging.info(f"Producing roles hierarchy from list, count: {len(roles)}")
+        for role in roles:
+            r = AccountRole(role)
+            self.roles_dict[role.auth_role_uid] = r
+            self.roles_list.append(r)
+            if role.auth_role_uid == Roles.SystemAdministrator:
+                self.root = r
+        for role in self.roles_list:
+            if role.role.parent_auth_role_uid is not None and role.role.parent_auth_role_uid != "" and role.role.parent_auth_role_uid != role.role.auth_role_uid:
+                if self.roles_dict.__contains__(role.role.parent_auth_role_uid):
+                    parent = self.roles_dict[role.role.parent_auth_role_uid]
+                    role.parent = parent
+                    parent.children[role.role.auth_role_uid] = role
+
+    def get_roles_below(self, role_uid: str) -> set[str]:
+        # TODO: get roles below this role
+        return set()
+
+    def get_roles_above(self, role_uid: str) -> set[str]:
+        # TODO: get roles above this role
+        return set()
+
+    def to_hierarchy(self) -> dict[str, any]:
+        # TODO: create simple hierarchy for roles
+        return {}
 
 
 class ThreadWrapper(base_object):
@@ -121,7 +197,7 @@ class ThreadWrapper(base_object):
 
 
 # base class for all services
-class thread_base(base_object):
+class ThreadBase(base_object):
     """base class for any thread class with thread_work method executed in separated dedicated thread"""
     thread: ThreadWrapper
     def __init__(self):
@@ -155,7 +231,7 @@ class thread_base(base_object):
 
 
 # watch dogs
-class WatchDog(thread_base):
+class WatchDog(ThreadBase):
     """class to watch for threads, objects, other processes, able to restart killed threads"""
     threads: list[ThreadWrapper]
     def __init__(self, threads: list[ThreadWrapper]):
@@ -175,7 +251,7 @@ class WatchDog(thread_base):
         return "WatchDog"
 
 
-class Cleaner(thread_base):
+class Cleaner(ThreadBase):
     """cleaner class to clean after processes, remove old rows, create backups and copies"""
     clean_method: Callable[[int], bool]
     def __init__(self, clean_method: Callable[[int], bool]):
@@ -205,9 +281,12 @@ class FlaskApplicationWrapper(base_object):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "FlaskApplicationWrapper"
+    def thread_work(self, tick: int) -> bool:
+        logging.debug("Flask is working")
+        #self.httpflaskapp.blueprints
+        return True
 
-
-class CacheManagerBase(thread_base):
+class CacheManagerBase(ThreadBase):
     """base class for CacheManager"""
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
         pass
@@ -222,7 +301,7 @@ class CacheManagerBase(thread_base):
 
 
 class DaoConnectionBase(base_object):
-    """base class for DAOConnection"""
+    """base class for DAOConnection - connection pool to single database"""
     def initialize_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str,
                               min_conns: int = 2, max_conns: int = 20):
         pass
@@ -236,7 +315,7 @@ class DaoConnectionBase(base_object):
 
 # DAO connections to main database and all other client databases
 class DaoConnectionsBase(base_object):
-    """base class for DaoConnections - """
+    """base class for DaoConnections - many connections to tenant databases """
     def create_tenant_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
         pass
     def get_connection(self):
@@ -360,8 +439,17 @@ class ResponseBase:
 
 #
 @dataclass(frozen=False)
+class AppMenuItemDto:
+    """single item in menu - DTO class"""
+    menu_name: str
+    menu_url: str
+    menu_roles: str
+    menu_parent_name: str
+
+
+@dataclass(frozen=False)
 class AppMenuItem:
-    """single item of menu"""
+    """single item in menu - part of hierarchy to produce menu"""
     menu_name: str
     menu_url: str
     menu_roles: set[str]
@@ -371,11 +459,35 @@ class AppMenuItem:
         self.menu_url = url
         self.menu_roles = roles
         self.menu_roles = roles
+    def to_dict(self) -> dict[str, any]:
+        return {
+            "menu_name": self.menu_name,
+            "menu_url": self.menu_url,
+            "menu_roles": self.menu_roles,
+            "menu_subitems": [item.to_dict() for item in self.menu_subitems],
+        }
 
 
+@dataclass(frozen=False)
 class AppMenuItems:
+    menu: list[AppMenuItem]
+    loaded_menu: list[AppMenuItem]
 
-    def get_menu(self, ) -> list[AppMenuItem]:
+    def __init__(self):
+        self.menu = self.create_full_menu()
+
+    def get_menu_full(self) -> list[AppMenuItem]:
+        return self.menu
+
+    def get_menu_by_request(self, req: RequestBase) -> list[AppMenuItem]:
+        # TODO: filter menu based on roles
+        return self.menu
+
+    def load_menu(self, dtos: list[AppMenuItemDto]) -> str:
+        # TODO: parse items from dtos and create loaded_menu
+        return ""
+
+    def create_full_menu(self) -> list[AppMenuItem]:
         return [
             AppMenuItem("Tenant", "/app/tenant", {Roles.TenantViewer}, []),
             AppMenuItem("Client", "/app/tenant", {Roles.ClientSupervisor}, []),
@@ -412,7 +524,12 @@ class ObjectManager:
     system_instance_uid: str = base.base_utils.get_random_uid_with_prefix("SI")
     any_instance_value: str = "any_value"
     http_port: int = 8080
+    host_name: str
+    host_ip: str
+    local_path: str
+    app_version: str = "1.0.0"
     created_by_default: str = "system"  # default account that is creating
+    settings_by_name: dict[str, str]
     account_sessions: dict[str, AccountSessionBase]  # sessions of user, key=token, value=session with user
     account_permissions: dict[str, AccountPermissionsBase]  # set of permissions per account
     dao_connections: DaoConnectionsBase  # DAO connections
@@ -424,17 +541,21 @@ class ObjectManager:
     request_handler: Callable[[ResponseBase], bool]
     requests_count: int
     menu: AppMenuItems
+    role_hierarchy: AccountRolesHierarchy
 
     def __init__(self):
         self.created_date = datetime.datetime.now()
         self.object_uid = base.base_utils.get_random_uid_with_prefix("SI")
         logging.info("Creating ObjectManager, creation time: " + str(self.created_date) + ", object_id: " + self.object_uid + ", system_instance_uid: " + self.system_instance_uid)
         self.all_objects = {}
+        self.host_name = socket.gethostname()
+        self.host_ip = socket.gethostname()
+        self.local_path = os.path.dirname(os.path.realpath(__file__))
         self.threads = []
         self.account_sessions = {}
         self.account_permissions = {}
         self.requests_count = 0
-        self.menu = AppMenuItems()
+        self.settings_by_name = {}
 
     # initialize
     def initialize(self) -> None:
@@ -442,6 +563,7 @@ class ObjectManager:
         self.watchdogs.append(WatchDog(self.threads))
         self.watchdogs.append(WatchDog(self.threads))
         self.flask_wrapper = FlaskApplicationWrapper(httpflaskapp)
+        self.menu = AppMenuItems()
 
     def register_object(self, obj: base_object) -> None:
         self.all_objects[obj.object_id] = obj
@@ -450,6 +572,7 @@ class ObjectManager:
         self.threads.append(thread)
         self.handle_thread(thread)
     def register_event(self, event) -> None:
+        """register new event in Object Manager"""
         logging.debug("Register event ")
     def register_cache(self, cm: CacheManagerBase) -> None:
         #self.cache_managers.append(cm)
@@ -457,6 +580,9 @@ class ObjectManager:
     def register_connections(self, dao_connections: DaoConnectionsBase) -> None:
         logging.debug("Register connections in Object Manager, parent: " + self.system_instance_uid + ", object: " + dao_connections.object_id)
         self.dao_connections = dao_connections
+    def register_roles(self, roles: list[auth_role_interface_dto]):
+        """register all roles to create hierarchy"""
+        self.role_hierarchy = AccountRolesHierarchy(roles)
     def get_life_time_seconds(self):
         x = datetime.datetime.now() - self.created_date
         return x.total_seconds()
@@ -481,6 +607,8 @@ class ObjectManager:
         return self.account_permissions.get(account_uid)
     def register_exception_handler(self, exception_handler: Callable[[Exception], bool]):
         self.exception_handler = exception_handler
+    def register_settings(self, s: dict[str, str]):
+        self.settings_by_name = s
     def register_thread_handler(self, thread_handler: Callable[[ThreadWrapper], bool]):
         self.thread_handler = thread_handler
     def register_request_handler(self, request_handler: Callable[[ResponseBase], bool]):

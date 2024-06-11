@@ -1,0 +1,79 @@
+SCENARIO: login user:
+1. User go to any Page
+2. Any endpoint is returning 401 (Unauthorized)
+OR
+1a: User go to /login page
+
+3. Redirection to /pre-login
+On that page UI is taking username/email of user and get identity URL
+
+4. Get authentication login URL
+GET {{URL}}/auth/get_auth_method?username={{test_user}}
+RESPONSE:
+{
+    "metadata": {...},
+    "result": {
+        "account_uid": "test_user",
+        "auth_identity_name": "Internal authentication - password is kept and managed within application",
+        "auth_identity_uid": "Internal",
+        "auth_identity_url": "http://localhost/auth/login"
+    }
+}
+Example:
+GET {{URL}}/auth/get_auth_method?username={{test_user}}
+
+5. Generate token
+Opening page:
+ http://localhost/auth/login?username={{account_uid}}
+ Should allow user to enter password, user_uid can be taken from previous step.
+To get token by user and password:
+{{URL}}/auth/token
+{
+    "username": "{{ACCOUNT_test_uid}}",
+    "password": "{{ACCOUNT_test_administrator_pass}}"
+}
+RESPONSE:
+{
+    "metadata": {...},
+    "result": {
+        "session_id": "40995e66-5328-4ca9-972a-2c6e00ffd8bc",
+        "token": "JWT",
+        "access_token": "ACC_TOK",
+        "id_token": "ID_TOK",
+        "valid_till_date": "2024-05-05 11:06:45.765710"
+    }
+}
+
+6. Information about logged user
+After logging in, user would get session_id (to be stored only), JWT token (to be used), access_token (to be stored and used later) and id_token (to be stored and used later).
+To get full information about given user, there is an endpoint:
+GET {{URL}}/auth/myself
+HEADER: Authorization=Bearer {JWT}
+RESPONSE:
+{
+    "metadata": {...},
+    "result": {
+        "account": {
+            "account_name": "test_administrator",
+            "account_uid": "test_administrator",
+            "created_date": "Sat, 20 Apr 2024 20:42:55 GMT",
+            "is_active": 1
+        },
+        "created_date": "2024-05-04 11:07:17.251077",
+        "permission_load_date": "2024-05-04 11:07:17.251077",
+        "roles": [
+            "ClientAdministrator"
+        ],
+        "session_id": "40995e66-5328-4ca9-972a-2c6e00ffd8bc",
+        "session_load_date": "2024-05-04 11:06:45.765710",
+        "tenant": {
+            "created_date": "Sat, 20 Apr 2024 20:42:55 GMT",
+            "is_active": 1,
+            "tenant_name": "test",
+            "tenant_uid": "Test"
+        },
+        "valid_till_date": "2024-05-05 11:06:45.765710"
+    }
+}
+
+7. Redirecting to main page: /application

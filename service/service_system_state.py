@@ -1,10 +1,10 @@
 from base.base_objects import objects
-from service.services_base import service_base, service_thread_base
+from service.services_base import service_base, service_threadBase
 from dao.daos import daos
 import psutil
 
 
-class SystemStateService(service_thread_base):
+class SystemStateService(service_threadBase):
     def __init__(self):
         super().__init__()
 

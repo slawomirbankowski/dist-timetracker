@@ -4,7 +4,7 @@ import threading
 import uuid
 from abc import abstractmethod
 from typing import Dict, Callable
-from base.base_objects import base_object, thread_base, CacheManagerBase, objects
+from base.base_objects import base_object, ThreadBase, CacheManagerBase, objects
 import logging
 from logging import config
 from functools import lru_cache
@@ -100,4 +100,3 @@ class CacheManager(CacheManagerBase):
 
 
 cache = CacheManager()
-# cache.with_cache("", lambda x: x*2)

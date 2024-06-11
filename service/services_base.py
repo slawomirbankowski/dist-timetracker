@@ -4,7 +4,7 @@ import threading
 from abc import abstractmethod
 from time import sleep
 
-from base.base_objects import base_object, objects, ThreadWrapper, thread_base
+from base.base_objects import base_object, objects, ThreadWrapper, ThreadBase
 from dao.dao_base import base_dao
 
 
@@ -24,7 +24,7 @@ class service_base(base_object):
 
 
 # base class for all services
-class service_thread_base(service_base, thread_base):
+class service_threadBase(service_base, ThreadBase):
     def __init__(self):
         super().__init__()
     # get type of base object

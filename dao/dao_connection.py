@@ -22,6 +22,7 @@ class DaoConnection(DaoConnectionBase):
     max_conns: int = 20
     db_pool: psycopg2.pool.SimpleConnectionPool
     liquibase_prop_file: str
+    pool_created_date: datetime.datetime
 
     def __init__(self):
         super().__init__()
@@ -45,6 +46,8 @@ class DaoConnection(DaoConnectionBase):
         logging.info("Creating new DB connection pool, host: " + db_host + ", name: " + db_name + ", user: " + db_user)
         self.db_pool = psycopg2.pool.SimpleConnectionPool(min_conns, max_conns, user=db_user, password=db_pass,
                                                           host=db_host, port='5432', database=db_name)
+        self.pool_created_date = datetime.datetime.now()
+
 
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {
