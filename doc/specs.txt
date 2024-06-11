@@ -1,3 +1,9 @@
+docker run --hostname=bc9d8c1fe70c --mac-address=02:42:ac:11:00:02 --env=POSTGRES_PASSWORD=pass123 --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/16/bin --env=GOSU_VERSION=1.16 --env=LANG=en_US.utf8 --env=PG_MAJOR=16 --env=PG_VERSION=16.1-1.pgdg120+1 --env=PGDATA=/var/lib/postgresql/data --volume=/var/lib/postgresql/data -p 5432:5432 --restart=no --runtime=runc -d postgres
+
+docker run --hostname=66bc1309b649 --user=elasticsearch:root --env=discovery.type=single-node --env=ELASTIC_PASSWORD=elastic --env=PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --env=ELASTIC_CONTAINER=true --network=dist-network --workdir=/usr/share/elasticsearch -p 9200:9200 -p 9300:9300 --restart=no --label='org.label-schema.build-date=2022-12-06T00:06:09.133373312Z' --label='org.label-schema.license=Elastic-License-2.0' --label='org.label-schema.name=Elasticsearch' --label='org.label-schema.schema-version=1.0' --label='org.label-schema.url=https://www.elastic.co/products/elasticsearch' --label='org.label-schema.usage=https://www.elastic.co/guide/en/elasticsearch/reference/index.html' --label='org.label-schema.vcs-ref=4ed5ee9afac63de92ec98f404ccbed7d3ba9584e' --label='org.label-schema.vcs-url=https://github.com/elastic/elasticsearch' --label='org.label-schema.vendor=Elastic' --label='org.label-schema.version=8.5.3' --label='org.opencontainers.image.created=2022-12-06T00:06:09.133373312Z' --label='org.opencontainers.image.documentation=https://www.elastic.co/guide/en/elasticsearch/reference/index.html' --label='org.opencontainers.image.licenses=Elastic-License-2.0' --label='org.opencontainers.image.revision=4ed5ee9afac63de92ec98f404ccbed7d3ba9584e' --label='org.opencontainers.image.source=https://github.com/elastic/elasticsearch' --label='org.opencontainers.image.title=Elasticsearch' --label='org.opencontainers.image.url=https://www.elastic.co/products/elasticsearch' --label='org.opencontainers.image.vendor=Elastic' --label='org.opencontainers.image.version=8.5.3' --runtime=runc -d elasticsearch:8.5.3
+
+docker run --hostname=0c5a56dbba6d --mac-address=02:42:ac:11:00:03 --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --env=GOSU_VERSION=1.17 --env=REDIS_VERSION=7.2.3 --env=REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-7.2.3.tar.gz --env=REDIS_DOWNLOAD_SHA=3e2b196d6eb4ddb9e743088bfc2915ccbb42d40f5a8a3edd8cb69c716ec34be7 --volume=/data --workdir=/data -p 6379:6379 --restart=no --runtime=runc -d redis
+
 
 --------------------------------------------------------------------------------------------
 - base_model - add types to columns - DONE
@@ -17,6 +23,17 @@
 - create Service to get one full object by UID - DONE
 - insert threads into system_thread - DONE
 - DB - system_table - add system tables - DONE
+
+Create installation documentation for TimeTracker backend application with all dependencies
+
+
+
+
+
+
+
+
+
 
 - Tenant REST endpoints - TO_DO
 - Account REST endpoints - TO_DO
@@ -54,16 +71,17 @@ http://localhost/ -> redirection to /
 - DB - create system_session table for account sessions
 - read all tenants from DB to Daos as dictionaries
 
-- add local cache in memory
-- add Redis cache - global cache for objects
+- Add local cache in memory to speed-up DAO methods
+
+- Add Redis cache for global cache to keep objects
 
 - DTO - create DTO from dictionary and from JSON
 - DTOS - parse from JSON
 - DTO - get default value for given attribute - to create with defaults
 
 - fix system_instance.is_active to have only one active instance
-- check password expiration date when checking password
-- check token expiration date when checking token with session
+- Check password expiration date when checking password
+- Check token expiration date when checking token with session
 - remove inactive tokens and accounts
 
 - Object HTTP endpoint to add single row
@@ -89,6 +107,9 @@ http://localhost/ -> redirection to /
 - tenant - create new with accounts
 - tenant -
 
+Create
+Create endpoints to manage Tenants and have full CRUD operations
+Create Dockerfile to run TimeTracker backend in separated dockers with environment variables to be able to connect to Postgres database as storage layer
 
 
 --------------------------------------------------------------------------------------------

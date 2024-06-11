@@ -1,6 +1,7 @@
 # auto-generated - v_definition_python_services_object - START at 2024-03-30 03:45:14.272376+01
 from service.service_object import *
 
+
 class service_list_base(base_object):
     all_services: list[service_base] = []
     account_service_inst = account_service()

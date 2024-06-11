@@ -9,11 +9,11 @@ from base.base_utils import get_random_uid
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
-from service.services_base import service_base, service_thread_base
+from service.services_base import service_base, service_threadBase
 from dao.daos import daos
 
 
-class LoginService(service_thread_base):
+class LoginService(service_threadBase):
     def __init__(self):
         super().__init__()
     # get name of base object
@@ -66,6 +66,7 @@ class LoginService(service_thread_base):
         if accinst is None:
             return ResponseSession.not_found(session, {"account_uid": account_uid})
         else:
+            # TODO: add auth_attempt ?
             passwords = daos.auth_password_dao_instance.select_rows_read_by_account_uid(accinst.account_uid)
             logging.debug("Found passwords: " + str(len(passwords.dtos)))
             password_ok = passwords.check_any(lambda dto: self.check_password_dto(dto, password))
@@ -79,8 +80,11 @@ class LoginService(service_thread_base):
         accinst: account_read_dto = daos.account_dao_instance.get_account_by_name(username)
         password_ok = self.check_password_for_account(accinst, password)
         if password_ok:
+            # TODO: add auth_attempt, auth_request
             logging.info("Generating token for account: " + accinst.account_uid + ", grant_type: " + grant_type)
             token = get_random_uid()
+            access_token = get_random_uid()
+            id_token = get_random_uid()
             token_salt = get_random_uid()
             token_salted = token_salt + token + token_salt
             md5_hash = hashlib.md5()
@@ -90,11 +94,11 @@ class LoginService(service_thread_base):
             remote_addr = session.request.remote_addr
             host_name = session.request.host
             cookie_session = session.request.cookies.get("ttsession", None)
-
+            # TODO: add auth_session
             user_session = objects.create_user_session(accinst.tenant_uid, accinst.account_uid, token, token_salt, token_hash, valid_till_date)
             logging.debug("Created user session for ID: " + user_session.session_id)
             daos.auth_token_dao_instance.insert_row(token, user_session.session_id, accinst.tenant_uid, accinst.account_uid, 100, token_hash, token_salt, valid_till_date, None, 1)
-            return ResponseSession.ok(session, {"token": token, "session_id": user_session.session_id, "valid_till_date": str(valid_till_date)})
+            return ResponseSession.ok(session, {"token": token, "access_token": access_token, "id_token": id_token, "session_id": user_session.session_id, "valid_till_date": str(valid_till_date)})
         else:
             return ResponseSession.unauthorized_request(session, {"account_uid": username})
 
