@@ -1,59 +1,128 @@
 import os
 import logging
 import atexit
+import sys
+import logging
+from logging import config
+import redis
+from base.base_constants import SystemVersions
 import dao.dao_connection
 from base.base_objects import objects
 from base.cache import cache
+from dao.dao_base import simple_dao
 from dao.daos import daos
 from dto.dtos_models import db_models
 from service.services import services
-from controller.controller_app import start_http_listening
+from controller.controllers_app import start_http_listening
 from controller.controllers import controllers
+from custom.identity_type import *
+from custom.identity_type import identity_types
+import custom
 
 
-if __name__ == '__main__':
-    print("=================================================== STARTING")
-    logging.info("Starting new Python application")
-    #logging.log(2, "Some log")
-    db_url = os.environ.get('JDBC_URL')
-    db_host = os.environ.get('JDBC_HOST')
-    db_name = os.environ.get('JDBC_NAME')
-    db_user = os.environ.get('JDBC_USER')
-    db_pass = os.environ.get('JDBC_PASS')
-    #logging.basicConfig()
-    logging.info("Main database URL =" + db_url)
-    logging.info("Main database HOST=" + db_host)
-    logging.info("Main database NAME=" + db_name)
-    logging.info("Main database USER=" + db_user)
-    print("=================================================== OBJECTS")
+def main_application() -> None:
+    logging.info(f"Starting new Python application of version: {SystemVersions.Latest}" )
+    logging.info("=================================================== OBJECTS")
     objects.initialize()
-    print("=================================================== CACHE")
+    logging.info("=================================================== CACHE")
     cache.initialize()
-    print("=================================================== MODELS")
+    logging.info("=================================================== MODELS")
     # initialize all models
     db_models.initialize()
-    print("=================================================== CONNECTIONS")
+    logging.info("=================================================== CONNECTIONS")
     # initialize DB connections
-    dao.dao_connection.db_connections.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
-    print("=================================================== DAS")
+    dao.dao_connection.db_connections.initialize_main_connection_from_env()
+    logging.info("=================================================== DAOs")
     # initialize services
     daos.initialize_daos()
-    print("=================================================== SERVICES")
-    services.initialize_services()
-    print("=================================================== CONTROLLERS")
+    logging.info("=================================================== SERVICES")
+    services.initialize()
+    logging.info("=================================================== CONTROLLERS")
     controllers.initialize_controllers()
-    print("=================================================== HTTP")
+    logging.info("=================================================== HTTP")
     start_http_listening()
 
 
+def generate_files() -> None:
+    dao.dao_connection.db_connections.initialize_main_connection_from_env()
+    rich_views_def = db_models.generate_all_rich_views()
+    f = open("./tmp/rich_views.xml.generated", "w")
+    f.writelines(rich_views_def)
+    f.close()
+    python_files_to_generate = daos.dao.get_column_values_by_params("select table_name from v_definition_generate_list")
+    for table_name in python_files_to_generate:
+        python_file = "./tmp/" + table_name[20:] + ".py.generated"
+        rows = daos.dao.get_column_values_by_params(f"select python from {table_name}  order by table_name, ordinal_position")
+        print("Generate python file for table: " + table_name + " into python fle: " + python_file)
+        f = open(python_file, "w")
+        f.writelines([row+"\n" for row in rows])
+        f.close()
+        daos.dao.create_rich_views()
+
+
+def rich_views_replace():
+    dao.dao_connection.db_connections.initialize_main_connection_from_env()
+    daos.dao.replace_rich_views()
+
+
+class MyTestClass:
+    def __init__(self):
+        print("START CLASS MY TEST CLASS")
+
+
+def test():
+    print("TEST")
+
+    #x = globals()[]
+    x = type("MyTestClass")
+    z = x()
+
+    print(str(type(x)))
+    print(str(type(x).__name__))
+    print(str(x.__name__))
+
+    print(str(type(z)))
+    print(str(type(z).__name__))
+
+    c = globals()["MyTestClass"]
+    print(str(type(c)))
+    print(str(type(c).__name__))
+    cc = c()
+    print(str(type(cc)))
+    print(str(type(cc).__name__))
+
+    v = eval("MyTestClass()")
+    print(str(type(v)))
+    print(str(type(v).__name__))
+
+    aa = getattr(custom.identity_type.identity_types, "IdentityTypeOAuth")
+    aaa = aa()
+
+    print(str(type(aa)))
+    print(str(type(aa).__name__))
+
+    print(str(type(aaa)))
+    print(str(type(aaa).__name__))
+
+    #  cache.with_cache("ddd", lambda y: y*1)
+    #for k in globals():
+    #    logging.info("Key= " + k)
+
+
+if __name__ == '__main__':
+    print("START")
+    #generate_files()
+    main_application()
+
+
 def exit_handler():
-    print("TimeTracker application is ending")
-    controllers.close()
-    daos.close()
-    dao.dao_connection.db_connections.close()
-    db_models.close()
-    objects.close()
-    print("TimeTracker ENDED!!!")
+    logging.info("TimeTracker application is ending")
+    #controllers.close()
+    #daos.close()
+    #dao.dao_connection.db_connections.close()
+    #db_models.close()
+    #objects.close()
+    logging.info("TimeTracker ENDED!!!")
 
 
 atexit.register(exit_handler)

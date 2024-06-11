@@ -1,21 +1,24 @@
 import datetime
+import logging
+from logging import config
 from abc import abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import uuid
 import random
 from random import randrange, uniform, randint
 from typing import Iterable
-
-from base.base_objects import base_object
+from base.base_objects import base_object, base_model
+from typing import Dict, Callable
 
 
 # base model class to keep objects representing tables in database
 @dataclass(frozen=False)
-class base_model(base_object):
+class db_model(base_model):
     table_name: str  # name of table in database
     key_column_name: str  # name of UID column, typically it is table_uid
     all_columns: list[str]  # list od all column names
     attr_columns: list[str]  # list of attribute columns
+    rich_columns: list[str]
     insert_columns: list[str]  # list of attribute columns
     insert_columns_list: str  #
     insert_columns_question_marks: str  #
@@ -33,8 +36,13 @@ class base_model(base_object):
     upsert_columns_exclude_list: str
     upsert_attrs_sql: str
     select_all_sql: str
+    attr_types: dict[str, str]
+    fks: dict[str, str]
+    table_comment: str
+    thin_columns: list[str]
+    thin_column_list: str
 
-    def __init__(self, table_name: str, attr_columns: list[str]):
+    def __init__(self, table_name: str, attr_columns: list[str], rich_columns: list[str], attr_types: dict[str, str] = {}, fks: dict[str, str] = {}, table_comment: str = ""):
         # only attr_columns should be passed
         super().__init__()
         self.table_name = table_name
@@ -43,6 +51,10 @@ class base_model(base_object):
         self.all_columns.append("id")
         for c in attr_columns:
             self.all_columns.append(c)
+        self.all_columns.append("row_instance")
+        self.all_columns.append("row_lock")
+        self.all_columns.append("row_owner")
+        self.all_columns.append("row_seq")
         self.all_columns.append("row_guid")
         self.all_columns.append("row_version")
         self.all_columns.append("is_active")
@@ -54,6 +66,7 @@ class base_model(base_object):
         self.all_columns.append("removed_by")
         self.all_columns.append("custom_attributes")
         self.attr_columns = attr_columns
+        self.rich_columns = rich_columns
         self.insert_columns = self.attr_columns.copy()
         self.insert_columns.append("created_by")
         self.insert_columns.append("last_updated_by")
@@ -76,6 +89,16 @@ class base_model(base_object):
         self.upsert_columns_exclude_list = ",".join([x+"=excluded."+x for x in self.upsert_columns])
         self.upsert_attrs_sql = "insert into " + self.table_name + "(" + self.insert_columns_list + ") values (" + self.insert_columns_question_marks + ") on conflict (" + self.table_name + "_uid) do update set " + self.upsert_columns_exclude_list + ", last_updated_date=now()"
         self.select_all_sql = "select * from " + self.table_name
+        self.thin_columns = []
+        self.thin_columns.append(self.table_name + "_uid")
+        self.thin_columns.append(self.table_name + "_name")
+        self.thin_columns.append("created_date")
+        self.thin_columns.append("is_active")
+        self.thin_column_list = ",".join(self.thin_columns)
+        self.attr_types = attr_types
+        self.fks = fks
+        self.table_comment = table_comment
+
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {
             "table_name": self.table_name,
@@ -103,7 +126,8 @@ class base_model(base_object):
 
     def get_insert_sql(self) -> str:
         return self.insert_attrs_sql
-
+    def get_rich_view_name(self) -> str:
+        return "v_rich_" + self.table_name
     def get_select_all_limit_sql(self, max_rows: int = 1000) -> str:
         return "select * from " + self.table_name + " limit " + str(max_rows)
     def get_select_active_limit_sql(self, max_rows: int = 1000) -> str:
@@ -112,6 +136,8 @@ class base_model(base_object):
         return "select * from " + self.table_name + " order by created_date desc limit " + str(max_rows)
     def get_select_active_latest_sql(self, max_rows: int = 1000) -> str:
         return "select * from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_order_by_query(self, col_name: str, max_rows: int = 1000) -> str:
+        return "select * from " + self.table_name + " order by " + col_name + " desc limit " + str(max_rows)
 
     def get_select_write_all_limit_sql(self, max_rows: int = 1000) -> str:
         return "select " + self.attr_columns_list + " from " + self.table_name + " limit " + str(max_rows)
@@ -121,14 +147,29 @@ class base_model(base_object):
         return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
     def get_select_write_active_latest_sql(self, max_rows: int = 1000) -> str:
         return "select " + self.attr_columns_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_thin_all_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.thin_column_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_thin_active_latest_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.thin_column_list + " from " + self.table_name + " order by created_date desc limit " + str(max_rows)
+    def get_select_rich_all_sql(self, max_rows: int = 1000) -> str:
+        return "select " + self.thin_column_list + " from v_rich_" + self.table_name + " order by created_date desc limit " + str(max_rows)
+
+
     def get_select_all_uids(self, max_rows: int = 1000) -> str:
-        return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
+        return "select " + self.get_uid_column_name() + " from " + self.table_name + " order by " + self.get_uid_column_name() + " limit " + str(max_rows)
+    def get_select_active_uids(self, max_rows: int = 1000) -> str:
+        return "select " + self.get_uid_column_name() + " from " + self.table_name + " where is_active=1 order by " + self.get_uid_column_name() + " limit " + str(max_rows)
+
     def get_select_all_keys(self, max_rows: int = 1000) -> str:
         return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
     def get_select_all_names(self, max_rows: int = 1000) -> str:
         return "select " + self.get_key_column_name() + " from " + self.table_name + " order by " + self.get_key_column_name() + " limit " + str(max_rows)
     def get_select_all_guids(self, max_rows: int = 1000) -> str:
         return "select row_guid from " + self.table_name + " limit " + str(max_rows)
+
+    def get_select_active_guids(self, max_rows: int = 1000) -> str:
+        return "select row_guid from " + self.table_name + " where is_active=1 limit " + str(max_rows)
+
     def get_select_keys_by_column_name(self, col_name: str, max_rows: int = 1000) -> str:
         return "select " + self.get_key_column_name() + " from " + self.table_name + " where " + col_name + "=%s order by " + self.get_key_column_name() + " limit " + str(max_rows)
     def get_select_guids_by_column_name(self, col_name: str, max_rows: int = 1000) -> str:
@@ -152,6 +193,7 @@ class base_model(base_object):
     def get_select_active_by_any_column(self, column_name: str, max_rows: int = 1000) -> str:
         return "select * from " + self.table_name + " where is_active=1 and " + column_name + "=%s order by created_date desc limit " + str(max_rows)
     def get_select_active_by_any_column_values(self, column_name: str, values: Iterable, max_rows: int = 1000) -> str:
+        # TODO: make multiple parameters from values
         return "select * from " + self.table_name + " where is_active=1 and " + column_name + " in (%s) order by created_date desc limit " + str(max_rows)
     def get_select_with_custom_where(self, where_sql: str, max_rows: int = 1000) -> str:
         return "select * from " + self.table_name + " where " + where_sql + " limit " + str(max_rows)
@@ -178,7 +220,7 @@ class base_dto:
     def get_random_float(cls) -> float:
         return random.uniform(0, 1000000)
     @classmethod
-    def get_random_date(cls) -> int:
+    def get_random_date(cls) -> str:
         # TODO: generate random date and time
         return str(uuid.uuid4())
 
@@ -196,15 +238,15 @@ class base_custom_dto(base_dto):
 # base DTO to insert/write row into DB
 class base_write_dto(base_custom_dto):
     def __init__(self):
-        print("Creating new DTO")
+        logging.info("Creating new DTO")
     @abstractmethod
-    def get_key(self) -> str:
+    def get_name(self) -> str:
         pass
     @abstractmethod
     def get_uid(self) -> str:
         pass
     @abstractmethod
-    def get_model(self) -> base_model:
+    def get_model(self) -> db_model:
         pass
     @abstractmethod
     def get_list_values(self) -> list[any]:
@@ -248,7 +290,10 @@ class base_write_dto(base_custom_dto):
 
 # base class for DTO classes
 class base_read_dto(base_write_dto):
-    id: int
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
     row_guid: str
     row_version: int
     is_active: int
@@ -260,7 +305,7 @@ class base_read_dto(base_write_dto):
     removed_by: str | None
     custom_attributes: str
     def get_id(self) -> int:
-        return self.id
+        return self.row_seq
     def get_created_date(self) -> datetime.datetime:
         return self.created_date
     def get_last_updated_date(self) -> datetime.datetime:
@@ -298,35 +343,138 @@ class base_read_dto(base_write_dto):
 
 # helper class to store list of items
 class base_dtos:
-    dtos: list[base_read_dto]
-    def __init__(self, dtos: list[base_read_dto]):
+    dtos: list[base_dto]
+    def __init__(self, dtos: list[base_dto]):
         self.dtos = dtos
-    def get_dtos(self) -> list[base_read_dto]:
+    def __len__(self):
+        return len(self.dtos)
+    def __getitem__(self, item):
+        return self.dtos[item]
+    def __bool__(self):
+        return len(self.dtos)>0
+    def __contains__(self, item):
+        return item in self.dtos
+    def __eq__(self, other):
+        return self.dtos == other
+    def get_dtos(self) -> list[base_dto]:
         return self.dtos
-    def get_keys(self) -> list[str]:
+    # count number of rows in this collection
+    def count(self) -> int:
+        return len(self.dtos)
+    def get_first(self):
+        if len(self.dtos) > 0:
+            return self.dtos[0]
+        else:
+            return None
+    def get_last(self):
+        if len(self.dtos) > 0:
+            return self.dtos[-1]
+        else:
+            return None
+    def for_each(self, do_method: Callable):
+        for dto in self.dtos:
+            do_method(dto)
+    def for_first(self, do_method: Callable):
+        if len(self.dtos) > 0:
+            return do_method(self.dtos[0])
+    def for_filter(self, check_method: Callable, do_method: Callable):
+        for dto in self.dtos:
+            if check_method(dto):
+                do_method(dto)
+    def map_to_string(self, map_method: Callable) -> list[str]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_int(self, map_method: Callable) -> list[int]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def map_to_float(self, map_method: Callable) -> list[float]:
+        return list(map(lambda dto:  map_method(dto), self.dtos))
+    def check_all(self, check_method: Callable) -> bool:
+        init = True
+        for dto in self.dtos:
+            init = init and check_method(dto)
+        return False
+    def check_any(self, check_method: Callable) -> bool:
+        init = False
+        for dto in self.dtos:
+            init = init or check_method(dto)
+        return False
+    def aggregate_string(self, map_method: Callable, init: str = "") -> str:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    """
+    :param map_method: mapping method to convert any DTO object into int
+    :param init: initial int value to be added
+    :return: sum of all int values for collection
+    """
+    def aggregate_int(self, map_method: Callable, init: int = 0) -> int:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    def aggregate_float(self, map_method: Callable, init: float = 0) -> float:
+        init_value = init
+        for dto in self.dtos:
+            init_value = map_method(init_value, dto)
+        return init_value
+    # map DTOs to list[dict] to be returned as JSON
+    def to_list_dict(self) -> list[dict]:
+        return list(map(lambda dto: asdict(dto), self.dtos))
+
+
+# helper class to store list of write items
+class base_write_dtos(base_dtos):
+    dtos: list[base_write_dto]
+    def __init__(self, dtos: list[base_write_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    def get_uids(self) -> list[str]:
         return list(map(lambda dto: dto.get_key(), self.dtos))
     def get_active_dtos(self):
         return list(filter(lambda x: x.is_active == 1, self.dtos))
     # count number of rows in this collection
-    def count(self) -> int:
-        return len(self.dtos)
-    def count_active_only(self):
+    def count_active_only(self) -> int:
         return len(self.get_active_dtos())
-    def touch_all(self, updated_by: str = "system"):
-        for dto in self.dtos:
-            dto.touch(updated_by)
     @abstractmethod
     def get_write_dicts(self) -> list[dict]:
         pass
     @abstractmethod
-    def get_read_dicts(self) -> list[dict]:
-        pass
-    @abstractmethod
     def find_by_uid(self, uid: str):
         pass
+    # convert DTO into dictionary based on key and name attributes
+    def to_dict_by_key_name(self, key: str, name: str) -> dict[str, str]:
+        d = {}
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d[dd[key]] = dd[name]
+        return d
+    def to_list_by_name(self, name: str) -> list[str]:
+        d = []
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d.append(dd[name])
+        return d
+    def to_set_by_name(self, name: str) -> set[str]:
+        d = set()
+        for dto in self.dtos:
+            dd = dto.to_write_dict()
+            d.add( dd[name])
+        return d
+
+
+# helper class to store list of read items
+class base_read_dtos(base_write_dtos):
+    dtos: list[base_read_dto]
+    def __init__(self, dtos: list[base_read_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    def touch_all(self, updated_by: str = "system") -> None:
+        for dto in self.dtos:
+            dto.touch(updated_by)
     @abstractmethod
-    def get_first(self):
+    def get_read_dicts(self) -> list[dict]:
         pass
+
 
 @dataclass(frozen=False)
 class group_dto:

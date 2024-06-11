@@ -1,0 +1,63 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0040_data_system.xml">
+
+    <changeSet id="0040 - dictionary data" author="slawomir.bankowski">
+
+        <!-- ____________________________ System table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_version(system_version_uid, system_version_name, version_description)
+            values ('1.0.0', '1.0.0', 'Initial version of application with all basic features.');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_database(system_database_uid, system_database_name, db_url, db_host, db_name, db_user)
+            values ('timetracker', 'timetracker', '', '', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_instance(system_instance_uid, system_instance_name, system_version_uid, host_name, host_ip, local_path, mode_name)
+            values ('1.0.0', '1.0.0', '1.0.0', '', '', '', 'PROD');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('dao_max_rows', 'dao_max_rows', '1000');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('db_pool_min_connections', 'db_pool_min_connections', '3');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('db_pool_max_connections', 'db_pool_max_connections', '30');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('system_email', 'system_email', '');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('test_email', 'test_email', '');
+            insert into system_setting(system_setting_uid, system_setting_name, setting_value)
+            values ('administrator_email', 'administrator_email', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Main', 'Main', 'Main');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('TimeTracking', 'TimeTracking', 'TimeTracking');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Calendar', 'Calendar', 'Calendar');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Invoice', 'Invoice', 'Invoice');
+            insert into system_module(system_module_uid, system_module_name, system_module_description)
+            values ('Project', 'Project', 'Project');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into system_license(system_license_uid, system_license_name, license_description)
+            values ('Full', 'Full', 'Full license with all features');
+            insert into system_license(system_license_uid, system_license_name, license_description)
+            values ('Test', 'Test', 'Test license with limited features to test application');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

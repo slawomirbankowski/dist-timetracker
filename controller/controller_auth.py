@@ -1,11 +1,17 @@
 import datetime
-
+import json
+import logging
+from dataclasses import asdict
+from logging import config
 from flask import Flask, jsonify, abort, Request, Response
+
+from base.cache import cache
 from dao.daos import daos
 from dto.dtos import base_dto
 from service.services import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 import hashlib
+
 
 # Auth controller
 class AuthController(BaseController):
@@ -16,99 +22,80 @@ class AuthController(BaseController):
     # get name of base object
     def get_base_object_name(self) -> str:
         return "AuthController"
-    # get name of base object
-    def get_base_object_name(self) -> str:
-        return "AuthController"
+
+    def info(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
     def get_auth_method(self, session: RequestSession) -> ResponseSession:
-        account_instance_uid = ""
-        daos.account_instance_dao_instance.get_item_by_uid(account_instance_uid)
-        return ResponseSession(jsonify({'access_token': "abc123"}))
+        username = session.get_query_or_body_param("username")
+        #cache.with_cache("get_auth_method" + username, lambda x: {
+        #})
+        account_dto = daos.account_dao_instance.get_account_by_name(username)
+        if account_dto is None:
+            return ResponseSession.not_found(session)
+        else:
+            ident_dto = daos.auth_identity_dao_instance.select_row_read_by_uid(account_dto.auth_identity_uid)
+            ident = {
+                "account_uid": account_dto.account_uid,
+                "auth_identity_name": ident_dto.auth_identity_name,
+                "auth_identity_uid": ident_dto.auth_identity_uid,
+                "auth_identity_url": "http://localhost/auth/login"
+            }
+            return ResponseSession.ok(session, ident)
 
     def token(self, session: RequestSession) -> ResponseSession:
         # session.request.data
-        print("Token request")
-        session.get_query_param("grant_type")
-        session.get_query_param("username")
-        session.get_query_param("password")
-        grant_type = session.request.args.getlist("grant_type")
-        account_instance_uid = "system"
-        accinst = daos.account_instance_dao_instance.get_items_by_account_instance_uid(account_instance_uid)
-
-        accinst.dtos
-
-        if daos.auth_password_dao_instance.check_password("", ""):
-            print("Authenticated")
-        else:
-            print("Not Autenticated")
-
-        return ResponseSession(jsonify({'access_token': "abc123"}))
+        grant_type = session.get_query_param("grant_type")
+        username = session.get_query_or_body_param("username")
+        password = session.get_query_or_body_param("password")
+        logging.debug("Token request for grant_type: " + grant_type + ", username: " + username)
+        return services.login_service.token(session, grant_type, username, password)
 
     def set_password(self, session: RequestSession) -> ResponseSession:
-        # session.request.data
-        account_instance_uid = session.get_query_param("username")
+        account_uid = session.get_query_param("username")
         password = session.get_query_param("password")
-        password_salt = base_dto.get_random_uid()
-        password_salted = password_salt + password + password_salt
-        md5_hash = hashlib.md5()
-        md5_hash.update(password_salted.encode())
-        password_hash = md5_hash.hexdigest()
-        date_to = datetime.datetime.now() + datetime.timedelta(days=30)
-        daos.auth_password_dao_instance.insert_row_random_uid(account_instance_uid, daos.system_instance_dto.system_instance_uid, password_hash, password_salt, datetime.datetime.now(), date_to, 0)
-        return ResponseSession(jsonify({'status': "OK"}))
+        return services.login_service.set_password(session, account_uid, password)
+
+    def my_set_password(self, session: RequestSession) -> ResponseSession:
+        password = session.get_query_param("password")
+        return services.login_service.set_password(session, session.account_session.account_uid, password)
+
+    def request_reset_password(self, session: RequestSession) -> ResponseSession:
+        account_uid = session.get_query_param("username")
+        return services.login_service.request_reset_password(session, account_uid)
 
     def check_password(self, session: RequestSession) -> ResponseSession:
-        # session.request.data
-        #daos.auth_password_dao_instance.get_items_by_any_column("")
-       # daos.auth_password_dao_instance.get_items_by_any_column("")
-        account_instance_uid = session.get_query_param("username")
+        account_uid = session.get_query_param("username")
         password = session.get_query_param("password")
+        return services.login_service.check_password(session, account_uid, password)
 
-        accinst = daos.account_instance_dao_instance.get_account_by_name(account_instance_uid)
-        if accinst is None:
-            return ResponseSession(jsonify({'status': "INCORRECT_PASSWORD"}))
-        else:
-            passwords = daos.auth_password_dao_instance.get_items_by_account_instance_uid(accinst.account_instance_uid)
-            passwords.for_each()
-
-            password_salt = base_dto.get_random_uid()
-            password_salted = password_salt + password + password_salt
-
-            md5_hash = hashlib.md5()
-            md5_hash.update(password_salted.encode())
-            password_hash = md5_hash.hexdigest()
-            password_ok = daos.auth_password_dao_instance.check_password(account_instance_uid, password_hash)
-            if password_ok:
-                return ResponseSession(jsonify({'status': "OK"}))
-            else:
-                return ResponseSession(jsonify({'status': "INCORRECT_PASSWORD"}))
-    def auth(self, session: RequestSession) -> ResponseSession:
-        print("Auth")
-        return ResponseSession(jsonify({'access_token': "abc123"}))
-
-    def login(self, session: RequestSession) -> ResponseSession:
-        print("Auth")
-        return ResponseSession(jsonify({'access_token': "abc123"}))
+    def produce_hash(self, session: RequestSession) -> ResponseSession:
+        password = session.get_query_param("password")
+        return services.login_service.produce_hash(session, password)
 
     def myself(self, session: RequestSession) -> ResponseSession:
-        print("Auth")
-        return ResponseSession(jsonify({'access_token': "abc123"}))
+        #session.account_permission
+        return ResponseSession.ok(session, session.to_myself_dict())
 
-    routes = {
-        "set_password": set_password,
-        "token": token,
-        "auth": auth,
-        "login": login,
-        "myself": myself
-    }
+    def permission_add(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.not_implemented(session)
 
-    def route(self, session: RequestSession) -> ResponseSession:
-        #session.request.method
-        print("Route OAuth with URL: " + session.request.url)
-        contr_method = self.routes.get(session.method_name)
-        print("Found method" + str(type(contr_method)))
-        if contr_method is not None:
-            print("Found method")
-            return contr_method(self, session)
-        else:
-            return ResponseSession(abort(404))
+    def userinfo(self, session: RequestSession) -> ResponseSession:
+        return self.myself(session)
+
+    def roles_list(self, session: RequestSession) -> ResponseSession:
+        roles = daos.auth_role_dao_instance.select_rows_write_active()
+        return ResponseSession.ok(session, {"roles": roles.dtos})
+
+    def roles_list_thin(self, session: RequestSession) -> ResponseSession:
+        daos.auth_role_dao_instance.select_rows_write_active()
+        roles = daos.auth_role_dao_instance.select_rows_read_active().to_list_by_name("auth_role_uid")
+        return ResponseSession.ok(session, {"roles": roles})
+
+    def roles_hierarchy(self, session: RequestSession) -> ResponseSession:
+        #
+        #
+        return ResponseSession.ok(session, {"roles": services.role_service.all_roles.dtos})
+
+
+

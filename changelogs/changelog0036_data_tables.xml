@@ -1,0 +1,215 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0036_data.xml">
+
+    <changeSet id="0036 - " author="slawomir.bankowski">
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+select 'databasechangelog' as system_table_uid,'databasechangelog' as system_table_name, 'databasechangelog' as table_label, 'id' as uid_name, 'liquibase' as table_group, 'dbcl' as table_code, 'liquibase' as table_type, 'private' as table_category, 1000 as cardinality, 0 as is_object, 0 as is_rich, 0 as is_tenant, 1 as is_local, 'Liquibase metadata table' as table_comment
+ union all select 'databasechangeloglock','databasechangeloglock','databasechangeloglock', 'id', 'liquibase' as table_group, 'dbcl', 'liquibase', 'private' as table_category, 1000, 0, 0, 0, 1, 'semantic version of application like 1.2.3, each version is introducing new features to application'
+         </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'account', 'account', 'Account', 'account_uid', 'account', 'acco', 'full', 'internal', 100000, 1, 1, 1, 1, 'single instance of account - person or user or system user'
+ union all select 'account_division', 'account_division', 'Account Division', 'account_division_uid', 'account', 'acdi', 'full', 'internal', 1000, 1, 1, 1, 1, 'division of the account'
+ union all select 'account_division_template', 'account_division_template', 'Account Division Template', 'account_division_template_uid', 'account', 'acdt', 'dictionary', 'public', 100, 1, 1, 0, 1, 'Templates of divisions to be used for tenants.'
+ union all select 'account_group', 'account_group', 'Account Group', 'account_group_uid', 'account', 'acgr', 'full', 'category', 10000, 1, 1, 1, 1, 'Group of the accounts'
+ union all select 'account_hierarchy', 'account_hierarchy', 'Account Hierarchy', 'account_hierarchy_uid', 'account', 'achi', 'full', 'protected', 100000, 1, 1, 1, 1, 'Single instance of account - person or user or system user'
+ union all select 'account_rate', 'account_rate', 'Account Rate', 'account_rate_uid', 'account', 'acra', 'full', 'protected', 1000000, 1, 1, 1, 1, 'Rate of selected account'
+ union all select 'account_skill', 'account_skill', 'Account Skill', 'account_skill_uid', 'account', 'acsk', 'dictionary', 'public', 100, 1, 1, 0, 1, 'Skill owned by an account'
+ union all select 'account_team', 'account_team', 'Account Team', 'account_team_uid', 'account', 'acte', 'full', 'internal', 1000, 1, 1, 1, 1, 'Team of accounts'
+ union all select 'account_title', 'account_title', 'Account Title', 'account_title_uid', 'account', 'acti', 'dictionary', 'public', 100, 1, 1, 0, 1, 'Title of the account connected with person role: Data Engineer, Data Analyst, ...'
+ union all select 'account_title_responsibility', 'account_title_responsibility', 'Account Title Responsibility', 'account_title_responsibility_uid', 'account', 'actr', 'type', 'protected', 1000, 1, 1, 1, 1, 'Responsibilities assigned to titles'
+ union all select 'account_type', 'account_type', 'Account Type', 'account_type_uid', 'account', 'acty', 'dictionary', 'public', 1000, 1, 1, 0, 1, 'type of the account: Person, Client, Contractor, Application'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'audit_change', 'audit_change', 'Audit Change', 'audit_change_uid', 'audit', 'adch', 'append', 'private', 10000000, 1, 1, 0, 1, 'changes to tables - updates, inserts, deletes'
+ union all select 'audit_type', 'audit_type', 'Audit Type', 'audit_type_uid', 'audit', 'adty', 'dictionary', 'public', 1000, 1, 1, 0, 1, 'Type of audit'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'auth_attempt', 'auth_attempt', 'Auth Attempt', 'auth_attempt_uid', 'auth', 'auat', 'append', 'private', 1000000, 1, 1, 1, 1, 'Possible identity types with configuration'
+ union all select 'auth_identity', 'auth_identity', 'Auth Identity', 'auth_identity_uid', 'auth', 'auid', 'dictionary', 'private', 10, 1, 1, 0, 1, 'Possible identity types'
+ union all select 'auth_identity_tenant', 'auth_identity_tenant', 'Auth Identity Tenant', 'auth_identity_tenant_uid', 'auth', 'auit', 'm2m', 'category', 1000, 1, 1, 1, 1, 'Possible identity types with configuration'
+ union all select 'auth_key', 'auth_key', 'Auth Key', 'auth_key_uid', 'auth', 'auke', 'full', 'private', 1000, 1, 1, 1, 1, 'Key for encoding'
+ union all select 'auth_key_type', 'auth_key_type', 'Auth Key Type', 'auth_key_type_uid', 'auth', 'aukt', 'full', 'public', 1000, 1, 1, 0, 1, 'Type of key: symmetric, asymmetric, signature, ...'
+ union all select 'auth_password', 'auth_password', 'Auth Password', 'auth_password_uid', 'auth', 'aupa', 'full', 'private', 100000, 1, 1, 1, 1, 'Password set by user - this is full history of passwords'
+ union all select 'auth_password_current', 'auth_password_current', 'Auth Password Current', 'auth_password_current_uid', 'auth', 'aupc', 'full', 'private', 10000, 1, 1, 1, 1, 'password set by user - only current valid password'
+ union all select 'auth_password_rule', 'auth_password_rule', 'Auth Password Rule', 'auth_password_rule_uid', 'auth', 'aupr', 'type', 'category', 1000, 1, 1, 0, 1, 'rule applied to new set passwords'
+ union all select 'auth_permission', 'auth_permission', 'Auth Permission', 'auth_permission_uid', 'auth', 'aupe', 'full', 'internal', 100000, 1, 1, 1, 1, 'permission assigned to account and role with optional project or client'
+ union all select 'auth_request', 'auth_request', 'Auth Request', 'auth_request_uid', 'auth', 'aure', 'append', 'private', 100000, 1, 1, 1, 1, 'Request of reset or set new password for user'
+ union all select 'auth_role', 'auth_role', 'Auth Role', 'auth_role_uid', 'auth', 'auro', 'type', 'internal', 100, 1, 1, 1, 1, 'List of roles used in permissions'
+ union all select 'auth_role_uri', 'auth_role_uri', 'Auth Role Uri', 'auth_role_uri_uid', 'auth', 'auru', 'full', 'private', 10000, 1, 1, 0, 1, 'Mapping between role and URIs'
+ union all select 'auth_session', 'auth_session', 'Auth Session', 'auth_session_uid', 'auth', 'ause', 'append', 'private', 1000000, 1, 1, 1, 1, 'UI sessions in browsers from UI application regarding connected accounts'
+ union all select 'auth_sso', 'auth_sso', 'Auth Sso', 'auth_sso_uid', 'auth', 'auso', 'type', 'category', 100, 1, 1, 1, 1, 'single sign on configuration'
+ union all select 'auth_token', 'auth_token', 'Auth Token', 'auth_token_uid', 'auth', 'auto', 'type', 'category', 1000000, 1, 1, 1, 1, 'single instance of token created for account'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'calendar_account', 'calendar_account', 'Calendar Account', 'calendar_account_uid', 'calendar', 'caac', 'type', 'account', 100000, 1, 1, 1, 1, 'calendar for account of given type'
+ union all select 'calendar_approval', 'calendar_approval', 'Calendar Approval', 'calendar_approval_uid', 'calendar', 'caap', 'type', 'private', 100000, 1, 1, 0, 1, 'approval of calendar event'
+ union all select 'calendar_approval_type', 'calendar_approval_type', 'Calendar Approval Type', 'calendar_approval_type_uid', 'calendar', 'caap', 'type', 'category', 10, 1, 1, 0, 1, 'type of approvals for calendar event: approve, correction, disapprove, waiting'
+ union all select 'calendar_event', 'calendar_event', 'Calendar Event', 'calendar_event_uid', 'calendar', 'caev', 'type', 'category', 1000, 1, 1, 0, 1, 'single day event in calendar within a group of events, single row would be single day within holiday'
+ union all select 'calendar_event_group', 'calendar_event_group', 'Calendar Event Group', 'calendar_event_group_uid', 'calendar', 'caeg', 'type', 'category', 1000, 1, 1, 0, 1, 'group of events in calendar with consistent period, one row could be holiday for 14 days for given person account'
+ union all select 'calendar_event_type', 'calendar_event_type', 'Calendar Event Type', 'calendar_event_type_uid', 'calendar', 'caet', 'type', 'category', 1000, 1, 1, 0, 1, 'type of event in calendar for given client'
+ union all select 'calendar_type', 'calendar_type', 'Calendar Type', 'calendar_type_uid', 'calendar', 'caty', 'type', 'category', 10, 1, 1, 0, 1, 'types of calendar: holiday, conference, sickness'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'client', 'client', 'Client', 'client_uid', 'client', 'clie', 'type', 'category', 100, 1, 1, 1, 1, 'single client of tenant'
+ union all select 'client_account', 'client_account', 'Client Account', 'client_account_uid', 'client', 'clac', 'type', 'category', 100000, 1, 1, 1, 1, 'account assignment to client with given role'
+ union all select 'client_country', 'client_country', 'Client Country', 'client_country_uid', 'client', 'clco', 'type', 'category', 1000, 1, 1, 1, 1, 'm2m between client and country to select countries that client operate'
+ union all select 'client_payment', 'client_payment', 'Client Payment', 'client_payment_uid', 'client', 'clpa', 'type', 'category', 1000, 1, 1, 1, 1, 'payment of client for licenses connected with modules'
+ union all select 'client_role', 'client_role', 'Client Role', 'client_role_uid', 'client', 'clro', 'type', 'category', 1000, 1, 1, 0, 1, 'roles of accounts in client'
+ union all select 'client_status', 'client_status', 'Client Status', 'client_status_uid', 'client', 'clst', 'type', 'category', 10, 1, 1, 0, 1, 'status of client: New, Pending, Active, Closed'
+ union all select 'client_type', 'client_type', 'Client Type', 'client_type_uid', 'client', 'clty', 'type', 'public', 10, 1, 1, 0, 1, 'type of client: System, Test, Corporate, Individual, ...'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'connection_engine', 'connection_engine', 'Connection Engine', 'connection_engine_uid', 'connection', 'coen', 'type', 'category', 1000, 1, 1, 0, 1, 'each connection engine is running on HTTP requests checking and acquiring statistics'
+ union all select 'connection_host', 'connection_host', 'Connection Host', 'connection_host_uid', 'connection', 'coho', 'type', 'category', 1000, 1, 1, 0, 1, 'list of hosts'
+ union all select 'connection_user', 'connection_user', 'Connection User', 'connection_user_uid', 'connection', 'cous', 'type', 'category', 1000, 1, 1, 0, 1, 'user connected to HTTP API through web applications'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'country', 'country', 'Country', 'country_uid', 'group', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'country of account or client'
+ union all select 'currency', 'currency', 'Currency', 'currency_uid', 'group', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'currency: EUR, USD, GBP, PLN, ...'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'event_acknowledge', 'event_acknowledge', 'Event Acknowledge', 'event_acknowledge_uid', 'event', 'evac', 'type', 'category', 1000, 1, 1, 1, 1, 'acknowledge of given notification by user'
+ union all select 'event_channel', 'event_channel', 'Event Channel', 'event_channel_uid', 'event', 'evch', 'type', 'category', 10, 1, 1, 1, 1, 'channel to deliver events'
+ union all select 'event_channel_type', 'event_channel_type', 'Event Channel Type', 'event_channel_type_uid', 'event', 'evct', 'type', 'category', 10, 1, 1, 0, 1, 'type of channels'
+ union all select 'event_instance', 'event_instance', 'Event Instance', 'event_instance_uid', 'event', 'evin', 'type', 'category', 1000000, 1, 1, 0, 1, 'event in system that can be published to listeners'
+ union all select 'event_notification', 'event_notification', 'Event Notification', 'event_notification_uid', 'event', 'evno', 'type', 'category', 100000, 1, 1, 1, 1, 'notification sent to password requests and info messages to accounts'
+ union all select 'event_observer', 'event_observer', 'Event Observer', 'event_observer_uid', 'event', 'evob', 'type', 'category', 100000, 1, 1, 0, 1, 'observer'
+ union all select 'event_subscription', 'event_subscription', 'Event Subscription', 'event_subscription_uid', 'event', 'evsu', 'type', 'category', 1000000, 1, 1, 1, 1, 'subscriptions for events'
+ union all select 'event_template', 'event_template', 'Event Template', 'event_template_uid', 'event', 'evte', 'type', 'category', 1000, 1, 1, 1, 1, 'template of notification or event to be sent'
+ union all select 'event_type', 'event_type', 'Event Type', 'event_type_uid', 'event', 'evty', 'type', 'category', 10, 1, 1, 0, 1, 'type of events'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'invoice_action', 'invoice_action', 'Invoice Action', 'invoice_action_uid', 'invoice', 'inac', 'type', 'category', 1000, 1, 1, 1, 1, 'types of action for invoice like receive, confirm, approve, deny, correction, paying, paid, closed'
+ union all select 'invoice_action_type', 'invoice_action_type', 'Invoice Action Type', 'invoice_action_type_uid', 'invoice', 'inat', 'type', 'category', 1000, 1, 1, 0, 1, 'types of action for invoice'
+ union all select 'invoice_category', 'invoice_category', 'Invoice Category', 'invoice_category_uid', 'invoice', 'inca', 'type', 'category', 1000, 1, 1, 1, 1, 'client category of invoice: Internal, Correction, ...'
+ union all select 'invoice_entry', 'invoice_entry', 'Invoice Entry', 'invoice_entry_uid', 'invoice', 'inen', 'type', 'category', 1000, 1, 1, 1, 1, 'entry assigned to invoice'
+ union all select 'invoice_flow', 'invoice_flow', 'Invoice Flow', 'invoice_flow_uid', 'invoice', 'infl', 'type', 'category', 1000, 1, 1, 0, 1, 'pre-defined flow of invoice'
+ union all select 'invoice_flow_state', 'invoice_flow_state', 'Invoice Flow State', 'invoice_flow_state_uid', 'invoice', 'infs', 'type', 'category', 100000, 1, 1, 0, 1, 'states of invoice flow'
+ union all select 'invoice_instance', 'invoice_instance', 'Invoice Instance', 'invoice_instance_uid', 'invoice', 'inin', 'type', 'category', 1000, 1, 1, 1, 1, 'invoices'
+ union all select 'invoice_status', 'invoice_status', 'Invoice Status', 'invoice_status_uid', 'invoice', 'inst', 'type', 'category', 10, 1, 1, 0, 1, 'status of invoice: Created, Pending, OnHold, Approved, Rejected, Paid, Closed'
+ union all select 'invoice_type', 'invoice_type', 'Invoice Type', 'invoice_type_uid', 'invoice', 'inty', 'dictionary', 'public', 1000, 1, 1, 0, 1, 'type of invoice: Default, Note, Pre, Draft'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'monitor', 'monitor', 'Monitor', 'monitor_uid', 'monitor', 'moni', 'full', 'protected', 1000, 1, 1, 1, 1, 'monitor to check state of given items'
+ union all select 'monitor_run', 'monitor_run', 'Monitor Run', 'monitor_run_uid', 'monitor', 'moru', 'append', 'protected', 100000, 1, 1, 1, 1, 'single run of monitor'
+ union all select 'monitor_type', 'monitor_type', 'Monitor Type', 'monitor_type_uid', 'monitor', 'moty', 'dictionary', 'public', 10, 1, 1, 0, 1, 'monitors in application to check status of item'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'period', 'period', 'Period', 'period_uid', 'group', 'peri', 'dictionary', 'public', 1000, 1, 1, 0, 1, 'period of time - daily, weekly, monthly, ...'
+ union all select 'process', 'process', 'Process', 'process_uid', 'process', 'proc', 'type', 'category', 100000, 1, 1, 1, 1, 'calendar for account of given type'
+ union all select 'process_run', 'process_run', 'Process Run', 'process_run_uid', 'process', 'pces', 'append', 'protected', 100000, 1, 1, 1, 1, 'single run of scheduled process'
+ union all select 'process_type', 'process_type', 'Process Type', 'process_type_uid', 'process', 'pcty', 'type', 'internal', 10, 1, 1, 0, 1, 'types of processes'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'project_account', 'project_account', 'Project Account', 'project_account_uid', 'project', 'prac', 'full', 'internal', 10000, 1, 1, 1, 1, 'project to bill time against'
+ union all select 'project_budget', 'project_budget', 'Project Budget', 'project_budget_uid', 'project', 'prbu', 'full', 'internal', 10000, 1, 1, 1, 1, 'budget for projects'
+ union all select 'project_group', 'project_group', 'Project Group', 'project_group_uid', 'project', 'prgr', 'full', 'internal', 10000, 1, 1, 1, 1, 'group of projects'
+ union all select 'project_instance', 'project_instance', 'Project Instance', 'project_instance_uid', 'project', 'prin', 'full', 'internal', 1000, 1, 1, 1, 1, 'project to bill time against'
+ union all select 'project_milestone', 'project_milestone', 'Project Milestone', 'project_milestone_uid', 'project', 'prmi', 'full', 'internal', 1000, 1, 1, 1, 1, 'milestone of project like: Concept, Development, Architecture, Analysis, Support'
+ union all select 'project_type', 'project_type', 'Project Type', 'project_type_uid', 'project', 'prty', 'dictionary', 'public', 100, 1, 1, 0, 1, 'type of project'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'report', 'report', 'Report', 'report_uid', 'report', 'repo', 'type', 'category', 100000, 1, 1, 1, 1, 'calendar for account of given type'
+ union all select 'report_content_type', 'report_content_type', 'Report Content Type', 'report_content_type_uid', 'report', 'rect', 'type', 'category', 10, 1, 1, 0, 1, 'type of content for report'
+ union all select 'report_format', 'report_format', 'Report Format', 'report_format_uid', 'report', 'refo', 'type', 'category', 10, 1, 1, 0, 1, 'formats supported by report rendering'
+ union all select 'report_run', 'report_run', 'Report Run', 'report_run_uid', 'report', 'reru', 'type', 'category', 100000, 1, 1, 1, 1, 'run of report by account'
+ union all select 'report_status', 'report_status', 'Report Status', 'report_status_uid', 'report', 'rest', 'type', 'category', 10, 1, 1, 0, 1, 'name of status for report'
+ union all select 'report_type', 'report_type', 'Report Type', 'report_type_uid', 'report', 'rety', 'type', 'category', 10, 1, 1, 0, 1, 'types of report'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'storage', 'storage', 'Storage', 'storage_uid', 'storage', 'code', 'type', 'category', 10000000, 1, 1, 0, 1, ''
+ union all select 'storage_connection', 'storage_connection', 'Storage Connection', 'storage_connection_uid', 'storage', 'code', 'type', 'category', 10000000, 1, 1, 0, 1, ''
+ union all select 'storage_query', 'storage_query', 'Storage Query', 'storage_query_uid', 'storage', 'code', 'type', 'category', 100000, 1, 1, 0, 1, 'type=full;cardinality=;description='
+ union all select 'storage_type', 'storage_type', 'Storage Type', 'storage_type_uid', 'storage', 'code', 'type', 'category', 10000000, 1, 1, 0, 1, 'type of storages: JDBC, Elasticsearch, Mongodb, Cassandra, ...'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'synchronization', 'synchronization', 'Synchronization', 'synchronization_uid', 'synchronization', 'code', 'type', 'category', 1000, 1, 1, 1, 1, 'synchronization with external system'
+ union all select 'synchronization_run', 'synchronization_run', 'Synchronization Run', 'synchronization_run_uid', 'synchronization', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'single run of synchronization'
+ union all select 'synchronization_type', 'synchronization_type', 'Synchronization Type', 'synchronization_type_uid', 'synchronization', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'type of synchronization: read, write'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'system_attribute', 'system_attribute', 'System Attribute', 'system_attribute_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'attributes for objects in tables'
+ union all select 'system_database', 'system_database', 'System Database', 'system_database_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'database with data for main common areas or database for clients, each database is having full schema of application and is controlled by Liquibase, application is connected to main database with common objects but also can use client-specific database for client data'
+ union all select 'system_exception', 'system_exception', 'System Exception', 'system_exception_uid', 'system', 'code', 'type', 'category', 10000, 1, 1, 0, 1, 'exception or error thrown in backend or frontend application, it is for diagnostic, debugging and checking reasons'
+ union all select 'system_instance', 'system_instance', 'System Instance', 'system_instance_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'instance of running application on server - each process would be having one row in table'
+ union all select 'system_license', 'system_license', 'System License', 'system_license_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'license of given module'
+ union all select 'system_lock', 'system_lock', 'System Lock', 'system_lock_uid', 'system', 'code', 'type', 'category', 100000, 1, 1, 0, 1, 'lock'
+ union all select 'system_module', 'system_module', 'System Module', 'system_module_uid', 'system', 'code', 'type', 'category', 100, 1, 1, 0, 1, 'module of system that could be within license'
+ union all select 'system_object', 'system_object', 'System Object', 'system_object_uid', 'system', 'code', 'type', 'category', 100, 1, 1, 0, 1, 'system objects related to tables, many objects might be in the same table but with different rows'
+ union all select 'system_object_type', 'system_object_type', 'System Object Type', 'system_object_type_uid', 'system', 'code', 'type', 'category', 10, 1, 1, 0, 1, 'types and subtypes of objects: table, dictionary, m2m, ...'
+ union all select 'system_query', 'system_query', 'System Query', 'system_query_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'SQL queries executed on database'
+ union all select 'system_request', 'system_request', 'System Request', 'system_request_uid', 'system', 'code', 'type', 'category', 1000000, 1, 1, 0, 1, 'HTTP request to application'
+ union all select 'system_setting', 'system_setting', 'System Setting', 'system_setting_uid', 'system', 'code', 'type', 'category', 100, 1, 1, 0, 1, 'global settings for system'
+ union all select 'system_setting_account', 'system_setting_account', 'System Setting Account', 'system_setting_account_uid', 'system', 'code', 'type', 'category', 100000, 1, 1, 0, 1, 'user settings for system'
+ union all select 'system_state', 'system_state', 'System State', 'system_state_uid', 'system', 'code', 'type', 'category', 100000, 1, 1, 0, 1, 'type=system,dictionary;cardinality=;description=state of current application/system instance, each state contains diagnostic information about running process in memory'
+ union all select 'system_table', 'system_table', 'System Table', 'system_table_uid', 'system', 'code', 'type', 'category', 100, 1, 1, 0, 1, 'tables managed by application'
+ union all select 'system_thread', 'system_thread', 'System Thread', 'system_thread_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'thread managed by instance of application'
+ union all select 'system_version', 'system_version', 'System Version', 'system_version_uid', 'system', 'code', 'type', 'category', 1000, 1, 1, 0, 1, 'semantic version of application like 1.2.3, each version is introducing new features to application'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'tenant', 'tenant', 'Tenant', 'tenant_uid', 'tenant', 'code', 'full', 'protected', 100, 1, 1, 1, 1, 'single tenant - company that is using time tracker app, each tenant is independent and has separated accounts and clients'
+ union all select 'tenant_account', 'tenant_account', 'Tenant Account', 'tenant_account_uid', 'tenant', 'tena', 'full', 'protected', 100000, 1, 1, 1, 1, 'account assignment to tenant with given role'
+ union all select 'tenant_category', 'tenant_category', 'Tenant Category', 'tenant_category_uid', 'tenant', 'teca', 'dictionary', 'protected', 10, 1, 1, 0, 1, 'category of tenant: Internal, External, Hybrid'
+ union all select 'tenant_country', 'tenant_country', 'Tenant Country', 'tenant_country_uid', 'tenant', 'teco', 'full', 'protected', 1000, 1, 1, 1, 1, 'm2m between tenant and country to select countries that tenant operate'
+ union all select 'tenant_license', 'tenant_license', 'Tenant License', 'tenant_license_uid', 'tenant', 'teli', 'full', 'protected', 1000, 1, 1, 1, 1, 'license bought/paid by tenant'
+ union all select 'tenant_payment', 'tenant_payment', 'Tenant Payment', 'tenant_payment_uid', 'tenant', 'tepa', 'full', 'protected', 10000, 1, 1, 1, 1, 'payment of tenant for licenses connected with modules'
+ union all select 'tenant_payment_type', 'tenant_payment_type', 'Tenant Payment Type', 'tenant_payment_type_uid', 'tenant', 'tept', 'dictionary', 'public', 10, 1, 1, 0, 1, 'type of payment'
+ union all select 'tenant_role', 'tenant_role', 'Tenant Role', 'tenant_role_uid', 'tenant', 'tero', 'type', 'category', 1000, 1, 1, 0, 1, 'key roles of accounts in tenant: Owner, Administrator, Manger, Finance, User'
+ union all select 'tenant_status', 'tenant_status', 'Tenant Status', 'tenant_status_uid', 'tenant', 'test', 'type', 'category', 10, 1, 1, 0, 1, 'status of tenant: New, Pending, Active, Closed'
+ union all select 'tenant_type', 'tenant_type', 'Tenant Type', 'tenant_type_uid', 'tenant', 'tety', 'type', 'category', 10, 1, 1, 0, 1, 'type of tenant: System, Test, Corporate, Individual'
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+insert into system_table(system_table_uid, system_table_name, table_label, uid_name, table_group, table_code, table_type, table_category, cardinality, is_object, is_rich, is_tenant, is_local, table_comment)
+ select 'time_approval', 'time_approval', 'Time Approval', 'time_approval_uid', 'time', 'teap', 'full', 'protected', 1000000, 1, 1, 1, 1, ''
+ union all select 'time_entry', 'time_entry', 'Time Entry', 'time_entry_uid', 'time', 'tien', 'type', 'account', 1000000, 1, 1, 1, 1, 'time entered by account against project'
+ union all select 'time_entry_final', 'time_entry_final', 'Time Entry Final', 'time_entry_final_uid', 'time', 'tief', 'type', 'category', 1000000, 1, 1, 1, 1, 'final time entered by account against project'
+ union all select 'time_entry_invoice', 'time_entry_invoice', 'Time Entry Invoice', 'time_entry_invoice_uid', 'time', 'tiei', 'type', 'category', 1000000, 1, 1, 1, 1, 'connection between time entry and invoice'
+ union all select 'time_rule', 'time_rule', 'Time Rule', 'time_rule_uid', 'time', 'tiru', 'type', 'protected', 10000, 1, 1, 0, 1, ''
+ union all select 'time_rule_client', 'time_rule_client', 'Time Rule Client', 'time_rule_client_uid', 'time', 'tirc', 'type', 'protected', 1000000, 1, 1, 0, 1, 'applied rule of time submitting into one client'
+ union all select 'time_submit', 'time_submit', 'Time Submit', 'time_submit_uid', 'time', 'tisu', 'full', 'private', 1000000, 1, 1, 1, 1, 'single submit of time for selected account to many projects wihtin one period'
+ union all select 'time_submit_type', 'time_submit_type', 'Time Submit Type', 'time_submit_type_uid', 'time', 'tist', 'dictionary', 'public', 10, 1, 1, 0, 1, 'type of submitting time'
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

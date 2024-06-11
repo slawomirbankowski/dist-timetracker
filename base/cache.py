@@ -4,11 +4,15 @@ import threading
 import uuid
 from abc import abstractmethod
 from typing import Dict, Callable
-from base.base_objects import base_object, thread_base
+from base.base_objects import base_object, ThreadBase, CacheManagerBase, objects
+import logging
+from logging import config
+from functools import lru_cache
 
 CACHE_MODE_TTL: int = 1
 CACHE_MODE_KEEP_FOREVER: int = 2
 CACHE_MODE_REFRESH: int = 3
+
 
 # wrapper for threads used in services
 class CacheItem:
@@ -50,14 +54,16 @@ class CacheItem:
             case _:
                 return False
 
+
 # Manager of all cache items
-class CacheManager(thread_base):
+class CacheManager(CacheManagerBase):
     created_date: datetime.datetime  # creation date of this manager with cache items
     cache_items: dict[str, CacheItem]
     def __init__(self):
         super().__init__()
+        objects.register_cache(self)
         self.created_date = datetime.datetime.now()
-        print("Creating object manager, creation time: " + str(self.created_date))
+        logging.info("Creating CacheManager, creation time: " + str(self.created_date))
         self.cache_items = {}
     def get_infos(self) -> list[dict]:
         return list(map(lambda x: x.get_info(), self.cache_items.values()))
@@ -67,26 +73,26 @@ class CacheManager(thread_base):
     def get_base_object_name(self) -> str:
         return "CacheManager"
     def initialize(self):
-        print("Initializing CacheManager")
+        logging.info("Initializing CacheManager, object_id: " + self.object_id)
         self.initialize_thread()
     # put cache item into cache storage
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
         item = CacheItem(key, obj, ttl_seconds, method)
         self.cache_items[key] = item
     def get(self, key: str) -> CacheItem | None:
-        item = self.cache_items[key]
-        if item is None:
-            return None
+        if self.cache_items.__contains__(key):
+            return  self.cache_items[key]
         else:
-            return item
+            return None
+
     # work in separated thread
     def thread_work(self, tick: int) -> bool:
-        # check inactive cache items
+        # TODO: check inactive cache items
         return True
-    def with_cache(self, key: str, method: Callable, ttl: int = 60) -> any:
+    def with_cache(self, key: str, method: Callable[[str], any], ttl: int = 60) -> any:
         item: CacheItem | None = self.get(key)
         if item is None or item.is_old():
-            obj = method()
+            obj = method(key)
             self.put(key, obj, method, ttl)
             return obj
         else:

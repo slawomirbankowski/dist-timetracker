@@ -1,0 +1,85 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog00062_definition_python_dto_list_views.xml">
+
+    <changeSet id="0062 - definition views" author="slawomir.bankowski">
+
+      <createView viewName="v_definition_python_dtos_model_list">
+	select '' as table_name, 1 as ordinal_position, concat('# auto-generated - v_definition_python_dtos_model_list - START at ', cast(now() as text)) as python
+	union all select '' as table_name, 1 as ordinal_position, 'from dto.dtos import db_model' as python
+	union all select '' as table_name, 1 as ordinal_position, 'from base.base_objects import base_model' as python
+	union all select '' as table_name, 1 as ordinal_position, '' as python
+	union all select '' as table_name, 1 as ordinal_position, 'class model_list_base:' as python
+	union all select '' as table_name, 1 as ordinal_position, '    all_models: dict[str, db_model] = {}' as python
+	union all select concat('bbb_', table_name), ordinal_position, python from v_definition_models
+	union all select 'ccc_' as table_name, 1 as ordinal_position, '    def initialize(self):' as python
+	union all select concat('ddd_', table_name), ordinal_position, python from v_definition_models_register
+	union all select 'zzzzzzzzzzzzzzzz' as table_name, 99999 as ordinal_position, '# auto-generated - v_definition_python_dtos_model_list - END'
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+      <createView viewName="xxxx">
+
+      </createView>
+
+
+
+
+    </changeSet>
+
+</databaseChangeLog>

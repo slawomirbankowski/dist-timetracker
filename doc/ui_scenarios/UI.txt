@@ -1,0 +1,144 @@
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+GENERAL REST API RULES
+1. Each request is having an address:
+METHOD http://host:port/api/version/controller/endpoint?parameters
+
+version: v1 | v2 | v3 | ....
+controller: auth | system | service | object | tenant | account | calendar
+endpoint: ping | info | ...
+parameters: parameters with values, depends on controller and method
+
+Example:
+GET http://localhost:8000/api/v1/object/get_list?table_name=account_title
+method=GET
+version: v1
+controller: object
+endpoint: get_list
+parameters: table_name=account_title
+
+2. To get information about all endpoints:
+GET {{URL}}/service/endpoints
+
+3. Response is returning HTTP codes:
+200 - OK with result
+204 - OK without result
+400 - bad request, incorrect payload or parameters;
+401 - Unauthorized - it means that token is empty, incorrect or already expired; UI should log out - redirect to /login page
+402 - Payment Required - just pay bro; UI should open page with Payment option: /payment
+403 - Forbidden - token is OK but account connected to that token has no rights to use this endpoint
+404 - NotFound - that method does not exist for controller within version, please check list of endpoints
+405 - MethodNotAllowed - this method is not allowed for controller
+408 - Request Timeout; UI should open page with /help
+429 - TooManyRequests - client is not allowed to call as many times per one minute, please wait till next call or pay more
+500 - Internal Server Error - something went terribly wrong, sorry, contact administrator
+501 - Not Implemented - feature not yet in this version, contact administrator for information when this would be implemented
+503 - Service Unavailable - service is not available, please contact administrator and try later
+
+4. OK response JSON is always a dictionary:
+{
+    "metadata": {
+        "code": 200,
+        "created_date": "2024-04-21 17:28:57.305096",
+        "error_message": "",
+        "request_id": "REQ_2024_04_21_17_28_57_24585696_cc7c",
+        "status": "",
+        "system_instance_uid": "SI_2024_04_21_022c0c6a_951e",
+        "total_time": 0.003998
+    },
+    "result": { ... }
+}
+result is different - depends on version, controller and endpoint
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Scenario 2: Generating main page
+
+1. Main page is: /application
+Example:
+http://localhost/application
+
+2. User information:
+GET {{URL}}/auth/myself
+HEADER: Authorization=Bearer {JWT}
+RESPONSE:
+{
+    "metadata": {
+        "code": 200,
+        "created_date": "2024-04-21 17:28:06.842034",
+        "error_message": "",
+        "request_id": "REQ_2024_04_21_17_28_06_1b39bd6b_8e83",
+        "status": "",
+        "system_instance_uid": "SI_2024_04_21_022c0c6a_951e",
+        "total_time": 0.007009
+    },
+    "result": {
+        "account": {
+            "account_name": "test_administrator",
+            "account_uid": "test_administrator",
+            "created_date": "2024-04-21 17:28:06.842034",
+            "is_active": 1
+        },
+        "roles": [
+            "ClientAdministrator"
+        ],
+        "tenant": {
+            "created_date": "2024-04-21 17:28:06.842034",
+            "is_active": 1,
+            "tenant_name": "test",
+            "tenant_uid": "Test"
+        }
+    }
+}
+
+2. Menu to be rendered:
+GET {{URL}}/auth/menu
+HEADER: Authorization=Bearer {JWT}
+RESPONSE:
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------

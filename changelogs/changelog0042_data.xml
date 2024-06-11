@@ -1,0 +1,459 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0042_data.xml">
+
+    <changeSet id="0042 - dictionary data" author="slawomir.bankowski">
+
+        <!-- ____________________________ tenant table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Default', 'Default');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('System', 'System');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Test', 'Test');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Individual', 'Individual');
+            insert into tenant_type(tenant_type_uid, tenant_type_name) values ('Corporate', 'Corporate');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Internal', 'Internal');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('External', 'External');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Hybrid', 'Hybrid');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('New', 'New');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Pending', 'Pending');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Active', 'Active');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closing', 'Closing');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'XX', 'System', 'Internal', 'system', 'system', 'System tenant - default one', now(), 1, 1, 0);
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'XX', 'Test', 'Internal', 'test', 'test', 'Test tenant - just for testing purpose', now(), 1, 1, 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'System');
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('System-Full', 'License for System tenant', 'System', 'Full', cast('2049-12-31' as timestamp), 1);
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('Test-Test', 'License for Test tenant', 'Test', 'Test', cast('2049-12-31' as timestamp), 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('HR', 'HR', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('User', 'User', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'System', 'system', 'Administrator');
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'Test', 'test_user', 'Administrator');
+        </sql>
+
+        <!-- ____________________________ Client table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_type(client_type_uid, client_type_name) values ('Default', 'Default');
+            insert into client_type(client_type_uid, client_type_name) values ('System', 'System');
+            insert into client_type(client_type_uid, client_type_name) values ('Test', 'Test');
+            insert into client_type(client_type_uid, client_type_name) values ('Individual', 'Individual');
+            insert into client_type(client_type_uid, client_type_name) values ('Corporate', 'Corporate');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_status(client_status_uid, client_status_name) values ('New', 'New');
+            insert into client_status(client_status_uid, client_status_name) values ('Pending', 'Pending');
+            insert into client_status(client_status_uid, client_status_name) values ('Active', 'Active');
+            insert into client_status(client_status_uid, client_status_name) values ('Closing', 'Closing');
+            insert into client_status(client_status_uid, client_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'System', 'System', 'XX', 'System', 'System', 'SYS', 'System client - default one', now(), 1, 1, 0);
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'Test', 'Test', 'XX', 'Test', 'Test', 'TST', 'Test client - default one', now(), 1, 1, 0);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_country(country_uid, tenant_uid ,client_uid) values ('XX', 'System', 'System');
+            insert into client_country(country_uid, tenant_uid ,client_uid) values ('XX', 'Test', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('HR', 'HR', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('User', 'User', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', 'System', 'System', 'system', 'Administrator');
+            insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', 'Test', 'Test', 'test_user', 'Administrator');
+        </sql>
+
+        <!-- ____________________________ Account table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('System', 'System account for administrative actions', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Test', 'Test account', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Person', 'Person account for people logging into application', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Client', 'Client account for external API clients', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Viewer', 'Viewer account for reporting and validation', '', '');
+            insert into account_type(account_type_uid, account_type_name, class_name, account_type_description) values ('Application', 'Application account for external applications', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CEO', 'Chief Execution Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CFO', 'Chief Financial Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CIO', 'Chief Information Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CSO', 'Chief Security Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CMO',  'Chief Marketing Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('COO', 'Chief Operating Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CTO', 'Chief Technology Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CCO', 'Chief Communications Officer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoE', 'Head of Engineering', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoA', 'Head of Analysis', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('HoC', 'Head of Cloud', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DMgr', 'Delivery Manager', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DE', 'Data Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LDE', 'Lead Data Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('CE', 'Cloud Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LCE', 'Lead Cloud Engineer', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DA', 'Data Analyst', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('LDA', 'Lead Data Analyst', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('ADM', 'Administrator', '');
+            insert into account_title(account_title_uid, account_title_name, title_description) values ('DEF', 'Default', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'CEO', '', 10);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'CIO', '', 20);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'COO', '', 30);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'HoC', '', 40);
+            insert into account_title_responsibility(account_title_responsibility_name, tenant_uid, account_title_uid, responsibility_description, responsibility_priority)
+            values ('', 'Test', 'HoA', '', 50);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('System', 'System', 'System', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Administrators', 'System', 'Administrators', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Default', 'System', 'Default', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Test', 'System', 'Test', '');
+            insert into account_group(account_group_uid, tenant_uid, account_group_name, account_group_description)
+            values ('Everyone', 'System', 'Everyone', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, account_uid, account_division_template_uid, division_description)
+            values ('Default', 'Default', 'System', 'system', 'Administration', '');
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, account_uid, account_division_template_uid, division_description)
+            values ('Test', 'Test', 'System', 'system', 'Administration', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Administration', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Finance', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Sales', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Marketing', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Human Resources', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Operation', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Investment', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Product', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Technical', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Public Relations', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Quality Assurance', '', '');
+            insert into account_division_template(account_division_template_uid, account_division_template_name, division_description)
+            values ('Information Technology', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_division(account_division_uid, account_division_name, tenant_uid, account_uid, account_division_template_uid, division_description)
+            values ('System-Administration', 'System-Administration', 'System', 'system', 'Administration', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('system', 'system', 'System', 'System', 'ADM', 'Default', 'Everyone', 'Internal', '{system_email}', 'System account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('administrator', 'administrator', 'System', 'System', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator_email}', 'System account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_administrator', 'test_administrator', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test1_email}', 'Test 1 account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_manager', 'test_manager', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test2_email}', 'Test account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_user', 'test_user', 'Test', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{test3_email}', 'Test account', 1);
+            insert into account(account_uid, account_name, tenant_uid, account_type_uid, account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, display_name, is_system)
+            values ('test_viewer', 'test_viewer', 'System', 'Test', 'ADM', 'Default', 'Everyone', 'Internal', '{administrator2_email}', 'System account', 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_administrator-test_manager', '', 'Test', 'test_administrator', 'test_manager');
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_manager-test_user', '', 'Test', 'test_manager', 'test_user');
+            insert into account_hierarchy(account_hierarchy_uid, account_hierarchy_name, tenant_uid, parent_account_uid, child_account_uid)
+            values ('Test-test_manager-test_viewer', '', 'Test', 'test_manager', 'test_viewer');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_rate(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('', 'Test', 'test_manager', 'EUR', 50.0, '2000-01-01', '2024-01-01');
+            insert into account_rate(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('', 'Test', 'test_user', 'USD', 40.0, '2000-01-01', '2024-01-01');
+            insert into account_rate(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('', 'Test', 'test_viewer', 'GBP', 20.0, '2000-01-01', '2024-01-01');
+            insert into account_rate(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('', 'Test', 'test_viewer', 'GBP', 22.0, '2024-01-01', '2024-05-01');
+            insert into account_rate(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+            values ('', 'Test', 'test_viewer', 'GBP', 24.0, '2024-05-01', '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into account_skill(account_skill_uid, account_skill_name, account_skill_description) values ('Java', 'Java', 'Java programming language');
+        </sql>
+
+        <!-- ____________________________ Auth table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Internal', 'Internal authentication - password is kept and managed within application', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('OneToken', 'OneToken authentication - generating token and sending to email for each login', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Google', 'Google authentication', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('AWS', 'AWS authentication', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Microsoft Azure AD', 'Microsoft Azure AD authentication', '', '{}');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('System-Internal', 'Internal authentication for system client', 'System', 'Internal');
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('Test-Internal', 'Internal authentication for test client', 'Test', 'Internal');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('symmetric', 'symmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('asymmetric', 'asymmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('signature', 'signature', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('client', 'client', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('custom', 'custom', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('system-main-asymmetric', 'Main asymmetric key for system client', 'System', 'system', 'asymmetric', '', '', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('system-main-symmetric', 'Main symmetric key for system client', 'System', 'system', 'asymmetric', '', '', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('test-main-asymmetric', 'Main asymmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '', '', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('test-main-symmetric', 'Main symmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '', '', '{}');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_tenant, is_client, is_custom)
+            select 'SystemAdministrator', 'SystemAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'Supervisor', 'Supervisor', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'DeliveryManager', 'DeliveryManager', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'Employee', 'Employee', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'StandardUser', 'StandardUser', '', '', '', 0, 0, 0, 0
+            union all select 'Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0, 0
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_tenant, is_client, is_custom)
+            select 'AccountAdministrator', 'AccountAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountManager', 'AccountManager', 'manager of , able to perform all possible actions except assigning managers', 'AccountAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountSupervisor', 'AccountSupervisor', 'supervisor of , able to create, edit and delete objects', 'AccountManager', '', 0, 0, 0, 0
+            union all select 'AccountOperator', 'AccountOperator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountCreator', 'AccountCreator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountEditor', 'AccountEditor', 'editor of - able to edit existing objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountViewer', 'AccountViewer', 'viewer of - able to view objects', 'AccountSupervisor', '', 0, 0, 0, 0
+
+            union all select 'AuthAdministrator', 'AuthAdministrator', 'administrator of authentication and authorization, able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthManager', 'AuthManager', 'manager of authentication and authorization, able to perform all possible actions except assigning managers', 'AuthAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthSupervisor', 'AuthSupervisor', 'supervisor of authentication and authorization, able to create, edit and delete objects', 'AuthManager', '', 0, 0, 0, 0
+            union all select 'AuthOperator', 'AuthOperator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthCreator', 'AuthCreator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthEditor', 'AuthEditor', 'editor of authentication and authorization - able to edit existing objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthViewer', 'AuthViewer', 'viewer of authentication and authorization - able to view objects', 'AuthSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ReportAdministrator', 'ReportAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportManager', 'ReportManager', '', 'ReportAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportSupervisor', 'ReportSupervisor', '', 'ReportManager', '', 0, 0, 0, 0
+            union all select 'ReportCreator', 'ReportCreator', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportEditor', 'ReportEditor', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportViewer', 'ReportViewer', '', 'ReportSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'ClientManager', 'ClientManager', '', 'ClientAdministrator', '', 0, 0, 0, 0
+            union all select 'ClientSupervisor', 'ClientSupervisor', '', 'ClientManager', '', 0, 0, 0, 0
+
+            union all select 'TenantAdministrator', 'TenantAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'TenantManager', 'TenantManager', 'manager of , able to perform all possible actions except assigning managers', 'TenantAdministrator', '', 0, 0, 0, 0
+            union all select 'TenantSupervisor', 'TenantSupervisor', 'supervisor of , able to create, edit and delete objects', 'TenantManager', '', 0, 0, 0, 0
+            union all select 'TenantOperator', 'TenantOperator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantCreator', 'TenantCreator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantEditor', 'TenantEditor', 'editor of - able to edit existing objects', 'TenantSupervisor', '', 0, 0, 0, 0
+            union all select 'TenantViewer', 'TenantViewer', 'viewer of - able to view objects', 'TenantSupervisor', '', 0, 0, 0, 0
+
+            union all select 'InvoiceAdministrator', 'InvoiceAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'InvoiceManager', 'InvoiceManager', 'manager of , able to perform all possible actions except assigning managers', 'Administrator', '', 0, 0, 0, 0
+            union all select 'InvoiceSupervisor', 'InvoiceSupervisor', 'supervisor of , able to create, edit and delete objects', 'Manager', '', 0, 0, 0, 0
+            union all select 'InvoiceOperator', 'InvoiceOperator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceCreator', 'InvoiceCreator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceEditor', 'InvoiceEditor', 'editor of - able to edit existing objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceViewer', 'InvoiceViewer', 'viewer of - able to view objects', 'Supervisor', '', 0, 0, 0, 0
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-GET', 'SystemAdministrator-GET', 'SystemAdministrator', 'GET:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-POST', 'SystemAdministrator-POST', 'SystemAdministrator', 'POST:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PUT', 'SystemAdministrator-PUT', 'SystemAdministrator', 'PUT:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PATCH', 'SystemAdministrator-PATCH', 'SystemAdministrator', 'PATCH:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-DELETE', 'SystemAdministrator-DELETE', 'SystemAdministrator', 'DELETE:/');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-system', 'SystemAdministrator role for system account', 'System', 'system', 'SystemAdministrator', now(), '2049-12-31');
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-test_administrator', 'SystemAdministrator role for test_administrator account', 'Test', 'test_administrator', 'ClientAdministrator', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for system account', 'Test', 'system', 'c45cf2b2dc0f3487561c293914bda7db', '427a79fe-9043-4fc5-8d11-51f3ad59b53e', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_administrator account', 'Test', 'test_administrator', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password_current(auth_password_current_uid, auth_password_current_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('system', 'First initial password for system account', 'System', 'system', 'xxxx', 'xxxxxx', now(), '2049-12-31');
+            insert into auth_password_current(auth_password_current_uid, auth_password_current_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('test_administrator', 'First initial password for test_administrator account', 'Test', 'test_administrator', 'a180a7bf659e6f9bf5e8e1030e0cba77', '3fa4412b-2023-493c-9015-bf74ff510ae6', now(), '2049-12-31');
+        </sql>
+
+        <!-- ____________________________ Invoice table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Created', 'Created', 'Created');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Pending', 'Pending', 'Pending');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('OnHold', 'OnHold', 'OnHold');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Approved', 'Approved', 'Approved');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Rejected', 'Rejected', 'Rejected');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Paid', 'Paid', 'Paid');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Closed', 'Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('Default', 'Default');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('System-Normal', 'Normal', 'System', 'Normal invoice');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('Test-Normal', 'Normal', 'Test', 'Normal invoice for Test client');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('Test-Correction', 'Correction', 'Test', 'Correction invoice for Test client');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Receive', 'Receive');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Accept', 'Accept');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Notify', 'Notify');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Approve', 'Approve');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Reject', 'Reject');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Issue', 'Issue');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Paid', 'Paid');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Done', 'Done');
+        </sql>
+
+        <!-- ____________________________ Project table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into project_group(project_group_uid, project_group_name, tenant_uid, project_group_description)
+            values ('System', 'System', 'System', '');
+        </sql>
+
+        <!-- ____________________________ Time table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Check', 'Check time - only try to check compliance milestone and project with time to be checked', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Save', 'Save time', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Submit', 'Submit time to be approved', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Approve', 'Approve time', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Reject', 'Reject', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Pending', 'Pending', '');
+        </sql>
+
+        <!-- ____________________________ Calendar table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Work', 'Work');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Holiday', 'Holiday');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Conference', 'Conference');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Sickness', 'Sickness');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Workshop', 'Workshop');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Waiting', 'Waiting');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Approve', 'Approve');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Correction', 'Correction');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Disapprove', 'Disapprove');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

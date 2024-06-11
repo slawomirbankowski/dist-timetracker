@@ -1,0 +1,46 @@
+
+1. Install python 3.11.X
+
+1.1 Check Python version
+>python --version
+Python 3.11.7
+
+1.2 Check PIP version and path
+>pip --version
+pip 24.0 from C:\Users\slawo\AppData\Local\Programs\Python\Python311\Lib\site-packages\pip (python 3.11)
+
+2. Go to main project TimeTracker Backend folder and run pip:
+
+pip install psycopg2
+pip install pyliquibase
+pip install flask
+pip install redis
+
+3. Install PostgreSQL OR run Postgres as container
+
+3.1 Docker version
+docker run --env=POSTGRES_PASSWORD=SupersecretPass123 --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/16/bin --env=GOSU_VERSION=1.16 --env=LANG=en_US.utf8 --env=PG_MAJOR=16 --env=PG_VERSION=16.1-1.pgdg120+1 --env=PGDATA=/var/lib/postgresql/data --volume=/var/lib/postgresql/data -p 5432:5432 --restart=no --runtime=runc -d postgres
+
+3.2 Standalone version:
+https://www.postgresql.org/download/
+
+3.1 Connect to Postgres and create database timetracker
+create database timetracker;
+
+3.2 Set up environment variables:
+export JDBC_HOST=localhost
+export JDBC_NAME=timetracker
+export JDBC_URL=jdbc:postgresql://localhost:5432/timetracker
+export JDBC_USER=postgres
+export JDBC_PASS=SupersecretPass123
+export JDBC_DRIVER=org.postgresql.Driver
+WARNING: change password and user according to user/password in Postgres.
+
+4. Run application from command line:
+ python main.py
+
+4.1 Tables should be automatically created in timetracker database
+
+4.2 HTTP interfaces are available on port 8000
+
+

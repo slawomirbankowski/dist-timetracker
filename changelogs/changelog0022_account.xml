@@ -1,0 +1,377 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0022_account.xml">
+
+    <changeSet id="0022 - account tables" author="slawomir.bankowski">
+
+        <createTable tableName="account_type" remarks="type of the account: Person, Client, Contractor, Application" >
+            <column name="account_type_uid" type="text" remarks="Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_type_name" type="text" remarks="Type of account: Person, Client, Contractor, Application"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <column name="class_name" type="text" remarks="name of class to apply rules and constraints around account"><constraints nullable="false"/></column>
+            <column name="account_type_description" type="text" remarks="Description of this type"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('acty')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_title" remarks="title of the account connected with person role: Data Engineer, Data Analyst, ..." >
+            <column name="account_title_uid" type="text" remarks="Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_title_name" type="text" remarks="Name of title like Data Engineer, Data Analyst, ..."><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <column name="title_description" type="text" remarks="Title description"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('acti')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_title_responsibility" remarks="custom responsibility of given title within tenant; responsibility is description of employee or contractor " >
+            <column name="account_title_responsibility_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks=""><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_title_responsibility_name" type="text" remarks=""><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_title_uid" type="text" remarks="Title description"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="responsibility_group" type="text" remarks="" defaultValue=""><constraints nullable="false"/></column>
+            <column name="responsibility_description" type="text" remarks="" defaultValue=""><constraints nullable="false"/></column>
+            <column name="responsibility_priority" type="bigint" remarks="" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('actr')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_title_assignment" remarks="assignment between account and title responsibility" >
+            <column name="account_title_assignment_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)" remarks=""><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_title_assignment_name" type="text" remarks=""><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_title_uid" type="text" remarks=""><constraints nullable="false"/></column>
+            <column name="account_title_responsibility_uid" type="text" remarks=""><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="responsibility_description" type="text" remarks=""><constraints nullable="false"/></column>
+            <column name="responsibility_priority" type="bigint" remarks=""><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('acta')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_division_template" remarks="template of division for accounts to be used for tenants" >
+            <column name="account_division_template_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_division_template_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <column name="division_description" type="text"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('adiv_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_division" remarks="division of the account based on template" >
+            <column name="account_division_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_division_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text" remarks="account UID"><constraints nullable="false"/></column>
+            <column name="account_division_template_uid" type="text" defaultValue="system" remarks=""><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="division_description" type="text"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('adiv_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account" remarks="single instance of account - person or user or system user or client or application" >
+            <column name="account_uid" type="text" remarks="email of that account or other unique ID of account"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_type_uid" type="text" defaultValue="Person"><constraints nullable="false"/></column>
+            <column name="account_title_uid" type="text" defaultValue="DEF"><constraints nullable="false"/></column>
+            <column name="account_division_uid" type="text" defaultValue="Default"><constraints nullable="false"/></column>
+            <column name="account_group_uid" type="text"><constraints nullable="false"/></column>
+            <column name="auth_identity_uid" type="text" defaultValue="Internal"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="account_email" type="text" remarks="email connected to that account"><constraints nullable="false"/></column>
+            <column name="display_name" type="text" remarks=""><constraints nullable="false"/></column>
+            <column name="account_address" type="text" remarks="" defaultValue=""><constraints nullable="false"/></column>
+            <column name="is_verified" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="is_system" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('acco_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex indexName="idx_account_account_email" tableName="account" unique="false"><column name="account_email" /></createIndex>
+        <createIndex indexName="idx_account_account_name" tableName="account" unique="false"><column name="account_name" /></createIndex>
+        <createIndex indexName="idx_account_display_name" tableName="account" unique="false"><column name="display_name" /></createIndex>
+
+        <createTable tableName="account_hierarchy" remarks="single instance of account - person or user or system user" >
+            <column name="account_hierarchy_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_hierarchy_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="parent_account_uid" type="text" defaultValue="system" remarks="parent account"><constraints nullable="false"/></column>
+            <column name="child_account_uid" type="text" defaultValue="system" remarks="child account"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('ahie_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex indexName="idx_account_hierarchy_tenant_uid" tableName="account_hierarchy" unique="false"><column name="tenant_uid" /></createIndex>
+
+        <createTable tableName="account_group" remarks="group of the accounts" >
+            <column name="account_group_uid" type="text" defaultValueComputed="generate_uid('agrp_')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_group_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="account_group_description" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('agrp')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex indexName="idx_account_group_account_group_name" tableName="account_group" unique="true"><column name="account_group_name" /></createIndex>
+
+        <createTable tableName="account_group_role" remarks="roles of accounts within group" >
+            <column name="account_group_role_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_group_role_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('agrp')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_group_assignment" remarks="assignments between groups and accounts" >
+            <column name="account_group_assignment_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_group_assignment_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_group_uid" type="text" remarks="group UID"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text" remarks="account UID"><constraints nullable="false"/></column>
+            <column name="account_group_role_uid" type="text" remarks="account UID"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="start_date" type="timestamp" remarks="start date of this assignment"><constraints nullable="false"/></column>
+            <column name="end_date" type="timestamp" remarks="start date of this assignment"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('acga')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_team" remarks="team of accounts - team is specialized set of accounts with flows ">
+            <column name="account_team_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_team_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="owner_account_uid" type="text" defaultValue="system" remarks="parent account"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="is_public" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_tenant" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="is_private" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('atea_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="account_rate" remarks="single instance of account - person or user or system user" >
+            <column name="account_rate_uid" type="text" defaultValueComputed="generate_uid('arat')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_rate_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text" remarks="parent account "><constraints nullable="false"/></column>
+            <column name="currency_uid" type="text" remarks="currency used to calculate this rate"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="rate" type="float" defaultValue="0.0" remarks="parent account"><constraints nullable="false"/></column>
+            <column name="start_date" type="timestamp" defaultValueDate="${nowdate}" remarks="start date of rate"><constraints nullable="false"/></column>
+            <column name="end_date" type="timestamp" remarks="end date of rate"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('arat')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex indexName="idx_account_rate_account_uid" tableName="account_rate" unique="false"><column name="account_uid" /></createIndex>
+
+        <createTable tableName="account_skill" remarks="skill owned by an account" >
+            <column name="account_skill_uid" type="text" remarks="Unique ID of title"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_skill_name" type="text" remarks="Name of title like Data Engineer, Data Analyst, ..."><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <column name="account_skill_description" type="text" remarks="Title description"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('atit_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
