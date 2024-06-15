@@ -146,19 +146,24 @@ class simple_dao(base_object):
             return tuple_to_dict(row)
 
     def get_single_value_int_or_default(self, query: str, default_value: int = 0, params: Iterable = [], col_num: int=0) -> int:
+        """get single value for query and given column number and cast value as int"""
         t: tuple = self.get_single_row(query, params)
         if t is None:
             return default_value
         else:
             return int(t[col_num])
+
     def get_single_value(self, query: str, col_num: int=0) -> Any | None:
+        """get single value for first row for given query result for given column number"""
         t: tuple = self.get_single_row(query)
         if t is None:
             return None
         else:
             return t[col_num]
+
     # get single column
     def get_column_values_by_params(self, query: str, params: Iterable = [], col_num: int = 0) -> list[str]:
+        """get all values for given column as list of string"""
         tuples = self.get_objects(query, params)
         return list(map(lambda x: str(x[col_num]), tuples))
     # get all values for given query and column number
@@ -205,20 +210,26 @@ class base_dao(simple_dao):
         pass
 
     def select_uids_all(self, n: int = 1000) -> list[str]:
+        """get all UID columns for this DAO"""
         return self.get_column_values_all(self.get_model().get_select_all_uids(n))
     def select_uids_active(self, n: int = 1000) -> list[str]:
+        """get all UIDs for rows that are active (is_active=1)"""
         return self.get_column_values_all(self.get_model().get_select_active_uids(n))
 
     def select_guids_all(self, n: int = 1000) -> list[str]:
+        """get GUID"""
         return self.get_column_values_all(self.get_model().get_select_all_guids(n))
+
     def select_guids_active(self, n: int = 1000) -> list[str]:
         return self.get_column_values_all(self.get_model().get_select_active_guids(n))
 
     # count all rows in table associated with this DAO
     def count_all(self) -> int:
+        """count number of rows in current DAO table, that includes inactive rows and active rows"""
         return self.get_single_value_int_or_default(self.get_model().get_select_count_all_sql())
     # count active rows in table associated with this DAO
     def count_active(self) -> int:
+        """count number of active rows for this DAO table"""
         return self.get_single_value_int_or_default(self.get_model().get_select_count_active_sql())
     # count all rows for given column in given values
     def count_by_any_column_values(self, col_name: str, col_values: list[any]) -> int:

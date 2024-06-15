@@ -119,7 +119,7 @@ class AccountRole:
 
 
 class AccountRolesHierarchy:
-    """hierarchy of roles"""
+    """hierarchy of roles with possibility """
     all_roles: list[auth_role_interface_dto]
     roles_dict: dict[str, AccountRole]
     roles_list: list[AccountRole]
@@ -157,17 +157,17 @@ class AccountRolesHierarchy:
 
 
 class ThreadWrapper(base_object):
-    """wrapper for threads used in threading classes"""
+    """wrapper for threads used in threading classes with separated thread to perform any actions"""
     thread: threading.Thread
     object: base_object
     is_working: bool = True
     ticks_count: int = 0
     sleep_time: int = 60
     end_time: datetime.datetime | None = None
-    def __init__(self, thread: threading.Thread, object: base_object, sleep_time: int = 60):
+    def __init__(self, thread: threading.Thread, obj: base_object, sleep_time: int = 60):
         super().__init__()
         self.thread = thread
-        self.object = object
+        self.object = obj
         self.sleep_time = sleep_time
     def get_base_object_type(self) -> str:
         """get type of this class"""
@@ -188,12 +188,20 @@ class ThreadWrapper(base_object):
             "thread_native_id": self.thread.native_id,
             "is_working": self.is_working,
             "ticks_count": self.ticks_count,
-            "sleep_time": self.sleep_time
+            "sleep_time": self.sleep_time,
+            "is_thread_active": self.is_thread_active()
         }
+    def stop_thread(self) -> None:
+        self.is_working = False
     def is_thread_active(self) -> int:
         """returns 1 if thread is still active or 0 is inactive"""
-        # TODO: implement this
-        return 1
+        try:
+            if self.thread.is_alive():
+                return 1
+            else:
+                return 0
+        except:
+            return -1
 
 
 # base class for all services
@@ -207,9 +215,11 @@ class ThreadBase(base_object):
     def thread_work(self, tick: int) -> bool:
         """work in separated thread - to be overridden"""
         pass
+
     def get_thread_sleep_time(self) -> int:
         """get sleep time in seconds"""
         return 60
+
     def thread_run(self) -> None:
         """running thread and executing thread_work method, then sleep for thread sleep time, works until thread_is_working"""
         logging.info("Starting work in separated thread, UUID: " + self.object_id)
@@ -239,13 +249,17 @@ class WatchDog(ThreadBase):
         logging.info("Initializing new WatchDog, object_id: " + self.object_id + ", threads: " + str(len(threads)))
         self.threads = threads
         self.initialize_thread()
+
     def thread_work(self, tick: int) -> bool:
         """separated thread to """
         # TODO: implement checking threads in ObjectManager and processes
         logging.debug("Watchdog is checking threads: " + str(len(self.threads)))
         return True
+
     def get_base_object_type(self) -> str:
+        """get object type for WatchDog"""
         return "WatchDog"
+
     # get name of base object
     def get_base_object_name(self) -> str:
         return "WatchDog"
@@ -528,6 +542,7 @@ class ObjectManager:
     host_ip: str
     local_path: str
     app_version: str = "1.0.0"
+    app_base_url: str
     created_by_default: str = "system"  # default account that is creating
     settings_by_name: dict[str, str]
     account_sessions: dict[str, AccountSessionBase]  # sessions of user, key=token, value=session with user
@@ -548,6 +563,7 @@ class ObjectManager:
         self.object_uid = base.base_utils.get_random_uid_with_prefix("SI")
         logging.info("Creating ObjectManager, creation time: " + str(self.created_date) + ", object_id: " + self.object_uid + ", system_instance_uid: " + self.system_instance_uid)
         self.all_objects = {}
+        self.app_base_url = os.environ.get('APP_BASE_URL')
         self.host_name = socket.gethostname()
         self.host_ip = socket.gethostname()
         self.local_path = os.path.dirname(os.path.realpath(__file__))
@@ -603,6 +619,10 @@ class ObjectManager:
         self.account_sessions[token] = session
         self.account_sessions[token_hash] = session
         return session
+    def destroy_session(self, active_session: AccountSessionBase | None) -> None:
+        if active_session:
+            self.account_sessions.__delitem__(active_session.token)
+
     def get_account_permission_by_account(self, account_uid: str) -> AccountPermissionsBase | None:
         return self.account_permissions.get(account_uid)
     def register_exception_handler(self, exception_handler: Callable[[Exception], bool]):
@@ -613,13 +633,7 @@ class ObjectManager:
         self.thread_handler = thread_handler
     def register_request_handler(self, request_handler: Callable[[ResponseBase], bool]):
         self.request_handler = request_handler
-    def handle_exception(self, ex: Exception) -> bool:
-        """handle any exception inside application, log it to DB table and create an event from it"""
-        try:
-            return self.exception_handler(ex)
-        except Exception as ex:
-            logging.error(f"Cannot handle Exception, reason: {ex}")
-            return False
+
     def handle_thread(self, ex: ThreadWrapper) -> bool:
         """handle thread change inside application, log it to DB table and create an event from it"""
         try:
@@ -636,5 +650,5 @@ class ObjectManager:
             return False
 
 
-# all the most important objects in application
+# all the most important objects in application - singleton to be used in backend application
 objects = ObjectManager()

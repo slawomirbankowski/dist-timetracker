@@ -9,6 +9,7 @@ import psycopg2.pool
 from pyliquibase import Pyliquibase
 
 from base.base_objects import base_object, DaoConnectionBase, DaoConnectionsBase, objects
+from base.base_utils import create_empty_list
 
 
 class DaoConnection(DaoConnectionBase):
@@ -20,6 +21,8 @@ class DaoConnection(DaoConnectionBase):
     db_pass: str
     min_conns: int = 2
     max_conns: int = 20
+    connections_opened: int = 0
+    connections_closed: int = 0
     db_pool: psycopg2.pool.SimpleConnectionPool
     liquibase_prop_file: str
     pool_created_date: datetime.datetime
@@ -42,12 +45,13 @@ class DaoConnection(DaoConnectionBase):
         self.db_pass = db_pass
         self.min_conns = min_conns
         self.max_conns = max_conns
+        self.connections_opened = 0
+        self.connections_closed = 0
         self.liquibase_prop_file = "./changelogs/liquibase." + self.db_name + ".properties"
         logging.info("Creating new DB connection pool, host: " + db_host + ", name: " + db_name + ", user: " + db_user)
         self.db_pool = psycopg2.pool.SimpleConnectionPool(min_conns, max_conns, user=db_user, password=db_pass,
                                                           host=db_host, port='5432', database=db_name)
         self.pool_created_date = datetime.datetime.now()
-
 
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {
@@ -55,8 +59,11 @@ class DaoConnection(DaoConnectionBase):
             "db_url": self.db_url,
             "db_host": self.db_host,
             "db_name": self.db_name,
+            "db_user": self.db_user,
             "min_conns": self.min_conns,
             "max_conns": self.max_conns,
+            "connections_opened": self.connections_opened,
+            "connections_closed": self.connections_closed,
             "db_pool_class_name": type(self.db_pool).__name__,
             "db_pool_closed": self.db_pool.closed
         }
@@ -88,16 +95,19 @@ class DaoConnection(DaoConnectionBase):
 
     def get_connection(self) -> connection:
         """get new DB connection; consider using with_connection instead"""
+        self.connections_opened += 1
         return self.db_pool.getconn()
 
     def close(self, db_conn) -> None:
         """close this connection; consider using with_connection instead"""
+        self.connections_closed += 1
         self.db_pool.putconn(db_conn)
 
     def get_url(self) -> str:
         """get JDBC URL to this DB connection"""
         return self.db_url
-    def get_objects(self, query: str, params: Iterable = []) -> list[tuple]:
+
+    def get_objects(self, query: str, params: Iterable = create_empty_list()) -> list[tuple]:
         """execute query with parameters and get list of rows as tuples"""
         logging.debug("Executing SQL query on database, Q=" + query)
         conn = db_connections.get_connection()
@@ -107,6 +117,7 @@ class DaoConnection(DaoConnectionBase):
         db_connections.close(conn)
         #self.executed_queries = self.executed_queries+1
         return results
+
     def with_connection(self, exec: Callable[[connection], any]) -> any:
         """execute exec method with connection"""
         conn = self.get_connection()
@@ -139,6 +150,8 @@ class DaoConnections(DaoConnectionsBase):
     db_name: str = "timetracker"
     db_user: str = "postgres"
     db_pass: str
+    connections_opened: int = 0
+    connections_closed: int = 0
     main_connection = DaoConnection()
     connections: dict[str, DaoConnection] = {}
 
@@ -178,13 +191,15 @@ class DaoConnections(DaoConnectionsBase):
         self.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
 
     def read_python_code(self) -> str | None:
-        self.main_connection.get_connection()
-
+        #self.main_connection.get_connection()
         return ""
 
     # handler for closing application
     def close_connections(self) -> None:
+        #TODO: close all connections
+
         logging.info("Closing ALL Connections, object_id: " + self.object_id)
+
     def get_base_dict_custom_info(self) -> dict:
         return {
             "is_initialized": self.is_initialized,
@@ -194,6 +209,8 @@ class DaoConnections(DaoConnectionsBase):
             "db_host": self.db_host,
             "db_name": self.db_name,
             "db_user": self.db_user,
+            "connections_opened": self.connections_opened,
+            "connections_closed": self.connections_closed,
             "main_conn": self.main_connection.get_base_dict_custom_info(),
             "connections": list(map(lambda c: c.get_base_dict_custom_info(), self.connections.values()))
         }
@@ -206,9 +223,11 @@ class DaoConnections(DaoConnectionsBase):
         self.connections[db_name] = tenant_connection
 
     def get_connection(self):
+        self.connections_opened += 1
         return self.main_connection.get_connection()
 
     def close(self, db_conn):
+        self.connections_closed += 1
         self.main_connection.close(db_conn)
 
     def get_tenant_connection(self, db_name: str) -> DaoConnection:
