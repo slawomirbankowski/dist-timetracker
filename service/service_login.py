@@ -91,6 +91,7 @@ class LoginService(service_threadBase):
             md5_hash.update(token_salted.encode())
             token_hash = md5_hash.hexdigest()
             valid_till_date = datetime.datetime.now() + datetime.timedelta(1.0)
+
             remote_addr = session.request.remote_addr
             host_name = session.request.host
             cookie_session = session.request.cookies.get("ttsession", None)
@@ -98,10 +99,18 @@ class LoginService(service_threadBase):
             user_session = objects.create_user_session(accinst.tenant_uid, accinst.account_uid, token, token_salt, token_hash, valid_till_date)
             logging.debug("Created user session for ID: " + user_session.session_id)
             daos.auth_token_dao_instance.insert_row(token, user_session.session_id, accinst.tenant_uid, accinst.account_uid, 100, token_hash, token_salt, valid_till_date, None, 1)
+            # daos.auth_token_access.insert_row(access_token, token, ....)
+
             return ResponseSession.ok(session, {"token": token, "access_token": access_token, "id_token": id_token, "session_id": user_session.session_id, "valid_till_date": str(valid_till_date)})
         else:
             return ResponseSession.unauthorized_request(session, {"account_uid": username})
 
+    def logout(self, session: RequestSession) -> ResponseSession:
+        objects.destroy_session(session.account_session)
+        if session.account_session:
+            daos.auth_token_dao_instance.delete_logical_by_uid(session.account_session.token, "")
+            #daos.auth_token_dao_instance.delete_logical_by_any_column()
+        return ResponseSession.ok(session, {"": ""})
 
     def produce_hash(self, session: RequestSession, password: str) -> ResponseSession:
         password_salt = base_dto.get_random_uid()

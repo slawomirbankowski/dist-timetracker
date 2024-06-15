@@ -46,3 +46,9 @@ class TenantController(BaseController):
         tenants = daos.tenant_dao_instance.select_rows_thin_all()
         return ResponseSession.ok(session, {"tenants": tenants.dtos})
 
+    def tenant_dictionaries(self, session: RequestSession) -> ResponseSession:
+        logging.info("list_tenants_thin")
+        # TODO: return all dictionaries for tenants
+        tenants = daos.tenant_dao_instance.select_rows_thin_all()
+        return ResponseSession.ok(session, {"tenants": tenants.dtos})
+

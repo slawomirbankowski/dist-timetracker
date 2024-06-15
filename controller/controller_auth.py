@@ -51,6 +51,11 @@ class AuthController(BaseController):
         logging.debug("Token request for grant_type: " + grant_type + ", username: " + username)
         return services.login_service.token(session, grant_type, username, password)
 
+    def logout(self, session: RequestSession) -> ResponseSession:
+        """logout - destroy session"""
+        # session.request.data
+        return services.login_service.logout(session)
+
     def set_password(self, session: RequestSession) -> ResponseSession:
         account_uid = session.get_query_param("username")
         password = session.get_query_param("password")
