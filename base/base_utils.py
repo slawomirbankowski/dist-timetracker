@@ -3,11 +3,15 @@ from abc import abstractmethod
 from dataclasses import dataclass
 import uuid
 import random
+import json
 from random import randrange, uniform, randint
 from typing import Iterable
 from typing import Dict, Callable
 import logging
 from logging import config
+
+from flask import jsonify
+
 from base.base_constants import SystemVersions
 
 # random methods
@@ -30,6 +34,10 @@ def get_random_uid_long_with_prefix(prefix: str) -> str:
     return prefix + "_" + str(datetime.datetime.now())[:19].replace("-", "_").replace(":", "_").replace(" ", "_") + "_" + str(
         uuid.uuid4())[:13].replace("-", "_")
 
+def get_random_uid_very_long_with_prefix(prefix: str) -> str:
+    return prefix + "_" + str(datetime.datetime.now())[:19].replace("-", "_").replace(":", "_").replace(" ", "_") + "_" + str(
+        uuid.uuid4()).replace("-", "_")
+
 
 def get_random_uid_for_object(prefix: str, obj: any) -> str:
     return prefix + "_" + type(obj).__name__ + "_" + str(datetime.datetime.now())[:10].replace("-", "_") + "_" + str(
@@ -39,6 +47,10 @@ def get_random_uid_for_object(prefix: str, obj: any) -> str:
 def get_random_uid_with_name( prefix: str) -> str:
     return prefix + "_" + str(datetime.datetime.now())[:10].replace("-", "_") + "_" + str(uuid.uuid4())[:13].replace(
         "-", "_")
+
+
+def dict_to_json(d: dict) -> str:
+    return json.dumps(d)
 
 
 def get_random_int() -> int:

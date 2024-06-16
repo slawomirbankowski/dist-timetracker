@@ -150,13 +150,15 @@ class RequestSession(RequestBase):
             return True
         if self.account_permission is None:
             return False
-        return not self.account_permission.roles.isdisjoint(required_roles)
+        return not self.account_permission.all_roles.isdisjoint(required_roles)
 
     def to_myself_dict(self) -> dict:
-        return {"account": asdict(self.account_permission.account_dto.to_thin()),
+        return {"account": asdict(self.account_permission.account_dto),
                 "tenant": asdict(self.account_permission.tenant_dto.to_thin()),
+                "groups": self.account_permission.groups_list,
                 "created_date": str(self.account_permission.created_date),
                 "roles": list(self.account_permission.roles),
+                "all_roles": list(self.account_permission.all_roles),
                 "session_load_date": str(self.account_session.session_load_date),
                 "permission_load_date": str(self.account_permission.permission_load_date),
                 "valid_till_date": str(self.account_session.valid_till_date),

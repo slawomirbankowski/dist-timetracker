@@ -18,7 +18,7 @@ from controller.controllers import controllers
 from custom.identity_type import *
 from custom.identity_type import identity_types
 import custom
-
+import smtplib, ssl
 
 def main_application() -> None:
     logging.info(f"Starting new Python application of version: {SystemVersions.Latest}" )
@@ -69,6 +69,32 @@ class MyTestClass:
     def __init__(self):
         print("START CLASS MY TEST CLASS")
 
+def test_email():
+        logging.info("Initializing Email DAO")
+        port = 587
+        smtp_server = "smtp.gmail.com"
+        password = "517ba70e-59d0-40ec-a549-3cb6ea2b0995"
+        sender_email = "disttimetracker@gmail.com"
+        to_email = "slawomir.bankowski@gmail.com"
+        message = "Request password change form"
+        logging.info("Sending email !!!!!!!!!!!!!!!!!!!!!!!!")
+        context = ssl.create_default_context()
+        # Try to log in to server and send email
+        server = None
+        try:
+            server = smtplib.SMTP(smtp_server, port)
+            server.ehlo() # Can be omitted
+            server.starttls(context=context) # Secure the connection
+            server.ehlo() # Can be omitted
+            server.login(sender_email, password)
+            # TODO: Send email here
+            server.sendmail(sender_email, to_email, message)
+        except Exception as e:
+            # Print any error messages to stdout
+            print(e)
+        finally:
+            server.quit()
+
 
 def test():
     print("TEST")
@@ -113,7 +139,7 @@ if __name__ == '__main__':
     print("START")
     #generate_files()
     main_application()
-
+    #test_email()
 
 def exit_handler():
     logging.info("TimeTracker application is ending")
