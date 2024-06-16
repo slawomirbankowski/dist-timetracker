@@ -19,9 +19,18 @@ class AccountController(BaseController):
         return "AccountController"
 
     def create_account(self, session: RequestSession) -> ResponseSession:
-        self.use()
-        session.get_body_as_dict()
-        #account_write_dto.from_dictionary()
+        account_uid = session.get_query_or_body_param("account_uid")
+        account_name = session.get_query_or_body_param("account_name")
+        account_type_uid = session.get_query_or_body_param("account_type_uid", "Test")
+        account_title_uid = "DEF"
+        account_division_uid = "Default"
+        account_group_uid = "Everyone"
+        auth_identity_uid = ""
+        account_email = ""
+        account_display_name = ""
+        account_address = ""
+        daos.account_dao_instance.insert_row(account_uid, account_name, session.account_session.tenant_uid, account_type_uid,
+                                             account_title_uid, account_division_uid, account_group_uid, auth_identity_uid, account_email, account_display_name, account_address, 0, 0)
         return ResponseSession.ok(session, {"table_name": "", "rows_count": 0})
 
     def list_accounts(self, session: RequestSession) -> ResponseSession:

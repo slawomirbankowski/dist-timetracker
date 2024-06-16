@@ -94,28 +94,51 @@ class AccountRole:
     parent: AccountRole | None  # parent role
     children: dict[str, AccountRole]  # children roles
     roles_below: set[str]
+    roles_above: set[str]
+    is_root: bool
     level: int = 0  # level in hierarchy
     def __init__(self, r: auth_role_interface_dto):
         self.role = r
         self.parent = None
+        self.is_root = False
         self.children = {}
         self.roles_below = set()
+        self.roles_above = set()
         self.level = 0
     def calculate_roles_below(self) -> set[str]:
-        below_roles = set()
+        br = set()
         for r in self.children:
+            self.children[r].level = self.level + 1
+            br.add(self.children[r].role.auth_role_uid)
             for b in self.children[r].calculate_roles_below():
-                below_roles.add(b)
-        self.roles_below = below_roles
-        return below_roles
-    def to_hierarchy(self) -> dict[str, dict]:
-        if len(self.children) == 0:
-            return {self.role.auth_role_uid: {}}
-        else:
-            h = {}
+                br.add(b)
+        self.roles_below = br
+        logging.info(f"------------------------------- Calculate roles below {self.role.auth_role_uid}, ROLES: {str(br)}")
+        return br
+    def calculate_roles_above(self) -> set[str]:
+        ra = set()
+        if self.parent:
+            ra.add(self.parent.role.auth_role_uid)
+            for r in self.parent.calculate_roles_above():
+                ra.add(r)
+        self.roles_above = ra
+        logging.info(f"------------------------------- Calculate roles above {self.role.auth_role_uid}, ROLES: {str(ra)}")
+        return ra
 
-            # TODO: finish returning hierarchy of roles
-            return {self.role.auth_role_uid: h}
+    def to_hierarchy(self) -> dict[str, dict]:
+        h = {}
+        for ch in self.children:
+            h[ch] = self.children[ch].to_hierarchy()
+        return h
+    def to_dict_info(self) -> dict[str, any]:
+        return {
+            "auth_role_uid": self.role.auth_role_uid,
+            "role_description": self.role.role_description,
+            "parent_auth_role_uid": self.role.parent_auth_role_uid,
+            "roles_below": list(self.roles_below),
+            "roles_above": list(self.roles_above),
+            "level": self.level
+        }
 
 
 class AccountRolesHierarchy:
@@ -136,24 +159,41 @@ class AccountRolesHierarchy:
             self.roles_list.append(r)
             if role.auth_role_uid == Roles.SystemAdministrator:
                 self.root = r
+                r.is_root = True
         for role in self.roles_list:
             if role.role.parent_auth_role_uid is not None and role.role.parent_auth_role_uid != "" and role.role.parent_auth_role_uid != role.role.auth_role_uid:
                 if self.roles_dict.__contains__(role.role.parent_auth_role_uid):
                     parent = self.roles_dict[role.role.parent_auth_role_uid]
                     role.parent = parent
                     parent.children[role.role.auth_role_uid] = role
+        self.root.calculate_roles_below()
+        for role in self.roles_list:
+            role.calculate_roles_above()
 
     def get_roles_below(self, role_uid: str) -> set[str]:
-        # TODO: get roles below this role
-        return set()
+        if self.roles_dict.__contains__(role_uid):
+            return self.roles_dict[role_uid].roles_below
+        else:
+            return set()
+
+    def get_roles_for_session(self, roles: set[str]) -> set[str]:
+        all_roles_below = set()
+        for r in roles:
+            all_roles_below.add(r)
+            for rb in self.get_roles_below(r):
+                all_roles_below.add(rb)
+        return all_roles_below
 
     def get_roles_above(self, role_uid: str) -> set[str]:
-        # TODO: get roles above this role
-        return set()
+        if self.roles_dict.__contains__(role_uid):
+            return self.roles_dict[role_uid].roles_above
+        else:
+            return set()
 
     def to_hierarchy(self) -> dict[str, any]:
-        # TODO: create simple hierarchy for roles
-        return {}
+        return { self.root.role.auth_role_uid: self.root.to_hierarchy() }
+    def to_list_info(self) -> list[dict]:
+        return [r.to_dict_info() for r in self.roles_list]
 
 
 class ThreadWrapper(base_object):
@@ -300,6 +340,7 @@ class FlaskApplicationWrapper(base_object):
         #self.httpflaskapp.blueprints
         return True
 
+
 class CacheManagerBase(ThreadBase):
     """base class for CacheManager"""
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
@@ -389,7 +430,7 @@ class AccountSessionBase:
     session_load_date: datetime.datetime
     def __init__(self, tenant_uid: str, account_uid: str, token: str, token_salt: str, token_hash: str, valid_till_date: datetime.datetime):
         self.created_date = datetime.datetime.now()
-        self.session_id = base.base_utils.get_random_uid()
+        self.session_id = base.base_utils.get_random_uid_with_prefix("USERSESSION")
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         logging.debug("Initializing session for Account, session_id: " + self.session_id + ", account: " + self.account_uid + ", tenant: " + self.tenant_uid)
@@ -401,6 +442,13 @@ class AccountSessionBase:
 
     def is_valid(self) -> bool:
         return datetime.datetime.now() > self.valid_till_date
+    def to_dict(self) -> dict[str, any]:
+        return {
+            "session_id": self.session_id,
+            "created_date": str(self.created_date),
+            "valid_till_date": str(self.valid_till_date),
+            "account_uid": self.account_uid
+        }
 
 
 class AccountPermissionsBase:
@@ -409,14 +457,29 @@ class AccountPermissionsBase:
     account_uid: str
     account_dto: account_interface_dto
     tenant_dto: tenant_interface_dto
+    permissions: list[auth_permission_interface_dto]
     roles: set[str]
+    all_roles: set[str]
+    groups: list[account_group_assignment_interface_dto]
+    groups_list: list[dict[str, str]]
     permission_load_date: datetime.datetime
-    def __init__(self, account_uid: str, account_dto: account_interface_dto, tenant_dto: tenant_interface_dto, roles: set[str]):
+
+    def __init__(self, account_uid: str, account_dto: account_interface_dto,
+                 tenant_dto: tenant_interface_dto,
+                 permissions: list[auth_permission_interface_dto],
+                 roles: set[str], all_roles: set[str],
+                 groups: list[account_group_assignment_interface_dto]):
         self.created_date = datetime.datetime.now()
         self.account_uid = account_uid
         self.account_dto = account_dto
         self.tenant_dto = tenant_dto
+        self.permissions = permissions
         self.roles = roles
+        self.all_roles = all_roles
+        self.groups = groups
+        self.groups_list = []
+        for group in groups:
+            self.groups_list.append({"account_group_uid": group.account_group_uid, "account_group_role_uid": group.account_group_role_uid, "created_date": str(group.created_date)})
         self.permission_load_date = datetime.datetime.now()
 
 
@@ -466,19 +529,25 @@ class AppMenuItem:
     """single item in menu - part of hierarchy to produce menu"""
     menu_name: str
     menu_url: str
+    menu_icon: str
     menu_roles: set[str]
     menu_subitems: list[AppMenuItem]
-    def __init__(self, name: str, url: str, roles: set[str], submenus: list[AppMenuItem]):
+    def __init__(self, name: str, url: str, icon: str, roles: set[str], submenus: list[AppMenuItem]):
         self.menu_name = name
         self.menu_url = url
+        self.menu_icon = icon
         self.menu_roles = roles
-        self.menu_roles = roles
-    def to_dict(self) -> dict[str, any]:
+        self.menu_subitems = submenus
+
+    def is_for_session(self, session_permission: AccountPermissionsBase) -> bool:
+        return len(session_permission.roles.intersection(self.menu_roles)) > 0
+
+    def to_dict(self,  session_permission: AccountPermissionsBase) -> dict[str, any]:
         return {
-            "menu_name": self.menu_name,
-            "menu_url": self.menu_url,
-            "menu_roles": self.menu_roles,
-            "menu_subitems": [item.to_dict() for item in self.menu_subitems],
+            "name": self.menu_name,
+            "link": self.menu_url,
+            "icon": self.menu_icon,
+            "subitems": [item.to_dict(session_permission) for item in self.menu_subitems if item.is_for_session(session_permission)],
         }
 
 
@@ -503,28 +572,46 @@ class AppMenuItems:
 
     def create_full_menu(self) -> list[AppMenuItem]:
         return [
-            AppMenuItem("Tenant", "/app/tenant", {Roles.TenantViewer}, []),
-            AppMenuItem("Client", "/app/tenant", {Roles.ClientSupervisor}, []),
-            AppMenuItem("Account", "/app/account", {Roles.AccountViewer}, []),
-            AppMenuItem("Time", "/app/time", {Roles.AccountViewer}, [
-                AppMenuItem("Entry", "/app/time-entry", {Roles.AccountViewer}, []),
-                AppMenuItem("Approval", "/app/time-approval", {Roles.AccountViewer}, []),
-                AppMenuItem("Summary", "/app/time-summary", {Roles.AccountViewer}, []),
-                AppMenuItem("Report", "/app/time-report", {Roles.AccountViewer}, [])
+            AppMenuItem("Tenant", "/app/tenant", "icon", {Roles.ClientAdministrator}, [
+                AppMenuItem("Tenants", "/app/tenant-list", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Create Tenant", "/app/tenant-create", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Tenant Info", "/app/tenant-info", "icon", {Roles.ClientAdministrator}, [])
             ]),
-            AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, []),
-            AppMenuItem("HR", "/app/hr", {Roles.AccountViewer}, []),
-            AppMenuItem("Calendar", "/app/calendar", {Roles.AccountViewer}, [
-                AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, []),
-                AppMenuItem("Project", "/app/project", {Roles.AccountViewer}, [])
+            AppMenuItem("Client", "/app/client", "icon", {Roles.ClientAdministrator}, [
+                AppMenuItem("Clients", "/app/client-list", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Create Client", "/app/client-create", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Client Info", "/app/client-info", "icon", {Roles.ClientAdministrator}, [])
             ]),
-            AppMenuItem("Administration", "/app/hr", {Roles.AccountViewer}, [
-                AppMenuItem("Reports", "/app/report", {Roles.AccountViewer}, []),
-                AppMenuItem("Synchronization", "/app/sync", {Roles.AccountViewer}, []),
-                AppMenuItem("Licenses", "/app/license", {Roles.AccountViewer}, [])
+            AppMenuItem("Account", "/app/account", "icon", {Roles.ClientAdministrator}, [
+
             ]),
-            AppMenuItem("My", "/app/myself", {Roles.AccountViewer}, [])
+            AppMenuItem("Time", "/app/time", "icon", {Roles.ClientAdministrator}, [
+                AppMenuItem("Entry", "/app/time-entry", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Approval", "/app/time-approval", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Summary", "/app/time-summary", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Report", "/app/time-report", "icon", {Roles.ClientAdministrator}, [])
+            ]),
+            AppMenuItem("Project", "/app/project", "icon", {Roles.ClientAdministrator}, []),
+            AppMenuItem("HR", "/app/hr", "icon", {Roles.ClientAdministrator}, []),
+            AppMenuItem("Calendar", "/app/calendar", "icon", {Roles.ClientAdministrator}, [
+                AppMenuItem("Project", "/app/calendar-event", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Project", "/app/project", "icon", {Roles.ClientAdministrator}, [])
+            ]),
+            AppMenuItem("Administration", "/app/hr", "icon", {Roles.ClientAdministrator}, [
+                AppMenuItem("Reports", "/app/report", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Synchronization", "/app/sync", "icon", {Roles.ClientAdministrator}, []),
+                AppMenuItem("Licenses", "/app/license", "icon", {Roles.ClientAdministrator}, [])
+            ]),
+            AppMenuItem("My", "/app/myself", "icon", {Roles.ClientAdministrator}, [])
         ]
+
+    def get_menu_as_dictionary(self, menu_to_convert: list[AppMenuItem],  session_permission: AccountPermissionsBase) -> list[dict[str, any]]:
+        """filter full menu for given account by roles"""
+        items = [mi.to_dict(session_permission) for mi in menu_to_convert if mi.is_for_session(session_permission)]
+        return items
+
+    def get_menu_as_dictionary_by_session(self, session_permission: AccountPermissionsBase) -> list[dict[str, any]]:
+        return self.get_menu_as_dictionary(self.menu, session_permission)
 
 
 class ObjectManager:
@@ -546,7 +633,7 @@ class ObjectManager:
     created_by_default: str = "system"  # default account that is creating
     settings_by_name: dict[str, str]
     account_sessions: dict[str, AccountSessionBase]  # sessions of user, key=token, value=session with user
-    account_permissions: dict[str, AccountPermissionsBase]  # set of permissions per account
+    account_permissions: dict[str, AccountPermissionsBase]  # set of permissions per account, key=account_uid, value=permissions for that account
     dao_connections: DaoConnectionsBase  # DAO connections
     watchdogs = []  # list of watchdogs
     cleaners = []  # list of cleaners
@@ -621,7 +708,9 @@ class ObjectManager:
         return session
     def destroy_session(self, active_session: AccountSessionBase | None) -> None:
         if active_session:
-            self.account_sessions.__delitem__(active_session.token)
+            self.account_sessions.pop(active_session.token, None)
+            self.account_permissions.pop(active_session.account_uid, None)
+            logging.info(f"Session destroyed for account: {active_session.account_uid}")
 
     def get_account_permission_by_account(self, account_uid: str) -> AccountPermissionsBase | None:
         return self.account_permissions.get(account_uid)

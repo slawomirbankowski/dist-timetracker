@@ -5,6 +5,7 @@ from logging import config
 from typing import TypeVar, Generic, List, Iterable, Any
 import dao.dao_connection
 from base.base_objects import ThreadWrapper, RequestBase, ResponseBase
+from dao.dao_email import DaoEmail
 from dao.daos_list import DaosList
 from dao.daos_read import *
 from dao.daos_full import *
@@ -23,11 +24,12 @@ class Daos(DaosList):
     settings_by_name: dict[str, str]
     account_skills: account_skill_read_dtos
     account_titles: account_title_read_dtos
+    email_dao: DaoEmail
 
     def __init__(self):
         super().__init__()
+        self.email_dao = DaoEmail()
         # objects.host_name
-        #
 
     def get_dao_for_table(self, table_name: str) -> base_dao | None:
         return self.all_daos.get(table_name + "_dao")
@@ -88,7 +90,6 @@ class Daos(DaosList):
     def read_dictionaries(self) -> None:
         self.account_skills = self.account_skill_dao_instance.select_rows_read_all()
         self.account_titles = self.account_title_dao_instance.select_rows_read_all()
-
 
     # handler for closing application
     def close(self) -> None:

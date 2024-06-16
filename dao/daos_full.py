@@ -136,6 +136,12 @@ class auth_permission_full_dao(auth_permission_dao):
 class auth_request_full_dao(auth_request_dao):
     def __init__(self):
         super().__init__()
+    def check(self, reset_guid: str) -> None:
+        self.execute_query("update auth_request set check_date=now(), is_checked=1 where auth_request_uid=%s", [reset_guid])
+    def use(self, reset_guid: str) -> None:
+        self.execute_query("update auth_request set use_date=now(), is_used=1 where auth_request_uid=%s", [reset_guid])
+    def notification(self, reset_guid: str, event_notification_uid) -> None:
+        self.execute_query("update auth_request set event_notification_uid=%s where auth_request_uid=%s", [event_notification_uid, reset_guid])
 
 
 class auth_role_full_dao(auth_role_dao):

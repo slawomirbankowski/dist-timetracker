@@ -10,11 +10,11 @@ from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
 from dto.dtos_read_list import auth_role_read_dtos
-from service.services_base import service_base, service_threadBase
+from service.services_base import service_base, ServiceThreadBase
 from dao.daos import daos
 
 
-class RoleService(service_threadBase):
+class RoleService(ServiceThreadBase):
     all_roles: auth_role_read_dtos
     roles_set: set[str]
     roles_by_parent: dict[str, list[str]]

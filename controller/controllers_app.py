@@ -29,32 +29,6 @@ def endpoints(session: RequestSession) -> ResponseSession:
 
 # all routes - list of available routes
 routes_list: list[ControllerRoute] = [
-    # service routes
-    ControllerRoute("GET:/v1/service/ping", "Just ping to check", controllers.service_controller.ping),
-    ControllerRoute("GET:/v1/service/version", "Check version of current application", controllers.service_controller.version),
-    ControllerRoute("GET:/v1/service/dao", "Get DAO", controllers.service_controller.dao, True, {"SystemAdministrator", "ClientAdministrator"}),
-    ControllerRoute("GET:/v1/service/connections", "", controllers.service_controller.connections, True),
-    ControllerRoute("GET:/v1/service/objects", "All management objects for current application instance", controllers.service_controller.objs, True),
-    ControllerRoute("GET:/v1/service/models", "List models", controllers.service_controller.models, True),
-    ControllerRoute("GET:/v1/service/endpoints", "List of HTTP endpoints", endpoints, True),
-    ControllerRoute("GET:/v1/service/threads", "Threads", controllers.service_controller.threads, True, {"SystemAdministrator", "ClientAdministrator"}),
-    ControllerRoute("GET:/v1/service/caches", "", controllers.service_controller.caches, True),
-    ControllerRoute("GET:/v1/service/settings", "", controllers.service_controller.settings),
-    ControllerRoute("GET:/v1/service/settings-system", "", controllers.service_controller.settings),
-
-    # object routes
-    ControllerRoute("GET:/v1/object/info", "", controllers.object_controller.info, True),
-    ControllerRoute("GET:/v1/object/count", "", controllers.object_controller.get_object_count, True),
-    ControllerRoute("GET:/v1/object/get_list", "", controllers.object_controller.get_objects_list, True),
-    ControllerRoute("GET:/v1/object/get_by_uid", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("GET:/v1/object/get_rich_by_uid", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("GET:/v1/object/search", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("POST:/v1/object/create", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("PATCH:/v1/object/update", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("PATCH:/v1/object/check", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("DELETE:/v1/object/delete", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("DELETE:/v1/object/deactivate", "", controllers.object_controller.get_object_by_uid, True),
-    ControllerRoute("POST:/v1/object/action", "Run defined action for object", controllers.object_controller.get_object_by_uid, True),
 
     # account routes
     ControllerRoute("PUT:/v1/account/create", "", controllers.account_controller.create_account, True),
@@ -63,20 +37,39 @@ routes_list: list[ControllerRoute] = [
     ControllerRoute("GET:/v1/account/get_account_by_uid", "", controllers.account_controller.list_accounts, True),
 
     # authentication routes
-    ControllerRoute("GET:/v1/auth/get_auth_method", "Get authentication method by account name or email or UID", controllers.auth_controller.get_auth_method),
-    ControllerRoute("GET:/v1/auth/set_password", "Set password for any user", controllers.auth_controller.set_password, True, {"SystemAdministrator", "ClientAdministrator"}),
-    ControllerRoute("GET:/v1/auth/my_set_password", "Set password for currently logged user", controllers.auth_controller.my_set_password, True),
-    ControllerRoute("GET:/v1/auth/check_password", "", controllers.auth_controller.check_password, True),
-    ControllerRoute("GET:/v1/auth/produce_hash", "", controllers.auth_controller.produce_hash),
+    ControllerRoute("GET:/v1/auth/set-password", "Set password for any user", controllers.auth_controller.set_password, True, {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/change-password", "Set password for currently logged user", controllers.auth_controller.change_password, True),
+    ControllerRoute("GET:/v1/auth/check-password", "", controllers.auth_controller.check_password, True),
+    ControllerRoute("GET:/v1/auth/produce-hash", "", controllers.auth_controller.produce_hash),
+
+    ControllerRoute("POST:/v1/auth/reset-request", "Request to reset password", controllers.auth_controller.request_password, False),
+    ControllerRoute("POST:/v1/auth/reset-check", "Check request token for password", controllers.auth_controller.reset_check, False),
+    ControllerRoute("POST:/v1/auth/reset-password", "Reset password", controllers.auth_controller.reset_password, False),
+
+    ControllerRoute("GET:/v1/auth/get-auth-method", "Get authentication method by account name or email or UID", controllers.auth_controller.get_auth_method),
     ControllerRoute("GET:/v1/auth/token", "Create token with authentication method", controllers.auth_controller.token),
-    ControllerRoute("POST:/v1/auth/token", "Create token with authentication method", controllers.auth_controller.token),
+    ControllerRoute("POST:/v1/auth/token", "Create token with authentication method",  controllers.auth_controller.token),
+    ControllerRoute("PUT:/v1/auth/token", "Create token with authentication method", controllers.auth_controller.token),
+    ControllerRoute("PATCH:/v1/auth/token", "Create token with authentication method", controllers.auth_controller.token),
+    ControllerRoute("POST:/v1/auth/logout", "Invalidate session", controllers.auth_controller.logout),
+    ControllerRoute("DELETE:/v1/auth/logout", "Invalidate session", controllers.auth_controller.logout),
+
+    ControllerRoute("GET:/v1/auth/sessions-latest", "List sessions", controllers.auth_controller.sessions_db_latest, True, {"ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/sessions", "List sessions", controllers.auth_controller.sessions_db_list, True, {"ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/sessions-memory", "List sessions", controllers.auth_controller.sessions_list, True, {"ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/sessions-by-account", "List sessions for selected account", controllers.auth_controller.sessions_by_account, True, {"ClientAdministrator"}),
+
     ControllerRoute("GET:/v1/auth/myself", "", controllers.auth_controller.myself, True),
     ControllerRoute("GET:/v1/auth/userinfo", "", controllers.auth_controller.userinfo, True),
+    ControllerRoute("POST:/v1/auth/reload-session", "", controllers.auth_controller.reload_session, True),
 
     ControllerRoute("GET:/v1/auth/roles", "", controllers.auth_controller.roles_list, True, {"SystemAdministrator", "ClientAdministrator"}),
-    ControllerRoute("GET:/v1/auth/roles-thin", "", controllers.auth_controller.roles_list_thin, True, {"SystemAdministrator", "ClientAdministrator"}),
-    ControllerRoute("GET:/v1/auth/roles-hierarchy", "", controllers.auth_controller.roles_hierarchy, True, {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/roles-info", "", controllers.auth_controller.roles_list, True, {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/roles-thin", "", controllers.auth_controller.roles_list_thin, True,  {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/auth/roles-hierarchy", "", controllers.auth_controller.roles_hierarchy, True,  {"SystemAdministrator", "ClientAdministrator"}),
 
+    ControllerRoute("GET:/v1/auth/menu", "", controllers.auth_controller.menu_for_user, True),
+    ControllerRoute("GET:/v1/auth/menu-full", "", controllers.auth_controller.menu_full, True),
     # client routes
     ControllerRoute("POST:/v1/client/info", "", controllers.client_controller.info, True),
     # ControllerRoute("GET:/client/list", "", controllers.client_controller.list_clients, True),
@@ -95,11 +88,25 @@ routes_list: list[ControllerRoute] = [
 
     # invoice routes
     ControllerRoute("POST:/v1/invoice/info", "", controllers.invoice_controller.info, True),
-    #ControllerRoute("GET:/invoice/list", "", controllers.invoice_controller.list_tenants, True),
+    # ControllerRoute("GET:/invoice/list", "", controllers.invoice_controller.list_tenants, True),
+
+    # object routes
+    ControllerRoute("GET:/v1/object/info", "", controllers.object_controller.info, True),
+    ControllerRoute("GET:/v1/object/count", "", controllers.object_controller.get_object_count, True),
+    ControllerRoute("GET:/v1/object/get_list", "", controllers.object_controller.get_objects_list, True),
+    ControllerRoute("GET:/v1/object/get_by_uid", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("GET:/v1/object/get_rich_by_uid", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("GET:/v1/object/search", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("POST:/v1/object/create", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("PATCH:/v1/object/update", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("PATCH:/v1/object/check", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("DELETE:/v1/object/delete", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("DELETE:/v1/object/deactivate", "", controllers.object_controller.get_object_by_uid, True),
+    ControllerRoute("POST:/v1/object/action", "Run defined action for object", controllers.object_controller.get_object_by_uid, True),
 
     # monitor routes
     ControllerRoute("POST:/v1/monitor/info", "", controllers.monitor_controller.info, True),
-    #ControllerRoute("GET:/monitor/list", "", controllers.monitor_controller.list_tenants, True),
+    # ControllerRoute("GET:/monitor/list", "", controllers.monitor_controller.list_tenants, True),
 
     # process routes
     ControllerRoute("POST:/v1/process/info", "", controllers.process_controller.info, True),
@@ -112,6 +119,19 @@ routes_list: list[ControllerRoute] = [
     # report routes
     ControllerRoute("POST:/v1/report/info", "", controllers.report_controller.info, True),
     # ControllerRoute("GET:/report/list", "", controllers.report_controller.list_tenants, True),
+
+    # service routes
+    ControllerRoute("GET:/v1/service/ping", "Just ping to check", controllers.service_controller.ping),
+    ControllerRoute("GET:/v1/service/version", "Check version of current application", controllers.service_controller.version),
+    ControllerRoute("GET:/v1/service/dao", "Get DAO", controllers.service_controller.dao, True, {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/service/connections", "", controllers.service_controller.connections, True),
+    ControllerRoute("GET:/v1/service/objects", "All management objects for current application instance", controllers.service_controller.objs, True),
+    ControllerRoute("GET:/v1/service/models", "List models", controllers.service_controller.models, True),
+    ControllerRoute("GET:/v1/service/endpoints", "List of HTTP endpoints", endpoints, True),
+    ControllerRoute("GET:/v1/service/threads", "Threads", controllers.service_controller.threads, True, {"SystemAdministrator", "ClientAdministrator"}),
+    ControllerRoute("GET:/v1/service/caches", "", controllers.service_controller.caches, True),
+    ControllerRoute("GET:/v1/service/settings", "", controllers.service_controller.settings),
+    ControllerRoute("GET:/v1/service/settings-system", "", controllers.service_controller.settings),
 
     # storage routes
     ControllerRoute("POST:/v1/storage/info", "", controllers.storage_controller.info, True),
@@ -147,7 +167,7 @@ def route_logic(version_name: str, controller_name: str, method_name: str, http_
         return ResponseSession.not_found(RequestSession(route_request, controller_name, method_name), {"status": "NOT_FOUND", "description": "controller or method not found"})
     else:
         try:
-            request_session = services.create_session_from_request(route_request, controller_name, method_name)
+            request_session: RequestSession = services.create_session_from_request(route_request, controller_name, method_name)
             if http_route.require_account:
                 if request_session.account_session is None:
                     return ResponseSession.unauthorized_request(request_session, {"status": "INCORRECT_EXPIRED_OR_NO_TOKEN"})

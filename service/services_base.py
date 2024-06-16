@@ -24,7 +24,7 @@ class service_base(base_object):
 
 
 # base class for all services
-class service_threadBase(service_base, ThreadBase):
+class ServiceThreadBase(service_base, ThreadBase):
     def __init__(self):
         super().__init__()
     # get type of base object

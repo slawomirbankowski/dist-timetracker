@@ -75,39 +75,40 @@ class service_list(service_list_base):
     def read_account_permission(self, account_session: AccountSessionBase) -> AccountPermissionsBase:
         account_permission = objects.get_account_permission_by_account(account_session.account_uid)
         if account_permission is None:
-            logging.info("Reading permissions for account: " + account_session.account_uid)
             account_dto = daos.account_dao_instance.select_row_read_by_uid(account_session.account_uid)
             tenant_dto = daos.tenant_dao_instance.select_row_read_by_uid(account_session.tenant_uid)
+            groups = daos.account_group_assignment_dao_instance.select_rows_read_by_account_uid(account_session.account_uid).filter(lambda x: x.is_active==1)
             perms = daos.auth_permission_dao_instance.select_rows_read_by_account_uid(account_session.account_uid)
-
-            # perms.dtos
-            roles = perms.filter(lambda dto: dto.is_active == 1).map_to_string(lambda dto: dto.auth_role_uid)
-
-            account_permission = AccountPermissionsBase(account_session.account_uid, account_dto, tenant_dto, set(roles))
+            roles: set[str] = set(perms.filter(lambda dto: dto.is_active == 1).map_to_string(lambda dto: dto.auth_role_uid))
+            all_roles = objects.role_hierarchy.get_roles_for_session(roles)
+            logging.info(f"Read permissions for account: {account_session.account_uid}, tenant: {tenant_dto.tenant_uid}, permissions: {str(len(perms))}, groups: {str(len(groups))}, roles: {str(len(roles))}")
+            account_permission = AccountPermissionsBase(account_session.account_uid, account_dto, tenant_dto, perms.dtos, roles, all_roles, groups.dtos)
         else:
             logging.debug("Got permissions in memory for account: " + account_session.account_uid)
         return account_permission
 
     def create_session_from_request(self, req: Request, controller_name: str, method_name: str) -> RequestSession:
-        logging.debug("Creating user session and running controller method for request")
+        logging.debug(f"Creating user session and running controller method for request, controller: {controller_name}, method: {method_name}")
         # decoding request into AppRequest with session, request ID, user, method, token, permissions, ...
         session = RequestSession(req, controller_name, method_name)
         token = session.get_authorization_token()
-        logging.info("!!!!!!!!! Searching for TOKEN: " + token)
+        logging.debug("!!!!!!!!! Searching for TOKEN: " + token)
         account_session: AccountSessionBase | None = objects.get_account_session_by_token(token)
         if account_session is None:
-            logging.debug("No TOKEN in MEMORY")
+            logging.debug("No TOKEN in MEMORY - trying to get session from DB")
             if token == "":
                 logging.info("EMPTY TOKEN")
             else:
                 auth_token_dto = daos.auth_token_dao_instance.select_row_read_by_uid(token)
-                if auth_token_dto is not None:
+                if auth_token_dto is None:
+                    logging.info("No token found in DB")
+                elif auth_token_dto.valid_till_date < datetime.datetime.now() or auth_token_dto.is_active == 0:
+                    logging.info("Session found in database is already invalid")
+                else:
                     logging.debug("Read account session with token from database, account: " + auth_token_dto.account_uid)
                     account_session = objects.create_user_session(auth_token_dto.tenant_uid, auth_token_dto.account_uid,
                                                                   auth_token_dto.auth_token_uid, auth_token_dto.token_salt,
                                                                   auth_token_dto.token_hash, auth_token_dto.valid_till_date)
-                else:
-                    logging.info("No token found in DB")
         else:
             logging.debug("Found active account session in memory: " + account_session.account_uid)
         session.set_account_session(account_session)
