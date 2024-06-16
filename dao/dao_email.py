@@ -10,7 +10,7 @@ class DaoEmail:
         logging.info("Initializing Email DAO")
         self.port = 587
         self.smtp_server = "smtp.gmail.com"
-        self.password = "517ba70e-59d0-40ec-a549-3cb6ea2b0995"
+        self.password = "*****************"
         self.sender_email = "disttimetracker@gmail.com"
 
     def send(self, to_email: str, title: str, message: str):

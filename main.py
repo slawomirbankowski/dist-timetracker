@@ -73,7 +73,7 @@ def test_email():
         logging.info("Initializing Email DAO")
         port = 587
         smtp_server = "smtp.gmail.com"
-        password = "517ba70e-59d0-40ec-a549-3cb6ea2b0995"
+        password = "********************"
         sender_email = "disttimetracker@gmail.com"
         to_email = "slawomir.bankowski@gmail.com"
         message = "Request password change form"
