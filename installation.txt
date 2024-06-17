@@ -11,7 +11,8 @@ pip 24.0 from C:\Users\slawo\AppData\Local\Programs\Python\Python311\Lib\site-pa
 
 2. Go to main project TimeTracker Backend folder and run pip:
 
-pip install psycopg2
+pip install virtualenv
+pip install psycopg2-binary
 pip install pyliquibase
 pip install flask
 pip install redis
