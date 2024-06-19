@@ -70,7 +70,6 @@ class DaoConnection(DaoConnectionBase):
 
     def save_liquibase_properties(self) -> None:
         logging.info("Saving Liquibase properties file")
-        print(os.environ)
         lpfile = open(self.liquibase_prop_file, "w")
         lpfile.writelines([
             "changeLogFile:./changelogs/masterchangelog.xml\n",
