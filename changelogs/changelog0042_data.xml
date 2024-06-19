@@ -273,6 +273,17 @@
         </sql>
 
         <sql splitStatements="false" stripComments="false">
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Access', 'Access');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Id', 'Id');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Refresh', 'Refresh');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Code', 'Code');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
             insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
             values ('System-Internal', 'Internal authentication for system client', 'System', 'Internal');
             insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
@@ -348,10 +359,19 @@
             union all select 'InvoiceAdministrator', 'InvoiceAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
             union all select 'InvoiceManager', 'InvoiceManager', 'manager of , able to perform all possible actions except assigning managers', 'Administrator', '', 0, 0, 0, 0
             union all select 'InvoiceSupervisor', 'InvoiceSupervisor', 'supervisor of , able to create, edit and delete objects', 'Manager', '', 0, 0, 0, 0
-            union all select 'InvoiceOperator', 'InvoiceOperator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
-            union all select 'InvoiceCreator', 'InvoiceCreator', 'creator of - able to create new objects', 'Supervisor', '', 0, 0, 0, 0
-            union all select 'InvoiceEditor', 'InvoiceEditor', 'editor of - able to edit existing objects', 'Supervisor', '', 0, 0, 0, 0
-            union all select 'InvoiceViewer', 'InvoiceViewer', 'viewer of - able to view objects', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceOperator', 'InvoiceOperator', 'creator of - able to create new objects', 'InvoiceSupervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceCreator', 'InvoiceCreator', 'creator of - able to create new objects', 'InvoiceSupervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceEditor', 'InvoiceEditor', 'editor of - able to edit existing objects', 'InvoiceSupervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceViewer', 'InvoiceViewer', 'viewer of - able to view objects', 'InvoiceSupervisor', '', 0, 0, 0, 0
+
+
+
+
+
+
+
+
+
         </sql>
 
         <sql splitStatements="false" stripComments="false">
