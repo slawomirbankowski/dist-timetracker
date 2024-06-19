@@ -12,6 +12,7 @@
             <!-- FKs -->
             <!-- attribute columns -->
             <column name="class_name" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <column name="auth_url" type="text" defaultValue=""><constraints nullable="false"/></column>
             <column name="default_parameters_json" type="text" remarks="" defaultValue="{}"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
@@ -184,7 +185,7 @@
             <!-- attribute columns -->
             <column name="account_login" type="text"><constraints nullable="false"/></column>
             <column name="identity_type" type="text" remarks="type of identity to be translated into class name"><constraints nullable="false"/></column>
-            <column name="identity_parameters" type="text" remarks="type=secret;description=JSON with identity parameters - map of parameters string to object" defaultValue="{}"><constraints nullable="false"/></column>
+            <column name="identity_parameters" type="text" remarks="JSON with identity parameters - map of parameters string to object" defaultValue="{}"><constraints nullable="false"/></column>
             <column name="last_status_name" type="text" defaultValue="Unknown"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
@@ -204,10 +205,33 @@
         </createTable>
         <createIndex indexName="idx_auth_identity_auth_identity_name" tableName="auth_identity" unique="true"><column name="auth_identity_name" /></createIndex>
 
+        <createTable tableName="auth_token_type" remarks="type of token: access, id, refresh, code" >
+            <column name="auth_token_type_uid" type="text" defaultValueComputed="generate_uid('autt')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_token_type_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('auto_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
         <createTable tableName="auth_token" remarks="single instance of token created for account" >
-            <column name="auth_token_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_token_uid" type="text" defaultValueComputed="generate_uid('auto')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_token_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
+            <column name="auth_token_type_uid" type="text" remarks="type of token"><constraints nullable="false"/></column>
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this token"><constraints nullable="false"/></column>
             <!-- attribute columns -->
@@ -217,6 +241,7 @@
             <column name="valid_till_date" type="timestamp" remarks="date and time of validation" />
             <column name="last_use_date" type="timestamp" remarks="date and time of insertion given row to database" />
             <column name="is_last" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="token_scope" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
@@ -291,6 +316,31 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
+
+        <createTable tableName="auth_permission_type" remarks="type of permission" >
+            <column name="auth_permission_type_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_permission_type_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <!-- FKs -->
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupe_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+
         <createTable tableName="auth_permission" remarks="permission assigned to account and role with optional project or client" >
             <column name="auth_permission_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_permission_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
@@ -300,6 +350,7 @@
             <column name="auth_role_uid" type="text"><constraints nullable="false"/></column>
             <column name="client_uid" type="text" />
             <column name="project_instance_uid" type="text" />
+            <column name="auth_permission_type_uid" type="text" defaultValue="role" />
             <!-- attribute columns -->
             <column name="valid_from_date" type="timestamp" remarks="permission from date" defaultValueDate="${nowdate}"><constraints nullable="false"/></column>
             <column name="valid_till_date" type="timestamp" remarks="permission till date"><constraints nullable="false"/></column>
@@ -354,8 +405,8 @@
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="password_hash" type="text" remarks="type=secret;description=hash of password including salt"><constraints nullable="false"/></column>
-            <column name="password_salt" type="text" remarks="type=secret;description=salt to add to password before hashing"><constraints nullable="false"/></column>
+            <column name="password_hash" type="text" remarks="hash of password including salt"><constraints nullable="false"/></column>
+            <column name="password_salt" type="text" remarks="salt to add to password before hashing"><constraints nullable="false"/></column>
             <column name="date_from" type="timestamp" remarks="date and time od start password"><constraints nullable="false"/></column>
             <column name="date_to" type="timestamp" remarks="date and time of validation date of this password"><constraints nullable="false"/></column>
             <column name="usage_count" type="bigint" defaultValueNumeric="0" remarks="numer of password usages"><constraints nullable="false"/></column>
@@ -384,8 +435,8 @@
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="password_hash" type="text" remarks="type=secret;description=hash of password including salt"><constraints nullable="false"/></column>
-            <column name="password_salt" type="text" remarks="type=secret;description=salt to add to password before hashing"><constraints nullable="false"/></column>
+            <column name="password_hash" type="text" remarks="hash of password including salt"><constraints nullable="false"/></column>
+            <column name="password_salt" type="text" remarks="salt to add to password before hashing"><constraints nullable="false"/></column>
             <column name="date_from" type="timestamp" remarks="date and time od start password"><constraints nullable="false"/></column>
             <column name="date_to" type="timestamp" remarks="date and time of validation date of this password"><constraints nullable="false"/></column>
             <column name="usage_count" type="bigint" defaultValueNumeric="0" remarks="numer of password usages"><constraints nullable="false"/></column>
@@ -415,9 +466,9 @@
             <column name="account_uid" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="requestor_email" type="text"><constraints nullable="false"/></column>
-            <column name="reset_guid" type="text" remarks="type=secret;description=global unique ID of this reset to be referred from the link"><constraints nullable="false"/></column>
+            <column name="reset_guid" type="text" remarks="global unique ID of this reset to be referred from the link"><constraints nullable="false"/></column>
             <column name="valid_till_date" type="timestamp" remarks="final date of validation of this request"><constraints nullable="false"/></column>
-            <column name="lock_guid" type="text" remarks="type=secret;description=lock global unique ID" />
+            <column name="lock_guid" type="text" remarks="lock global unique ID" />
             <column name="lock_by" type="text" remarks="process that has been locked this request" />
             <column name="lock_date" type="timestamp" remarks="date and time of last lock" />
             <column name="is_checked" type="bigint" defaultValueNumeric="0"><constraints nullable="false"/></column>
@@ -442,6 +493,33 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
         <createIndex indexName="idx_auth_request_account_uid" tableName="auth_request" unique="false"><column name="account_uid" /></createIndex>
+
+        <createTable tableName="auth_pin" remarks="pin set by user for simple actions or additional authorization" >
+            <column name="auth_pin_uid" type="text" defaultValueComputed="generate_uid('aupi')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_pin_name" type="text" defaultValueComputed="generate_uid('aupi')"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="pin_hash" type="text" remarks=""><constraints nullable="false"/></column>
+            <column name="pin_salt" type="text" remarks=""><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('aupa_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex indexName="idx_auth_pin_account_uid" tableName="auth_password" unique="false"><column name="account_uid" /></createIndex>
 
     </changeSet>
 

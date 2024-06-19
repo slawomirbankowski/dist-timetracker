@@ -2075,7 +2075,7 @@ class auth_password_rule_dao(base_dao):
     def upsert_row_and_get(self, auth_password_uid: str, auth_password_name: str, rule_type: int, rule_parameters: str, user_scope: str, updated_by: str = objects.created_by_default) -> auth_password_rule_read_dto | None:
         params = auth_password_rule_write_dto.new_write(auth_password_uid, auth_password_name, rule_type, rule_parameters, user_scope).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
-        return self.select_row_read_by_uid(auth_password_rule_uid)
+        return self.select_row_read_by_uid(auth_password_uid)
     def delete_logical_dtos(self, dtos: list[auth_password_rule_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)

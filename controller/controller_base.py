@@ -92,6 +92,13 @@ class RequestSession(RequestBase):
                 return body_dict[name]
             return default_value
 
+    def get_query_or_body_param_as_int(self, name: str, default_value: int = "") -> int:
+        try:
+            value_str = self.get_query_or_body_param(name, str(default_value))
+            return int(value_str)
+        except:
+            return default_value
+
     def get_query_params(self, name: str, default_list: list[str] = []) -> list[str]:
         if self.request.args.__contains__(name):
             return request.args.getlist(name)

@@ -3,6 +3,8 @@ from typing import Dict, Callable
 import logging
 from logging import config
 from flask import jsonify, abort, Request, Response
+
+from base.base_constants import TenantTypes, TenantCategories
 from dao.daos_instances import *
 from dao.daos import daos
 from service.services import services
@@ -24,15 +26,16 @@ class TenantController(BaseController):
     def create_tenant(self, session: RequestSession) -> ResponseSession:
         logging.info("create_tenant")
         tenant_data = session.get_body_as_dict()
-        tenant_uid = tenant_data.get("tenant_uid", "")
-        tenant_name = tenant_data.get("tenant_name", "")
-        country_uid = tenant_data.get("country_uid", "")
-        tenant_type_uid = tenant_data.get("tenant_type_uid", "")
-        tenant_category_uid = tenant_data.get("tenant_category_uid", "")
-        tenant_code = tenant_data.get("tenant_code", "")
+        tenant_uid = session.get_query_or_body_param("tenant_uid", "")
+        tenant_name = tenant_data.get("tenant_name", tenant_uid)
+        country_uid = tenant_data.get("country_uid", "XX")
+        tenant_type_uid = tenant_data.get("tenant_type_uid", TenantTypes.Default)
+        tenant_category_uid = tenant_data.get("tenant_category_uid", TenantCategories.Internal)
+        tenant_code = tenant_data.get("tenant_code", tenant_uid)
         tenant_description = tenant_data.get("tenant_description", "")
+
         start_date = datetime.datetime.now()
-        dto = tenant_write_dto(tenant_uid, tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, None, 1, 0, 0, None, "{}")
+        dto = tenant_write_dto(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, None, 1, 0, 0, None, "{}")
         read_dto = daos.tenant_dao_instance.insert_and_get(dto)
         return ResponseSession.ok(session, {"write_dto": dto, "read_dto": read_dto})
 
@@ -50,5 +53,11 @@ class TenantController(BaseController):
         logging.info("list_tenants_thin")
         # TODO: return all dictionaries for tenants
         tenants = daos.tenant_dao_instance.select_rows_thin_all()
-        return ResponseSession.ok(session, {"tenants": tenants.dtos})
+
+        return ResponseSession.ok(session, {
+            "tenants": tenants.dtos,
+            "tenant_type_uid": daos.tenant_type_dao_instance.select_rows_write_active().get_uids(),
+            "country_uid": daos.country_dao_instance.get_uids(),
+            "tenant_category_uid": daos.tenant_category_dao_instance.get_uids()
+        })
 
