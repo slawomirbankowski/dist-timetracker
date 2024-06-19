@@ -3,41 +3,80 @@ name: timetracker
 services:
   proxy:
     image: "nginx:1.26"
+    networks:
+      - timetracker
     volumes:
-      - ./deploy/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8000:80
     depends_on:
-      - app
+      app:
+        condition: service_healthy
   app:
-    image: "timetracker-app:0.0.1"
+    image: "timetracker:0.0.1"
     environment:
-      - JDBC_HOST=${JDBC_HOST}
-      - JDBC_NAME=${JDBC_NAME}
-      - JDBC_URL=${JDBC_URL}
-      - JDBC_USER_FILE=/run/secrets/db_user
-      - JDBC_PASS_FILE=/run/secrets/db_pass
+      - JDBC_HOST=${DB_HOST}
+      - JDBC_NAME=${DB_NAME}
+      - JDBC_URL=jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+      - JDBC_USER=${DB_USER}
+      - JDBC_PASS_FILE=/run/secrets/db_client_creds
       - JDBC_DRIVER=${JDBC_DRIVER}
     networks:
       - timetracker
     secrets:
-      - db_user
-      - db_pass
+      - db_client_creds
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8000", "localhost:8000/api/v1/service/ping"]
+      start_period: 3s
+      interval: 10s
+      retries: 10
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init_db:
+        condition: service_completed_successfully
+  # App DB
   db:
     image: "postgres:16.3"
     environment:
       - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER_FILE=/run/secrets/db_user
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db_pass
+      - PGUSER=postgres
+      - POSTGRES_USER_FILE=/run/secrets/db_server_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_server_pass
+    ports:
+      - 127.0.0.1:5433:5432
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
       - timetracker
     secrets:
-      - db_user
-      - db_pass
-
-
+      - db_server_user
+      - db_server_pass
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U" , "${POSTGRES_USER}", "-d", "${POSTGRES_DB}", "-q"]
+      interval: 2s
+      retries: 10
+  # DB Initialization
+  init_db:
+    image: "postgres:16.3"
+    environment:
+      - PGPASSFILE=/run/secrets/db_client_creds
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+    networks:
+      - timetracker
+    volumes:
+      - ./init_db.sh:/init_db.sh
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - db_client_creds
+    entrypoint: >
+      sh -c "
+        /init_db.sh \$DB_HOST \$DB_NAME \$DB_USER;
+      "
 networks:
   timetracker:
     driver: bridge
@@ -46,7 +85,9 @@ volumes:
   db_data:
 
 secrets:
-  db_user:
-    file: "./deploy/pg-user.secret"
-  db_pass:
-    file: "./deploy/pg-pass.secret"
+  db_server_pass:
+    file: "pg-server-pass.secret"
+  db_server_user:
+    file: "pg-server-user.secret"
+  db_client_creds:
+    file: "pg-user-creds.secret"
