@@ -76,7 +76,7 @@ class DaoConnection(DaoConnectionBase):
             "url: " + self.db_url + "\n",
             "username: " + self.db_user + "\n",
             "password: " + self.db_pass + "\n",
-            "classpath:  postgresql-42.7.3.jar\n"
+            "classpath:  postgresql.jar\n"
         ])
         lpfile.close()
 
@@ -185,9 +185,18 @@ class DaoConnections(DaoConnectionsBase):
         db_url = os.environ.get('JDBC_URL')
         db_host = os.environ.get('JDBC_HOST')
         db_name = os.environ.get('JDBC_NAME')
-        db_user = os.environ.get('JDBC_USER')
-        db_pass = os.environ.get('JDBC_PASS')
-        logging.info(f"Main database URL ={db_url}, HOST={db_host}, NAME={db_name}, USER={db_user}" )
+        db_user_file = os.environ.get("JDBC_USER_FILE")
+        db_pass_file = os.environ.get('JDBC_PASS_FILE')
+        if not db_user_file:
+            raise Exception("Must specify env 'JDBC_USER_FILE")
+        if not db_pass_file:
+            raise Exception("Must specify env 'JDBC_PASS_FILE")
+        with open(db_user_file, 'rt') as f:
+            db_user = f.read()
+        with open(db_pass_file, 'rt') as f:
+            db_pass = f.read()
+
+        logging.info(f"Main database URL ={db_url}, HOST={db_host}, DB_NAME={db_name}, USER={db_user}")
         self.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
 
     def read_python_code(self) -> str | None:

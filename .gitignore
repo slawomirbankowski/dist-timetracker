@@ -50,3 +50,6 @@ var/
 .installed.cfg
 *.egg
 
+# Secrets
+secrets/
+*.secret

@@ -209,5 +209,5 @@ def start_http_listening() -> None:
     """start HTTP interface"""
     start_duration: timedelta = datetime.datetime.now()-application_start_date
     logging.info(f"Start listening on HTTP 8000, started in {start_duration.total_seconds()} seconds")
-    httpflaskapp.run(debug=True, port=8000)
+    httpflaskapp.run(debug=True, host='0.0.0.0', port=8000)
     logging.info("End listening")
