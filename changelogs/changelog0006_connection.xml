@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0005_connection.xml">
+        logicalFilePath="conf/changelog0006_connection.xml">
 
-    <changeSet id="0005 - connections" author="slawomir.bankowski">
+    <changeSet id="0006 - connections" author="slawomir.bankowski">
 
         <createTable tableName="connection_engine" remarks="each connection engine is running on HTTP requests checking and acquiring statistics" >
             <column name="connection_engine_uid" type="text" remarks="unique ID of engine"><constraints primaryKey="true" nullable="false"/></column>

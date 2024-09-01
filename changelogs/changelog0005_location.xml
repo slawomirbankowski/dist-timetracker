@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0004_location.xml">
+        logicalFilePath="conf/changelog0005_location.xml">
 
-    <changeSet id="0004 - location and geography tables" author="slawomir.bankowski">
+    <changeSet id="0005 - location and geography tables" author="slawomir.bankowski">
 
         <createTable tableName="country" remarks="country of account or client" >
             <column name="country_uid" type="text" remarks="unique ID of country - ISO2 code"><constraints primaryKey="true" nullable="false"/></column>
@@ -88,6 +88,61 @@
             <column name="territory_latitude" type="float"><constraints nullable="false"/></column>
             <column name="territory_longitude" type="float"><constraints nullable="false"/></column>
             <column name="territory_description" type="text"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0" remarks="FK to system instance produced this state"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('lote')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row: 0, 1, 2, 3; each update is increasing this number"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of removing this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}" remarks="JSON with custom attributes for this object"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="location_hierarchy" remarks="root hierarchy of location - hierarchical structure per tenant" >
+            <column name="location_hierarchy_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="location_hierarchy_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="country_uid" type="text" remarks="connected country UID" />
+            <!-- attribute columns -->
+            <column name="hierarchy_description" type="text"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0" remarks="FK to system instance produced this state"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('lote')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row: 0, 1, 2, 3; each update is increasing this number"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of removing this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}" remarks="JSON with custom attributes for this object"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="location_region" remarks="region of location - hierarchical structure per tenant" >
+            <column name="location_region_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="location_region_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="location_hierarchy_uid" type="text" remarks="connected hierarchy UID"><constraints nullable="false"/></column>
+            <column name="location_territory_uid" type="text" remarks="connected territory UID" />
+            <column name="parent_location_region_uid" type="text" remarks="FK to parent region" />
+            <column name="country_uid" type="text" remarks="connected country UID" />
+            <!-- attribute columns -->
+            <column name="region_latitude" type="float"><constraints nullable="false"/></column>
+            <column name="region_longitude" type="float"><constraints nullable="false"/></column>
+            <column name="region_description" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0" remarks="FK to system instance produced this state"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />

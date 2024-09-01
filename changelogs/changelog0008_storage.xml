@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0007_storage.xml">
+        logicalFilePath="conf/changelog0008_storage.xml">
 
-    <changeSet id="0007 - storage" author="slawomir.bankowski">
+    <changeSet id="0008 - storage" author="slawomir.bankowski">
 
         <createTable tableName="storage_type" remarks="type of storages: JDBC, Elasticsearch, Mongodb, Cassandra, ..." >
             <column name="storage_type_uid" type="text" remarks=""><constraints primaryKey="true" nullable="false"/></column>

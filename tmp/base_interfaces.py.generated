@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_base_interfaces_dto - START at 2024-04-21 11:58:43.399715+00
+# auto-generated - v_definition_python_base_interfaces_dto - START at 2024-08-04 09:36:03.196833+00
 import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -173,6 +173,8 @@ class account_rate_interface_dto:
     rate: str
     start_date: datetime.datetime
     end_date: datetime.datetime
+    rate_note: str
+    is_default: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -192,7 +194,53 @@ class account_rate_interface_dto:
 class account_skill_interface_dto:
     account_skill_uid: str
     account_skill_name: str
+    account_skill_group_uid: str
+    skill_title: str
+    skill_code: str
+    skill_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class account_skill_assignment_interface_dto:
+    account_skill_assignment_uid: str
+    account_skill_assignment_name: str
+    tenant_uid: str
+    account_uid: str
+    account_skill_uid: str
+    skill_rate: str
     account_skill_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class account_skill_group_interface_dto:
+    account_skill_group_uid: str
+    account_skill_group_name: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -393,6 +441,7 @@ class auth_identity_interface_dto:
     auth_identity_uid: str
     auth_identity_name: str
     class_name: str
+    auth_url: str
     default_parameters_json: str
     row_instance: str
     row_lock: str | None
@@ -564,8 +613,51 @@ class auth_permission_interface_dto:
     auth_role_uid: str
     client_uid: str | None
     project_instance_uid: str | None
+    auth_permission_type_uid: str | None
     valid_from_date: datetime.datetime
     valid_till_date: datetime.datetime
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class auth_permission_type_interface_dto:
+    auth_permission_type_uid: str
+    auth_permission_type_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class auth_pin_interface_dto:
+    auth_pin_uid: str
+    auth_pin_name: str
+    tenant_uid: str
+    account_uid: str
+    pin_hash: str
+    pin_salt: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -719,6 +811,8 @@ class auth_sso_interface_dto:
 class auth_token_interface_dto:
     auth_token_uid: str
     auth_token_name: str
+    auth_attempt_uid: str
+    auth_token_type_uid: str
     tenant_uid: str
     account_uid: str
     token_seq: int
@@ -727,6 +821,26 @@ class auth_token_interface_dto:
     valid_till_date: datetime.datetime | None
     last_use_date: datetime.datetime | None
     is_last: int
+    token_scope: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class auth_token_type_interface_dto:
+    auth_token_type_uid: str
+    auth_token_type_name: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -953,6 +1067,31 @@ class client_account_interface_dto:
     custom_attributes: str
 
 
+class client_contract_interface_dto:
+    client_contract_uid: str
+    client_contract_name: str
+    tenant_uid: str
+    client_uid: str
+    parent_client_contract_uid: str | None
+    contract_text: str
+    contract_value: str
+    currency_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
 class client_country_interface_dto:
     client_country_uid: str
     client_country_name: str
@@ -1051,6 +1190,295 @@ class client_type_interface_dto:
     client_type_uid: str
     client_type_name: str
     client_type_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_entry_interface_dto:
+    competency_entry_uid: str
+    competency_entry_name: str
+    tenant_uid: str
+    competency_item_uid: str
+    account_uid: str
+    entry_template: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_entry_account_interface_dto:
+    competency_entry_account_uid: str
+    competency_entry_account_name: str
+    tenant_uid: str
+    account_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_entry_uid: str
+    competency_item_account_uid: str
+    entry_title: str | None
+    entry_content: str | None
+    entry_value: str | None
+    competency_ranking_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_group_interface_dto:
+    competency_group_uid: str
+    competency_group_name: str
+    competency_process_uid: str
+    tenant_uid: str
+    account_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_group_account_interface_dto:
+    competency_group_account_uid: str
+    competency_group_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_process_account_uid: str
+    competency_group_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    final_group_result: str | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_group_type_interface_dto:
+    competency_group_type_uid: str
+    competency_group_type_name: str
+    tenant_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_item_interface_dto:
+    competency_item_uid: str
+    competency_item_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_item_type_uid: str
+    competency_group_uid: str
+    account_uid: str
+    item_template: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_item_account_interface_dto:
+    competency_item_account_uid: str
+    competency_item_account_name: str
+    tenant_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_item_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    item_title: str | None
+    item_content: str | None
+    item_value: str | None
+    competency_ranking_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_item_type_interface_dto:
+    competency_item_type_uid: str
+    competency_item_type_name: str
+    tenant_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_process_interface_dto:
+    competency_process_uid: str
+    competency_process_name: str
+    competency_process_type_uid: str
+    tenant_uid: str
+    account_group_uid: str
+    is_required: int
+    process_description: str
+    due_date: datetime.datetime
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_process_account_interface_dto:
+    competency_process_account_uid: str
+    competency_process_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    due_date: datetime.datetime
+    end_date: datetime.datetime | None
+    is_closed: int
+    final_result: str | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_process_type_interface_dto:
+    competency_process_type_uid: str
+    competency_process_type_name: str
+    competency_class_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class competency_ranking_interface_dto:
+    competency_ranking_uid: str
+    competency_ranking_name: str
+    tenant_uid: str
+    competency_group_uid: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -1209,6 +1637,52 @@ class currency_interface_dto:
     currency_name: str
     is_focused: int
     priority: int
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class currency_rate_interface_dto:
+    currency_rate_uid: str
+    currency_rate_name: str
+    tenant_uid: str
+    currency_source_uid: str
+    from_currency_uid: str
+    to_currency_uid: str
+    start_date: datetime.datetime | None
+    end_date: datetime.datetime | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class currency_source_interface_dto:
+    currency_source_uid: str
+    currency_source_name: str
+    tenant_uid: str
+    source_url: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -1636,6 +2110,28 @@ class invoice_type_interface_dto:
     custom_attributes: str
 
 
+class location_hierarchy_interface_dto:
+    location_hierarchy_uid: str
+    location_hierarchy_name: str
+    tenant_uid: str
+    country_uid: str | None
+    hierarchy_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
 class location_postal_code_interface_dto:
     location_postal_code_uid: str
     location_postal_code_name: str
@@ -1646,6 +2142,33 @@ class location_postal_code_interface_dto:
     county_name: str
     state_name: str
     region_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class location_region_interface_dto:
+    location_region_uid: str
+    location_region_name: str
+    tenant_uid: str
+    location_hierarchy_uid: str
+    location_territory_uid: str | None
+    parent_location_region_uid: str | None
+    country_uid: str | None
+    region_latitude: str
+    region_longitude: str
+    region_description: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -1766,15 +2289,23 @@ class monitor_type_interface_dto:
 class period_interface_dto:
     period_uid: str
     period_name: str
+    period_full_name: str
     period_number: int
     period_type: str
     period_start_time: datetime.datetime
     period_end_time: datetime.datetime
     period_year: int | None
+    period_semester: int | None
+    period_trimester: int | None
     period_quarter: int | None
     period_month: int | None
     period_week: int | None
     period_day: int | None
+    period_day_of_year: int | None
+    parent_year_period_uid: str | None
+    parent_quarter_period_uid: str | None
+    parent_month_period_uid: str | None
+    parent_week_period_uid: str | None
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -1798,6 +2329,31 @@ class process_interface_dto:
     account_uid: str
     process_type_uid: str
     status_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class process_result_interface_dto:
+    process_result_uid: str
+    process_result_name: str
+    tenant_uid: str
+    account_uid: str
+    process_uid: str
+    process_run_uid: str
+    result_type: str
+    result_text: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -1968,6 +2524,35 @@ class project_milestone_interface_dto:
     client_uid: str
     project_instance_uid: str
     project_budget_uid: str | None
+    project_phase_uid: str | None
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    status_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+
+
+class project_phase_interface_dto:
+    project_phase_uid: str
+    project_phase_name: str
+    tenant_uid: str
+    client_uid: str
+    project_instance_uid: str
+    project_budget_uid: str | None
+    previous_project_phase_uid: str | None
+    client_contract_uid: str | None
     start_date: datetime.datetime
     end_date: datetime.datetime
     status_name: str
@@ -2382,6 +2967,8 @@ class system_database_interface_dto:
     db_user: str
     last_status_name: str
     last_db_size: int
+    created_connections: int
+    released_connections: int
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -2449,6 +3036,7 @@ class system_license_interface_dto:
     system_license_uid: str
     system_license_name: str
     class_name: str
+    license_definition_json: str
     license_description: str
     row_instance: str
     row_lock: str | None
@@ -2713,6 +3301,7 @@ class tenant_interface_dto:
     country_uid: str
     tenant_type_uid: str
     tenant_category_uid: str
+    tenant_status_uid: str
     tenant_code: str
     tenant_description: str
     start_date: datetime.datetime
@@ -2918,6 +3507,7 @@ class tenant_type_interface_dto:
     tenant_type_uid: str
     tenant_type_name: str
     tenant_type_description: str
+    tenant_class: str
     row_instance: str
     row_lock: str | None
     row_owner: str

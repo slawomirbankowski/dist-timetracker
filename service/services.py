@@ -104,6 +104,8 @@ class service_list(service_list_base):
                     logging.info("No token found in DB")
                 elif auth_token_dto.valid_till_date < datetime.datetime.now() or auth_token_dto.is_active == 0:
                     logging.info("Session found in database is already invalid")
+                elif auth_token_dto.auth_token_type_uid != "Access":
+                    logging.info(f"Token is not Access type but type: {auth_token_dto.auth_token_type_uid}")
                 else:
                     logging.debug("Read account session with token from database, account: " + auth_token_dto.account_uid)
                     account_session = objects.create_user_session(auth_token_dto.tenant_uid, auth_token_dto.account_uid,

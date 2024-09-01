@@ -1,0 +1,214 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0045_data_auth.xml">
+
+    <changeSet id="0045 - dictionary data for auth tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Auth table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Internal', 'Internal authentication - password is kept and managed within application', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('OneToken', 'OneToken authentication - generating token and sending to email for each login', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Google', 'Google authentication', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('AWS', 'AWS authentication', '', '{}');
+            insert into auth_identity(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+            values ('Microsoft Azure AD', 'Microsoft Azure AD authentication', '', '{}');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Access', 'Access');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Id', 'Id');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Refresh', 'Refresh');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('Code', 'Code');
+            insert into auth_token_type(auth_token_type_uid, auth_token_type_name)
+            values ('External', 'External');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('System-Internal', 'Internal authentication for system client', 'System', 'Internal');
+            insert into auth_identity_tenant(auth_identity_tenant_uid, auth_identity_tenant_name, tenant_uid, auth_identity_uid)
+            values ('Test-Internal', 'Internal authentication for test client', 'Test', 'Internal');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('symmetric', 'symmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('asymmetric', 'asymmetric', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('signature', 'signature', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('client', 'client', '');
+            insert into auth_key_type(auth_key_type_uid, auth_key_type_name, class_name) values ('custom', 'custom', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_length, key_private, key_exponent, key_modulus, key_parameters_json, key_public)
+            values ('system-main', 'system-main', 'System', 'system', 'symmetric', 4096, '', '', '', '{}', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVNaVa8FO3eaQoBLg7AsUf0jLb08WfSgS17+ZpZiJ3Y7ZuLTHknVnXg8MTi6yPRw2fOdxxzwKmZSHFKUydknJa/NeUm0vLhYKRyKHDogtQKHOZT7TTrVW742wTxSl3KZek84Un+EmzRCIuNiT4+/fpAEnrgbVuT7FIiDhMwwcY3VOAf+iUjBj+jS3M9+hhMW1zApr5oVtLhS11brYnbqSU8BbUtessd22spwX+B+5e21dY/ASRnF4osE1QBgi1HMK9RWfm3Aw+W5Ki+72/fvpCAJQayioBfL5PEUvmGiMOm0Fonj8wbgqSFgtE3PWvbSuUoEW34JWwiC/9Yjom0Dj8GWUnX8+GHuYZoZeY8rsiWkGJTv/CxcPZj9hyBSKcyaKZO3YlHBnhRhv2wN08NympFswLG/GEutJcSur24lg/FP8inTX+rOdu1AHy4YA5oBCs0YtSe/0pJdTxGlZ9NXdbntX/PekdQSGns1fo9EP1Qid/b7U6UepW119QlTRGFWkNO9M/QPQAB7bxLGVB1CHRBSicBVv7c+kNvh7C3ETaCniTqxriLcj2YhrqCehOdCmF8A3IPxzgAKQeS+QT4231UfDJc5VYai9tbeNdjYFXlkfU1Z3IApN39iBePdjec4aCPqcHwZ9qD4zVKOUjNUJwAa/Q69RCzTc1fv9StggROQ== sample.key =');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('system-main-asymmetric', 'Main asymmetric key for system client', 'System', 'system', 'asymmetric', '{key_public1}', '{key_private1}', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('system-main-symmetric', 'Main symmetric key for system client', 'System', 'system', 'asymmetric', '{key_public2}', '', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('test-main-asymmetric', 'Main asymmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '{key_public3}', '{key_private3}', '{}');
+            insert into auth_key(auth_key_uid, auth_key_name, tenant_uid, owner_account_uid, auth_key_type_uid, key_public, key_private, key_parameters_json)
+            values ('test-main-symmetric', 'Main symmetric key for test client', 'Test', 'test_administrator', 'asymmetric', '{key_public4}', '{key_private4}', '{}');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role(auth_role_uid, auth_role_name, role_description, parent_auth_role_uid, access_uris, is_project, is_tenant, is_client, is_custom)
+            select 'SystemAdministrator', 'SystemAdministrator', 'Root role for all roles, allows to run all actions and endpoints', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'Supervisor', 'Supervisor', 'Global supervisor for standard users', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'StandardUser', 'StandardUser', 'Standard user', 'Supervisor', '', 0, 0, 0, 0
+            union all select 'Everyone', 'Everyone', 'dummy role for everyone', 'StandardUser', '', 0, 0, 0, 0
+
+            union all select 'AccountAdministrator', 'AccountAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountManager', 'AccountManager', 'manager of , able to perform all possible actions except assigning managers', 'AccountAdministrator', '', 0, 0, 0, 0
+            union all select 'AccountSupervisor', 'AccountSupervisor', 'supervisor of , able to create, edit and delete objects', 'AccountManager', '', 0, 0, 0, 0
+            union all select 'AccountOperator', 'AccountOperator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountCreator', 'AccountCreator', 'creator of - able to create new objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountEditor', 'AccountEditor', 'editor of - able to edit existing objects', 'AccountSupervisor', '', 0, 0, 0, 0
+            union all select 'AccountViewer', 'AccountViewer', 'viewer of - able to view objects', 'AccountSupervisor', '', 0, 0, 0, 0
+
+            union all select 'AuthAdministrator', 'AuthAdministrator', 'administrator of authentication and authorization, able to perform all possible actions', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthManager', 'AuthManager', 'manager of authentication and authorization, able to perform all possible actions except assigning managers', 'AuthAdministrator', '', 0, 0, 0, 0
+            union all select 'AuthSupervisor', 'AuthSupervisor', 'supervisor of authentication and authorization, able to create, edit and delete objects', 'AuthManager', '', 0, 0, 0, 0
+            union all select 'AuthOperator', 'AuthOperator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthCreator', 'AuthCreator', 'creator of authentication and authorization - able to create new objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthEditor', 'AuthEditor', 'editor of authentication and authorization - able to edit existing objects', 'AuthSupervisor', '', 0, 0, 0, 0
+            union all select 'AuthViewer', 'AuthViewer', 'viewer of authentication and authorization - able to view objects', 'AuthSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ReportAdministrator', 'ReportAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportManager', 'ReportManager', '', 'ReportAdministrator', '', 0, 0, 0, 0
+            union all select 'ReportSupervisor', 'ReportSupervisor', '', 'ReportManager', '', 0, 0, 0, 0
+            union all select 'ReportCreator', 'ReportCreator', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportEditor', 'ReportEditor', '', 'ReportSupervisor', '', 0, 0, 0, 0
+            union all select 'ReportViewer', 'ReportViewer', '', 'ReportSupervisor', '', 0, 0, 0, 0
+
+            union all select 'InvoiceAdministrator', 'InvoiceAdministrator', '', 'SystemAdministrator', '', 0, 0, 0, 0
+            union all select 'InvoiceManager', 'InvoiceManager', '', 'InvoiceAdministrator', '', 0, 0, 0, 0
+            union all select 'InvoiceSupervisor', 'InvoiceSupervisor', '', 'InvoiceManager', '', 0, 0, 0, 0
+            union all select 'InvoiceCreator', 'InvoiceCreator', '', 'InvoiceSupervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceEditor', 'InvoiceEditor', '', 'InvoiceSupervisor', '', 0, 0, 0, 0
+            union all select 'InvoiceViewer', 'InvoiceViewer', '', 'InvoiceSupervisor', '', 0, 0, 0, 0
+
+            union all select 'ClientAdministrator', 'ClientAdministrator', '', 'SystemAdministrator', '', 0, 0, 1, 0
+            union all select 'ClientManager', 'ClientManager', '', 'ClientAdministrator', '', 0, 0, 1, 0
+            union all select 'ClientSupervisor', 'ClientSupervisor', '', 'ClientManager', '', 0, 0, 1, 0
+            union all select 'DeliveryManager', 'DeliveryManager', '', 'ClientManager', '', 0, 0, 1, 0
+            union all select 'Employee', 'Employee', '', 'ClientSupervisor', '', 0, 0, 1, 0
+
+            union all select 'TenantAdministrator', 'TenantAdministrator', 'administrator of , able to perform all possible actions', 'SystemAdministrator', '', 0, 1, 0, 0
+            union all select 'TenantManager', 'TenantManager', 'manager of , able to perform all possible actions except assigning managers', 'TenantAdministrator', '', 0, 1, 0, 0
+            union all select 'TenantSupervisor', 'TenantSupervisor', 'supervisor of , able to create, edit and delete objects', 'TenantManager', '', 0, 1, 0, 0
+            union all select 'TenantOperator', 'TenantOperator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 1, 0, 0
+            union all select 'TenantCreator', 'TenantCreator', 'creator of - able to create new objects', 'TenantSupervisor', '', 0, 1, 0, 0
+            union all select 'TenantEditor', 'TenantEditor', 'editor of - able to edit existing objects', 'TenantSupervisor', '', 0, 1, 0, 0
+            union all select 'TenantViewer', 'TenantViewer', 'viewer of - able to view objects', 'TenantSupervisor', '', 0, 1, 0, 0
+
+            union all select 'TimeAdministrator', 'TimeAdministrator', 'administrator of Time, able to perform all possible actions', 'SystemAdministrator', '', 0, 1, 0, 0
+            union all select 'TimeManager', 'TimeManager', 'manager of Time, able to perform all possible actions except assigning managers', 'TimeAdministrator', '', 0, 1, 0, 0
+            union all select 'TimeSupervisor', 'TimeSupervisor', 'supervisor of Time, able to create, edit and delete objects', 'TimeManager', '', 0, 1, 0, 0
+            union all select 'TimeOperator', 'TimeOperator', 'creator of Time - able to create new objects', 'TimeSupervisor', '', 0, 1, 0, 0
+            union all select 'TimeCreator', 'TimeCreator', 'creator of Time - able to create new objects', 'TimeSupervisor', '', 0, 1, 0, 0
+            union all select 'TimeEditor', 'TimeEditor', 'editor of Time - able to edit existing objects', 'TimeSupervisor', '', 0, 1, 0, 0
+            union all select 'TimeViewer', 'TimeViewer', 'viewer of Time - able to view objects', 'TimeSupervisor', '', 0, 1, 0, 0
+
+            union all select 'CompetencyAdministrator', 'CompetencyAdministrator', 'administrator of Competency, able to perform all possible actions', 'SystemAdministrator', '', 0, 1, 0, 0
+            union all select 'CompetencyManager', 'CompetencyManager', 'manager of Competency, able to perform all possible actions except assigning managers', 'CompetencyAdministrator', '', 0, 1, 0, 0
+            union all select 'CompetencySupervisor', 'CompetencySupervisor', 'supervisor of Competency processes, able to create, edit and delete objects', 'CompetencyManager', '', 0, 1, 0, 0
+            union all select 'CompetencyOperator', 'CompetencyOperator', 'creator of Competency- able to create new objects', 'CompetencySupervisor', '', 0, 1, 0, 0
+            union all select 'CompetencyCreator', 'CompetencyCreator', 'creator of Competency - able to create new objects', 'CompetencySupervisor', '', 0, 1, 0, 0
+            union all select 'CompetencyEditor', 'CompetencyEditor', 'editor of Competency - able to edit existing objects', 'CompetencySupervisor', '', 0, 1, 0, 0
+            union all select 'CompetencyViewer', 'CompetencyViewer', 'viewer of Competency - able to view objects', 'CompetencySupervisor', '', 0, 1, 0, 0
+
+            union all select 'ProjectAdministrator', 'ProjectAdministrator', 'administrator of Project, able to perform all possible actions', 'SystemAdministrator', '', 0, 1, 0, 0
+            union all select 'ProjectManager', 'ProjectManager', 'manager of Project, able to perform all possible actions except assigning project managers', 'ProjectAdministrator', '', 0, 1, 0, 0
+            union all select 'ProjectSupervisor', 'ProjectSupervisor', 'supervisor of Project processes, able to create, edit and delete objects', 'ProjectManager', '', 0, 1, 0, 0
+            union all select 'ProjectOperator', 'ProjectOperator', 'creator of Project - able to create new objects', 'ProjectSupervisor', '', 0, 1, 0, 0
+            union all select 'ProjectCreator', 'ProjectCreator', 'creator of Project - able to create new objects', 'ProjectSupervisor', '', 0, 1, 0, 0
+            union all select 'ProjectEditor', 'ProjectEditor', 'editor of Project - able to edit existing objects', 'ProjectSupervisor', '', 0, 1, 0, 0
+            union all select 'ProjectViewer', 'ProjectViewer', 'viewer of Project - able to view objects', 'ProjectSupervisor', '', 0, 1, 0, 0
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-GET', 'SystemAdministrator-GET', 'SystemAdministrator', 'GET:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-POST', 'SystemAdministrator-POST', 'SystemAdministrator', 'POST:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PUT', 'SystemAdministrator-PUT', 'SystemAdministrator', 'PUT:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-PATCH', 'SystemAdministrator-PATCH', 'SystemAdministrator', 'PATCH:/');
+            insert into auth_role_uri(auth_role_uri_uid, auth_role_uri_name, auth_role_uid, uri) values ('SystemAdministrator-DELETE', 'SystemAdministrator-DELETE', 'SystemAdministrator', 'DELETE:/');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-system', 'SystemAdministrator role for system account', 'System', 'system', 'SystemAdministrator', now(), '2049-12-31');
+            insert into auth_permission(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, valid_from_date, valid_till_date)
+            values ('SystemAdministrator-test_administrator', 'SystemAdministrator role for test_administrator account', 'Test', 'test_administrator', 'ClientAdministrator', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for system account', 'System', 'system', 'c45cf2b2dc0f3487561c293914bda7db', '427a79fe-9043-4fc5-8d11-51f3ad59b53e', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for administrator account', 'System', 'administrator', '5d1a2034ad0a70aa8b3c815c2eaafbb7', '8079b620-8c8f-4ae4-b583-a9228fe88bb3', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for synchronizer account', 'System', 'synchronizer', '549478e9f86bbd2916162a02be446922', 'd24a973a-8614-44e3-a93d-a8142121f5f8', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for logger account', 'System', 'logger', '87dd04d7c7b95ffeb75bda828103670f', '4b75684f-68f6-4cf6-988b-7920efaa8752', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for notifier account', 'System', 'notifier', '2b35686197ffe74c98f15058343b2d1c', 'b1decee6-111d-4ffc-b3b9-2625f6fccc12', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_administrator account', 'Test', 'test_administrator', '3a6fbb190ee33c8a09ece1ef26695143', 'b3c1a3b6-f407-4df2-b372-bcf8a5004a8f', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_manager account', 'Test', 'test_manager', '8d2a84dbfd9d2dd2e96510f43a303f65', '3e78a28d-3709-438b-ba09-1fda347319e8', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_user account', 'Test', 'test_user', '86e3a82071c784f47945750b680ceada', 'b5a9019f-8360-4fc0-be59-9e20d064a86a', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_supervisor account', 'Test', 'test_supervisor', '0a3077601a808b76dd9f3953003e1acc', 'e8c86ae8-a8d9-429c-be33-e53cce07253c', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_contractor account', 'Test', 'test_contractor', '067e91db29df83b5f2c81cd798f3be7c', 'f3c319eb-70d4-4e53-a42a-ecdfdafddc2d', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_scenario account', 'Test', 'test_scenario', 'dc91bd3a8e06719ae43d960c55f4ab6a', '40fd6ba9-5711-4761-afe5-fb7f8946cc6', now(), '2049-12-31');
+            insert into auth_password(auth_password_name, tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            values ('First initial password for test_viewer account', 'Test', 'test_viewer', 'f3ff6f71947e9ec9b6cec59fb9b409ae', '70b40652-8177-452a-91b7-193061a39d7f', now(), '2049-12-31');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_password_current(tenant_uid, account_uid, password_hash, password_salt, date_from, date_to)
+            select tenant_uid, account_uid, password_hash, password_salt, date_from, date_to
+            from auth_password
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_pin(tenant_uid, account_uid, pin_hash, pin_salt)
+            select 'System' as tenant_uid, 'administrator' as account_uid, 'd441c0138e033741227d871525f24794' as pin_hash, '19d3bbf2-da53-4266-be6d-5ecb983b6346' as pin_salt
+            union all select 'System' as tenant_uid, 'synchronizer' as account_uid, '78e76567bedcf98ec4d3b097995ee7f0' as pin_hash, '7bed8e48-039e-4a49-8485-c06e743edd1b' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_administrator' as account_uid, 'cb2f64cb4758287a843f4b67794d4735' as pin_hash, '88a2a8e4-e6d3-46bc-bdd5-388fca7771cc' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_manager' as account_uid, '968eafc6b043cd632c48dd5a55dac146' as pin_hash, '1f2d600c-c24e-4556-ab8d-0a63e227a969' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_user' as account_uid, 'b0d47900293bf6e9e6369eca1e289a93' as pin_hash, '9940113a-70d3-4b0c-9da2-c784c6ee1bf5' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_supervisor' as account_uid, '8d6f1057bfbd874ab96b292b18e2f2c2' as pin_hash, '13266de6-946c-4016-9163-46ba0191fbbd' as pin_salt
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into auth_pin(tenant_uid, account_uid, pin_hash, pin_salt)
+            select 'System' as tenant_uid, 'administrator' as account_uid, 'd441c0138e033741227d871525f24794' as pin_hash, '19d3bbf2-da53-4266-be6d-5ecb983b6346' as pin_salt
+            union all select 'System' as tenant_uid, 'synchronizer' as account_uid, '78e76567bedcf98ec4d3b097995ee7f0' as pin_hash, '7bed8e48-039e-4a49-8485-c06e743edd1b' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_administrator' as account_uid, 'cb2f64cb4758287a843f4b67794d4735' as pin_hash, '88a2a8e4-e6d3-46bc-bdd5-388fca7771cc' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_manager' as account_uid, '968eafc6b043cd632c48dd5a55dac146' as pin_hash, '1f2d600c-c24e-4556-ab8d-0a63e227a969' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_user' as account_uid, 'b0d47900293bf6e9e6369eca1e289a93' as pin_hash, '9940113a-70d3-4b0c-9da2-c784c6ee1bf5' as pin_salt
+            union all select 'Test' as tenant_uid, 'test_supervisor' as account_uid, '8d6f1057bfbd874ab96b292b18e2f2c2' as pin_hash, '13266de6-946c-4016-9163-46ba0191fbbd' as pin_salt
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

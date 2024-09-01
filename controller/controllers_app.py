@@ -41,6 +41,7 @@ routes_list: list[ControllerRoute] = [
     ControllerRoute("GET:/v1/auth/change-password", "Set password for currently logged user", controllers.auth_controller.change_password, True),
     ControllerRoute("GET:/v1/auth/check-password", "", controllers.auth_controller.check_password, True),
     ControllerRoute("GET:/v1/auth/produce-hash", "", controllers.auth_controller.produce_hash),
+    ControllerRoute("GET:/v1/auth/produce-password-tab", "", controllers.auth_controller.produce_passwords_tab),
 
     ControllerRoute("POST:/v1/auth/reset-request", "Request to reset password", controllers.auth_controller.request_password, False),
     ControllerRoute("POST:/v1/auth/reset-check", "Check request token for password", controllers.auth_controller.reset_check, False),
@@ -147,9 +148,13 @@ routes_list: list[ControllerRoute] = [
 
     # tenant routes
     ControllerRoute("GET:/v1/tenant/info", "", controllers.tenant_controller.info, True),
-    ControllerRoute("GET:/v1/tenant/list", "", controllers.tenant_controller.list_tenants, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
-    ControllerRoute("GET:/v1/tenant/list_thin", "", controllers.tenant_controller.list_tenants_thin, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
-    ControllerRoute("PUT:/v1/tenant/create", "", controllers.tenant_controller.create_tenant, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
+    ControllerRoute("GET:/v1/tenant/list", "List of all existing tenants", controllers.tenant_controller.list_tenants, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
+    ControllerRoute("GET:/v1/tenant/list_thin", "Simple list of all existing tenants", controllers.tenant_controller.list_tenants_thin, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
+    ControllerRoute("PUT:/v1/tenant/create", "Create new tenant", controllers.tenant_controller.create_tenant, True, {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
+    ControllerRoute("PUT:/v1/tenant/dictionaries", "List all dictionaries needed to create new tenant", controllers.tenant_controller.tenant_dictionaries, True,
+                    {Roles.ClientAdministrator, Roles.TenantViewer, Roles.TenantAdministrator}),
+
+
 
     # time routes
     ControllerRoute("GET:/v1/time/info", "", controllers.time_controller.info, True)

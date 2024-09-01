@@ -9,6 +9,7 @@ from dataclasses import asdict
 from typing import Callable
 
 import base.base_utils
+from base.base_utils import get_random_uid
 import base.base_interfaces
 from base.base_constants import Roles
 from base.base_interfaces import *
@@ -16,6 +17,8 @@ from abc import abstractmethod
 from time import sleep
 from flask import Flask, jsonify, request, abort
 import logging
+from psycopg2.extensions import connection
+import hashlib
 
 httpflaskapp: Flask = Flask(__name__)
 
@@ -60,6 +63,18 @@ class base_object:
         }
         d.update(self.get_base_dict_custom_info())
         return d
+
+
+class RichDict:
+    d: dict
+    def get(self, key: str) -> any:
+        return self.d[key]
+    def get_or_default(self, key: str, default_value: any) -> any:
+        return self.d[key]
+    def get_as_str(self, key: str, default_value: int) -> str:
+        return str(self.d[key])
+    def get_as_int(self, key: str, default_value: int) -> int:
+        return 0
 
 
 class DictOfList(dict[str, list[str]]):
@@ -373,11 +388,11 @@ class DaoConnectionsBase(base_object):
     """base class for DaoConnections - many connections to tenant databases """
     def create_tenant_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str):
         pass
-    def get_connection(self):
+    def get_connection(self) -> connection:
         pass
-    def close_connections(self):
+    def close_connections(self) -> None:
         pass
-    def close(self, db_conn):
+    def close(self, db_conn) -> None:
         pass
     def get_tenant_connection(self, db_name: str) -> DaoConnectionBase:
         pass
@@ -414,6 +429,20 @@ class base_model(base_object):
     table_comment: str
     thin_columns: list[str]
     thin_column_list: str
+
+
+class TokenSaltedHashed(base_object):
+    token: str
+    token_salt: str
+    token_salted: str
+    token_hash: str
+    def __init__(self, token: str):
+        self.token = token
+        self.token_salt = get_random_uid()
+        self.token_salted = self.token_salt + self.token + self.token_salt
+        md5_hash = hashlib.md5()
+        md5_hash.update(self.token_salted.encode())
+        self.token_hash = md5_hash.hexdigest()
 
 
 # session for account - mapping between token and account_uid with validation date, created date
@@ -615,7 +644,7 @@ class AppMenuItems:
 
 
 class ObjectManager:
-    """Manager of all objects and threads in application"""
+    """Manager of all objects and threads in application - all global variables"""
     object_uid: str
     created_date: datetime.datetime
     all_objects: dict[str, base_object]  # all base objects registered
@@ -642,6 +671,7 @@ class ObjectManager:
     thread_handler: Callable[[ThreadWrapper], bool]
     request_handler: Callable[[ResponseBase], bool]
     requests_count: int
+    transaction_counter: int = 0  # DB transaction counter with
     menu: AppMenuItems
     role_hierarchy: AccountRolesHierarchy
 
@@ -694,7 +724,10 @@ class ObjectManager:
 
     def get_base_object_infos(self, name: str = "") -> list[dict[str, any]]:
         return list(map(lambda o: o.get_base_dict_info(), self.get_base_objects_list(name)))
-
+    def get_next_transaction_id(self) -> str:
+        """get next ID of DB transaction"""
+        self.transaction_counter += 1
+        return self.system_instance_uid + str(self.transaction_counter)
     def get_threads_infos(self) -> list[dict[str, any]]:
         return list(map(lambda o: o.get_base_dict_info(), self.threads))
     # get account HTTP session by token

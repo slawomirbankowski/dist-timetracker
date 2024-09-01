@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_thin - START at 2024-04-21 11:58:41.399348+00
+# auto-generated - v_definition_python_dtos_thin - START at 2024-08-04 09:35:55.647508+00
 import datetime
 from abc import abstractmethod
 from dataclasses import dataclass, asdict
@@ -122,6 +122,32 @@ class account_skill_thin_dto(base_dto):
     def __init__(self, account_skill_uid: str,account_skill_name: str, created_date: datetime.datetime, is_active: int):
         self.account_skill_uid = account_skill_uid
         self.account_skill_name = account_skill_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class account_skill_assignment_thin_dto(base_dto):
+    account_skill_assignment_uid: str
+    account_skill_assignment_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, account_skill_assignment_uid: str,account_skill_assignment_name: str, created_date: datetime.datetime, is_active: int):
+        self.account_skill_assignment_uid = account_skill_assignment_uid
+        self.account_skill_assignment_name = account_skill_assignment_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class account_skill_group_thin_dto(base_dto):
+    account_skill_group_uid: str
+    account_skill_group_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, account_skill_group_uid: str,account_skill_group_name: str, created_date: datetime.datetime, is_active: int):
+        self.account_skill_group_uid = account_skill_group_uid
+        self.account_skill_group_name = account_skill_group_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -335,6 +361,32 @@ class auth_permission_thin_dto(base_dto):
 
 
 @dataclass(frozen=False)
+class auth_permission_type_thin_dto(base_dto):
+    auth_permission_type_uid: str
+    auth_permission_type_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, auth_permission_type_uid: str,auth_permission_type_name: str, created_date: datetime.datetime, is_active: int):
+        self.auth_permission_type_uid = auth_permission_type_uid
+        self.auth_permission_type_name = auth_permission_type_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class auth_pin_thin_dto(base_dto):
+    auth_pin_uid: str
+    auth_pin_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, auth_pin_uid: str,auth_pin_name: str, created_date: datetime.datetime, is_active: int):
+        self.auth_pin_uid = auth_pin_uid
+        self.auth_pin_name = auth_pin_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
 class auth_request_thin_dto(base_dto):
     auth_request_uid: str
     auth_request_name: str
@@ -408,6 +460,19 @@ class auth_token_thin_dto(base_dto):
     def __init__(self, auth_token_uid: str,auth_token_name: str, created_date: datetime.datetime, is_active: int):
         self.auth_token_uid = auth_token_uid
         self.auth_token_name = auth_token_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class auth_token_type_thin_dto(base_dto):
+    auth_token_type_uid: str
+    auth_token_type_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, auth_token_type_uid: str,auth_token_type_name: str, created_date: datetime.datetime, is_active: int):
+        self.auth_token_type_uid = auth_token_type_uid
+        self.auth_token_type_name = auth_token_type_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -530,6 +595,19 @@ class client_account_thin_dto(base_dto):
 
 
 @dataclass(frozen=False)
+class client_contract_thin_dto(base_dto):
+    client_contract_uid: str
+    client_contract_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, client_contract_uid: str,client_contract_name: str, created_date: datetime.datetime, is_active: int):
+        self.client_contract_uid = client_contract_uid
+        self.client_contract_name = client_contract_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
 class client_country_thin_dto(base_dto):
     client_country_uid: str
     client_country_name: str
@@ -590,6 +668,162 @@ class client_type_thin_dto(base_dto):
     def __init__(self, client_type_uid: str,client_type_name: str, created_date: datetime.datetime, is_active: int):
         self.client_type_uid = client_type_uid
         self.client_type_name = client_type_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_entry_thin_dto(base_dto):
+    competency_entry_uid: str
+    competency_entry_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_entry_uid: str,competency_entry_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_entry_name = competency_entry_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_entry_account_thin_dto(base_dto):
+    competency_entry_account_uid: str
+    competency_entry_account_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_entry_account_uid: str,competency_entry_account_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_entry_account_uid = competency_entry_account_uid
+        self.competency_entry_account_name = competency_entry_account_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_group_thin_dto(base_dto):
+    competency_group_uid: str
+    competency_group_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_group_uid: str,competency_group_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_group_uid = competency_group_uid
+        self.competency_group_name = competency_group_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_group_account_thin_dto(base_dto):
+    competency_group_account_uid: str
+    competency_group_account_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_group_account_uid: str,competency_group_account_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_group_account_name = competency_group_account_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_group_type_thin_dto(base_dto):
+    competency_group_type_uid: str
+    competency_group_type_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_group_type_uid: str,competency_group_type_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_group_type_uid = competency_group_type_uid
+        self.competency_group_type_name = competency_group_type_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_item_thin_dto(base_dto):
+    competency_item_uid: str
+    competency_item_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_item_uid: str,competency_item_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_item_uid = competency_item_uid
+        self.competency_item_name = competency_item_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_item_account_thin_dto(base_dto):
+    competency_item_account_uid: str
+    competency_item_account_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_item_account_uid: str,competency_item_account_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_item_account_uid = competency_item_account_uid
+        self.competency_item_account_name = competency_item_account_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_item_type_thin_dto(base_dto):
+    competency_item_type_uid: str
+    competency_item_type_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_item_type_uid: str,competency_item_type_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_item_type_name = competency_item_type_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_process_thin_dto(base_dto):
+    competency_process_uid: str
+    competency_process_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_process_uid: str,competency_process_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_name = competency_process_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_process_account_thin_dto(base_dto):
+    competency_process_account_uid: str
+    competency_process_account_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_process_account_uid: str,competency_process_account_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_process_account_name = competency_process_account_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_process_type_thin_dto(base_dto):
+    competency_process_type_uid: str
+    competency_process_type_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_process_type_uid: str,competency_process_type_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_process_type_uid = competency_process_type_uid
+        self.competency_process_type_name = competency_process_type_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class competency_ranking_thin_dto(base_dto):
+    competency_ranking_uid: str
+    competency_ranking_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, competency_ranking_uid: str,competency_ranking_name: str, created_date: datetime.datetime, is_active: int):
+        self.competency_ranking_uid = competency_ranking_uid
+        self.competency_ranking_name = competency_ranking_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -668,6 +902,32 @@ class currency_thin_dto(base_dto):
     def __init__(self, currency_uid: str,currency_name: str, created_date: datetime.datetime, is_active: int):
         self.currency_uid = currency_uid
         self.currency_name = currency_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class currency_rate_thin_dto(base_dto):
+    currency_rate_uid: str
+    currency_rate_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, currency_rate_uid: str,currency_rate_name: str, created_date: datetime.datetime, is_active: int):
+        self.currency_rate_uid = currency_rate_uid
+        self.currency_rate_name = currency_rate_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class currency_source_thin_dto(base_dto):
+    currency_source_uid: str
+    currency_source_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, currency_source_uid: str,currency_source_name: str, created_date: datetime.datetime, is_active: int):
+        self.currency_source_uid = currency_source_uid
+        self.currency_source_name = currency_source_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -907,6 +1167,19 @@ class invoice_type_thin_dto(base_dto):
 
 
 @dataclass(frozen=False)
+class location_hierarchy_thin_dto(base_dto):
+    location_hierarchy_uid: str
+    location_hierarchy_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, location_hierarchy_uid: str,location_hierarchy_name: str, created_date: datetime.datetime, is_active: int):
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_hierarchy_name = location_hierarchy_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
 class location_postal_code_thin_dto(base_dto):
     location_postal_code_uid: str
     location_postal_code_name: str
@@ -915,6 +1188,19 @@ class location_postal_code_thin_dto(base_dto):
     def __init__(self, location_postal_code_uid: str,location_postal_code_name: str, created_date: datetime.datetime, is_active: int):
         self.location_postal_code_uid = location_postal_code_uid
         self.location_postal_code_name = location_postal_code_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class location_region_thin_dto(base_dto):
+    location_region_uid: str
+    location_region_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, location_region_uid: str,location_region_name: str, created_date: datetime.datetime, is_active: int):
+        self.location_region_uid = location_region_uid
+        self.location_region_name = location_region_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -993,6 +1279,19 @@ class process_thin_dto(base_dto):
     def __init__(self, process_uid: str,process_name: str, created_date: datetime.datetime, is_active: int):
         self.process_uid = process_uid
         self.process_name = process_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class process_result_thin_dto(base_dto):
+    process_result_uid: str
+    process_result_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, process_result_uid: str,process_result_name: str, created_date: datetime.datetime, is_active: int):
+        self.process_result_uid = process_result_uid
+        self.process_result_name = process_result_name
         self.created_date = created_date
         self.is_active = is_active
 
@@ -1084,6 +1383,19 @@ class project_milestone_thin_dto(base_dto):
     def __init__(self, project_milestone_uid: str,project_milestone_name: str, created_date: datetime.datetime, is_active: int):
         self.project_milestone_uid = project_milestone_uid
         self.project_milestone_name = project_milestone_name
+        self.created_date = created_date
+        self.is_active = is_active
+
+
+@dataclass(frozen=False)
+class project_phase_thin_dto(base_dto):
+    project_phase_uid: str
+    project_phase_name: str
+    created_date: datetime.datetime
+    is_active: int
+    def __init__(self, project_phase_uid: str,project_phase_name: str, created_date: datetime.datetime, is_active: int):
+        self.project_phase_uid = project_phase_uid
+        self.project_phase_name = project_phase_name
         self.created_date = created_date
         self.is_active = is_active
 

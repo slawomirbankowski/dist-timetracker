@@ -4,7 +4,7 @@ import hashlib
 import datetime
 from flask import jsonify
 
-from base.base_objects import objects, AccountSessionBase
+from base.base_objects import objects, AccountSessionBase, TokenSaltedHashed
 from base.base_utils import get_random_uid, dict_to_json, get_random_uid_very_long_with_prefix
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
@@ -26,6 +26,7 @@ class LoginService(ServiceThreadBase):
         logging.info("Login")
 
     def set_password_for_user(self, accinst: account_read_dto, password: str):
+
         password_salt = base_dto.get_random_uid()
         password_salted = password_salt + password + password_salt
         md5_hash = hashlib.md5()
@@ -146,28 +147,25 @@ class LoginService(ServiceThreadBase):
             "session_request_id": session.request_id,
             "password_ok": password_ok
         })
-        daos.auth_attempt_dao_instance.insert_row_random_uid("LoginAttempt"+str(session.request_id), None, None, username, grant_type, ident_params, "REQUESTED")
+        auth_attempt_uid = "LoginAttempt"+str(session.request_id)
+        daos.auth_attempt_dao_instance.insert_row(auth_attempt_uid, auth_attempt_uid, None, None, username, grant_type, ident_params, "REQUESTED")
         if password_ok:
             logging.info("Generating token for account: " + accinst.account_uid + ", grant_type: " + grant_type)
             refresh_token = get_random_uid_very_long_with_prefix("REFRESHTOKEN")
             access_token = get_random_uid_very_long_with_prefix("ACCESSTOKEN")
             id_token = get_random_uid_very_long_with_prefix("IDTOKEN")
-            token_salt = get_random_uid()
-            token_salted = token_salt + access_token + token_salt
-            md5_hash = hashlib.md5()
-            md5_hash.update(token_salted.encode())
-            token_hash = md5_hash.hexdigest()
+            refresh_token_object = TokenSaltedHashed(refresh_token)
+            access_token_object = TokenSaltedHashed(access_token)
+            id_token_object = TokenSaltedHashed(id_token)
             valid_till_date = datetime.datetime.now() + datetime.timedelta(1.0)
-            user_session = objects.create_user_session(accinst.tenant_uid, accinst.account_uid, access_token, token_salt, token_hash, valid_till_date)
+            user_session = objects.create_user_session(accinst.tenant_uid, accinst.account_uid, access_token, access_token_object.token_salt, access_token_object.token_hash, valid_till_date)
             daos.auth_session_dao_instance.insert_row(user_session.session_id, session.request_id, accinst.tenant_uid, accinst.account_uid, id_token, "browser", "desc", host_name)
             logging.debug("Created user session for ID: " + user_session.session_id)
             self.token_seq += 1
             token_sequence_num = self.token_seq
-            daos.auth_token_dao_instance.insert_row(access_token, user_session.session_id, accinst.tenant_uid, accinst.account_uid, token_sequence_num, token_hash, token_salt, valid_till_date, None, 1)
-            #daos.auth_token_dao_instance.insert_row(id_token, user_session.session_id, accinst.tenant_uid,
-            #                                        accinst.account_uid, 100, "", "", valid_till_date,
-            #                                        None, 1)
-            # daos.auth_token_access.insert_row(access_token, token, ....)
+            daos.auth_token_dao_instance.insert_row(access_token, user_session.session_id, auth_attempt_uid, "Access", accinst.tenant_uid, accinst.account_uid, token_sequence_num, access_token_object.token_hash, access_token_object.token_salt, valid_till_date)
+            daos.auth_token_dao_instance.insert_row(refresh_token, user_session.session_id, auth_attempt_uid, "Refresh", accinst.tenant_uid, accinst.account_uid, token_sequence_num, refresh_token_object.token_hash, refresh_token_object.token_salt, valid_till_date)
+            daos.auth_token_dao_instance.insert_row(id_token, user_session.session_id, auth_attempt_uid, "Id", accinst.tenant_uid, accinst.account_uid, token_sequence_num, id_token_object.token_hash, id_token_object.token_salt, valid_till_date)
             return ResponseSession.ok(session, {"refresh_token": refresh_token, "access_token": access_token, "id_token": id_token, "session_id": user_session.session_id, "valid_till_date": str(valid_till_date)})
         else:
             return ResponseSession.unauthorized_request(session, {"account_uid": username})
@@ -198,6 +196,21 @@ class LoginService(ServiceThreadBase):
         md5_hash.update(password_salted.encode())
         password_hash = md5_hash.hexdigest()
         return ResponseSession.ok(session, {'status': "OK", "password_salt": password_salt, "password_hash": password_hash})
+
+
+    def produce_passwords_tab(self, session: RequestSession) -> ResponseSession:
+        passwords = []
+        for i in range(100):
+            password = base_dto.get_random_uid()
+            password_salt = base_dto.get_random_uid()
+            password_salted = password_salt + password + password_salt
+            md5_hash = hashlib.md5()
+            md5_hash.update(password_salted.encode())
+            password_hash = md5_hash.hexdigest()
+            single_entry = {"password": password, "password_salt": password_salt, "password_hash": password_hash}
+            passwords.append(single_entry)
+        return ResponseSession.ok(session, {'status': "OK", "passwords": passwords})
+
 
     # work in separated thread
     def thread_work(self, tick: int) -> bool:

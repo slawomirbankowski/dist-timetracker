@@ -1,0 +1,47 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0046_data_invoice.xml">
+
+    <changeSet id="0046 - dictionary data for invoice tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Invoice table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Created', 'Created', 'Created');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Pending', 'Pending', 'Pending');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('OnHold', 'OnHold', 'OnHold');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Approved', 'Approved', 'Approved');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Rejected', 'Rejected', 'Rejected');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Paid', 'Paid', 'Paid');
+            insert into invoice_status(invoice_status_uid, invoice_status_name, status_description) values ('Closed', 'Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_type(invoice_type_uid, invoice_type_name) values ('Default', 'Default');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('System-Normal', 'Normal', 'System', 'Normal invoice');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('Test-Normal', 'Normal', 'Test', 'Normal invoice for Test client');
+            insert into invoice_category(invoice_category_uid, invoice_category_name, tenant_uid, invoice_category_description)
+            values ('Test-Correction', 'Correction', 'Test', 'Correction invoice for Test client');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Receive', 'Receive');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Accept', 'Accept');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Notify', 'Notify');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Approve', 'Approve');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Reject', 'Reject');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Issue', 'Issue');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Paid', 'Paid');
+            insert into invoice_action_type(invoice_action_type_uid, invoice_action_type_name) values ('Done', 'Done');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

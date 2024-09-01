@@ -96,6 +96,12 @@ class AuthController(BaseController):
         password = session.get_query_param("password")
         return services.login_service.produce_hash(session, password)
 
+    def produce_passwords_tab(self, session: RequestSession) -> ResponseSession:
+        return services.login_service.produce_passwords_tab(session)
+
+    def me(self, session: RequestSession) -> ResponseSession:
+        return ResponseSession.ok(session, session.to_me_dict())
+
     def myself(self, session: RequestSession) -> ResponseSession:
         #session.account_permission
         return ResponseSession.ok(session, session.to_myself_dict())

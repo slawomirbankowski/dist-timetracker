@@ -1,5 +1,4 @@
-# auto-generated - v_definition_python_daos_list - START at 2024-04-21 11:58:43.308743+00
-from dao.dao_base import simple_dao
+# auto-generated - v_definition_python_daos_list - START at 2024-08-04 09:36:02.605973+00
 from dao.daos_full import *
 
 
@@ -14,6 +13,8 @@ class DaosList(base_object):
     account_hierarchy_dao_instance = account_hierarchy_full_dao()
     account_rate_dao_instance = account_rate_full_dao()
     account_skill_dao_instance = account_skill_full_dao()
+    account_skill_assignment_dao_instance = account_skill_assignment_full_dao()
+    account_skill_group_dao_instance = account_skill_group_full_dao()
     account_team_dao_instance = account_team_full_dao()
     account_title_dao_instance = account_title_full_dao()
     account_title_assignment_dao_instance = account_title_assignment_full_dao()
@@ -30,12 +31,15 @@ class DaosList(base_object):
     auth_password_current_dao_instance = auth_password_current_full_dao()
     auth_password_rule_dao_instance = auth_password_rule_full_dao()
     auth_permission_dao_instance = auth_permission_full_dao()
+    auth_permission_type_dao_instance = auth_permission_type_full_dao()
+    auth_pin_dao_instance = auth_pin_full_dao()
     auth_request_dao_instance = auth_request_full_dao()
     auth_role_dao_instance = auth_role_full_dao()
     auth_role_uri_dao_instance = auth_role_uri_full_dao()
     auth_session_dao_instance = auth_session_full_dao()
     auth_sso_dao_instance = auth_sso_full_dao()
     auth_token_dao_instance = auth_token_full_dao()
+    auth_token_type_dao_instance = auth_token_type_full_dao()
     calendar_account_dao_instance = calendar_account_full_dao()
     calendar_approval_dao_instance = calendar_approval_full_dao()
     calendar_approval_type_dao_instance = calendar_approval_type_full_dao()
@@ -45,17 +49,32 @@ class DaosList(base_object):
     calendar_type_dao_instance = calendar_type_full_dao()
     client_dao_instance = client_full_dao()
     client_account_dao_instance = client_account_full_dao()
+    client_contract_dao_instance = client_contract_full_dao()
     client_country_dao_instance = client_country_full_dao()
     client_payment_dao_instance = client_payment_full_dao()
     client_role_dao_instance = client_role_full_dao()
     client_status_dao_instance = client_status_full_dao()
     client_type_dao_instance = client_type_full_dao()
+    competency_entry_dao_instance = competency_entry_full_dao()
+    competency_entry_account_dao_instance = competency_entry_account_full_dao()
+    competency_group_dao_instance = competency_group_full_dao()
+    competency_group_account_dao_instance = competency_group_account_full_dao()
+    competency_group_type_dao_instance = competency_group_type_full_dao()
+    competency_item_dao_instance = competency_item_full_dao()
+    competency_item_account_dao_instance = competency_item_account_full_dao()
+    competency_item_type_dao_instance = competency_item_type_full_dao()
+    competency_process_dao_instance = competency_process_full_dao()
+    competency_process_account_dao_instance = competency_process_account_full_dao()
+    competency_process_type_dao_instance = competency_process_type_full_dao()
+    competency_ranking_dao_instance = competency_ranking_full_dao()
     connection_engine_dao_instance = connection_engine_full_dao()
     connection_host_dao_instance = connection_host_full_dao()
     connection_tenant_dao_instance = connection_tenant_full_dao()
     connection_user_dao_instance = connection_user_full_dao()
     country_dao_instance = country_full_dao()
     currency_dao_instance = currency_full_dao()
+    currency_rate_dao_instance = currency_rate_full_dao()
+    currency_source_dao_instance = currency_source_full_dao()
     event_acknowledge_dao_instance = event_acknowledge_full_dao()
     event_channel_dao_instance = event_channel_full_dao()
     event_channel_type_dao_instance = event_channel_type_full_dao()
@@ -74,13 +93,16 @@ class DaosList(base_object):
     invoice_instance_dao_instance = invoice_instance_full_dao()
     invoice_status_dao_instance = invoice_status_full_dao()
     invoice_type_dao_instance = invoice_type_full_dao()
+    location_hierarchy_dao_instance = location_hierarchy_full_dao()
     location_postal_code_dao_instance = location_postal_code_full_dao()
+    location_region_dao_instance = location_region_full_dao()
     location_territory_dao_instance = location_territory_full_dao()
     monitor_dao_instance = monitor_full_dao()
     monitor_run_dao_instance = monitor_run_full_dao()
     monitor_type_dao_instance = monitor_type_full_dao()
     period_dao_instance = period_full_dao()
     process_dao_instance = process_full_dao()
+    process_result_dao_instance = process_result_full_dao()
     process_run_dao_instance = process_run_full_dao()
     process_type_dao_instance = process_type_full_dao()
     project_account_dao_instance = project_account_full_dao()
@@ -88,6 +110,7 @@ class DaosList(base_object):
     project_group_dao_instance = project_group_full_dao()
     project_instance_dao_instance = project_instance_full_dao()
     project_milestone_dao_instance = project_milestone_full_dao()
+    project_phase_dao_instance = project_phase_full_dao()
     project_type_dao_instance = project_type_full_dao()
     report_dao_instance = report_full_dao()
     report_content_type_dao_instance = report_content_type_full_dao()
@@ -147,6 +170,8 @@ class DaosList(base_object):
         self.all_daos["account_hierarchy_dao"] = self.account_hierarchy_dao_instance
         self.all_daos["account_rate_dao"] = self.account_rate_dao_instance
         self.all_daos["account_skill_dao"] = self.account_skill_dao_instance
+        self.all_daos["account_skill_assignment_dao"] = self.account_skill_assignment_dao_instance
+        self.all_daos["account_skill_group_dao"] = self.account_skill_group_dao_instance
         self.all_daos["account_team_dao"] = self.account_team_dao_instance
         self.all_daos["account_title_dao"] = self.account_title_dao_instance
         self.all_daos["account_title_assignment_dao"] = self.account_title_assignment_dao_instance
@@ -163,12 +188,15 @@ class DaosList(base_object):
         self.all_daos["auth_password_current_dao"] = self.auth_password_current_dao_instance
         self.all_daos["auth_password_rule_dao"] = self.auth_password_rule_dao_instance
         self.all_daos["auth_permission_dao"] = self.auth_permission_dao_instance
+        self.all_daos["auth_permission_type_dao"] = self.auth_permission_type_dao_instance
+        self.all_daos["auth_pin_dao"] = self.auth_pin_dao_instance
         self.all_daos["auth_request_dao"] = self.auth_request_dao_instance
         self.all_daos["auth_role_dao"] = self.auth_role_dao_instance
         self.all_daos["auth_role_uri_dao"] = self.auth_role_uri_dao_instance
         self.all_daos["auth_session_dao"] = self.auth_session_dao_instance
         self.all_daos["auth_sso_dao"] = self.auth_sso_dao_instance
         self.all_daos["auth_token_dao"] = self.auth_token_dao_instance
+        self.all_daos["auth_token_type_dao"] = self.auth_token_type_dao_instance
         self.all_daos["calendar_account_dao"] = self.calendar_account_dao_instance
         self.all_daos["calendar_approval_dao"] = self.calendar_approval_dao_instance
         self.all_daos["calendar_approval_type_dao"] = self.calendar_approval_type_dao_instance
@@ -178,17 +206,32 @@ class DaosList(base_object):
         self.all_daos["calendar_type_dao"] = self.calendar_type_dao_instance
         self.all_daos["client_dao"] = self.client_dao_instance
         self.all_daos["client_account_dao"] = self.client_account_dao_instance
+        self.all_daos["client_contract_dao"] = self.client_contract_dao_instance
         self.all_daos["client_country_dao"] = self.client_country_dao_instance
         self.all_daos["client_payment_dao"] = self.client_payment_dao_instance
         self.all_daos["client_role_dao"] = self.client_role_dao_instance
         self.all_daos["client_status_dao"] = self.client_status_dao_instance
         self.all_daos["client_type_dao"] = self.client_type_dao_instance
+        self.all_daos["competency_entry_dao"] = self.competency_entry_dao_instance
+        self.all_daos["competency_entry_account_dao"] = self.competency_entry_account_dao_instance
+        self.all_daos["competency_group_dao"] = self.competency_group_dao_instance
+        self.all_daos["competency_group_account_dao"] = self.competency_group_account_dao_instance
+        self.all_daos["competency_group_type_dao"] = self.competency_group_type_dao_instance
+        self.all_daos["competency_item_dao"] = self.competency_item_dao_instance
+        self.all_daos["competency_item_account_dao"] = self.competency_item_account_dao_instance
+        self.all_daos["competency_item_type_dao"] = self.competency_item_type_dao_instance
+        self.all_daos["competency_process_dao"] = self.competency_process_dao_instance
+        self.all_daos["competency_process_account_dao"] = self.competency_process_account_dao_instance
+        self.all_daos["competency_process_type_dao"] = self.competency_process_type_dao_instance
+        self.all_daos["competency_ranking_dao"] = self.competency_ranking_dao_instance
         self.all_daos["connection_engine_dao"] = self.connection_engine_dao_instance
         self.all_daos["connection_host_dao"] = self.connection_host_dao_instance
         self.all_daos["connection_tenant_dao"] = self.connection_tenant_dao_instance
         self.all_daos["connection_user_dao"] = self.connection_user_dao_instance
         self.all_daos["country_dao"] = self.country_dao_instance
         self.all_daos["currency_dao"] = self.currency_dao_instance
+        self.all_daos["currency_rate_dao"] = self.currency_rate_dao_instance
+        self.all_daos["currency_source_dao"] = self.currency_source_dao_instance
         self.all_daos["event_acknowledge_dao"] = self.event_acknowledge_dao_instance
         self.all_daos["event_channel_dao"] = self.event_channel_dao_instance
         self.all_daos["event_channel_type_dao"] = self.event_channel_type_dao_instance
@@ -207,13 +250,16 @@ class DaosList(base_object):
         self.all_daos["invoice_instance_dao"] = self.invoice_instance_dao_instance
         self.all_daos["invoice_status_dao"] = self.invoice_status_dao_instance
         self.all_daos["invoice_type_dao"] = self.invoice_type_dao_instance
+        self.all_daos["location_hierarchy_dao"] = self.location_hierarchy_dao_instance
         self.all_daos["location_postal_code_dao"] = self.location_postal_code_dao_instance
+        self.all_daos["location_region_dao"] = self.location_region_dao_instance
         self.all_daos["location_territory_dao"] = self.location_territory_dao_instance
         self.all_daos["monitor_dao"] = self.monitor_dao_instance
         self.all_daos["monitor_run_dao"] = self.monitor_run_dao_instance
         self.all_daos["monitor_type_dao"] = self.monitor_type_dao_instance
         self.all_daos["period_dao"] = self.period_dao_instance
         self.all_daos["process_dao"] = self.process_dao_instance
+        self.all_daos["process_result_dao"] = self.process_result_dao_instance
         self.all_daos["process_run_dao"] = self.process_run_dao_instance
         self.all_daos["process_type_dao"] = self.process_type_dao_instance
         self.all_daos["project_account_dao"] = self.project_account_dao_instance
@@ -221,6 +267,7 @@ class DaosList(base_object):
         self.all_daos["project_group_dao"] = self.project_group_dao_instance
         self.all_daos["project_instance_dao"] = self.project_instance_dao_instance
         self.all_daos["project_milestone_dao"] = self.project_milestone_dao_instance
+        self.all_daos["project_phase_dao"] = self.project_phase_dao_instance
         self.all_daos["project_type_dao"] = self.project_type_dao_instance
         self.all_daos["report_dao"] = self.report_dao_instance
         self.all_daos["report_content_type_dao"] = self.report_content_type_dao_instance

@@ -2,15 +2,16 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog00012_report.xml">
+        logicalFilePath="conf/changelog00012_process.xml">
 
-    <changeSet id="0012 - report tables" author="slawomir.bankowski">
+    <changeSet id="0012 - process tables" author="slawomir.bankowski">
 
-        <createTable tableName="report_type" remarks="types of report" >
-            <column name="report_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_type_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="process_type" remarks="types of processes that are running in application" >
+            <column name="process_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="process_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
+            <column name="class_name" type="text" remarks="name of class representing this event"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
@@ -28,82 +29,14 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_format" remarks="formats supported by report rendering: TXT, CSV, HTML, JSON, JSONL, XLS" >
-            <column name="report_format_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_format_name" type="text"><constraints nullable="false"/></column>
-            <!-- FKs -->
-            <!-- attribute columns -->
-            <column name="class_name" type="text"><constraints nullable="false"/></column>
-            <!-- metadata columns -->
-            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
-            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
-            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
-            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
-            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
-            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
-            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
-            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
-        </createTable>
-
-        <createTable tableName="report_status" remarks="name of status for report" >
-            <column name="report_status_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_status_name" type="text"><constraints nullable="false"/></column>
-            <!-- FKs -->
-            <!-- attribute columns -->
-            <!-- metadata columns -->
-            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
-            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
-            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
-            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
-            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
-            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
-            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
-            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
-        </createTable>
-
-        <createTable tableName="report_content_type" remarks="type of content for report" >
-            <column name="report_content_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_content_type_name" type="text"><constraints nullable="false"/></column>
-            <!-- FKs -->
-            <!-- attribute columns -->
-            <!-- metadata columns -->
-            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
-            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
-            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
-            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
-            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
-            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
-            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
-            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
-        </createTable>
-
-        <createTable tableName="report" remarks="definition of report that can be run" >
-            <column name="report_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="process" remarks="process running in application" >
+            <column name="process_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="process_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text"><constraints nullable="false"/></column>
-            <column name="report_status_uid" type="text" defaultValue="Created"><constraints nullable="false"/></column>
-            <column name="report_query" type="text"><constraints nullable="false"/></column>
-            <column name="report_parameters" type="text"><constraints nullable="false"/></column>
+            <column name="process_type_uid" type="text"><constraints nullable="false"/></column>
+            <column name="status_name" type="text" remarks="last known status of this process" defaultValue="Unknown"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
@@ -122,21 +55,44 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="report_run" remarks="run of report by account" >
-            <column name="report_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="report_run_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="process_run" remarks="single run of scheduled process" >
+            <column name="process_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="process_run_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text"><constraints nullable="false"/></column>
-            <column name="report_uid" type="text"><constraints nullable="false"/></column>
-            <column name="report_format_uid" type="text"><constraints nullable="false"/></column>
-            <column name="report_status_uid" type="text" defaultValue="Created"><constraints nullable="false"/></column>
-            <column name="report_content_type_uid" type="text" defaultValue="text/plain"><constraints nullable="false"/></column>
+            <column name="process_uid" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="input_parameters_json" type="text"><constraints nullable="false"/></column>
-            <column name="run_time_ms" type="bigint"><constraints nullable="false"/></column>
-            <column name="returned_rows" type="bigint"><constraints nullable="false"/></column>
-            <column name="content_size" type="bigint"><constraints nullable="false"/></column>
+            <column name="status_name" type="text" remarks="status of this process" defaultValue="Unknown"><constraints nullable="false"/></column>
+            <column name="run_time" type="bigint" remarks="run time in milliseconds" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cacc_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="process_result" remarks="result of single run of scheduled process" >
+            <column name="process_result_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="process_result_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text"><constraints nullable="false"/></column>
+            <column name="process_uid" type="text"><constraints nullable="false"/></column>
+            <column name="process_run_uid" type="text"><constraints nullable="false"/></column>
+            <!-- attribute columns -->
+            <column name="result_type" type="text" remarks="result type of this process" defaultValue="Default"><constraints nullable="false"/></column>
+            <column name="result_text" type="text" remarks="result of this process" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />

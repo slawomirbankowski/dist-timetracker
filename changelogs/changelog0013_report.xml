@@ -2,23 +2,21 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0025_project.xml">
+        logicalFilePath="conf/changelog00013_report.xml">
 
-    <changeSet id="0025 - project tables" author="slawomir.bankowski">
+    <changeSet id="0013 - report tables" author="slawomir.bankowski">
 
-        <createTable tableName="project_group" remarks="group of projects" >
-            <column name="project_group_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_group_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="report_type" remarks="types of report" >
+            <column name="report_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="project_group_description" type="text" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
             <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prgr')"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
@@ -30,18 +28,18 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="project_type" remarks="type of project" >
-            <column name="project_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_type_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="report_format" remarks="formats supported by report rendering: TXT, CSV, HTML, JSON, JSONL, XLS" >
+            <column name="report_format_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_format_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
-            <column name="project_type_description" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <column name="class_name" type="text"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
             <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prty')"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
@@ -53,29 +51,17 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="project_instance" remarks="project to bill time against" >
-            <column name="project_instance_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_instance_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="report_status" remarks="name of status for report" >
+            <column name="report_status_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_status_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
-            <column name="client_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_type_uid" type="text"><constraints nullable="false"/></column>
-            <column name="manager_account_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_group_uid" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="project_code" type="text"><constraints nullable="false"/></column>
-            <column name="project_description" type="text"><constraints nullable="false"/></column>
-            <column name="is_billable" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
-            <column name="start_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time" />
-            <column name="end_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time" />
-            <column name="current_billed" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
-            <column name="budget" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
             <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prin')"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
@@ -86,27 +72,45 @@
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
-        <createIndex indexName="idx_project_instance_client_uid" tableName="project_instance" unique="false"><column name="client_uid" /></createIndex>
-        <createIndex indexName="idx_project_instance_project_code" tableName="project_instance" unique="true"><column name="project_code" /></createIndex>
-        <createIndex indexName="idx_project_instance_manager_account_uid" tableName="project_instance" unique="false"><column name="manager_account_uid" /></createIndex>
 
-        <createTable tableName="project_account" remarks="project to bill time against" >
-            <column name="project_account_uid" type="text" defaultValueComputed="generate_uid('prac')"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_account_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="report_content_type" remarks="type of content for report" >
+            <column name="report_content_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_content_type_name" type="text"><constraints nullable="false"/></column>
+            <!-- FKs -->
+            <!-- attribute columns -->
+            <!-- metadata columns -->
+            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
+            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
+            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
+            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cty_v01_')"><constraints nullable="false"/></column>
+            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
+            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
+            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
+            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
+            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
+            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
+            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
+            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
+            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="report" remarks="definition of report that can be run" >
+            <column name="report_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
-            <column name="client_uid" type="text"><constraints nullable="false"/></column>
             <column name="account_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_instance_uid" type="text"><constraints nullable="false"/></column>
+            <column name="report_status_uid" type="text" defaultValue="Created"><constraints nullable="false"/></column>
+            <column name="report_query" type="text"><constraints nullable="false"/></column>
+            <column name="report_parameters" type="text"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="start_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time" />
-            <column name="end_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time" />
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
             <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prac')"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cacc_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
@@ -118,25 +122,27 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="project_budget" remarks="budget for projects" >
-            <column name="project_budget_uid" type="text" defaultValueComputed="generate_uid('prbu')"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_budget_name" type="text"><constraints nullable="false"/></column>
+        <createTable tableName="report_run" remarks="run of report by account" >
+            <column name="report_run_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="report_run_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
-            <column name="client_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_instance_uid" type="text"><constraints nullable="false"/></column>
-            <column name="currency_uid" type="text" remarks="currency of budget"><constraints nullable="false"/></column>
+            <column name="account_uid" type="text"><constraints nullable="false"/></column>
+            <column name="report_uid" type="text"><constraints nullable="false"/></column>
+            <column name="report_format_uid" type="text"><constraints nullable="false"/></column>
+            <column name="report_status_uid" type="text" defaultValue="Created"><constraints nullable="false"/></column>
+            <column name="report_content_type_uid" type="text" defaultValue="text/plain"><constraints nullable="false"/></column>
             <!-- attribute columns -->
-            <column name="budget_value" type="float" defaultValueNumeric="0"><constraints nullable="false"/></column>
-            <column name="is_approved" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
-            <column name="is_current" type="bigint" defaultValueNumeric="1"><constraints nullable="false"/></column>
-            <!-- Defaults -->
+            <column name="input_parameters_json" type="text"><constraints nullable="false"/></column>
+            <column name="run_time_ms" type="bigint"><constraints nullable="false"/></column>
+            <column name="returned_rows" type="bigint"><constraints nullable="false"/></column>
+            <column name="content_size" type="bigint"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
             <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
             <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prbu')"><constraints nullable="false"/></column>
+            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('cacc_v01_')"><constraints nullable="false"/></column>
             <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
             <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
             <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
@@ -147,69 +153,6 @@
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
-        <createIndex indexName="idx_project_budget_project_budget_name" tableName="project_budget" unique="false"><column name="project_budget_name" /></createIndex>
-
-        <createTable tableName="project_phase" remarks="phase of project" >
-            <column name="project_phase_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_phase_name" type="text" remarks="friendly name of phase"><constraints nullable="false"/></column>
-            <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
-            <column name="client_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_instance_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_budget_uid" type="text" />
-            <column name="previous_project_phase_uid" type="text" />
-            <column name="client_contract_uid" type="text" />
-            <!-- attribute columns -->
-            <column name="start_date" type="timestamp" defaultValueDate="${nowdate}" remarks="start date and time of milestone" ><constraints nullable="false"/></column>
-            <column name="end_date" type="timestamp" defaultValueDate="${nowdate}" remarks="end date and time of milestone"><constraints nullable="false"/></column>
-            <column name="status_name" type="text" remarks="status of that milestone" defaultValue="Created"><constraints nullable="false"/></column>
-            <!-- metadata columns -->
-            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
-            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prmi')"><constraints nullable="false"/></column>
-            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
-            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
-            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
-            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
-            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
-            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
-        </createTable>
-
-        <createTable tableName="project_milestone" remarks="milestone of project like: Concept, Development, Architecture, Analysis, Support" >
-            <column name="project_milestone_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="project_milestone_name" type="text" remarks="friendly name of milestone"><constraints nullable="false"/></column>
-            <!-- FKs -->
-            <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
-            <column name="client_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_instance_uid" type="text"><constraints nullable="false"/></column>
-            <column name="project_budget_uid" type="text" />
-            <column name="project_phase_uid" type="text" />
-            <!-- attribute columns -->
-            <column name="start_date" type="timestamp" defaultValueDate="${nowdate}" remarks="start date and time of milestone" ><constraints nullable="false"/></column>
-            <column name="end_date" type="timestamp" defaultValueDate="${nowdate}" remarks="end date and time of milestone"><constraints nullable="false"/></column>
-            <column name="status_name" type="text" remarks="status of that milestone" defaultValue="Created"><constraints nullable="false"/></column>
-            <!-- metadata columns -->
-            <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
-            <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
-            <column name="row_owner" type="text" defaultValue="System" remarks="FK to account_group - owner of this row"><constraints nullable="false"/></column>
-            <column name="row_seq" type="bigint" autoIncrement="true" remarks="sequence number of this row in table"><constraints nullable="false"/></column>
-            <column name="row_guid" type="text" remarks="global generated unique ID" defaultValueComputed="generate_uid('prmi')"><constraints nullable="false"/></column>
-            <column name="row_version" type="bigint" defaultValueNumeric="0" remarks="version of the row"><constraints nullable="false"/></column>
-            <column name="is_active" type="bigint" defaultValueNumeric="1" remarks="0 - row has been logically deleted, 1 - row is still active, -1 - rows is on hold, -2 - row is locked"><constraints nullable="false"/></column>
-            <column name="created_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of insertion given row to database"><constraints nullable="false"/></column>
-            <column name="created_by" type="text" defaultValue="system" remarks="account UID of person that created this row"><constraints nullable="false"/></column>
-            <column name="last_updated_date" type="timestamp" defaultValueDate="${nowdate}" remarks="date and time of last change of this row"><constraints nullable="false"/></column>
-            <column name="last_updated_by" type="text" defaultValue="system" remarks="account UID of person that updated this row"><constraints nullable="false"/></column>
-            <column name="removed_date" type="timestamp" remarks="date and time of change this row" />
-            <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
-            <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
-        </createTable>
-        <createIndex indexName="idx_project_milestone_project_instance_uid" tableName="project_milestone" unique="false"><column name="project_instance_uid" /></createIndex>
 
     </changeSet>
 

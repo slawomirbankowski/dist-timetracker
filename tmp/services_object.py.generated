@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_services_object - START at 2024-04-21 11:58:44.32827+00
+# auto-generated - v_definition_python_services_object - START at 2024-08-04 09:36:06.775896+00
 import dao.dao_connection
 from typing import TypeVar, Generic, List, Iterable
 from dao.dao_base import base_dao
@@ -61,6 +61,18 @@ class account_rate_service(service_base):
 
 class account_skill_service(service_base):
     dao: account_skill_full_dao = daos.account_skill_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class account_skill_assignment_service(service_base):
+    dao: account_skill_assignment_full_dao = daos.account_skill_assignment_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class account_skill_group_service(service_base):
+    dao: account_skill_group_full_dao = daos.account_skill_group_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -161,6 +173,18 @@ class auth_permission_service(service_base):
         super().__init__()
 
 
+class auth_permission_type_service(service_base):
+    dao: auth_permission_type_full_dao = daos.auth_permission_type_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class auth_pin_service(service_base):
+    dao: auth_pin_full_dao = daos.auth_pin_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
 class auth_request_service(service_base):
     dao: auth_request_full_dao = daos.auth_request_dao_instance
     def __init__(self):
@@ -193,6 +217,12 @@ class auth_sso_service(service_base):
 
 class auth_token_service(service_base):
     dao: auth_token_full_dao = daos.auth_token_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class auth_token_type_service(service_base):
+    dao: auth_token_type_full_dao = daos.auth_token_type_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -251,6 +281,12 @@ class client_account_service(service_base):
         super().__init__()
 
 
+class client_contract_service(service_base):
+    dao: client_contract_full_dao = daos.client_contract_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
 class client_country_service(service_base):
     dao: client_country_full_dao = daos.client_country_dao_instance
     def __init__(self):
@@ -277,6 +313,78 @@ class client_status_service(service_base):
 
 class client_type_service(service_base):
     dao: client_type_full_dao = daos.client_type_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_entry_service(service_base):
+    dao: competency_entry_full_dao = daos.competency_entry_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_entry_account_service(service_base):
+    dao: competency_entry_account_full_dao = daos.competency_entry_account_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_service(service_base):
+    dao: competency_group_full_dao = daos.competency_group_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_account_service(service_base):
+    dao: competency_group_account_full_dao = daos.competency_group_account_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_type_service(service_base):
+    dao: competency_group_type_full_dao = daos.competency_group_type_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_service(service_base):
+    dao: competency_item_full_dao = daos.competency_item_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_account_service(service_base):
+    dao: competency_item_account_full_dao = daos.competency_item_account_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_type_service(service_base):
+    dao: competency_item_type_full_dao = daos.competency_item_type_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_service(service_base):
+    dao: competency_process_full_dao = daos.competency_process_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_account_service(service_base):
+    dao: competency_process_account_full_dao = daos.competency_process_account_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_type_service(service_base):
+    dao: competency_process_type_full_dao = daos.competency_process_type_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class competency_ranking_service(service_base):
+    dao: competency_ranking_full_dao = daos.competency_ranking_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -313,6 +421,18 @@ class country_service(service_base):
 
 class currency_service(service_base):
     dao: currency_full_dao = daos.currency_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class currency_rate_service(service_base):
+    dao: currency_rate_full_dao = daos.currency_rate_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class currency_source_service(service_base):
+    dao: currency_source_full_dao = daos.currency_source_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -425,8 +545,20 @@ class invoice_type_service(service_base):
         super().__init__()
 
 
+class location_hierarchy_service(service_base):
+    dao: location_hierarchy_full_dao = daos.location_hierarchy_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
 class location_postal_code_service(service_base):
     dao: location_postal_code_full_dao = daos.location_postal_code_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class location_region_service(service_base):
+    dao: location_region_full_dao = daos.location_region_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -463,6 +595,12 @@ class period_service(service_base):
 
 class process_service(service_base):
     dao: process_full_dao = daos.process_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class process_result_service(service_base):
+    dao: process_result_full_dao = daos.process_result_dao_instance
     def __init__(self):
         super().__init__()
 
@@ -505,6 +643,12 @@ class project_instance_service(service_base):
 
 class project_milestone_service(service_base):
     dao: project_milestone_full_dao = daos.project_milestone_dao_instance
+    def __init__(self):
+        super().__init__()
+
+
+class project_phase_service(service_base):
+    dao: project_phase_full_dao = daos.project_phase_dao_instance
     def __init__(self):
         super().__init__()
 

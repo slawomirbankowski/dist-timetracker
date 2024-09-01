@@ -49,20 +49,20 @@ def generate_files() -> None:
     f = open("./tmp/rich_views.xml.generated", "w")
     f.writelines(rich_views_def)
     f.close()
-    python_files_to_generate = daos.dao.get_column_values_by_params("select table_name from v_definition_generate_list")
+    python_files_to_generate = daos.system_instance_dao_instance.get_column_values_by_params("select table_name from v_definition_generate_list")
     for table_name in python_files_to_generate:
         python_file = "./tmp/" + table_name[20:] + ".py.generated"
-        rows = daos.dao.get_column_values_by_params(f"select python from {table_name}  order by table_name, ordinal_position")
+        rows = daos.system_instance_dao_instance.get_column_values_by_params(f"select python from {table_name}  order by table_name, ordinal_position")
         print("Generate python file for table: " + table_name + " into python fle: " + python_file)
         f = open(python_file, "w")
         f.writelines([row+"\n" for row in rows])
         f.close()
-        daos.dao.create_rich_views()
+        daos.system_instance_dao_instance.create_rich_views()
 
 
 def rich_views_replace():
     dao.dao_connection.db_connections.initialize_main_connection_from_env()
-    daos.dao.replace_rich_views()
+    daos.system_instance_dao_instance.replace_rich_views()
 
 
 class MyTestClass:
@@ -137,9 +137,9 @@ def test():
 
 if __name__ == '__main__':
     print("START")
-    #generate_files()
+    # generate_files()
     main_application()
-    #test_email()
+    # test_email()
 
 def exit_handler():
     logging.info("TimeTracker application is ending")

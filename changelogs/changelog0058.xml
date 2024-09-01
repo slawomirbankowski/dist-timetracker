@@ -6,6 +6,17 @@
 
     <changeSet id="0046 - " author="slawomir.bankowski">
 
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+
+        </sql>
 
     </changeSet>
 

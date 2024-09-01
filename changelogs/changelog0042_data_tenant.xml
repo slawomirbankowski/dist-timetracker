@@ -1,0 +1,92 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0042_data_tenant.xml">
+
+    <changeSet id="0042 - dictionary data for tenant tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ tenant table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_type(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class) values ('Default', 'Default', '', '');
+            insert into tenant_type(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class) values ('System', 'System', '', '');
+            insert into tenant_type(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class) values ('Test', 'Test', '', '');
+            insert into tenant_type(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class) values ('Individual', 'Individual', '', '');
+            insert into tenant_type(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class) values ('Corporate', 'Corporate', '', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Internal', 'Internal');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('External', 'External');
+            insert into tenant_category(tenant_category_uid, tenant_category_name) values ('Hybrid', 'Hybrid');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('New', 'New');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Pending', 'Pending');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Active', 'Active');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closing', 'Closing');
+            insert into tenant_status(tenant_status_uid, tenant_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'XX', 'System', 'Internal', 'system', 'system', 'System tenant - default one', now(), 1, 1, 0);
+            insert into tenant(tenant_uid, country_uid, tenant_type_uid, tenant_category_uid, tenant_name, tenant_code, tenant_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'XX', 'Test', 'Internal', 'test', 'test', 'Test tenant - just for testing purpose', now(), 1, 1, 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'System');
+            insert into tenant_country(country_uid, tenant_uid) values ('XX', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('System-Full', 'License for System tenant', 'System', 'Full', cast('2049-12-31' as timestamp), 1);
+            insert into tenant_license(tenant_license_uid, tenant_license_name, tenant_uid, system_license_uid, end_date, is_approved)
+            values ('Test-Test', 'License for Test tenant', 'Test', 'Test', cast('2049-12-31' as timestamp), 1);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Default', 'Default');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Regular', 'Regular');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('License', 'License');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Fee', 'Fee');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Bonus', 'Bonus');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Free', 'Free');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('Storage', 'Storage');
+            insert into tenant_payment_type(tenant_payment_type_uid, tenant_payment_type_name)
+            values ('API', 'API');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('HR', 'HR', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('User', 'User', '');
+            insert into tenant_role(tenant_role_uid, tenant_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'System', 'system', 'Administrator');
+            insert into tenant_account(tenant_account_name, tenant_uid, account_uid, tenant_role_uid)
+            values ('Assignment of Administrator role to system tenant', 'Test', 'test_user', 'Administrator');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

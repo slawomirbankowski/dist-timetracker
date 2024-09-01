@@ -92,6 +92,13 @@ class RequestSession(RequestBase):
                 return body_dict[name]
             return default_value
 
+    def get_query_or_body_param_as_int(self, name: str, default_value: int = "") -> int:
+        try:
+            value_str = self.get_query_or_body_param(name, str(default_value))
+            return int(value_str)
+        except:
+            return default_value
+
     def get_query_params(self, name: str, default_list: list[str] = []) -> list[str]:
         if self.request.args.__contains__(name):
             return request.args.getlist(name)
@@ -113,6 +120,10 @@ class RequestSession(RequestBase):
                 return {}
         except:
             return {}
+
+    def get_body_as_rich_dict(self) -> dict:
+        return self.get_body_as_dict()
+
     def get_body_as_json_parsed(self) -> any:
         try:
             x = json.loads(self.get_body_as_text())
@@ -161,6 +172,14 @@ class RequestSession(RequestBase):
                 "all_roles": list(self.account_permission.all_roles),
                 "session_load_date": str(self.account_session.session_load_date),
                 "permission_load_date": str(self.account_permission.permission_load_date),
+                "valid_till_date": str(self.account_session.valid_till_date),
+                "session_id": self.account_session.session_id}
+
+    def to_me_dict(self) -> dict:
+        return {"account_uid": self.account_permission.account_dto.account_uid,
+                "account_name": self.account_permission.account_dto.account_name,
+                "tenant_uid": self.account_permission.tenant_dto.tenant_uid,
+                "session_load_date": str(self.account_session.session_load_date),
                 "valid_till_date": str(self.account_session.valid_till_date),
                 "session_id": self.account_session.session_id}
 

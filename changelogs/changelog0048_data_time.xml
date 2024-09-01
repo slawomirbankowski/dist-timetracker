@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0047_data_time.xml">
+
+    <changeSet id="0047 - dictionary data for time tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Time table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Check', 'Check time - only try to check compliance milestone and project with time to be checked', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Save', 'Save time', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Submit', 'Submit time to be approved', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Approve', 'Approve time', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Reject', 'Reject', '');
+            insert into time_submit_type(time_submit_type_uid, time_submit_type_name, time_submit_type_description) values ('Pending', 'Pending', '');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

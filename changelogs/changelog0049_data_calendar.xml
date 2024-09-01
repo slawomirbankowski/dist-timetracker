@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0049_data_calendar.xml">
+
+    <changeSet id="0049 - dictionary data for calendar tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Calendar table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Work', 'Work');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Holiday', 'Holiday');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Conference', 'Conference');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Sickness', 'Sickness');
+            insert into calendar_type(calendar_type_uid, calendar_type_name) values ('Workshop', 'Workshop');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Waiting', 'Waiting');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Approve', 'Approve');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Correction', 'Correction');
+            insert into calendar_approval_type(calendar_approval_type_uid, calendar_approval_type_name) values ('Disapprove', 'Disapprove');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

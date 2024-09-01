@@ -24,21 +24,37 @@ docker run --hostname=0c5a56dbba6d --mac-address=02:42:ac:11:00:03 --env=PATH=/u
 - insert threads into system_thread - DONE
 - DB - system_table - add system tables - DONE
 
-Create installation documentation for TimeTracker backend application with all dependencies
+
+- transaction counter to count DB transaction and create event log of transactions
+
+- fill data dictionary for account_group_role                                           - DONE
+- fill data dictionary for account_group_assignment                                     - TO_DO
+
+- tenant endpoints to create, list and update tenant                                    - TO_DO
+- account endpoints to create, list and edit account                                    - TO_DO
 
 
+- DB - add HR tables                                                                    - TO_DO
+- DB - add table to location hierarchy per tenant or client                             - TO_DO
+- DB - add table with binary content or attachment for multiple purposes                - TO_DO
+
+- cache - add MODE to cache initialization                                              - TO_DO
+- cache - CacheProviderBase                                                             - TO_DO
+- Redis as cache implementation                                                         - TO_DO
+- cache - add local and remote provider                                                 - TO_DO
+- CacheManagerBase into CacheProviderBase                                               - TO_DO
+- Add local cache in memory to speed-up DAO methods                                     - TO_DO
 
 
-
-
-
-
-
-
+- callback to be added at the end of executing rest endpoint
+- add WebSockets to have communication with UI
+- Elasticsearch
+- add internal communication between backend applications to sync caches
+- add Kafka or any other Queue system
 - Tenant REST endpoints - TO_DO
 - Account REST endpoints - TO_DO
 - Auth REST endpoints - TO_DO
-
+- Project REST endpoints - TO_DO
 
 http://localhost/app/* -> UI
 http://localhost/auth/* -> login page
@@ -46,11 +62,9 @@ http://localhost/api/* -> backend
 http://localhost/ -> redirection to /
 
 - DB - system_attribute - ordinal_position, field_category, is_hidden, is_meta, is_secret, is_full_search, is_
-- DB - add HR tables
 - DB - add competency tables -
 - DB - add competency tables
 - DB - auth_identity - URL
-
 - DB - perm_type to permission - global, tenant, client, table
 - DB - add time tracking tables
 - DB - add system operation counter to count reads/writes/updates
@@ -62,6 +76,7 @@ http://localhost/ -> redirection to /
 - DTO - implement custom attributes for read_dto classes
 - NORMAL DTOs - generate from DB
 
+- rich dictionary - implement to use in project
 
 - Implement Full DTOs with links and additional information around object with metadata
 - system_attribute with search columns - model with search generation
@@ -71,7 +86,6 @@ http://localhost/ -> redirection to /
 - DB - create system_session table for account sessions
 - read all tenants from DB to Daos as dictionaries
 
-- Add local cache in memory to speed-up DAO methods
 
 - Add Redis cache for global cache to keep objects
 
@@ -131,7 +145,9 @@ TABLES
 	z(z_uid)
 	t(t_id, t_uid, t_name, y_uid, z_uid, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version )
 	t_history(t_id, t_uid, t_name, y_uid, z_uid, row_guid, is_active, created_by, created_date, last_updated_by, last_updated_date, row_version, inserted_row_date)
-
+    t_stat()
+    t_count()
+    t_
 row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by,
 owner_uid
 

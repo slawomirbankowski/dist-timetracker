@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0006_audit.xml">
+        logicalFilePath="conf/changelog0007_audit.xml">
 
-    <changeSet id="0006 - audit" author="slawomir.bankowski">
+    <changeSet id="0007 - audit" author="slawomir.bankowski">
 
         <createTable tableName="audit_type" remarks="types of audit in application - audit type could be type of operation applied to any table" >
             <column name="audit_type_uid" type="text" remarks="type of audit operations: Update, Delete, Insert"><constraints primaryKey="true" nullable="false"/></column>
