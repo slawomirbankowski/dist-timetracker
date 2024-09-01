@@ -17,13 +17,13 @@ CACHE_MODE_REFRESH: int = 3
 # wrapper for threads used in services
 class CacheItem:
     mode: int  # 1 - TTL, 2 - KEEP_FOREVER, 3 - CACHE_MODE_REFRESH
-    key: any
+    key: str
     obj: any
-    ttl_seconds: int
-    acquire_time: int
-    created_date: datetime.datetime
+    ttl_seconds: int  # number of seconds to keep object in cache
+    acquire_time: int  # acquire time in seconds to get object from original source again
+    created_date: datetime.datetime  # cache item created date and time
     method: Callable
-    used_count: int = 0
+    used_count: int = 0  # how many times object in cache was used
     def __init__(self, key: str, obj: any, ttl_seconds: int, method: Callable):
         self.mode = CACHE_MODE_TTL
         self.created_date = datetime.datetime.now()
@@ -55,9 +55,7 @@ class CacheItem:
                 return False
 
 
-# Manager of all cache items
-class CacheManager(CacheManagerBase):
-    created_date: datetime.datetime  # creation date of this manager with cache items
+class LocalCache(CacheManagerBase):
     cache_items: dict[str, CacheItem]
     def __init__(self):
         super().__init__()
@@ -68,6 +66,47 @@ class CacheManager(CacheManagerBase):
     def get_infos(self) -> list[dict]:
         return list(map(lambda x: x.get_info(), self.cache_items.values()))
     def get_base_object_type(self) -> str:
+        return "LocalCache"
+    # get name of base object
+    def get_base_object_name(self) -> str:
+        return "LocalCache"
+    def initialize(self):
+        logging.info("Initializing LocalCache, object_id: " + self.object_id)
+        self.initialize_thread()
+    # put cache item into cache storage
+    def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
+        item = CacheItem(key, obj, ttl_seconds, method)
+        self.cache_items[key] = item
+    def get(self, key: str) -> CacheItem | None:
+        if self.cache_items.__contains__(key):
+            return self.cache_items[key]
+        else:
+            return None
+
+    # work in separated thread
+    def thread_work(self, tick: int) -> bool:
+        # TODO: check inactive cache items
+        return True
+
+
+# Manager of all cache items
+class CacheManager(CacheManagerBase):
+    created_date: datetime.datetime  # creation date of this manager with cache items
+    local_cache: CacheManagerBase
+    redis_cache: CacheManagerBase
+    chain_caches: list[CacheManagerBase]
+
+    def __init__(self):
+        super().__init__()
+        objects.register_cache(self)
+        self.created_date = datetime.datetime.now()
+        logging.info("Creating CacheManager, creation time: " + str(self.created_date))
+    def get_infos(self) -> list[dict]:
+        return [
+            {"local_cache": "local_cache"},
+            {"redis_cache": "redis_cache"}
+        ]
+    def get_base_object_type(self) -> str:
         return "CacheManager"
     # get name of base object
     def get_base_object_name(self) -> str:
@@ -77,19 +116,17 @@ class CacheManager(CacheManagerBase):
         self.initialize_thread()
     # put cache item into cache storage
     def put(self, key: str, obj: any, method: any, ttl_seconds: int = 60):
-        item = CacheItem(key, obj, ttl_seconds, method)
-        self.cache_items[key] = item
+        self.local_cache.put(key, obj, method, ttl_seconds)
+
     def get(self, key: str) -> CacheItem | None:
-        if self.cache_items.__contains__(key):
-            return  self.cache_items[key]
-        else:
-            return None
+        return self.local_cache.get(key)
 
     # work in separated thread
     def thread_work(self, tick: int) -> bool:
         # TODO: check inactive cache items
         return True
-    def with_cache(self, key: str, method: Callable[[str], any], ttl: int = 60) -> any:
+
+    def with_cache(self, key: str, method: Callable[[str], any], mode: int = 1, ttl: int = 60) -> any:
         item: CacheItem | None = self.get(key)
         if item is None or item.is_old():
             obj = method(key)

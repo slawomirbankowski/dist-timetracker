@@ -12,6 +12,7 @@
             <!-- FKs -->
             <!-- attribute columns -->
             <column name="tenant_type_description" type="text" remarks="description of tenant type" defaultValue=""><constraints nullable="false"/></column>
+            <column name="tenant_class" type="text" remarks="class to execute custom functions for tenant" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
@@ -82,6 +83,7 @@
             <column name="country_uid" type="text" remarks="ISO2 country code - FK to country"><constraints nullable="false"/></column>
             <column name="tenant_type_uid" type="text" remarks="type of tenant"><constraints nullable="false"/></column>
             <column name="tenant_category_uid" type="text" remarks="category of tenant"><constraints nullable="false"/></column>
+            <column name="tenant_status_uid" type="text" remarks="current status of tenant" defaultValue="New"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="tenant_code" type="text" remarks="tenant code - 3, 4 or 4 letters uppercase"><constraints nullable="false"/></column>
             <column name="tenant_description" type="text" remarks="full description of that tenant" defaultValue=""><constraints nullable="false"/></column>
@@ -219,8 +221,8 @@
         </createTable>
 
         <createTable tableName="tenant_role" remarks="key roles of accounts in tenant: Owner, Administrator, Manger, Finance, User">
-            <column name="tenant_role_uid" type="text" remarks="UID of role assignment to tenant" defaultValueComputed="generate_uid('tero')"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="tenant_role_name" type="text" remarks="name of this license"><constraints nullable="false"/></column>
+            <column name="tenant_role_uid" type="text" remarks="UID of tenant role for account" defaultValueComputed="generate_uid('tero')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="tenant_role_name" type="text" remarks="name of tenant role for account"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="role_description" type="text" defaultValue="" remarks="description of role of account in tenant"><constraints nullable="false"/></column>
             <!-- metadata columns -->

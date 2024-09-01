@@ -5,17 +5,16 @@
 
   <include file="./changelog0001_common.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0002_system.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0003_dictionary_currency.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0004_dictionary_period.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0005_location.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0006_connection.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0007_audit.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0008_storage.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0009_synchronization.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0010_monitor.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0011_event.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0012_process.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0013_report.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0003_dictionary.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0004_location.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0005_connection.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0006_audit.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0007_storage.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0008_synchronization.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0009_monitor.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0010_event.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0011_process.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0012_report.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0020_tenant.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0021_client.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0022_account.xml" relativeToChangelogFile="true"/>
@@ -25,7 +24,10 @@
   <include file="./changelog0026_time.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0027_calendar.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0028_competency.xml" relativeToChangelogFile="true"/>
+  <!--include file="./changelog0029_recrutation.xml" relativeToChangelogFile="true"/-->
+  <!--include file="./changelog0031_rich_views.xml" relativeToChangelogFile="true"/-->
   <include file="./changelog0036_data_tables.xml" relativeToChangelogFile="true"/>
+  <!--include file="./changelog0037_data_attributes.xml" relativeToChangelogFile="true"/-->
   <include file="./changelog0040_data_system.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0041_data.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0042_data_tenant.xml" relativeToChangelogFile="true"/>
@@ -38,6 +40,6 @@
   <include file="./changelog0049_data_calendar.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0055_data_geo.xml" relativeToChangelogFile="true"/>
   <include file="./changelog0057_data_period.xml" relativeToChangelogFile="true"/>
-  <include file="./changelog0059_fks.xml" relativeToChangelogFile="true"/>
+  <include file="./changelog0050_fks.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

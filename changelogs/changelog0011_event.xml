@@ -2,9 +2,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-        logicalFilePath="conf/changelog0010_event.xml">
+        logicalFilePath="conf/changelog0011_event.xml">
 
-    <changeSet id="0010 - event tables" author="slawomir.bankowski">
+    <changeSet id="0011 - event tables" author="slawomir.bankowski">
 
         <createTable tableName="event_type" remarks="type of events" >
             <column name="event_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>

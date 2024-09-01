@@ -1,13 +1,13 @@
-# auto-generated - v_definition_python_dtos_read - START at 2024-04-21 11:58:41.449427+00
+# auto-generated - v_definition_python_dtos_read - START at 2024-08-04 09:35:56.887596+00
 import datetime
 from datetime import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
-
-from base.base_interfaces import *
 from dto.dtos import *
 from dto.dtos_thin import *
 from dto.dtos_write import *
+from dto.dtos_normal import *
+from base.base_interfaces import *
 
 
 @dataclass(frozen=False)
@@ -96,6 +96,8 @@ class account_read_dto(base_read_dto, account_write_dto, account_interface_dto):
         return account_write_dto(self.account_uid, self.account_name, self.tenant_uid, self.account_type_uid, self.account_title_uid, self.account_division_uid, self.account_group_uid, self.auth_identity_uid, self.account_email, self.display_name, self.account_address, self.is_verified, self.is_system, self.custom_attributes)
     def to_thin(self) -> account_thin_dto:
         return account_thin_dto(self.account_uid, self.account_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_normal_dto:
+        return account_normal_dto(self.account_uid, self.account_name, self.tenant_uid, self.account_type_uid, self.account_title_uid, self.account_division_uid, self.account_group_uid, self.auth_identity_uid, self.account_email, self.display_name, self.account_address, self.is_verified, self.is_system, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -113,7 +115,7 @@ class account_read_dto(base_read_dto, account_write_dto, account_interface_dto):
 
 
 @dataclass(frozen=False)
-class account_division_read_dto(base_read_dto, account_division_write_dto):
+class account_division_read_dto(base_read_dto, account_division_write_dto, account_division_interface_dto):
     account_division_uid: str
     account_division_name: str
     tenant_uid: str
@@ -184,6 +186,8 @@ class account_division_read_dto(base_read_dto, account_division_write_dto):
         return account_division_write_dto(self.account_division_uid, self.account_division_name, self.tenant_uid, self.account_uid, self.account_division_template_uid, self.division_description, self.custom_attributes)
     def to_thin(self) -> account_division_thin_dto:
         return account_division_thin_dto(self.account_division_uid, self.account_division_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_division_normal_dto:
+        return account_division_normal_dto(self.account_division_uid, self.account_division_name, self.tenant_uid, self.account_uid, self.account_division_template_uid, self.division_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -201,7 +205,7 @@ class account_division_read_dto(base_read_dto, account_division_write_dto):
 
 
 @dataclass(frozen=False)
-class account_division_template_read_dto(base_read_dto, account_division_template_write_dto):
+class account_division_template_read_dto(base_read_dto, account_division_template_write_dto, account_division_template_interface_dto):
     account_division_template_uid: str
     account_division_template_name: str
     division_description: str
@@ -266,6 +270,8 @@ class account_division_template_read_dto(base_read_dto, account_division_templat
         return account_division_template_write_dto(self.account_division_template_uid, self.account_division_template_name, self.division_description, self.custom_attributes)
     def to_thin(self) -> account_division_template_thin_dto:
         return account_division_template_thin_dto(self.account_division_template_uid, self.account_division_template_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_division_template_normal_dto:
+        return account_division_template_normal_dto(self.account_division_template_uid, self.account_division_template_name, self.division_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -283,7 +289,7 @@ class account_division_template_read_dto(base_read_dto, account_division_templat
 
 
 @dataclass(frozen=False)
-class account_group_read_dto(base_read_dto, account_group_write_dto):
+class account_group_read_dto(base_read_dto, account_group_write_dto, account_group_interface_dto):
     account_group_uid: str
     account_group_name: str
     tenant_uid: str
@@ -350,6 +356,8 @@ class account_group_read_dto(base_read_dto, account_group_write_dto):
         return account_group_write_dto(self.account_group_uid, self.account_group_name, self.tenant_uid, self.account_group_description, self.custom_attributes)
     def to_thin(self) -> account_group_thin_dto:
         return account_group_thin_dto(self.account_group_uid, self.account_group_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_group_normal_dto:
+        return account_group_normal_dto(self.account_group_uid, self.account_group_name, self.tenant_uid, self.account_group_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -367,7 +375,7 @@ class account_group_read_dto(base_read_dto, account_group_write_dto):
 
 
 @dataclass(frozen=False)
-class account_group_assignment_read_dto(base_read_dto, account_group_assignment_write_dto):
+class account_group_assignment_read_dto(base_read_dto, account_group_assignment_write_dto, account_group_assignment_interface_dto):
     account_group_assignment_uid: str
     account_group_assignment_name: str
     tenant_uid: str
@@ -442,6 +450,8 @@ class account_group_assignment_read_dto(base_read_dto, account_group_assignment_
         return account_group_assignment_write_dto(self.account_group_assignment_uid, self.account_group_assignment_name, self.tenant_uid, self.account_group_uid, self.account_uid, self.account_group_role_uid, self.start_date, self.end_date, self.custom_attributes)
     def to_thin(self) -> account_group_assignment_thin_dto:
         return account_group_assignment_thin_dto(self.account_group_assignment_uid, self.account_group_assignment_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_group_assignment_normal_dto:
+        return account_group_assignment_normal_dto(self.account_group_assignment_uid, self.account_group_assignment_name, self.tenant_uid, self.account_group_uid, self.account_uid, self.account_group_role_uid, self.start_date, self.end_date, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -459,7 +469,7 @@ class account_group_assignment_read_dto(base_read_dto, account_group_assignment_
 
 
 @dataclass(frozen=False)
-class account_group_role_read_dto(base_read_dto, account_group_role_write_dto):
+class account_group_role_read_dto(base_read_dto, account_group_role_write_dto, account_group_role_interface_dto):
     account_group_role_uid: str
     account_group_role_name: str
     row_instance: str
@@ -522,6 +532,8 @@ class account_group_role_read_dto(base_read_dto, account_group_role_write_dto):
         return account_group_role_write_dto(self.account_group_role_uid, self.account_group_role_name, self.custom_attributes)
     def to_thin(self) -> account_group_role_thin_dto:
         return account_group_role_thin_dto(self.account_group_role_uid, self.account_group_role_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_group_role_normal_dto:
+        return account_group_role_normal_dto(self.account_group_role_uid, self.account_group_role_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -539,7 +551,7 @@ class account_group_role_read_dto(base_read_dto, account_group_role_write_dto):
 
 
 @dataclass(frozen=False)
-class account_hierarchy_read_dto(base_read_dto, account_hierarchy_write_dto):
+class account_hierarchy_read_dto(base_read_dto, account_hierarchy_write_dto, account_hierarchy_interface_dto):
     account_hierarchy_uid: str
     account_hierarchy_name: str
     tenant_uid: str
@@ -608,6 +620,8 @@ class account_hierarchy_read_dto(base_read_dto, account_hierarchy_write_dto):
         return account_hierarchy_write_dto(self.account_hierarchy_uid, self.account_hierarchy_name, self.tenant_uid, self.parent_account_uid, self.child_account_uid, self.custom_attributes)
     def to_thin(self) -> account_hierarchy_thin_dto:
         return account_hierarchy_thin_dto(self.account_hierarchy_uid, self.account_hierarchy_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_hierarchy_normal_dto:
+        return account_hierarchy_normal_dto(self.account_hierarchy_uid, self.account_hierarchy_name, self.tenant_uid, self.parent_account_uid, self.child_account_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -625,7 +639,7 @@ class account_hierarchy_read_dto(base_read_dto, account_hierarchy_write_dto):
 
 
 @dataclass(frozen=False)
-class account_rate_read_dto(base_read_dto, account_rate_write_dto):
+class account_rate_read_dto(base_read_dto, account_rate_write_dto, account_rate_interface_dto):
     account_rate_uid: str
     account_rate_name: str
     tenant_uid: str
@@ -634,6 +648,8 @@ class account_rate_read_dto(base_read_dto, account_rate_write_dto):
     rate: str
     start_date: datetime.datetime
     end_date: datetime.datetime
+    rate_note: str
+    is_default: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -648,7 +664,7 @@ class account_rate_read_dto(base_read_dto, account_rate_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.account_rate_uid = account_rate_uid
         self.account_rate_name = account_rate_name
         self.tenant_uid = tenant_uid
@@ -657,6 +673,8 @@ class account_rate_read_dto(base_read_dto, account_rate_write_dto):
         self.rate = rate
         self.start_date = start_date
         self.end_date = end_date
+        self.rate_note = rate_note
+        self.is_default = is_default
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -673,41 +691,43 @@ class account_rate_read_dto(base_read_dto, account_rate_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime):
-        return cls(0, account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str):
+        return cls(0, account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: account_rate_write_dto):
-        return cls(0, dto.account_rate_uid, dto.account_rate_name, dto.tenant_uid, dto.account_uid, dto.currency_uid, dto.rate, dto.start_date, dto.end_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.account_rate_uid, dto.account_rate_name, dto.tenant_uid, dto.account_uid, dto.currency_uid, dto.rate, dto.start_date, dto.end_date, dto.rate_note, dto.is_default, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return account_rate_read_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return account_rate_read_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["account_rate_uid"], d["account_rate_name"], d["tenant_uid"], d["account_uid"], d["currency_uid"], d["rate"], d["start_date"], d["end_date"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["account_rate_uid"], d["account_rate_name"], d["tenant_uid"], d["account_uid"], d["currency_uid"], d["rate"], d["start_date"], d["end_date"], d["rate_note"], d["is_default"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> account_rate_write_dto:
-        return account_rate_write_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes)
+        return account_rate_write_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes)
     def to_thin(self) -> account_rate_thin_dto:
         return account_rate_thin_dto(self.account_rate_uid, self.account_rate_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_rate_normal_dto:
+        return account_rate_normal_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes, updated_by, self.account_rate_uid]
+        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes, updated_by, self.account_rate_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -717,9 +737,103 @@ class account_rate_read_dto(base_read_dto, account_rate_write_dto):
 
 
 @dataclass(frozen=False)
-class account_skill_read_dto(base_read_dto, account_skill_write_dto):
+class account_skill_read_dto(base_read_dto, account_skill_write_dto, account_skill_interface_dto):
     account_skill_uid: str
     account_skill_name: str
+    account_skill_group_uid: str
+    skill_title: str
+    skill_code: str
+    skill_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.account_skill_uid = account_skill_uid
+        self.account_skill_name = account_skill_name
+        self.account_skill_group_uid = account_skill_group_uid
+        self.skill_title = skill_title
+        self.skill_code = skill_code
+        self.skill_description = skill_description
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str):
+        return cls(0, account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: account_skill_write_dto):
+        return cls(0, dto.account_skill_uid, dto.account_skill_name, dto.account_skill_group_uid, dto.skill_title, dto.skill_code, dto.skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return account_skill_read_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["account_skill_uid"], d["account_skill_name"], d["account_skill_group_uid"], d["skill_title"], d["skill_code"], d["skill_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> account_skill_write_dto:
+        return account_skill_write_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes)
+    def to_thin(self) -> account_skill_thin_dto:
+        return account_skill_thin_dto(self.account_skill_uid, self.account_skill_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_skill_normal_dto:
+        return account_skill_normal_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes, updated_by, self.account_skill_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class account_skill_assignment_read_dto(base_read_dto, account_skill_assignment_write_dto, account_skill_assignment_interface_dto):
+    account_skill_assignment_uid: str
+    account_skill_assignment_name: str
+    tenant_uid: str
+    account_uid: str
+    account_skill_uid: str
+    skill_rate: str
     account_skill_description: str
     row_instance: str
     row_lock: str | None
@@ -735,9 +849,13 @@ class account_skill_read_dto(base_read_dto, account_skill_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, account_skill_uid: str, account_skill_name: str, account_skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.account_skill_assignment_uid = account_skill_assignment_uid
+        self.account_skill_assignment_name = account_skill_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
         self.account_skill_uid = account_skill_uid
-        self.account_skill_name = account_skill_name
+        self.skill_rate = skill_rate
         self.account_skill_description = account_skill_description
         self.row_instance = row_instance
         self.row_lock = row_lock
@@ -755,41 +873,43 @@ class account_skill_read_dto(base_read_dto, account_skill_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, account_skill_uid: str, account_skill_name: str, account_skill_description: str):
-        return cls(0, account_skill_uid, account_skill_name, account_skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str):
+        return cls(0, account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, account_skill_uid: str, account_skill_name: str, account_skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(account_skill_uid, account_skill_name, account_skill_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
-    def from_write(cls, dto: account_skill_write_dto):
-        return cls(0, dto.account_skill_uid, dto.account_skill_name, dto.account_skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def from_write(cls, dto: account_skill_assignment_write_dto):
+        return cls(0, dto.account_skill_assignment_uid, dto.account_skill_assignment_name, dto.tenant_uid, dto.account_uid, dto.account_skill_uid, dto.skill_rate, dto.account_skill_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return account_skill_read_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return account_skill_assignment_read_dto(self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["account_skill_uid"], d["account_skill_name"], d["account_skill_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["account_skill_assignment_uid"], d["account_skill_assignment_name"], d["tenant_uid"], d["account_uid"], d["account_skill_uid"], d["skill_rate"], d["account_skill_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
-    def to_write(self) -> account_skill_write_dto:
-        return account_skill_write_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.custom_attributes)
-    def to_thin(self) -> account_skill_thin_dto:
-        return account_skill_thin_dto(self.account_skill_uid, self.account_skill_name, self.created_date, self.is_active)
+    def to_write(self) -> account_skill_assignment_write_dto:
+        return account_skill_assignment_write_dto(self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes)
+    def to_thin(self) -> account_skill_assignment_thin_dto:
+        return account_skill_assignment_thin_dto(self.account_skill_assignment_uid, self.account_skill_assignment_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_skill_assignment_normal_dto:
+        return account_skill_assignment_normal_dto(self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.account_skill_name, self.account_skill_description, self.custom_attributes, updated_by, self.account_skill_uid]
+        return [self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes, updated_by, self.account_skill_assignment_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -799,7 +919,89 @@ class account_skill_read_dto(base_read_dto, account_skill_write_dto):
 
 
 @dataclass(frozen=False)
-class account_team_read_dto(base_read_dto, account_team_write_dto):
+class account_skill_group_read_dto(base_read_dto, account_skill_group_write_dto, account_skill_group_interface_dto):
+    account_skill_group_uid: str
+    account_skill_group_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, account_skill_group_uid: str, account_skill_group_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.account_skill_group_uid = account_skill_group_uid
+        self.account_skill_group_name = account_skill_group_name
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, account_skill_group_uid: str, account_skill_group_name: str):
+        return cls(0, account_skill_group_uid, account_skill_group_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, account_skill_group_uid: str, account_skill_group_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(account_skill_group_uid, account_skill_group_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: account_skill_group_write_dto):
+        return cls(0, dto.account_skill_group_uid, dto.account_skill_group_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return account_skill_group_read_dto(self.account_skill_group_uid, self.account_skill_group_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["account_skill_group_uid"], d["account_skill_group_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> account_skill_group_write_dto:
+        return account_skill_group_write_dto(self.account_skill_group_uid, self.account_skill_group_name, self.custom_attributes)
+    def to_thin(self) -> account_skill_group_thin_dto:
+        return account_skill_group_thin_dto(self.account_skill_group_uid, self.account_skill_group_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_skill_group_normal_dto:
+        return account_skill_group_normal_dto(self.account_skill_group_uid, self.account_skill_group_name, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.account_skill_group_uid, self.account_skill_group_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.account_skill_group_name, self.custom_attributes, updated_by, self.account_skill_group_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class account_team_read_dto(base_read_dto, account_team_write_dto, account_team_interface_dto):
     account_team_uid: str
     account_team_name: str
     tenant_uid: str
@@ -872,6 +1074,8 @@ class account_team_read_dto(base_read_dto, account_team_write_dto):
         return account_team_write_dto(self.account_team_uid, self.account_team_name, self.tenant_uid, self.owner_account_uid, self.is_public, self.is_tenant, self.is_private, self.custom_attributes)
     def to_thin(self) -> account_team_thin_dto:
         return account_team_thin_dto(self.account_team_uid, self.account_team_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_team_normal_dto:
+        return account_team_normal_dto(self.account_team_uid, self.account_team_name, self.tenant_uid, self.owner_account_uid, self.is_public, self.is_tenant, self.is_private, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -889,7 +1093,7 @@ class account_team_read_dto(base_read_dto, account_team_write_dto):
 
 
 @dataclass(frozen=False)
-class account_title_read_dto(base_read_dto, account_title_write_dto):
+class account_title_read_dto(base_read_dto, account_title_write_dto, account_title_interface_dto):
     account_title_uid: str
     account_title_name: str
     title_description: str
@@ -954,6 +1158,8 @@ class account_title_read_dto(base_read_dto, account_title_write_dto):
         return account_title_write_dto(self.account_title_uid, self.account_title_name, self.title_description, self.custom_attributes)
     def to_thin(self) -> account_title_thin_dto:
         return account_title_thin_dto(self.account_title_uid, self.account_title_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_title_normal_dto:
+        return account_title_normal_dto(self.account_title_uid, self.account_title_name, self.title_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -971,7 +1177,7 @@ class account_title_read_dto(base_read_dto, account_title_write_dto):
 
 
 @dataclass(frozen=False)
-class account_title_assignment_read_dto(base_read_dto, account_title_assignment_write_dto):
+class account_title_assignment_read_dto(base_read_dto, account_title_assignment_write_dto, account_title_assignment_interface_dto):
     account_title_assignment_uid: str
     account_title_assignment_name: str
     tenant_uid: str
@@ -1044,6 +1250,8 @@ class account_title_assignment_read_dto(base_read_dto, account_title_assignment_
         return account_title_assignment_write_dto(self.account_title_assignment_uid, self.account_title_assignment_name, self.tenant_uid, self.account_title_uid, self.account_title_responsibility_uid, self.responsibility_description, self.responsibility_priority, self.custom_attributes)
     def to_thin(self) -> account_title_assignment_thin_dto:
         return account_title_assignment_thin_dto(self.account_title_assignment_uid, self.account_title_assignment_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_title_assignment_normal_dto:
+        return account_title_assignment_normal_dto(self.account_title_assignment_uid, self.account_title_assignment_name, self.tenant_uid, self.account_title_uid, self.account_title_responsibility_uid, self.responsibility_description, self.responsibility_priority, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1061,7 +1269,7 @@ class account_title_assignment_read_dto(base_read_dto, account_title_assignment_
 
 
 @dataclass(frozen=False)
-class account_title_responsibility_read_dto(base_read_dto, account_title_responsibility_write_dto):
+class account_title_responsibility_read_dto(base_read_dto, account_title_responsibility_write_dto, account_title_responsibility_interface_dto):
     account_title_responsibility_uid: str
     account_title_responsibility_name: str
     tenant_uid: str
@@ -1134,6 +1342,8 @@ class account_title_responsibility_read_dto(base_read_dto, account_title_respons
         return account_title_responsibility_write_dto(self.account_title_responsibility_uid, self.account_title_responsibility_name, self.tenant_uid, self.account_title_uid, self.responsibility_group, self.responsibility_description, self.responsibility_priority, self.custom_attributes)
     def to_thin(self) -> account_title_responsibility_thin_dto:
         return account_title_responsibility_thin_dto(self.account_title_responsibility_uid, self.account_title_responsibility_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_title_responsibility_normal_dto:
+        return account_title_responsibility_normal_dto(self.account_title_responsibility_uid, self.account_title_responsibility_name, self.tenant_uid, self.account_title_uid, self.responsibility_group, self.responsibility_description, self.responsibility_priority, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1151,7 +1361,7 @@ class account_title_responsibility_read_dto(base_read_dto, account_title_respons
 
 
 @dataclass(frozen=False)
-class account_type_read_dto(base_read_dto, account_type_write_dto):
+class account_type_read_dto(base_read_dto, account_type_write_dto, account_type_interface_dto):
     account_type_uid: str
     account_type_name: str
     class_name: str
@@ -1218,6 +1428,8 @@ class account_type_read_dto(base_read_dto, account_type_write_dto):
         return account_type_write_dto(self.account_type_uid, self.account_type_name, self.class_name, self.account_type_description, self.custom_attributes)
     def to_thin(self) -> account_type_thin_dto:
         return account_type_thin_dto(self.account_type_uid, self.account_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> account_type_normal_dto:
+        return account_type_normal_dto(self.account_type_uid, self.account_type_name, self.class_name, self.account_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1235,7 +1447,7 @@ class account_type_read_dto(base_read_dto, account_type_write_dto):
 
 
 @dataclass(frozen=False)
-class audit_change_read_dto(base_read_dto, audit_change_write_dto):
+class audit_change_read_dto(base_read_dto, audit_change_write_dto, audit_change_interface_dto):
     audit_change_uid: str
     audit_change_name: str
     account_uid: str
@@ -1306,6 +1518,8 @@ class audit_change_read_dto(base_read_dto, audit_change_write_dto):
         return audit_change_write_dto(self.audit_change_uid, self.audit_change_name, self.account_uid, self.audit_type_uid, self.change_type, self.change_json, self.custom_attributes)
     def to_thin(self) -> audit_change_thin_dto:
         return audit_change_thin_dto(self.audit_change_uid, self.audit_change_name, self.created_date, self.is_active)
+    def to_normal(self) -> audit_change_normal_dto:
+        return audit_change_normal_dto(self.audit_change_uid, self.audit_change_name, self.account_uid, self.audit_type_uid, self.change_type, self.change_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1323,7 +1537,7 @@ class audit_change_read_dto(base_read_dto, audit_change_write_dto):
 
 
 @dataclass(frozen=False)
-class audit_type_read_dto(base_read_dto, audit_type_write_dto):
+class audit_type_read_dto(base_read_dto, audit_type_write_dto, audit_type_interface_dto):
     audit_type_uid: str
     audit_type_name: str
     row_instance: str
@@ -1386,6 +1600,8 @@ class audit_type_read_dto(base_read_dto, audit_type_write_dto):
         return audit_type_write_dto(self.audit_type_uid, self.audit_type_name, self.custom_attributes)
     def to_thin(self) -> audit_type_thin_dto:
         return audit_type_thin_dto(self.audit_type_uid, self.audit_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> audit_type_normal_dto:
+        return audit_type_normal_dto(self.audit_type_uid, self.audit_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1403,7 +1619,7 @@ class audit_type_read_dto(base_read_dto, audit_type_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_attempt_read_dto(base_read_dto, auth_attempt_write_dto):
+class auth_attempt_read_dto(base_read_dto, auth_attempt_write_dto, auth_attempt_interface_dto):
     auth_attempt_uid: str
     auth_attempt_name: str
     tenant_uid: str | None
@@ -1478,6 +1694,8 @@ class auth_attempt_read_dto(base_read_dto, auth_attempt_write_dto):
         return auth_attempt_write_dto(self.auth_attempt_uid, self.auth_attempt_name, self.tenant_uid, self.account_uid, self.account_login, self.identity_type, self.identity_parameters, self.last_status_name, self.custom_attributes)
     def to_thin(self) -> auth_attempt_thin_dto:
         return auth_attempt_thin_dto(self.auth_attempt_uid, self.auth_attempt_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_attempt_normal_dto:
+        return auth_attempt_normal_dto(self.auth_attempt_uid, self.auth_attempt_name, self.tenant_uid, self.account_uid, self.account_login, self.identity_type, self.identity_parameters, self.last_status_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1495,10 +1713,11 @@ class auth_attempt_read_dto(base_read_dto, auth_attempt_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_identity_read_dto(base_read_dto, auth_identity_write_dto):
+class auth_identity_read_dto(base_read_dto, auth_identity_write_dto, auth_identity_interface_dto):
     auth_identity_uid: str
     auth_identity_name: str
     class_name: str
+    auth_url: str
     default_parameters_json: str
     row_instance: str
     row_lock: str | None
@@ -1514,10 +1733,11 @@ class auth_identity_read_dto(base_read_dto, auth_identity_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.auth_identity_uid = auth_identity_uid
         self.auth_identity_name = auth_identity_name
         self.class_name = class_name
+        self.auth_url = auth_url
         self.default_parameters_json = default_parameters_json
         self.row_instance = row_instance
         self.row_lock = row_lock
@@ -1535,41 +1755,43 @@ class auth_identity_read_dto(base_read_dto, auth_identity_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str):
-        return cls(0, auth_identity_uid, auth_identity_name, class_name, default_parameters_json, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str):
+        return cls(0, auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(auth_identity_uid, auth_identity_name, class_name, default_parameters_json, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: auth_identity_write_dto):
-        return cls(0, dto.auth_identity_uid, dto.auth_identity_name, dto.class_name, dto.default_parameters_json, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.auth_identity_uid, dto.auth_identity_name, dto.class_name, dto.auth_url, dto.default_parameters_json, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return auth_identity_read_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return auth_identity_read_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_identity_uid"], d["auth_identity_name"], d["class_name"], d["default_parameters_json"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["auth_identity_uid"], d["auth_identity_name"], d["class_name"], d["auth_url"], d["default_parameters_json"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> auth_identity_write_dto:
-        return auth_identity_write_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes)
+        return auth_identity_write_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes)
     def to_thin(self) -> auth_identity_thin_dto:
         return auth_identity_thin_dto(self.auth_identity_uid, self.auth_identity_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_identity_normal_dto:
+        return auth_identity_normal_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes, updated_by, self.auth_identity_uid]
+        return [self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes, updated_by, self.auth_identity_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -1579,7 +1801,7 @@ class auth_identity_read_dto(base_read_dto, auth_identity_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_identity_tenant_read_dto(base_read_dto, auth_identity_tenant_write_dto):
+class auth_identity_tenant_read_dto(base_read_dto, auth_identity_tenant_write_dto, auth_identity_tenant_interface_dto):
     auth_identity_tenant_uid: str
     auth_identity_tenant_name: str
     tenant_uid: str
@@ -1652,6 +1874,8 @@ class auth_identity_tenant_read_dto(base_read_dto, auth_identity_tenant_write_dt
         return auth_identity_tenant_write_dto(self.auth_identity_tenant_uid, self.auth_identity_tenant_name, self.tenant_uid, self.auth_identity_uid, self.auth_sso_uid, self.identity_parameters_json, self.last_status_name, self.custom_attributes)
     def to_thin(self) -> auth_identity_tenant_thin_dto:
         return auth_identity_tenant_thin_dto(self.auth_identity_tenant_uid, self.auth_identity_tenant_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_identity_tenant_normal_dto:
+        return auth_identity_tenant_normal_dto(self.auth_identity_tenant_uid, self.auth_identity_tenant_name, self.tenant_uid, self.auth_identity_uid, self.auth_sso_uid, self.identity_parameters_json, self.last_status_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1669,7 +1893,7 @@ class auth_identity_tenant_read_dto(base_read_dto, auth_identity_tenant_write_dt
 
 
 @dataclass(frozen=False)
-class auth_key_read_dto(base_read_dto, auth_key_write_dto):
+class auth_key_read_dto(base_read_dto, auth_key_write_dto, auth_key_interface_dto):
     auth_key_uid: str
     auth_key_name: str
     tenant_uid: str
@@ -1750,6 +1974,8 @@ class auth_key_read_dto(base_read_dto, auth_key_write_dto):
         return auth_key_write_dto(self.auth_key_uid, self.auth_key_name, self.tenant_uid, self.owner_account_uid, self.auth_key_type_uid, self.key_private, self.key_public, self.key_length, self.key_exponent, self.key_modulus, self.key_parameters_json, self.custom_attributes)
     def to_thin(self) -> auth_key_thin_dto:
         return auth_key_thin_dto(self.auth_key_uid, self.auth_key_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_key_normal_dto:
+        return auth_key_normal_dto(self.auth_key_uid, self.auth_key_name, self.tenant_uid, self.owner_account_uid, self.auth_key_type_uid, self.key_private, self.key_public, self.key_length, self.key_exponent, self.key_modulus, self.key_parameters_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1767,7 +1993,7 @@ class auth_key_read_dto(base_read_dto, auth_key_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_key_type_read_dto(base_read_dto, auth_key_type_write_dto):
+class auth_key_type_read_dto(base_read_dto, auth_key_type_write_dto, auth_key_type_interface_dto):
     auth_key_type_uid: str
     auth_key_type_name: str
     class_name: str
@@ -1832,6 +2058,8 @@ class auth_key_type_read_dto(base_read_dto, auth_key_type_write_dto):
         return auth_key_type_write_dto(self.auth_key_type_uid, self.auth_key_type_name, self.class_name, self.custom_attributes)
     def to_thin(self) -> auth_key_type_thin_dto:
         return auth_key_type_thin_dto(self.auth_key_type_uid, self.auth_key_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_key_type_normal_dto:
+        return auth_key_type_normal_dto(self.auth_key_type_uid, self.auth_key_type_name, self.class_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1849,7 +2077,7 @@ class auth_key_type_read_dto(base_read_dto, auth_key_type_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_password_read_dto(base_read_dto, auth_password_write_dto):
+class auth_password_read_dto(base_read_dto, auth_password_write_dto, auth_password_interface_dto):
     auth_password_uid: str
     auth_password_name: str
     tenant_uid: str
@@ -1926,6 +2154,8 @@ class auth_password_read_dto(base_read_dto, auth_password_write_dto):
         return auth_password_write_dto(self.auth_password_uid, self.auth_password_name, self.tenant_uid, self.account_uid, self.password_hash, self.password_salt, self.date_from, self.date_to, self.usage_count, self.custom_attributes)
     def to_thin(self) -> auth_password_thin_dto:
         return auth_password_thin_dto(self.auth_password_uid, self.auth_password_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_password_normal_dto:
+        return auth_password_normal_dto(self.auth_password_uid, self.auth_password_name, self.tenant_uid, self.account_uid, self.password_hash, self.password_salt, self.date_from, self.date_to, self.usage_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -1943,7 +2173,7 @@ class auth_password_read_dto(base_read_dto, auth_password_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_password_current_read_dto(base_read_dto, auth_password_current_write_dto):
+class auth_password_current_read_dto(base_read_dto, auth_password_current_write_dto, auth_password_current_interface_dto):
     auth_password_current_uid: str
     auth_password_current_name: str
     tenant_uid: str
@@ -2020,6 +2250,8 @@ class auth_password_current_read_dto(base_read_dto, auth_password_current_write_
         return auth_password_current_write_dto(self.auth_password_current_uid, self.auth_password_current_name, self.tenant_uid, self.account_uid, self.password_hash, self.password_salt, self.date_from, self.date_to, self.usage_count, self.custom_attributes)
     def to_thin(self) -> auth_password_current_thin_dto:
         return auth_password_current_thin_dto(self.auth_password_current_uid, self.auth_password_current_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_password_current_normal_dto:
+        return auth_password_current_normal_dto(self.auth_password_current_uid, self.auth_password_current_name, self.tenant_uid, self.account_uid, self.password_hash, self.password_salt, self.date_from, self.date_to, self.usage_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2037,7 +2269,7 @@ class auth_password_current_read_dto(base_read_dto, auth_password_current_write_
 
 
 @dataclass(frozen=False)
-class auth_password_rule_read_dto(base_read_dto, auth_password_rule_write_dto):
+class auth_password_rule_read_dto(base_read_dto, auth_password_rule_write_dto, auth_password_rule_interface_dto):
     auth_password_uid: str
     auth_password_name: str
     rule_type: int
@@ -2106,6 +2338,8 @@ class auth_password_rule_read_dto(base_read_dto, auth_password_rule_write_dto):
         return auth_password_rule_write_dto(self.auth_password_uid, self.auth_password_name, self.rule_type, self.rule_parameters, self.user_scope, self.custom_attributes)
     def to_thin(self) -> auth_password_rule_thin_dto:
         return auth_password_rule_thin_dto(self.auth_password_rule_uid, self.auth_password_rule_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_password_rule_normal_dto:
+        return auth_password_rule_normal_dto(self.auth_password_uid, self.auth_password_name, self.rule_type, self.rule_parameters, self.user_scope, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2123,7 +2357,7 @@ class auth_password_rule_read_dto(base_read_dto, auth_password_rule_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
+class auth_permission_read_dto(base_read_dto, auth_permission_write_dto, auth_permission_interface_dto):
     auth_permission_uid: str
     auth_permission_name: str
     tenant_uid: str
@@ -2131,6 +2365,7 @@ class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
     auth_role_uid: str
     client_uid: str | None
     project_instance_uid: str | None
+    auth_permission_type_uid: str | None
     valid_from_date: datetime.datetime
     valid_till_date: datetime.datetime
     row_instance: str
@@ -2147,7 +2382,7 @@ class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.auth_permission_uid = auth_permission_uid
         self.auth_permission_name = auth_permission_name
         self.tenant_uid = tenant_uid
@@ -2155,6 +2390,7 @@ class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
         self.auth_role_uid = auth_role_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
+        self.auth_permission_type_uid = auth_permission_type_uid
         self.valid_from_date = valid_from_date
         self.valid_till_date = valid_till_date
         self.row_instance = row_instance
@@ -2173,41 +2409,43 @@ class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
-        return cls(0, auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
+        return cls(0, auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: auth_permission_write_dto):
-        return cls(0, dto.auth_permission_uid, dto.auth_permission_name, dto.tenant_uid, dto.account_uid, dto.auth_role_uid, dto.client_uid, dto.project_instance_uid, dto.valid_from_date, dto.valid_till_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.auth_permission_uid, dto.auth_permission_name, dto.tenant_uid, dto.account_uid, dto.auth_role_uid, dto.client_uid, dto.project_instance_uid, dto.auth_permission_type_uid, dto.valid_from_date, dto.valid_till_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return auth_permission_read_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return auth_permission_read_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_permission_uid"], d["auth_permission_name"], d["tenant_uid"], d["account_uid"], d["auth_role_uid"], d["client_uid"], d["project_instance_uid"], d["valid_from_date"], d["valid_till_date"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["auth_permission_uid"], d["auth_permission_name"], d["tenant_uid"], d["account_uid"], d["auth_role_uid"], d["client_uid"], d["project_instance_uid"], d["auth_permission_type_uid"], d["valid_from_date"], d["valid_till_date"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> auth_permission_write_dto:
-        return auth_permission_write_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
+        return auth_permission_write_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
     def to_thin(self) -> auth_permission_thin_dto:
         return auth_permission_thin_dto(self.auth_permission_uid, self.auth_permission_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_permission_normal_dto:
+        return auth_permission_normal_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes, updated_by, self.auth_permission_uid]
+        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes, updated_by, self.auth_permission_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -2217,7 +2455,179 @@ class auth_permission_read_dto(base_read_dto, auth_permission_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_request_read_dto(base_read_dto, auth_request_write_dto):
+class auth_permission_type_read_dto(base_read_dto, auth_permission_type_write_dto, auth_permission_type_interface_dto):
+    auth_permission_type_uid: str
+    auth_permission_type_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, auth_permission_type_uid: str, auth_permission_type_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.auth_permission_type_uid = auth_permission_type_uid
+        self.auth_permission_type_name = auth_permission_type_name
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, auth_permission_type_uid: str, auth_permission_type_name: str):
+        return cls(0, auth_permission_type_uid, auth_permission_type_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, auth_permission_type_uid: str, auth_permission_type_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_permission_type_uid, auth_permission_type_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: auth_permission_type_write_dto):
+        return cls(0, dto.auth_permission_type_uid, dto.auth_permission_type_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return auth_permission_type_read_dto(self.auth_permission_type_uid, self.auth_permission_type_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_permission_type_uid"], d["auth_permission_type_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> auth_permission_type_write_dto:
+        return auth_permission_type_write_dto(self.auth_permission_type_uid, self.auth_permission_type_name, self.custom_attributes)
+    def to_thin(self) -> auth_permission_type_thin_dto:
+        return auth_permission_type_thin_dto(self.auth_permission_type_uid, self.auth_permission_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_permission_type_normal_dto:
+        return auth_permission_type_normal_dto(self.auth_permission_type_uid, self.auth_permission_type_name, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.auth_permission_type_uid, self.auth_permission_type_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.auth_permission_type_name, self.custom_attributes, updated_by, self.auth_permission_type_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class auth_pin_read_dto(base_read_dto, auth_pin_write_dto, auth_pin_interface_dto):
+    auth_pin_uid: str
+    auth_pin_name: str
+    tenant_uid: str
+    account_uid: str
+    pin_hash: str
+    pin_salt: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.auth_pin_uid = auth_pin_uid
+        self.auth_pin_name = auth_pin_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.pin_hash = pin_hash
+        self.pin_salt = pin_salt
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str):
+        return cls(0, auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: auth_pin_write_dto):
+        return cls(0, dto.auth_pin_uid, dto.auth_pin_name, dto.tenant_uid, dto.account_uid, dto.pin_hash, dto.pin_salt, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return auth_pin_read_dto(self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_pin_uid"], d["auth_pin_name"], d["tenant_uid"], d["account_uid"], d["pin_hash"], d["pin_salt"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> auth_pin_write_dto:
+        return auth_pin_write_dto(self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes)
+    def to_thin(self) -> auth_pin_thin_dto:
+        return auth_pin_thin_dto(self.auth_pin_uid, self.auth_pin_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_pin_normal_dto:
+        return auth_pin_normal_dto(self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes, updated_by, self.auth_pin_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class auth_request_read_dto(base_read_dto, auth_request_write_dto, auth_request_interface_dto):
     auth_request_uid: str
     auth_request_name: str
     tenant_uid: str
@@ -2306,6 +2716,8 @@ class auth_request_read_dto(base_read_dto, auth_request_write_dto):
         return auth_request_write_dto(self.auth_request_uid, self.auth_request_name, self.tenant_uid, self.account_uid, self.requestor_email, self.reset_guid, self.valid_till_date, self.lock_guid, self.lock_by, self.lock_date, self.is_checked, self.is_used, self.check_date, self.use_date, self.event_notification_uid, self.custom_attributes)
     def to_thin(self) -> auth_request_thin_dto:
         return auth_request_thin_dto(self.auth_request_uid, self.auth_request_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_request_normal_dto:
+        return auth_request_normal_dto(self.auth_request_uid, self.auth_request_name, self.tenant_uid, self.account_uid, self.requestor_email, self.reset_guid, self.valid_till_date, self.lock_guid, self.lock_by, self.lock_date, self.is_checked, self.is_used, self.check_date, self.use_date, self.event_notification_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2323,7 +2735,7 @@ class auth_request_read_dto(base_read_dto, auth_request_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_role_read_dto(base_read_dto, auth_role_write_dto):
+class auth_role_read_dto(base_read_dto, auth_role_write_dto, auth_role_interface_dto):
     auth_role_uid: str
     auth_role_name: str
     parent_auth_role_uid: str | None
@@ -2402,6 +2814,8 @@ class auth_role_read_dto(base_read_dto, auth_role_write_dto):
         return auth_role_write_dto(self.auth_role_uid, self.auth_role_name, self.parent_auth_role_uid, self.tenant_uid, self.role_description, self.access_uris, self.is_project, self.is_tenant, self.is_client, self.is_custom, self.custom_attributes)
     def to_thin(self) -> auth_role_thin_dto:
         return auth_role_thin_dto(self.auth_role_uid, self.auth_role_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_role_normal_dto:
+        return auth_role_normal_dto(self.auth_role_uid, self.auth_role_name, self.parent_auth_role_uid, self.tenant_uid, self.role_description, self.access_uris, self.is_project, self.is_tenant, self.is_client, self.is_custom, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2419,7 +2833,7 @@ class auth_role_read_dto(base_read_dto, auth_role_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_role_uri_read_dto(base_read_dto, auth_role_uri_write_dto):
+class auth_role_uri_read_dto(base_read_dto, auth_role_uri_write_dto, auth_role_uri_interface_dto):
     auth_role_uri_uid: str
     auth_role_uri_name: str
     auth_role_uid: str | None
@@ -2486,6 +2900,8 @@ class auth_role_uri_read_dto(base_read_dto, auth_role_uri_write_dto):
         return auth_role_uri_write_dto(self.auth_role_uri_uid, self.auth_role_uri_name, self.auth_role_uid, self.uri, self.custom_attributes)
     def to_thin(self) -> auth_role_uri_thin_dto:
         return auth_role_uri_thin_dto(self.auth_role_uri_uid, self.auth_role_uri_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_role_uri_normal_dto:
+        return auth_role_uri_normal_dto(self.auth_role_uri_uid, self.auth_role_uri_name, self.auth_role_uid, self.uri, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2503,7 +2919,7 @@ class auth_role_uri_read_dto(base_read_dto, auth_role_uri_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_session_read_dto(base_read_dto, auth_session_write_dto):
+class auth_session_read_dto(base_read_dto, auth_session_write_dto, auth_session_interface_dto):
     auth_session_uid: str
     auth_session_name: str
     tenant_uid: str | None
@@ -2578,6 +2994,8 @@ class auth_session_read_dto(base_read_dto, auth_session_write_dto):
         return auth_session_write_dto(self.auth_session_uid, self.auth_session_name, self.tenant_uid, self.account_uid, self.session_token, self.browser_name, self.browser_description, self.host_name, self.custom_attributes)
     def to_thin(self) -> auth_session_thin_dto:
         return auth_session_thin_dto(self.auth_session_uid, self.auth_session_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_session_normal_dto:
+        return auth_session_normal_dto(self.auth_session_uid, self.auth_session_name, self.tenant_uid, self.account_uid, self.session_token, self.browser_name, self.browser_description, self.host_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2595,7 +3013,7 @@ class auth_session_read_dto(base_read_dto, auth_session_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_sso_read_dto(base_read_dto, auth_sso_write_dto):
+class auth_sso_read_dto(base_read_dto, auth_sso_write_dto, auth_sso_interface_dto):
     auth_sso_uid: str
     auth_sso_name: str
     tenant_uid: str
@@ -2678,6 +3096,8 @@ class auth_sso_read_dto(base_read_dto, auth_sso_write_dto):
         return auth_sso_write_dto(self.auth_sso_uid, self.auth_sso_name, self.tenant_uid, self.owner_account_uid, self.sso_name, self.sso_url, self.sso_key, self.sso_secret, self.sso_code, self.clientid, self.clientsecret, self.callback_url, self.custom_attributes)
     def to_thin(self) -> auth_sso_thin_dto:
         return auth_sso_thin_dto(self.auth_sso_uid, self.auth_sso_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_sso_normal_dto:
+        return auth_sso_normal_dto(self.auth_sso_uid, self.auth_sso_name, self.tenant_uid, self.owner_account_uid, self.sso_name, self.sso_url, self.sso_key, self.sso_secret, self.sso_code, self.clientid, self.clientsecret, self.callback_url, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2695,9 +3115,11 @@ class auth_sso_read_dto(base_read_dto, auth_sso_write_dto):
 
 
 @dataclass(frozen=False)
-class auth_token_read_dto(base_read_dto, auth_token_write_dto):
+class auth_token_read_dto(base_read_dto, auth_token_write_dto, auth_token_interface_dto):
     auth_token_uid: str
     auth_token_name: str
+    auth_attempt_uid: str
+    auth_token_type_uid: str
     tenant_uid: str
     account_uid: str
     token_seq: int
@@ -2706,6 +3128,7 @@ class auth_token_read_dto(base_read_dto, auth_token_write_dto):
     valid_till_date: datetime.datetime | None
     last_use_date: datetime.datetime | None
     is_last: int
+    token_scope: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -2720,9 +3143,11 @@ class auth_token_read_dto(base_read_dto, auth_token_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.auth_token_uid = auth_token_uid
         self.auth_token_name = auth_token_name
+        self.auth_attempt_uid = auth_attempt_uid
+        self.auth_token_type_uid = auth_token_type_uid
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.token_seq = token_seq
@@ -2731,6 +3156,7 @@ class auth_token_read_dto(base_read_dto, auth_token_write_dto):
         self.valid_till_date = valid_till_date
         self.last_use_date = last_use_date
         self.is_last = is_last
+        self.token_scope = token_scope
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -2747,41 +3173,43 @@ class auth_token_read_dto(base_read_dto, auth_token_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int):
-        return cls(0, auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str):
+        return cls(0, auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: auth_token_write_dto):
-        return cls(0, dto.auth_token_uid, dto.auth_token_name, dto.tenant_uid, dto.account_uid, dto.token_seq, dto.token_hash, dto.token_salt, dto.valid_till_date, dto.last_use_date, dto.is_last, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.auth_token_uid, dto.auth_token_name, dto.auth_attempt_uid, dto.auth_token_type_uid, dto.tenant_uid, dto.account_uid, dto.token_seq, dto.token_hash, dto.token_salt, dto.valid_till_date, dto.last_use_date, dto.is_last, dto.token_scope, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return auth_token_read_dto(self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return auth_token_read_dto(self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_token_uid"], d["auth_token_name"], d["tenant_uid"], d["account_uid"], d["token_seq"], d["token_hash"], d["token_salt"], d["valid_till_date"], d["last_use_date"], d["is_last"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["auth_token_uid"], d["auth_token_name"], d["auth_attempt_uid"], d["auth_token_type_uid"], d["tenant_uid"], d["account_uid"], d["token_seq"], d["token_hash"], d["token_salt"], d["valid_till_date"], d["last_use_date"], d["is_last"], d["token_scope"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> auth_token_write_dto:
-        return auth_token_write_dto(self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes)
+        return auth_token_write_dto(self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes)
     def to_thin(self) -> auth_token_thin_dto:
         return auth_token_thin_dto(self.auth_token_uid, self.auth_token_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_token_normal_dto:
+        return auth_token_normal_dto(self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes, updated_by, self.auth_token_uid]
+        return [self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes, updated_by, self.auth_token_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -2791,7 +3219,89 @@ class auth_token_read_dto(base_read_dto, auth_token_write_dto):
 
 
 @dataclass(frozen=False)
-class calendar_account_read_dto(base_read_dto, calendar_account_write_dto):
+class auth_token_type_read_dto(base_read_dto, auth_token_type_write_dto, auth_token_type_interface_dto):
+    auth_token_type_uid: str
+    auth_token_type_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, auth_token_type_uid: str, auth_token_type_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.auth_token_type_uid = auth_token_type_uid
+        self.auth_token_type_name = auth_token_type_name
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, auth_token_type_uid: str, auth_token_type_name: str):
+        return cls(0, auth_token_type_uid, auth_token_type_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, auth_token_type_uid: str, auth_token_type_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(auth_token_type_uid, auth_token_type_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: auth_token_type_write_dto):
+        return cls(0, dto.auth_token_type_uid, dto.auth_token_type_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return auth_token_type_read_dto(self.auth_token_type_uid, self.auth_token_type_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_token_type_uid"], d["auth_token_type_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> auth_token_type_write_dto:
+        return auth_token_type_write_dto(self.auth_token_type_uid, self.auth_token_type_name, self.custom_attributes)
+    def to_thin(self) -> auth_token_type_thin_dto:
+        return auth_token_type_thin_dto(self.auth_token_type_uid, self.auth_token_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> auth_token_type_normal_dto:
+        return auth_token_type_normal_dto(self.auth_token_type_uid, self.auth_token_type_name, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.auth_token_type_uid, self.auth_token_type_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.auth_token_type_name, self.custom_attributes, updated_by, self.auth_token_type_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class calendar_account_read_dto(base_read_dto, calendar_account_write_dto, calendar_account_interface_dto):
     calendar_account_uid: str
     calendar_account_name: str
     tenant_uid: str
@@ -2860,6 +3370,8 @@ class calendar_account_read_dto(base_read_dto, calendar_account_write_dto):
         return calendar_account_write_dto(self.calendar_account_uid, self.calendar_account_name, self.tenant_uid, self.account_uid, self.calendar_type_uid, self.custom_attributes)
     def to_thin(self) -> calendar_account_thin_dto:
         return calendar_account_thin_dto(self.calendar_account_uid, self.calendar_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_account_normal_dto:
+        return calendar_account_normal_dto(self.calendar_account_uid, self.calendar_account_name, self.tenant_uid, self.account_uid, self.calendar_type_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2877,7 +3389,7 @@ class calendar_account_read_dto(base_read_dto, calendar_account_write_dto):
 
 
 @dataclass(frozen=False)
-class calendar_approval_read_dto(base_read_dto, calendar_approval_write_dto):
+class calendar_approval_read_dto(base_read_dto, calendar_approval_write_dto, calendar_approval_interface_dto):
     calendar_approval_uid: str
     calendar_approval_name: str
     client_uid: str
@@ -2952,6 +3464,8 @@ class calendar_approval_read_dto(base_read_dto, calendar_approval_write_dto):
         return calendar_approval_write_dto(self.calendar_approval_uid, self.calendar_approval_name, self.client_uid, self.account_uid, self.calendar_approval_type_uid, self.calendar_event_group_uid, self.calendar_type_uid, self.time_submit_type_name, self.custom_attributes)
     def to_thin(self) -> calendar_approval_thin_dto:
         return calendar_approval_thin_dto(self.calendar_approval_uid, self.calendar_approval_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_approval_normal_dto:
+        return calendar_approval_normal_dto(self.calendar_approval_uid, self.calendar_approval_name, self.client_uid, self.account_uid, self.calendar_approval_type_uid, self.calendar_event_group_uid, self.calendar_type_uid, self.time_submit_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -2969,7 +3483,7 @@ class calendar_approval_read_dto(base_read_dto, calendar_approval_write_dto):
 
 
 @dataclass(frozen=False)
-class calendar_approval_type_read_dto(base_read_dto, calendar_approval_type_write_dto):
+class calendar_approval_type_read_dto(base_read_dto, calendar_approval_type_write_dto, calendar_approval_type_interface_dto):
     calendar_approval_type_uid: str
     calendar_approval_type_name: str
     row_instance: str
@@ -3032,6 +3546,8 @@ class calendar_approval_type_read_dto(base_read_dto, calendar_approval_type_writ
         return calendar_approval_type_write_dto(self.calendar_approval_type_uid, self.calendar_approval_type_name, self.custom_attributes)
     def to_thin(self) -> calendar_approval_type_thin_dto:
         return calendar_approval_type_thin_dto(self.calendar_approval_type_uid, self.calendar_approval_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_approval_type_normal_dto:
+        return calendar_approval_type_normal_dto(self.calendar_approval_type_uid, self.calendar_approval_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3049,7 +3565,7 @@ class calendar_approval_type_read_dto(base_read_dto, calendar_approval_type_writ
 
 
 @dataclass(frozen=False)
-class calendar_event_read_dto(base_read_dto, calendar_event_write_dto):
+class calendar_event_read_dto(base_read_dto, calendar_event_write_dto, calendar_event_interface_dto):
     calendar_event_uid: str
     calendar_event_name: str
     client_uid: str
@@ -3120,6 +3636,8 @@ class calendar_event_read_dto(base_read_dto, calendar_event_write_dto):
         return calendar_event_write_dto(self.calendar_event_uid, self.calendar_event_name, self.client_uid, self.account_uid, self.calendar_event_group_uid, self.calendar_type_uid, self.custom_attributes)
     def to_thin(self) -> calendar_event_thin_dto:
         return calendar_event_thin_dto(self.calendar_event_uid, self.calendar_event_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_event_normal_dto:
+        return calendar_event_normal_dto(self.calendar_event_uid, self.calendar_event_name, self.client_uid, self.account_uid, self.calendar_event_group_uid, self.calendar_type_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3137,7 +3655,7 @@ class calendar_event_read_dto(base_read_dto, calendar_event_write_dto):
 
 
 @dataclass(frozen=False)
-class calendar_event_group_read_dto(base_read_dto, calendar_event_group_write_dto):
+class calendar_event_group_read_dto(base_read_dto, calendar_event_group_write_dto, calendar_event_group_interface_dto):
     calendar_event_group_uid: str
     calendar_event_group_name: str
     client_uid: str
@@ -3216,6 +3734,8 @@ class calendar_event_group_read_dto(base_read_dto, calendar_event_group_write_dt
         return calendar_event_group_write_dto(self.calendar_event_group_uid, self.calendar_event_group_name, self.client_uid, self.account_uid, self.calendar_account_uid, self.calendar_event_type_uid, self.group_comment, self.event_start_date, self.event_end_date, self.is_approved, self.custom_attributes)
     def to_thin(self) -> calendar_event_group_thin_dto:
         return calendar_event_group_thin_dto(self.calendar_event_group_uid, self.calendar_event_group_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_event_group_normal_dto:
+        return calendar_event_group_normal_dto(self.calendar_event_group_uid, self.calendar_event_group_name, self.client_uid, self.account_uid, self.calendar_account_uid, self.calendar_event_type_uid, self.group_comment, self.event_start_date, self.event_end_date, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3233,7 +3753,7 @@ class calendar_event_group_read_dto(base_read_dto, calendar_event_group_write_dt
 
 
 @dataclass(frozen=False)
-class calendar_event_type_read_dto(base_read_dto, calendar_event_type_write_dto):
+class calendar_event_type_read_dto(base_read_dto, calendar_event_type_write_dto, calendar_event_type_interface_dto):
     calendar_event_type_uid: str
     calendar_event_type_name: str
     client_uid: str
@@ -3302,6 +3822,8 @@ class calendar_event_type_read_dto(base_read_dto, calendar_event_type_write_dto)
         return calendar_event_type_write_dto(self.calendar_event_type_uid, self.calendar_event_type_name, self.client_uid, self.calendar_type_uid, self.auto_approved, self.custom_attributes)
     def to_thin(self) -> calendar_event_type_thin_dto:
         return calendar_event_type_thin_dto(self.calendar_event_type_uid, self.calendar_event_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_event_type_normal_dto:
+        return calendar_event_type_normal_dto(self.calendar_event_type_uid, self.calendar_event_type_name, self.client_uid, self.calendar_type_uid, self.auto_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3319,7 +3841,7 @@ class calendar_event_type_read_dto(base_read_dto, calendar_event_type_write_dto)
 
 
 @dataclass(frozen=False)
-class calendar_type_read_dto(base_read_dto, calendar_type_write_dto):
+class calendar_type_read_dto(base_read_dto, calendar_type_write_dto, calendar_type_interface_dto):
     calendar_type_uid: str
     calendar_type_name: str
     row_instance: str
@@ -3378,6 +3900,8 @@ class calendar_type_read_dto(base_read_dto, calendar_type_write_dto):
         return calendar_type_write_dto(self.calendar_type_uid, self.calendar_type_name, self.custom_attributes)
     def to_thin(self) -> calendar_type_thin_dto:
         return calendar_type_thin_dto(self.calendar_type_uid, self.calendar_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> calendar_type_normal_dto:
+        return calendar_type_normal_dto(self.calendar_type_uid, self.calendar_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3395,7 +3919,7 @@ class calendar_type_read_dto(base_read_dto, calendar_type_write_dto):
 
 
 @dataclass(frozen=False)
-class client_read_dto(base_read_dto, client_write_dto):
+class client_read_dto(base_read_dto, client_write_dto, client_interface_dto):
     client_uid: str
     client_name: str
     tenant_uid: str
@@ -3482,6 +4006,8 @@ class client_read_dto(base_read_dto, client_write_dto):
         return client_write_dto(self.client_uid, self.client_name, self.tenant_uid, self.country_uid, self.client_type_uid, self.client_category_uid, self.account_uid, self.client_code, self.client_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.custom_attributes)
     def to_thin(self) -> client_thin_dto:
         return client_thin_dto(self.client_uid, self.client_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_normal_dto:
+        return client_normal_dto(self.client_uid, self.client_name, self.tenant_uid, self.country_uid, self.client_type_uid, self.client_category_uid, self.account_uid, self.client_code, self.client_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3499,7 +4025,7 @@ class client_read_dto(base_read_dto, client_write_dto):
 
 
 @dataclass(frozen=False)
-class client_account_read_dto(base_read_dto, client_account_write_dto):
+class client_account_read_dto(base_read_dto, client_account_write_dto, client_account_interface_dto):
     client_account_uid: str
     client_account_name: str
     tenant_uid: str
@@ -3572,6 +4098,8 @@ class client_account_read_dto(base_read_dto, client_account_write_dto):
         return client_account_write_dto(self.client_account_uid, self.client_account_name, self.tenant_uid, self.client_uid, self.account_uid, self.client_role_uid, self.role_comment, self.custom_attributes)
     def to_thin(self) -> client_account_thin_dto:
         return client_account_thin_dto(self.client_account_uid, self.client_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_account_normal_dto:
+        return client_account_normal_dto(self.client_account_uid, self.client_account_name, self.tenant_uid, self.client_uid, self.account_uid, self.client_role_uid, self.role_comment, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3589,7 +4117,101 @@ class client_account_read_dto(base_read_dto, client_account_write_dto):
 
 
 @dataclass(frozen=False)
-class client_country_read_dto(base_read_dto, client_country_write_dto):
+class client_contract_read_dto(base_read_dto, client_contract_write_dto, client_contract_interface_dto):
+    client_contract_uid: str
+    client_contract_name: str
+    tenant_uid: str
+    client_uid: str
+    parent_client_contract_uid: str | None
+    contract_text: str
+    contract_value: str
+    currency_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.client_contract_uid = client_contract_uid
+        self.client_contract_name = client_contract_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.parent_client_contract_uid = parent_client_contract_uid
+        self.contract_text = contract_text
+        self.contract_value = contract_value
+        self.currency_uid = currency_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str):
+        return cls(0, client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: client_contract_write_dto):
+        return cls(0, dto.client_contract_uid, dto.client_contract_name, dto.tenant_uid, dto.client_uid, dto.parent_client_contract_uid, dto.contract_text, dto.contract_value, dto.currency_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return client_contract_read_dto(self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["client_contract_uid"], d["client_contract_name"], d["tenant_uid"], d["client_uid"], d["parent_client_contract_uid"], d["contract_text"], d["contract_value"], d["currency_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> client_contract_write_dto:
+        return client_contract_write_dto(self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes)
+    def to_thin(self) -> client_contract_thin_dto:
+        return client_contract_thin_dto(self.client_contract_uid, self.client_contract_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_contract_normal_dto:
+        return client_contract_normal_dto(self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes, updated_by, self.client_contract_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class client_country_read_dto(base_read_dto, client_country_write_dto, client_country_interface_dto):
     client_country_uid: str
     client_country_name: str
     tenant_uid: str
@@ -3662,6 +4284,8 @@ class client_country_read_dto(base_read_dto, client_country_write_dto):
         return client_country_write_dto(self.client_country_uid, self.client_country_name, self.tenant_uid, self.client_uid, self.country_uid, self.country_priority, self.country_comment, self.custom_attributes)
     def to_thin(self) -> client_country_thin_dto:
         return client_country_thin_dto(self.client_country_uid, self.client_country_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_country_normal_dto:
+        return client_country_normal_dto(self.client_country_uid, self.client_country_name, self.tenant_uid, self.client_uid, self.country_uid, self.country_priority, self.country_comment, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3679,7 +4303,7 @@ class client_country_read_dto(base_read_dto, client_country_write_dto):
 
 
 @dataclass(frozen=False)
-class client_payment_read_dto(base_read_dto, client_payment_write_dto):
+class client_payment_read_dto(base_read_dto, client_payment_write_dto, client_payment_interface_dto):
     client_payment_uid: str
     client_payment_name: str
     tenant_uid: str
@@ -3764,6 +4388,8 @@ class client_payment_read_dto(base_read_dto, client_payment_write_dto):
         return client_payment_write_dto(self.client_payment_uid, self.client_payment_name, self.tenant_uid, self.client_uid, self.account_uid, self.currency_uid, self.start_date, self.end_date, self.payment_value, self.payment_type, self.source_number, self.source_reference, self.is_approved, self.custom_attributes)
     def to_thin(self) -> client_payment_thin_dto:
         return client_payment_thin_dto(self.client_payment_uid, self.client_payment_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_payment_normal_dto:
+        return client_payment_normal_dto(self.client_payment_uid, self.client_payment_name, self.tenant_uid, self.client_uid, self.account_uid, self.currency_uid, self.start_date, self.end_date, self.payment_value, self.payment_type, self.source_number, self.source_reference, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3781,7 +4407,7 @@ class client_payment_read_dto(base_read_dto, client_payment_write_dto):
 
 
 @dataclass(frozen=False)
-class client_role_read_dto(base_read_dto, client_role_write_dto):
+class client_role_read_dto(base_read_dto, client_role_write_dto, client_role_interface_dto):
     client_role_uid: str
     client_role_name: str
     role_description: str
@@ -3846,6 +4472,8 @@ class client_role_read_dto(base_read_dto, client_role_write_dto):
         return client_role_write_dto(self.client_role_uid, self.client_role_name, self.role_description, self.custom_attributes)
     def to_thin(self) -> client_role_thin_dto:
         return client_role_thin_dto(self.client_role_uid, self.client_role_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_role_normal_dto:
+        return client_role_normal_dto(self.client_role_uid, self.client_role_name, self.role_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3863,7 +4491,7 @@ class client_role_read_dto(base_read_dto, client_role_write_dto):
 
 
 @dataclass(frozen=False)
-class client_status_read_dto(base_read_dto, client_status_write_dto):
+class client_status_read_dto(base_read_dto, client_status_write_dto, client_status_interface_dto):
     client_status_uid: str
     client_status_name: str
     client_status_description: str
@@ -3928,6 +4556,8 @@ class client_status_read_dto(base_read_dto, client_status_write_dto):
         return client_status_write_dto(self.client_status_uid, self.client_status_name, self.client_status_description, self.custom_attributes)
     def to_thin(self) -> client_status_thin_dto:
         return client_status_thin_dto(self.client_status_uid, self.client_status_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_status_normal_dto:
+        return client_status_normal_dto(self.client_status_uid, self.client_status_name, self.client_status_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -3945,7 +4575,7 @@ class client_status_read_dto(base_read_dto, client_status_write_dto):
 
 
 @dataclass(frozen=False)
-class client_type_read_dto(base_read_dto, client_type_write_dto):
+class client_type_read_dto(base_read_dto, client_type_write_dto, client_type_interface_dto):
     client_type_uid: str
     client_type_name: str
     client_type_description: str
@@ -4010,6 +4640,8 @@ class client_type_read_dto(base_read_dto, client_type_write_dto):
         return client_type_write_dto(self.client_type_uid, self.client_type_name, self.client_type_description, self.custom_attributes)
     def to_thin(self) -> client_type_thin_dto:
         return client_type_thin_dto(self.client_type_uid, self.client_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> client_type_normal_dto:
+        return client_type_normal_dto(self.client_type_uid, self.client_type_name, self.client_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4027,7 +4659,1113 @@ class client_type_read_dto(base_read_dto, client_type_write_dto):
 
 
 @dataclass(frozen=False)
-class connection_engine_read_dto(base_read_dto, connection_engine_write_dto):
+class competency_entry_read_dto(base_read_dto, competency_entry_write_dto, competency_entry_interface_dto):
+    competency_entry_uid: str
+    competency_entry_name: str
+    tenant_uid: str
+    competency_item_uid: str
+    account_uid: str
+    entry_template: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_entry_name = competency_entry_name
+        self.tenant_uid = tenant_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.entry_template = entry_template
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str):
+        return cls(0, competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_entry_write_dto):
+        return cls(0, dto.competency_entry_uid, dto.competency_entry_name, dto.tenant_uid, dto.competency_item_uid, dto.account_uid, dto.entry_template, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_entry_read_dto(self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_entry_uid"], d["competency_entry_name"], d["tenant_uid"], d["competency_item_uid"], d["account_uid"], d["entry_template"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_entry_write_dto:
+        return competency_entry_write_dto(self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes)
+    def to_thin(self) -> competency_entry_thin_dto:
+        return competency_entry_thin_dto(self.competency_entry_uid, self.competency_entry_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_entry_normal_dto:
+        return competency_entry_normal_dto(self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes, updated_by, self.competency_entry_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_entry_account_read_dto(base_read_dto, competency_entry_account_write_dto, competency_entry_account_interface_dto):
+    competency_entry_account_uid: str
+    competency_entry_account_name: str
+    tenant_uid: str
+    account_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_entry_uid: str
+    competency_item_account_uid: str
+    entry_title: str | None
+    entry_content: str | None
+    entry_value: str | None
+    competency_ranking_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_entry_account_uid = competency_entry_account_uid
+        self.competency_entry_account_name = competency_entry_account_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_item_account_uid = competency_item_account_uid
+        self.entry_title = entry_title
+        self.entry_content = entry_content
+        self.entry_value = entry_value
+        self.competency_ranking_uid = competency_ranking_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str):
+        return cls(0, competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_entry_account_write_dto):
+        return cls(0, dto.competency_entry_account_uid, dto.competency_entry_account_name, dto.tenant_uid, dto.account_uid, dto.competency_process_account_uid, dto.competency_group_account_uid, dto.competency_entry_uid, dto.competency_item_account_uid, dto.entry_title, dto.entry_content, dto.entry_value, dto.competency_ranking_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_entry_account_read_dto(self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_entry_account_uid"], d["competency_entry_account_name"], d["tenant_uid"], d["account_uid"], d["competency_process_account_uid"], d["competency_group_account_uid"], d["competency_entry_uid"], d["competency_item_account_uid"], d["entry_title"], d["entry_content"], d["entry_value"], d["competency_ranking_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_entry_account_write_dto:
+        return competency_entry_account_write_dto(self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes)
+    def to_thin(self) -> competency_entry_account_thin_dto:
+        return competency_entry_account_thin_dto(self.competency_entry_account_uid, self.competency_entry_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_entry_account_normal_dto:
+        return competency_entry_account_normal_dto(self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes, updated_by, self.competency_entry_account_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_group_read_dto(base_read_dto, competency_group_write_dto, competency_group_interface_dto):
+    competency_group_uid: str
+    competency_group_name: str
+    competency_process_uid: str
+    tenant_uid: str
+    account_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_group_uid = competency_group_uid
+        self.competency_group_name = competency_group_name
+        self.competency_process_uid = competency_process_uid
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str):
+        return cls(0, competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_group_write_dto):
+        return cls(0, dto.competency_group_uid, dto.competency_group_name, dto.competency_process_uid, dto.tenant_uid, dto.account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_group_read_dto(self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_uid"], d["competency_group_name"], d["competency_process_uid"], d["tenant_uid"], d["account_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_group_write_dto:
+        return competency_group_write_dto(self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes)
+    def to_thin(self) -> competency_group_thin_dto:
+        return competency_group_thin_dto(self.competency_group_uid, self.competency_group_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_group_normal_dto:
+        return competency_group_normal_dto(self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes, updated_by, self.competency_group_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_group_account_read_dto(base_read_dto, competency_group_account_write_dto, competency_group_account_interface_dto):
+    competency_group_account_uid: str
+    competency_group_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_process_account_uid: str
+    competency_group_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    final_group_result: str | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_group_account_name = competency_group_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.final_group_result = final_group_result
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None):
+        return cls(0, competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_group_account_write_dto):
+        return cls(0, dto.competency_group_account_uid, dto.competency_group_account_name, dto.tenant_uid, dto.competency_process_uid, dto.competency_process_account_uid, dto.competency_group_uid, dto.account_uid, dto.start_date, dto.end_date, dto.final_group_result, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_group_account_read_dto(self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_account_uid"], d["competency_group_account_name"], d["tenant_uid"], d["competency_process_uid"], d["competency_process_account_uid"], d["competency_group_uid"], d["account_uid"], d["start_date"], d["end_date"], d["final_group_result"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_group_account_write_dto:
+        return competency_group_account_write_dto(self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes)
+    def to_thin(self) -> competency_group_account_thin_dto:
+        return competency_group_account_thin_dto(self.competency_group_account_uid, self.competency_group_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_group_account_normal_dto:
+        return competency_group_account_normal_dto(self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes, updated_by, self.competency_group_account_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_group_type_read_dto(base_read_dto, competency_group_type_write_dto, competency_group_type_interface_dto):
+    competency_group_type_uid: str
+    competency_group_type_name: str
+    tenant_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_group_type_uid = competency_group_type_uid
+        self.competency_group_type_name = competency_group_type_name
+        self.tenant_uid = tenant_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str):
+        return cls(0, competency_group_type_uid, competency_group_type_name, tenant_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_group_type_uid, competency_group_type_name, tenant_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_group_type_write_dto):
+        return cls(0, dto.competency_group_type_uid, dto.competency_group_type_name, dto.tenant_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_group_type_read_dto(self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_type_uid"], d["competency_group_type_name"], d["tenant_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_group_type_write_dto:
+        return competency_group_type_write_dto(self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.custom_attributes)
+    def to_thin(self) -> competency_group_type_thin_dto:
+        return competency_group_type_thin_dto(self.competency_group_type_uid, self.competency_group_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_group_type_normal_dto:
+        return competency_group_type_normal_dto(self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_group_type_name, self.tenant_uid, self.custom_attributes, updated_by, self.competency_group_type_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_item_read_dto(base_read_dto, competency_item_write_dto, competency_item_interface_dto):
+    competency_item_uid: str
+    competency_item_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_item_type_uid: str
+    competency_group_uid: str
+    account_uid: str
+    item_template: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_item_uid = competency_item_uid
+        self.competency_item_name = competency_item_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.item_template = item_template
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str):
+        return cls(0, competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_item_write_dto):
+        return cls(0, dto.competency_item_uid, dto.competency_item_name, dto.tenant_uid, dto.competency_process_uid, dto.competency_item_type_uid, dto.competency_group_uid, dto.account_uid, dto.item_template, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_item_read_dto(self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_uid"], d["competency_item_name"], d["tenant_uid"], d["competency_process_uid"], d["competency_item_type_uid"], d["competency_group_uid"], d["account_uid"], d["item_template"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_item_write_dto:
+        return competency_item_write_dto(self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes)
+    def to_thin(self) -> competency_item_thin_dto:
+        return competency_item_thin_dto(self.competency_item_uid, self.competency_item_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_item_normal_dto:
+        return competency_item_normal_dto(self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes, updated_by, self.competency_item_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_item_account_read_dto(base_read_dto, competency_item_account_write_dto, competency_item_account_interface_dto):
+    competency_item_account_uid: str
+    competency_item_account_name: str
+    tenant_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_item_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    item_title: str | None
+    item_content: str | None
+    item_value: str | None
+    competency_ranking_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_item_account_uid = competency_item_account_uid
+        self.competency_item_account_name = competency_item_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.item_title = item_title
+        self.item_content = item_content
+        self.item_value = item_value
+        self.competency_ranking_uid = competency_ranking_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str):
+        return cls(0, competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_item_account_write_dto):
+        return cls(0, dto.competency_item_account_uid, dto.competency_item_account_name, dto.tenant_uid, dto.competency_process_account_uid, dto.competency_group_account_uid, dto.competency_item_uid, dto.account_uid, dto.start_date, dto.end_date, dto.item_title, dto.item_content, dto.item_value, dto.competency_ranking_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_item_account_read_dto(self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_account_uid"], d["competency_item_account_name"], d["tenant_uid"], d["competency_process_account_uid"], d["competency_group_account_uid"], d["competency_item_uid"], d["account_uid"], d["start_date"], d["end_date"], d["item_title"], d["item_content"], d["item_value"], d["competency_ranking_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_item_account_write_dto:
+        return competency_item_account_write_dto(self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes)
+    def to_thin(self) -> competency_item_account_thin_dto:
+        return competency_item_account_thin_dto(self.competency_item_account_uid, self.competency_item_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_item_account_normal_dto:
+        return competency_item_account_normal_dto(self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes, updated_by, self.competency_item_account_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_item_type_read_dto(base_read_dto, competency_item_type_write_dto, competency_item_type_interface_dto):
+    competency_item_type_uid: str
+    competency_item_type_name: str
+    tenant_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_item_type_name = competency_item_type_name
+        self.tenant_uid = tenant_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str):
+        return cls(0, competency_item_type_uid, competency_item_type_name, tenant_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_item_type_uid, competency_item_type_name, tenant_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_item_type_write_dto):
+        return cls(0, dto.competency_item_type_uid, dto.competency_item_type_name, dto.tenant_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_item_type_read_dto(self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_type_uid"], d["competency_item_type_name"], d["tenant_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_item_type_write_dto:
+        return competency_item_type_write_dto(self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.custom_attributes)
+    def to_thin(self) -> competency_item_type_thin_dto:
+        return competency_item_type_thin_dto(self.competency_item_type_uid, self.competency_item_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_item_type_normal_dto:
+        return competency_item_type_normal_dto(self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_item_type_name, self.tenant_uid, self.custom_attributes, updated_by, self.competency_item_type_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_process_read_dto(base_read_dto, competency_process_write_dto, competency_process_interface_dto):
+    competency_process_uid: str
+    competency_process_name: str
+    competency_process_type_uid: str
+    tenant_uid: str
+    account_group_uid: str
+    is_required: int
+    process_description: str
+    due_date: datetime.datetime
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_name = competency_process_name
+        self.competency_process_type_uid = competency_process_type_uid
+        self.tenant_uid = tenant_uid
+        self.account_group_uid = account_group_uid
+        self.is_required = is_required
+        self.process_description = process_description
+        self.due_date = due_date
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", 0, "", datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, "", datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime):
+        return cls(0, competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_process_write_dto):
+        return cls(0, dto.competency_process_uid, dto.competency_process_name, dto.competency_process_type_uid, dto.tenant_uid, dto.account_group_uid, dto.is_required, dto.process_description, dto.due_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_process_read_dto(self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_uid"], d["competency_process_name"], d["competency_process_type_uid"], d["tenant_uid"], d["account_group_uid"], d["is_required"], d["process_description"], d["due_date"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_process_write_dto:
+        return competency_process_write_dto(self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes)
+    def to_thin(self) -> competency_process_thin_dto:
+        return competency_process_thin_dto(self.competency_process_uid, self.competency_process_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_process_normal_dto:
+        return competency_process_normal_dto(self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes, updated_by, self.competency_process_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_process_account_read_dto(base_read_dto, competency_process_account_write_dto, competency_process_account_interface_dto):
+    competency_process_account_uid: str
+    competency_process_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    due_date: datetime.datetime
+    end_date: datetime.datetime | None
+    is_closed: int
+    final_result: str | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_process_account_name = competency_process_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.due_date = due_date
+        self.end_date = end_date
+        self.is_closed = is_closed
+        self.final_result = final_result
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None):
+        return cls(0, competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_process_account_write_dto):
+        return cls(0, dto.competency_process_account_uid, dto.competency_process_account_name, dto.tenant_uid, dto.competency_process_uid, dto.account_uid, dto.start_date, dto.due_date, dto.end_date, dto.is_closed, dto.final_result, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_process_account_read_dto(self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_account_uid"], d["competency_process_account_name"], d["tenant_uid"], d["competency_process_uid"], d["account_uid"], d["start_date"], d["due_date"], d["end_date"], d["is_closed"], d["final_result"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_process_account_write_dto:
+        return competency_process_account_write_dto(self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes)
+    def to_thin(self) -> competency_process_account_thin_dto:
+        return competency_process_account_thin_dto(self.competency_process_account_uid, self.competency_process_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_process_account_normal_dto:
+        return competency_process_account_normal_dto(self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes, updated_by, self.competency_process_account_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_process_type_read_dto(base_read_dto, competency_process_type_write_dto, competency_process_type_interface_dto):
+    competency_process_type_uid: str
+    competency_process_type_name: str
+    competency_class_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_process_type_uid = competency_process_type_uid
+        self.competency_process_type_name = competency_process_type_name
+        self.competency_class_name = competency_class_name
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str):
+        return cls(0, competency_process_type_uid, competency_process_type_name, competency_class_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_process_type_uid, competency_process_type_name, competency_class_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_process_type_write_dto):
+        return cls(0, dto.competency_process_type_uid, dto.competency_process_type_name, dto.competency_class_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_process_type_read_dto(self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_type_uid"], d["competency_process_type_name"], d["competency_class_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_process_type_write_dto:
+        return competency_process_type_write_dto(self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.custom_attributes)
+    def to_thin(self) -> competency_process_type_thin_dto:
+        return competency_process_type_thin_dto(self.competency_process_type_uid, self.competency_process_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_process_type_normal_dto:
+        return competency_process_type_normal_dto(self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_process_type_name, self.competency_class_name, self.custom_attributes, updated_by, self.competency_process_type_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class competency_ranking_read_dto(base_read_dto, competency_ranking_write_dto, competency_ranking_interface_dto):
+    competency_ranking_uid: str
+    competency_ranking_name: str
+    tenant_uid: str
+    competency_group_uid: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.competency_ranking_uid = competency_ranking_uid
+        self.competency_ranking_name = competency_ranking_name
+        self.tenant_uid = tenant_uid
+        self.competency_group_uid = competency_group_uid
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str):
+        return cls(0, competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: competency_ranking_write_dto):
+        return cls(0, dto.competency_ranking_uid, dto.competency_ranking_name, dto.tenant_uid, dto.competency_group_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return competency_ranking_read_dto(self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_ranking_uid"], d["competency_ranking_name"], d["tenant_uid"], d["competency_group_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> competency_ranking_write_dto:
+        return competency_ranking_write_dto(self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes)
+    def to_thin(self) -> competency_ranking_thin_dto:
+        return competency_ranking_thin_dto(self.competency_ranking_uid, self.competency_ranking_name, self.created_date, self.is_active)
+    def to_normal(self) -> competency_ranking_normal_dto:
+        return competency_ranking_normal_dto(self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes, updated_by, self.competency_ranking_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class connection_engine_read_dto(base_read_dto, connection_engine_write_dto, connection_engine_interface_dto):
     connection_engine_uid: str
     connection_engine_name: str
     start_date: datetime.datetime | None
@@ -4102,6 +5840,8 @@ class connection_engine_read_dto(base_read_dto, connection_engine_write_dto):
         return connection_engine_write_dto(self.connection_engine_uid, self.connection_engine_name, self.start_date, self.calls_count, self.last_time, self.host_count, self.user_count, self.token_count, self.custom_attributes)
     def to_thin(self) -> connection_engine_thin_dto:
         return connection_engine_thin_dto(self.connection_engine_uid, self.connection_engine_name, self.created_date, self.is_active)
+    def to_normal(self) -> connection_engine_normal_dto:
+        return connection_engine_normal_dto(self.connection_engine_uid, self.connection_engine_name, self.start_date, self.calls_count, self.last_time, self.host_count, self.user_count, self.token_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4119,7 +5859,7 @@ class connection_engine_read_dto(base_read_dto, connection_engine_write_dto):
 
 
 @dataclass(frozen=False)
-class connection_host_read_dto(base_read_dto, connection_host_write_dto):
+class connection_host_read_dto(base_read_dto, connection_host_write_dto, connection_host_interface_dto):
     connection_host_uid: str
     connection_host_name: str
     connection_engine_uid: str
@@ -4196,6 +5936,8 @@ class connection_host_read_dto(base_read_dto, connection_host_write_dto):
         return connection_host_write_dto(self.connection_host_uid, self.connection_host_name, self.connection_engine_uid, self.host_ip, self.calls_count, self.start_time, self.last_call_time, self.user_count, self.token_count, self.custom_attributes)
     def to_thin(self) -> connection_host_thin_dto:
         return connection_host_thin_dto(self.connection_host_uid, self.connection_host_name, self.created_date, self.is_active)
+    def to_normal(self) -> connection_host_normal_dto:
+        return connection_host_normal_dto(self.connection_host_uid, self.connection_host_name, self.connection_engine_uid, self.host_ip, self.calls_count, self.start_time, self.last_call_time, self.user_count, self.token_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4213,7 +5955,7 @@ class connection_host_read_dto(base_read_dto, connection_host_write_dto):
 
 
 @dataclass(frozen=False)
-class connection_tenant_read_dto(base_read_dto, connection_tenant_write_dto):
+class connection_tenant_read_dto(base_read_dto, connection_tenant_write_dto, connection_tenant_interface_dto):
     connection_tenant_uid: str
     connection_tenant_name: str
     tenant_uid: str
@@ -4286,6 +6028,8 @@ class connection_tenant_read_dto(base_read_dto, connection_tenant_write_dto):
         return connection_tenant_write_dto(self.connection_tenant_uid, self.connection_tenant_name, self.tenant_uid, self.calls_count, self.items_count, self.request_size, self.response_size, self.custom_attributes)
     def to_thin(self) -> connection_tenant_thin_dto:
         return connection_tenant_thin_dto(self.connection_tenant_uid, self.connection_tenant_name, self.created_date, self.is_active)
+    def to_normal(self) -> connection_tenant_normal_dto:
+        return connection_tenant_normal_dto(self.connection_tenant_uid, self.connection_tenant_name, self.tenant_uid, self.calls_count, self.items_count, self.request_size, self.response_size, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4303,7 +6047,7 @@ class connection_tenant_read_dto(base_read_dto, connection_tenant_write_dto):
 
 
 @dataclass(frozen=False)
-class connection_user_read_dto(base_read_dto, connection_user_write_dto):
+class connection_user_read_dto(base_read_dto, connection_user_write_dto, connection_user_interface_dto):
     connection_user_uid: str
     connection_user_name: str
     connection_engine_uid: str
@@ -4376,6 +6120,8 @@ class connection_user_read_dto(base_read_dto, connection_user_write_dto):
         return connection_user_write_dto(self.connection_user_uid, self.connection_user_name, self.connection_engine_uid, self.account_uid, self.call_count, self.host_count, self.token_count, self.custom_attributes)
     def to_thin(self) -> connection_user_thin_dto:
         return connection_user_thin_dto(self.connection_user_uid, self.connection_user_name, self.created_date, self.is_active)
+    def to_normal(self) -> connection_user_normal_dto:
+        return connection_user_normal_dto(self.connection_user_uid, self.connection_user_name, self.connection_engine_uid, self.account_uid, self.call_count, self.host_count, self.token_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4393,7 +6139,7 @@ class connection_user_read_dto(base_read_dto, connection_user_write_dto):
 
 
 @dataclass(frozen=False)
-class country_read_dto(base_read_dto, country_write_dto):
+class country_read_dto(base_read_dto, country_write_dto, country_interface_dto):
     country_uid: str
     country_name: str
     continent_name: str
@@ -4494,6 +6240,8 @@ class country_read_dto(base_read_dto, country_write_dto):
         return country_write_dto(self.country_uid, self.country_name, self.continent_name, self.continent_code, self.country_iso3, self.country_code, self.phone_code, self.currency_code, self.capital_name, self.region_name, self.subregion_name, self.region_code, self.latitude, self.longitude, self.currency_name, self.population, self.languages, self.area, self.bar_code, self.top_level_domain, self.is_focused, self.custom_attributes)
     def to_thin(self) -> country_thin_dto:
         return country_thin_dto(self.country_uid, self.country_name, self.created_date, self.is_active)
+    def to_normal(self) -> country_normal_dto:
+        return country_normal_dto(self.country_uid, self.country_name, self.continent_name, self.continent_code, self.country_iso3, self.country_code, self.phone_code, self.currency_code, self.capital_name, self.region_name, self.subregion_name, self.region_code, self.latitude, self.longitude, self.currency_name, self.population, self.languages, self.area, self.bar_code, self.top_level_domain, self.is_focused, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4511,7 +6259,7 @@ class country_read_dto(base_read_dto, country_write_dto):
 
 
 @dataclass(frozen=False)
-class currency_read_dto(base_read_dto, currency_write_dto):
+class currency_read_dto(base_read_dto, currency_write_dto, currency_interface_dto):
     currency_uid: str
     currency_name: str
     is_focused: int
@@ -4578,6 +6326,8 @@ class currency_read_dto(base_read_dto, currency_write_dto):
         return currency_write_dto(self.currency_uid, self.currency_name, self.is_focused, self.priority, self.custom_attributes)
     def to_thin(self) -> currency_thin_dto:
         return currency_thin_dto(self.currency_uid, self.currency_name, self.created_date, self.is_active)
+    def to_normal(self) -> currency_normal_dto:
+        return currency_normal_dto(self.currency_uid, self.currency_name, self.is_focused, self.priority, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4595,7 +6345,187 @@ class currency_read_dto(base_read_dto, currency_write_dto):
 
 
 @dataclass(frozen=False)
-class event_acknowledge_read_dto(base_read_dto, event_acknowledge_write_dto):
+class currency_rate_read_dto(base_read_dto, currency_rate_write_dto, currency_rate_interface_dto):
+    currency_rate_uid: str
+    currency_rate_name: str
+    tenant_uid: str
+    currency_source_uid: str
+    from_currency_uid: str
+    to_currency_uid: str
+    start_date: datetime.datetime | None
+    end_date: datetime.datetime | None
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.currency_rate_uid = currency_rate_uid
+        self.currency_rate_name = currency_rate_name
+        self.tenant_uid = tenant_uid
+        self.currency_source_uid = currency_source_uid
+        self.from_currency_uid = from_currency_uid
+        self.to_currency_uid = to_currency_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None):
+        return cls(0, currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: currency_rate_write_dto):
+        return cls(0, dto.currency_rate_uid, dto.currency_rate_name, dto.tenant_uid, dto.currency_source_uid, dto.from_currency_uid, dto.to_currency_uid, dto.start_date, dto.end_date, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return currency_rate_read_dto(self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["currency_rate_uid"], d["currency_rate_name"], d["tenant_uid"], d["currency_source_uid"], d["from_currency_uid"], d["to_currency_uid"], d["start_date"], d["end_date"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> currency_rate_write_dto:
+        return currency_rate_write_dto(self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes)
+    def to_thin(self) -> currency_rate_thin_dto:
+        return currency_rate_thin_dto(self.currency_rate_uid, self.currency_rate_name, self.created_date, self.is_active)
+    def to_normal(self) -> currency_rate_normal_dto:
+        return currency_rate_normal_dto(self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes, updated_by, self.currency_rate_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class currency_source_read_dto(base_read_dto, currency_source_write_dto, currency_source_interface_dto):
+    currency_source_uid: str
+    currency_source_name: str
+    tenant_uid: str
+    source_url: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.currency_source_uid = currency_source_uid
+        self.currency_source_name = currency_source_name
+        self.tenant_uid = tenant_uid
+        self.source_url = source_url
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str):
+        return cls(0, currency_source_uid, currency_source_name, tenant_uid, source_url, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(currency_source_uid, currency_source_name, tenant_uid, source_url, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: currency_source_write_dto):
+        return cls(0, dto.currency_source_uid, dto.currency_source_name, dto.tenant_uid, dto.source_url, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return currency_source_read_dto(self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["currency_source_uid"], d["currency_source_name"], d["tenant_uid"], d["source_url"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> currency_source_write_dto:
+        return currency_source_write_dto(self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes)
+    def to_thin(self) -> currency_source_thin_dto:
+        return currency_source_thin_dto(self.currency_source_uid, self.currency_source_name, self.created_date, self.is_active)
+    def to_normal(self) -> currency_source_normal_dto:
+        return currency_source_normal_dto(self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes, updated_by, self.currency_source_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class event_acknowledge_read_dto(base_read_dto, event_acknowledge_write_dto, event_acknowledge_interface_dto):
     event_acknowledge_uid: str
     event_acknowledge_name: str
     event_notification_uid: str
@@ -4664,6 +6594,8 @@ class event_acknowledge_read_dto(base_read_dto, event_acknowledge_write_dto):
         return event_acknowledge_write_dto(self.event_acknowledge_uid, self.event_acknowledge_name, self.event_notification_uid, self.tenant_uid, self.account_uid, self.custom_attributes)
     def to_thin(self) -> event_acknowledge_thin_dto:
         return event_acknowledge_thin_dto(self.event_acknowledge_uid, self.event_acknowledge_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_acknowledge_normal_dto:
+        return event_acknowledge_normal_dto(self.event_acknowledge_uid, self.event_acknowledge_name, self.event_notification_uid, self.tenant_uid, self.account_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4681,7 +6613,7 @@ class event_acknowledge_read_dto(base_read_dto, event_acknowledge_write_dto):
 
 
 @dataclass(frozen=False)
-class event_channel_read_dto(base_read_dto, event_channel_write_dto):
+class event_channel_read_dto(base_read_dto, event_channel_write_dto, event_channel_interface_dto):
     event_channel_uid: str
     event_channel_name: str
     event_channel_type_uid: str
@@ -4754,6 +6686,8 @@ class event_channel_read_dto(base_read_dto, event_channel_write_dto):
         return event_channel_write_dto(self.event_channel_uid, self.event_channel_name, self.event_channel_type_uid, self.channel_definition, self.last_status_name, self.tenant_uid, self.account_uid, self.custom_attributes)
     def to_thin(self) -> event_channel_thin_dto:
         return event_channel_thin_dto(self.event_channel_uid, self.event_channel_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_channel_normal_dto:
+        return event_channel_normal_dto(self.event_channel_uid, self.event_channel_name, self.event_channel_type_uid, self.channel_definition, self.last_status_name, self.tenant_uid, self.account_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4771,7 +6705,7 @@ class event_channel_read_dto(base_read_dto, event_channel_write_dto):
 
 
 @dataclass(frozen=False)
-class event_channel_type_read_dto(base_read_dto, event_channel_type_write_dto):
+class event_channel_type_read_dto(base_read_dto, event_channel_type_write_dto, event_channel_type_interface_dto):
     event_channel_type_uid: str
     event_channel_type_name: str
     channel_type_description: str
@@ -4836,6 +6770,8 @@ class event_channel_type_read_dto(base_read_dto, event_channel_type_write_dto):
         return event_channel_type_write_dto(self.event_channel_type_uid, self.event_channel_type_name, self.channel_type_description, self.custom_attributes)
     def to_thin(self) -> event_channel_type_thin_dto:
         return event_channel_type_thin_dto(self.event_channel_type_uid, self.event_channel_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_channel_type_normal_dto:
+        return event_channel_type_normal_dto(self.event_channel_type_uid, self.event_channel_type_name, self.channel_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4853,7 +6789,7 @@ class event_channel_type_read_dto(base_read_dto, event_channel_type_write_dto):
 
 
 @dataclass(frozen=False)
-class event_instance_read_dto(base_read_dto, event_instance_write_dto):
+class event_instance_read_dto(base_read_dto, event_instance_write_dto, event_instance_interface_dto):
     event_instance_uid: str
     event_instance_name: str
     tenant_uid: str
@@ -4932,6 +6868,8 @@ class event_instance_read_dto(base_read_dto, event_instance_write_dto):
         return event_instance_write_dto(self.event_instance_uid, self.event_instance_name, self.tenant_uid, self.event_type, self.event_object, self.event_method, self.event_parameters, self.event_signature, self.event_date, self.published_count, self.custom_attributes)
     def to_thin(self) -> event_instance_thin_dto:
         return event_instance_thin_dto(self.event_instance_uid, self.event_instance_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_instance_normal_dto:
+        return event_instance_normal_dto(self.event_instance_uid, self.event_instance_name, self.tenant_uid, self.event_type, self.event_object, self.event_method, self.event_parameters, self.event_signature, self.event_date, self.published_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -4949,7 +6887,7 @@ class event_instance_read_dto(base_read_dto, event_instance_write_dto):
 
 
 @dataclass(frozen=False)
-class event_notification_read_dto(base_read_dto, event_notification_write_dto):
+class event_notification_read_dto(base_read_dto, event_notification_write_dto, event_notification_interface_dto):
     event_notification_uid: str
     event_notification_name: str
     tenant_uid: str
@@ -5026,6 +6964,8 @@ class event_notification_read_dto(base_read_dto, event_notification_write_dto):
         return event_notification_write_dto(self.event_notification_uid, self.event_notification_name, self.tenant_uid, self.account_uid, self.notification_type, self.notification_topic, self.notification_format, self.notification_content, self.sending_status, self.custom_attributes)
     def to_thin(self) -> event_notification_thin_dto:
         return event_notification_thin_dto(self.event_notification_uid, self.event_notification_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_notification_normal_dto:
+        return event_notification_normal_dto(self.event_notification_uid, self.event_notification_name, self.tenant_uid, self.account_uid, self.notification_type, self.notification_topic, self.notification_format, self.notification_content, self.sending_status, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5043,7 +6983,7 @@ class event_notification_read_dto(base_read_dto, event_notification_write_dto):
 
 
 @dataclass(frozen=False)
-class event_observer_read_dto(base_read_dto, event_observer_write_dto):
+class event_observer_read_dto(base_read_dto, event_observer_write_dto, event_observer_interface_dto):
     event_observer_uid: str
     event_observer_name: str
     event_observer_definition: str
@@ -5110,6 +7050,8 @@ class event_observer_read_dto(base_read_dto, event_observer_write_dto):
         return event_observer_write_dto(self.event_observer_uid, self.event_observer_name, self.event_observer_definition, self.action_definition, self.custom_attributes)
     def to_thin(self) -> event_observer_thin_dto:
         return event_observer_thin_dto(self.event_observer_uid, self.event_observer_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_observer_normal_dto:
+        return event_observer_normal_dto(self.event_observer_uid, self.event_observer_name, self.event_observer_definition, self.action_definition, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5127,7 +7069,7 @@ class event_observer_read_dto(base_read_dto, event_observer_write_dto):
 
 
 @dataclass(frozen=False)
-class event_subscription_read_dto(base_read_dto, event_subscription_write_dto):
+class event_subscription_read_dto(base_read_dto, event_subscription_write_dto, event_subscription_interface_dto):
     event_subscription_uid: str
     event_subscription_name: str
     event_channel_uid: str
@@ -5202,6 +7144,8 @@ class event_subscription_read_dto(base_read_dto, event_subscription_write_dto):
         return event_subscription_write_dto(self.event_subscription_uid, self.event_subscription_name, self.event_channel_uid, self.tenant_uid, self.account_uid, self.subscription_filter, self.subscription_topic, self.subscription_template, self.custom_attributes)
     def to_thin(self) -> event_subscription_thin_dto:
         return event_subscription_thin_dto(self.event_subscription_uid, self.event_subscription_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_subscription_normal_dto:
+        return event_subscription_normal_dto(self.event_subscription_uid, self.event_subscription_name, self.event_channel_uid, self.tenant_uid, self.account_uid, self.subscription_filter, self.subscription_topic, self.subscription_template, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5219,7 +7163,7 @@ class event_subscription_read_dto(base_read_dto, event_subscription_write_dto):
 
 
 @dataclass(frozen=False)
-class event_template_read_dto(base_read_dto, event_template_write_dto):
+class event_template_read_dto(base_read_dto, event_template_write_dto, event_template_interface_dto):
     event_template_uid: str
     event_template_name: str
     tenant_uid: str
@@ -5290,6 +7234,8 @@ class event_template_read_dto(base_read_dto, event_template_write_dto):
         return event_template_write_dto(self.event_template_uid, self.event_template_name, self.tenant_uid, self.notification_type, self.notification_topic, self.notification_format, self.custom_attributes)
     def to_thin(self) -> event_template_thin_dto:
         return event_template_thin_dto(self.event_template_uid, self.event_template_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_template_normal_dto:
+        return event_template_normal_dto(self.event_template_uid, self.event_template_name, self.tenant_uid, self.notification_type, self.notification_topic, self.notification_format, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5307,7 +7253,7 @@ class event_template_read_dto(base_read_dto, event_template_write_dto):
 
 
 @dataclass(frozen=False)
-class event_type_read_dto(base_read_dto, event_type_write_dto):
+class event_type_read_dto(base_read_dto, event_type_write_dto, event_type_interface_dto):
     event_type_uid: str
     event_type_name: str
     event_type_description: str
@@ -5372,6 +7318,8 @@ class event_type_read_dto(base_read_dto, event_type_write_dto):
         return event_type_write_dto(self.event_type_uid, self.event_type_name, self.event_type_description, self.custom_attributes)
     def to_thin(self) -> event_type_thin_dto:
         return event_type_thin_dto(self.event_type_uid, self.event_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> event_type_normal_dto:
+        return event_type_normal_dto(self.event_type_uid, self.event_type_name, self.event_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5389,7 +7337,7 @@ class event_type_read_dto(base_read_dto, event_type_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_action_read_dto(base_read_dto, invoice_action_write_dto):
+class invoice_action_read_dto(base_read_dto, invoice_action_write_dto, invoice_action_interface_dto):
     invoice_action_uid: str
     invoice_action_name: str
     tenant_uid: str
@@ -5460,6 +7408,8 @@ class invoice_action_read_dto(base_read_dto, invoice_action_write_dto):
         return invoice_action_write_dto(self.invoice_action_uid, self.invoice_action_name, self.tenant_uid, self.account_uid, self.invoice_instance_uid, self.invoice_action_type_uid, self.custom_attributes)
     def to_thin(self) -> invoice_action_thin_dto:
         return invoice_action_thin_dto(self.invoice_action_uid, self.invoice_action_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_action_normal_dto:
+        return invoice_action_normal_dto(self.invoice_action_uid, self.invoice_action_name, self.tenant_uid, self.account_uid, self.invoice_instance_uid, self.invoice_action_type_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5477,7 +7427,7 @@ class invoice_action_read_dto(base_read_dto, invoice_action_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_action_type_read_dto(base_read_dto, invoice_action_type_write_dto):
+class invoice_action_type_read_dto(base_read_dto, invoice_action_type_write_dto, invoice_action_type_interface_dto):
     invoice_action_type_uid: str
     invoice_action_type_name: str
     row_instance: str
@@ -5540,6 +7490,8 @@ class invoice_action_type_read_dto(base_read_dto, invoice_action_type_write_dto)
         return invoice_action_type_write_dto(self.invoice_action_type_uid, self.invoice_action_type_name, self.custom_attributes)
     def to_thin(self) -> invoice_action_type_thin_dto:
         return invoice_action_type_thin_dto(self.invoice_action_type_uid, self.invoice_action_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_action_type_normal_dto:
+        return invoice_action_type_normal_dto(self.invoice_action_type_uid, self.invoice_action_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5557,7 +7509,7 @@ class invoice_action_type_read_dto(base_read_dto, invoice_action_type_write_dto)
 
 
 @dataclass(frozen=False)
-class invoice_category_read_dto(base_read_dto, invoice_category_write_dto):
+class invoice_category_read_dto(base_read_dto, invoice_category_write_dto, invoice_category_interface_dto):
     invoice_category_uid: str
     invoice_category_name: str
     tenant_uid: str
@@ -5624,6 +7576,8 @@ class invoice_category_read_dto(base_read_dto, invoice_category_write_dto):
         return invoice_category_write_dto(self.invoice_category_uid, self.invoice_category_name, self.tenant_uid, self.invoice_category_description, self.custom_attributes)
     def to_thin(self) -> invoice_category_thin_dto:
         return invoice_category_thin_dto(self.invoice_category_uid, self.invoice_category_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_category_normal_dto:
+        return invoice_category_normal_dto(self.invoice_category_uid, self.invoice_category_name, self.tenant_uid, self.invoice_category_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5641,7 +7595,7 @@ class invoice_category_read_dto(base_read_dto, invoice_category_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_entry_read_dto(base_read_dto, invoice_entry_write_dto):
+class invoice_entry_read_dto(base_read_dto, invoice_entry_write_dto, invoice_entry_interface_dto):
     invoice_entry_uid: str
     invoice_entry_name: str
     tenant_uid: str
@@ -5718,6 +7672,8 @@ class invoice_entry_read_dto(base_read_dto, invoice_entry_write_dto):
         return invoice_entry_write_dto(self.invoice_entry_uid, self.invoice_entry_name, self.tenant_uid, self.account_uid, self.invoice_instance_uid, self.entry_details, self.entry_amount_net, self.entry_amount_tax, self.entry_amount_gross, self.custom_attributes)
     def to_thin(self) -> invoice_entry_thin_dto:
         return invoice_entry_thin_dto(self.invoice_entry_uid, self.invoice_entry_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_entry_normal_dto:
+        return invoice_entry_normal_dto(self.invoice_entry_uid, self.invoice_entry_name, self.tenant_uid, self.account_uid, self.invoice_instance_uid, self.entry_details, self.entry_amount_net, self.entry_amount_tax, self.entry_amount_gross, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5735,7 +7691,7 @@ class invoice_entry_read_dto(base_read_dto, invoice_entry_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_flow_read_dto(base_read_dto, invoice_flow_write_dto):
+class invoice_flow_read_dto(base_read_dto, invoice_flow_write_dto, invoice_flow_interface_dto):
     invoice_flow_uid: str
     invoice_flow_name: str
     class_name: str
@@ -5804,6 +7760,8 @@ class invoice_flow_read_dto(base_read_dto, invoice_flow_write_dto):
         return invoice_flow_write_dto(self.invoice_flow_uid, self.invoice_flow_name, self.class_name, self.flow_description, self.flow_definition_json, self.custom_attributes)
     def to_thin(self) -> invoice_flow_thin_dto:
         return invoice_flow_thin_dto(self.invoice_flow_uid, self.invoice_flow_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_flow_normal_dto:
+        return invoice_flow_normal_dto(self.invoice_flow_uid, self.invoice_flow_name, self.class_name, self.flow_description, self.flow_definition_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5821,7 +7779,7 @@ class invoice_flow_read_dto(base_read_dto, invoice_flow_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_flow_state_read_dto(base_read_dto, invoice_flow_state_write_dto):
+class invoice_flow_state_read_dto(base_read_dto, invoice_flow_state_write_dto, invoice_flow_state_interface_dto):
     invoice_flow_state_uid: str
     invoice_flow_state_name: str
     invoice_flow_uid: str
@@ -5888,6 +7846,8 @@ class invoice_flow_state_read_dto(base_read_dto, invoice_flow_state_write_dto):
         return invoice_flow_state_write_dto(self.invoice_flow_state_uid, self.invoice_flow_state_name, self.invoice_flow_uid, self.state_definition_json, self.custom_attributes)
     def to_thin(self) -> invoice_flow_state_thin_dto:
         return invoice_flow_state_thin_dto(self.invoice_flow_state_uid, self.invoice_flow_state_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_flow_state_normal_dto:
+        return invoice_flow_state_normal_dto(self.invoice_flow_state_uid, self.invoice_flow_state_name, self.invoice_flow_uid, self.state_definition_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -5905,7 +7865,7 @@ class invoice_flow_state_read_dto(base_read_dto, invoice_flow_state_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_instance_read_dto(base_read_dto, invoice_instance_write_dto):
+class invoice_instance_read_dto(base_read_dto, invoice_instance_write_dto, invoice_instance_interface_dto):
     invoice_instance_uid: str
     invoice_instance_name: str
     tenant_uid: str
@@ -5994,6 +7954,8 @@ class invoice_instance_read_dto(base_read_dto, invoice_instance_write_dto):
         return invoice_instance_write_dto(self.invoice_instance_uid, self.invoice_instance_name, self.tenant_uid, self.account_uid, self.invoice_flow_uid, self.invoice_status_uid, self.invoice_category_uid, self.invoice_type_uid, self.period_uid, self.currency_uid, self.invoice_number, self.invoice_details, self.invoice_amount_net, self.invoice_amount_tax, self.invoice_amount_gross, self.custom_attributes)
     def to_thin(self) -> invoice_instance_thin_dto:
         return invoice_instance_thin_dto(self.invoice_instance_uid, self.invoice_instance_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_instance_normal_dto:
+        return invoice_instance_normal_dto(self.invoice_instance_uid, self.invoice_instance_name, self.tenant_uid, self.account_uid, self.invoice_flow_uid, self.invoice_status_uid, self.invoice_category_uid, self.invoice_type_uid, self.period_uid, self.currency_uid, self.invoice_number, self.invoice_details, self.invoice_amount_net, self.invoice_amount_tax, self.invoice_amount_gross, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6011,7 +7973,7 @@ class invoice_instance_read_dto(base_read_dto, invoice_instance_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_status_read_dto(base_read_dto, invoice_status_write_dto):
+class invoice_status_read_dto(base_read_dto, invoice_status_write_dto, invoice_status_interface_dto):
     invoice_status_uid: str
     invoice_status_name: str
     status_description: str
@@ -6076,6 +8038,8 @@ class invoice_status_read_dto(base_read_dto, invoice_status_write_dto):
         return invoice_status_write_dto(self.invoice_status_uid, self.invoice_status_name, self.status_description, self.custom_attributes)
     def to_thin(self) -> invoice_status_thin_dto:
         return invoice_status_thin_dto(self.invoice_status_uid, self.invoice_status_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_status_normal_dto:
+        return invoice_status_normal_dto(self.invoice_status_uid, self.invoice_status_name, self.status_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6093,7 +8057,7 @@ class invoice_status_read_dto(base_read_dto, invoice_status_write_dto):
 
 
 @dataclass(frozen=False)
-class invoice_type_read_dto(base_read_dto, invoice_type_write_dto):
+class invoice_type_read_dto(base_read_dto, invoice_type_write_dto, invoice_type_interface_dto):
     invoice_type_uid: str
     invoice_type_name: str
     row_instance: str
@@ -6156,6 +8120,8 @@ class invoice_type_read_dto(base_read_dto, invoice_type_write_dto):
         return invoice_type_write_dto(self.invoice_type_uid, self.invoice_type_name, self.custom_attributes)
     def to_thin(self) -> invoice_type_thin_dto:
         return invoice_type_thin_dto(self.invoice_type_uid, self.invoice_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> invoice_type_normal_dto:
+        return invoice_type_normal_dto(self.invoice_type_uid, self.invoice_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6173,7 +8139,95 @@ class invoice_type_read_dto(base_read_dto, invoice_type_write_dto):
 
 
 @dataclass(frozen=False)
-class location_postal_code_read_dto(base_read_dto, location_postal_code_write_dto):
+class location_hierarchy_read_dto(base_read_dto, location_hierarchy_write_dto, location_hierarchy_interface_dto):
+    location_hierarchy_uid: str
+    location_hierarchy_name: str
+    tenant_uid: str
+    country_uid: str | None
+    hierarchy_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_hierarchy_name = location_hierarchy_name
+        self.tenant_uid = tenant_uid
+        self.country_uid = country_uid
+        self.hierarchy_description = hierarchy_description
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str):
+        return cls(0, location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: location_hierarchy_write_dto):
+        return cls(0, dto.location_hierarchy_uid, dto.location_hierarchy_name, dto.tenant_uid, dto.country_uid, dto.hierarchy_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return location_hierarchy_read_dto(self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["location_hierarchy_uid"], d["location_hierarchy_name"], d["tenant_uid"], d["country_uid"], d["hierarchy_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> location_hierarchy_write_dto:
+        return location_hierarchy_write_dto(self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes)
+    def to_thin(self) -> location_hierarchy_thin_dto:
+        return location_hierarchy_thin_dto(self.location_hierarchy_uid, self.location_hierarchy_name, self.created_date, self.is_active)
+    def to_normal(self) -> location_hierarchy_normal_dto:
+        return location_hierarchy_normal_dto(self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes, updated_by, self.location_hierarchy_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class location_postal_code_read_dto(base_read_dto, location_postal_code_write_dto, location_postal_code_interface_dto):
     location_postal_code_uid: str
     location_postal_code_name: str
     country_uid: str
@@ -6250,6 +8304,8 @@ class location_postal_code_read_dto(base_read_dto, location_postal_code_write_dt
         return location_postal_code_write_dto(self.location_postal_code_uid, self.location_postal_code_name, self.country_uid, self.postal_code, self.street_name, self.city_name, self.county_name, self.state_name, self.region_name, self.custom_attributes)
     def to_thin(self) -> location_postal_code_thin_dto:
         return location_postal_code_thin_dto(self.location_postal_code_uid, self.location_postal_code_name, self.created_date, self.is_active)
+    def to_normal(self) -> location_postal_code_normal_dto:
+        return location_postal_code_normal_dto(self.location_postal_code_uid, self.location_postal_code_name, self.country_uid, self.postal_code, self.street_name, self.city_name, self.county_name, self.state_name, self.region_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6267,7 +8323,105 @@ class location_postal_code_read_dto(base_read_dto, location_postal_code_write_dt
 
 
 @dataclass(frozen=False)
-class location_territory_read_dto(base_read_dto, location_territory_write_dto):
+class location_region_read_dto(base_read_dto, location_region_write_dto, location_region_interface_dto):
+    location_region_uid: str
+    location_region_name: str
+    tenant_uid: str
+    location_hierarchy_uid: str
+    location_territory_uid: str | None
+    parent_location_region_uid: str | None
+    country_uid: str | None
+    region_latitude: str
+    region_longitude: str
+    region_description: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.location_region_uid = location_region_uid
+        self.location_region_name = location_region_name
+        self.tenant_uid = tenant_uid
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_territory_uid = location_territory_uid
+        self.parent_location_region_uid = parent_location_region_uid
+        self.country_uid = country_uid
+        self.region_latitude = region_latitude
+        self.region_longitude = region_longitude
+        self.region_description = region_description
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", "", base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str):
+        return cls(0, location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: location_region_write_dto):
+        return cls(0, dto.location_region_uid, dto.location_region_name, dto.tenant_uid, dto.location_hierarchy_uid, dto.location_territory_uid, dto.parent_location_region_uid, dto.country_uid, dto.region_latitude, dto.region_longitude, dto.region_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return location_region_read_dto(self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["location_region_uid"], d["location_region_name"], d["tenant_uid"], d["location_hierarchy_uid"], d["location_territory_uid"], d["parent_location_region_uid"], d["country_uid"], d["region_latitude"], d["region_longitude"], d["region_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> location_region_write_dto:
+        return location_region_write_dto(self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes)
+    def to_thin(self) -> location_region_thin_dto:
+        return location_region_thin_dto(self.location_region_uid, self.location_region_name, self.created_date, self.is_active)
+    def to_normal(self) -> location_region_normal_dto:
+        return location_region_normal_dto(self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes, updated_by, self.location_region_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class location_territory_read_dto(base_read_dto, location_territory_write_dto, location_territory_interface_dto):
     location_territory_uid: str
     location_territory_name: str
     tenant_uid: str
@@ -6340,6 +8494,8 @@ class location_territory_read_dto(base_read_dto, location_territory_write_dto):
         return location_territory_write_dto(self.location_territory_uid, self.location_territory_name, self.tenant_uid, self.location_postal_code_uid, self.territory_latitude, self.territory_longitude, self.territory_description, self.custom_attributes)
     def to_thin(self) -> location_territory_thin_dto:
         return location_territory_thin_dto(self.location_territory_uid, self.location_territory_name, self.created_date, self.is_active)
+    def to_normal(self) -> location_territory_normal_dto:
+        return location_territory_normal_dto(self.location_territory_uid, self.location_territory_name, self.tenant_uid, self.location_postal_code_uid, self.territory_latitude, self.territory_longitude, self.territory_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6357,7 +8513,7 @@ class location_territory_read_dto(base_read_dto, location_territory_write_dto):
 
 
 @dataclass(frozen=False)
-class monitor_read_dto(base_read_dto, monitor_write_dto):
+class monitor_read_dto(base_read_dto, monitor_write_dto, monitor_interface_dto):
     monitor_uid: str
     monitor_name: str
     tenant_uid: str
@@ -6444,6 +8600,8 @@ class monitor_read_dto(base_read_dto, monitor_write_dto):
         return monitor_write_dto(self.monitor_uid, self.monitor_name, self.tenant_uid, self.account_uid, self.monitor_type_uid, self.schedule_expression, self.monitor_protocol, self.monitor_url, self.monitor_user, self.monitor_priority, self.is_on_hold, self.last_status_name, self.last_run_time, self.last_exception_message, self.custom_attributes)
     def to_thin(self) -> monitor_thin_dto:
         return monitor_thin_dto(self.monitor_uid, self.monitor_name, self.created_date, self.is_active)
+    def to_normal(self) -> monitor_normal_dto:
+        return monitor_normal_dto(self.monitor_uid, self.monitor_name, self.tenant_uid, self.account_uid, self.monitor_type_uid, self.schedule_expression, self.monitor_protocol, self.monitor_url, self.monitor_user, self.monitor_priority, self.is_on_hold, self.last_status_name, self.last_run_time, self.last_exception_message, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6461,7 +8619,7 @@ class monitor_read_dto(base_read_dto, monitor_write_dto):
 
 
 @dataclass(frozen=False)
-class monitor_run_read_dto(base_read_dto, monitor_run_write_dto):
+class monitor_run_read_dto(base_read_dto, monitor_run_write_dto, monitor_run_interface_dto):
     monitor_run_uid: str
     monitor_run_name: str
     tenant_uid: str
@@ -6536,6 +8694,8 @@ class monitor_run_read_dto(base_read_dto, monitor_run_write_dto):
         return monitor_run_write_dto(self.monitor_run_uid, self.monitor_run_name, self.tenant_uid, self.account_uid, self.monitor_uid, self.status_name, self.run_time, self.exception_message, self.custom_attributes)
     def to_thin(self) -> monitor_run_thin_dto:
         return monitor_run_thin_dto(self.monitor_run_uid, self.monitor_run_name, self.created_date, self.is_active)
+    def to_normal(self) -> monitor_run_normal_dto:
+        return monitor_run_normal_dto(self.monitor_run_uid, self.monitor_run_name, self.tenant_uid, self.account_uid, self.monitor_uid, self.status_name, self.run_time, self.exception_message, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6553,7 +8713,7 @@ class monitor_run_read_dto(base_read_dto, monitor_run_write_dto):
 
 
 @dataclass(frozen=False)
-class monitor_type_read_dto(base_read_dto, monitor_type_write_dto):
+class monitor_type_read_dto(base_read_dto, monitor_type_write_dto, monitor_type_interface_dto):
     monitor_type_uid: str
     monitor_type_name: str
     class_name: str
@@ -6620,6 +8780,8 @@ class monitor_type_read_dto(base_read_dto, monitor_type_write_dto):
         return monitor_type_write_dto(self.monitor_type_uid, self.monitor_type_name, self.class_name, self.parameters_json, self.custom_attributes)
     def to_thin(self) -> monitor_type_thin_dto:
         return monitor_type_thin_dto(self.monitor_type_uid, self.monitor_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> monitor_type_normal_dto:
+        return monitor_type_normal_dto(self.monitor_type_uid, self.monitor_type_name, self.class_name, self.parameters_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6637,18 +8799,26 @@ class monitor_type_read_dto(base_read_dto, monitor_type_write_dto):
 
 
 @dataclass(frozen=False)
-class period_read_dto(base_read_dto, period_write_dto):
+class period_read_dto(base_read_dto, period_write_dto, period_interface_dto):
     period_uid: str
     period_name: str
+    period_full_name: str
     period_number: int
     period_type: str
     period_start_time: datetime.datetime
     period_end_time: datetime.datetime
     period_year: int | None
+    period_semester: int | None
+    period_trimester: int | None
     period_quarter: int | None
     period_month: int | None
     period_week: int | None
     period_day: int | None
+    period_day_of_year: int | None
+    parent_year_period_uid: str | None
+    parent_quarter_period_uid: str | None
+    parent_month_period_uid: str | None
+    parent_week_period_uid: str | None
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -6663,18 +8833,26 @@ class period_read_dto(base_read_dto, period_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.period_uid = period_uid
         self.period_name = period_name
+        self.period_full_name = period_full_name
         self.period_number = period_number
         self.period_type = period_type
         self.period_start_time = period_start_time
         self.period_end_time = period_end_time
         self.period_year = period_year
+        self.period_semester = period_semester
+        self.period_trimester = period_trimester
         self.period_quarter = period_quarter
         self.period_month = period_month
         self.period_week = period_week
         self.period_day = period_day
+        self.period_day_of_year = period_day_of_year
+        self.parent_year_period_uid = parent_year_period_uid
+        self.parent_quarter_period_uid = parent_quarter_period_uid
+        self.parent_month_period_uid = parent_month_period_uid
+        self.parent_week_period_uid = parent_week_period_uid
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -6691,41 +8869,43 @@ class period_read_dto(base_read_dto, period_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None):
-        return cls(0, period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None):
+        return cls(0, period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: period_write_dto):
-        return cls(0, dto.period_uid, dto.period_name, dto.period_number, dto.period_type, dto.period_start_time, dto.period_end_time, dto.period_year, dto.period_quarter, dto.period_month, dto.period_week, dto.period_day, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.period_uid, dto.period_name, dto.period_full_name, dto.period_number, dto.period_type, dto.period_start_time, dto.period_end_time, dto.period_year, dto.period_semester, dto.period_trimester, dto.period_quarter, dto.period_month, dto.period_week, dto.period_day, dto.period_day_of_year, dto.parent_year_period_uid, dto.parent_quarter_period_uid, dto.parent_month_period_uid, dto.parent_week_period_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return period_read_dto(self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return period_read_dto(self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["period_uid"], d["period_name"], d["period_number"], d["period_type"], d["period_start_time"], d["period_end_time"], d["period_year"], d["period_quarter"], d["period_month"], d["period_week"], d["period_day"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["period_uid"], d["period_name"], d["period_full_name"], d["period_number"], d["period_type"], d["period_start_time"], d["period_end_time"], d["period_year"], d["period_semester"], d["period_trimester"], d["period_quarter"], d["period_month"], d["period_week"], d["period_day"], d["period_day_of_year"], d["parent_year_period_uid"], d["parent_quarter_period_uid"], d["parent_month_period_uid"], d["parent_week_period_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> period_write_dto:
-        return period_write_dto(self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes)
+        return period_write_dto(self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes)
     def to_thin(self) -> period_thin_dto:
         return period_thin_dto(self.period_uid, self.period_name, self.created_date, self.is_active)
+    def to_normal(self) -> period_normal_dto:
+        return period_normal_dto(self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes, updated_by, self.period_uid]
+        return [self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes, updated_by, self.period_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -6735,7 +8915,7 @@ class period_read_dto(base_read_dto, period_write_dto):
 
 
 @dataclass(frozen=False)
-class process_read_dto(base_read_dto, process_write_dto):
+class process_read_dto(base_read_dto, process_write_dto, process_interface_dto):
     process_uid: str
     process_name: str
     tenant_uid: str
@@ -6806,6 +8986,8 @@ class process_read_dto(base_read_dto, process_write_dto):
         return process_write_dto(self.process_uid, self.process_name, self.tenant_uid, self.account_uid, self.process_type_uid, self.status_name, self.custom_attributes)
     def to_thin(self) -> process_thin_dto:
         return process_thin_dto(self.process_uid, self.process_name, self.created_date, self.is_active)
+    def to_normal(self) -> process_normal_dto:
+        return process_normal_dto(self.process_uid, self.process_name, self.tenant_uid, self.account_uid, self.process_type_uid, self.status_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6823,7 +9005,101 @@ class process_read_dto(base_read_dto, process_write_dto):
 
 
 @dataclass(frozen=False)
-class process_run_read_dto(base_read_dto, process_run_write_dto):
+class process_result_read_dto(base_read_dto, process_result_write_dto, process_result_interface_dto):
+    process_result_uid: str
+    process_result_name: str
+    tenant_uid: str
+    account_uid: str
+    process_uid: str
+    process_run_uid: str
+    result_type: str
+    result_text: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.process_result_uid = process_result_uid
+        self.process_result_name = process_result_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.process_uid = process_uid
+        self.process_run_uid = process_run_uid
+        self.result_type = result_type
+        self.result_text = result_text
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str):
+        return cls(0, process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: process_result_write_dto):
+        return cls(0, dto.process_result_uid, dto.process_result_name, dto.tenant_uid, dto.account_uid, dto.process_uid, dto.process_run_uid, dto.result_type, dto.result_text, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return process_result_read_dto(self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["process_result_uid"], d["process_result_name"], d["tenant_uid"], d["account_uid"], d["process_uid"], d["process_run_uid"], d["result_type"], d["result_text"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> process_result_write_dto:
+        return process_result_write_dto(self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes)
+    def to_thin(self) -> process_result_thin_dto:
+        return process_result_thin_dto(self.process_result_uid, self.process_result_name, self.created_date, self.is_active)
+    def to_normal(self) -> process_result_normal_dto:
+        return process_result_normal_dto(self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes, updated_by, self.process_result_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class process_run_read_dto(base_read_dto, process_run_write_dto, process_run_interface_dto):
     process_run_uid: str
     process_run_name: str
     tenant_uid: str
@@ -6896,6 +9172,8 @@ class process_run_read_dto(base_read_dto, process_run_write_dto):
         return process_run_write_dto(self.process_run_uid, self.process_run_name, self.tenant_uid, self.account_uid, self.process_uid, self.status_name, self.run_time, self.custom_attributes)
     def to_thin(self) -> process_run_thin_dto:
         return process_run_thin_dto(self.process_run_uid, self.process_run_name, self.created_date, self.is_active)
+    def to_normal(self) -> process_run_normal_dto:
+        return process_run_normal_dto(self.process_run_uid, self.process_run_name, self.tenant_uid, self.account_uid, self.process_uid, self.status_name, self.run_time, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6913,7 +9191,7 @@ class process_run_read_dto(base_read_dto, process_run_write_dto):
 
 
 @dataclass(frozen=False)
-class process_type_read_dto(base_read_dto, process_type_write_dto):
+class process_type_read_dto(base_read_dto, process_type_write_dto, process_type_interface_dto):
     process_type_uid: str
     process_type_name: str
     class_name: str
@@ -6978,6 +9256,8 @@ class process_type_read_dto(base_read_dto, process_type_write_dto):
         return process_type_write_dto(self.process_type_uid, self.process_type_name, self.class_name, self.custom_attributes)
     def to_thin(self) -> process_type_thin_dto:
         return process_type_thin_dto(self.process_type_uid, self.process_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> process_type_normal_dto:
+        return process_type_normal_dto(self.process_type_uid, self.process_type_name, self.class_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -6995,7 +9275,7 @@ class process_type_read_dto(base_read_dto, process_type_write_dto):
 
 
 @dataclass(frozen=False)
-class project_account_read_dto(base_read_dto, project_account_write_dto):
+class project_account_read_dto(base_read_dto, project_account_write_dto, project_account_interface_dto):
     project_account_uid: str
     project_account_name: str
     tenant_uid: str
@@ -7070,6 +9350,8 @@ class project_account_read_dto(base_read_dto, project_account_write_dto):
         return project_account_write_dto(self.project_account_uid, self.project_account_name, self.tenant_uid, self.client_uid, self.account_uid, self.project_instance_uid, self.start_date, self.end_date, self.custom_attributes)
     def to_thin(self) -> project_account_thin_dto:
         return project_account_thin_dto(self.project_account_uid, self.project_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_account_normal_dto:
+        return project_account_normal_dto(self.project_account_uid, self.project_account_name, self.tenant_uid, self.client_uid, self.account_uid, self.project_instance_uid, self.start_date, self.end_date, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7087,7 +9369,7 @@ class project_account_read_dto(base_read_dto, project_account_write_dto):
 
 
 @dataclass(frozen=False)
-class project_budget_read_dto(base_read_dto, project_budget_write_dto):
+class project_budget_read_dto(base_read_dto, project_budget_write_dto, project_budget_interface_dto):
     project_budget_uid: str
     project_budget_name: str
     tenant_uid: str
@@ -7164,6 +9446,8 @@ class project_budget_read_dto(base_read_dto, project_budget_write_dto):
         return project_budget_write_dto(self.project_budget_uid, self.project_budget_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.currency_uid, self.budget_value, self.is_approved, self.is_current, self.custom_attributes)
     def to_thin(self) -> project_budget_thin_dto:
         return project_budget_thin_dto(self.project_budget_uid, self.project_budget_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_budget_normal_dto:
+        return project_budget_normal_dto(self.project_budget_uid, self.project_budget_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.currency_uid, self.budget_value, self.is_approved, self.is_current, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7181,7 +9465,7 @@ class project_budget_read_dto(base_read_dto, project_budget_write_dto):
 
 
 @dataclass(frozen=False)
-class project_group_read_dto(base_read_dto, project_group_write_dto):
+class project_group_read_dto(base_read_dto, project_group_write_dto, project_group_interface_dto):
     project_group_uid: str
     project_group_name: str
     tenant_uid: str
@@ -7248,6 +9532,8 @@ class project_group_read_dto(base_read_dto, project_group_write_dto):
         return project_group_write_dto(self.project_group_uid, self.project_group_name, self.tenant_uid, self.project_group_description, self.custom_attributes)
     def to_thin(self) -> project_group_thin_dto:
         return project_group_thin_dto(self.project_group_uid, self.project_group_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_group_normal_dto:
+        return project_group_normal_dto(self.project_group_uid, self.project_group_name, self.tenant_uid, self.project_group_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7265,7 +9551,7 @@ class project_group_read_dto(base_read_dto, project_group_write_dto):
 
 
 @dataclass(frozen=False)
-class project_instance_read_dto(base_read_dto, project_instance_write_dto):
+class project_instance_read_dto(base_read_dto, project_instance_write_dto, project_instance_interface_dto):
     project_instance_uid: str
     project_instance_name: str
     tenant_uid: str
@@ -7352,6 +9638,8 @@ class project_instance_read_dto(base_read_dto, project_instance_write_dto):
         return project_instance_write_dto(self.project_instance_uid, self.project_instance_name, self.tenant_uid, self.client_uid, self.project_type_uid, self.manager_account_uid, self.project_group_uid, self.project_code, self.project_description, self.is_billable, self.start_date, self.end_date, self.current_billed, self.budget, self.custom_attributes)
     def to_thin(self) -> project_instance_thin_dto:
         return project_instance_thin_dto(self.project_instance_uid, self.project_instance_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_instance_normal_dto:
+        return project_instance_normal_dto(self.project_instance_uid, self.project_instance_name, self.tenant_uid, self.client_uid, self.project_type_uid, self.manager_account_uid, self.project_group_uid, self.project_code, self.project_description, self.is_billable, self.start_date, self.end_date, self.current_billed, self.budget, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7369,13 +9657,14 @@ class project_instance_read_dto(base_read_dto, project_instance_write_dto):
 
 
 @dataclass(frozen=False)
-class project_milestone_read_dto(base_read_dto, project_milestone_write_dto):
+class project_milestone_read_dto(base_read_dto, project_milestone_write_dto, project_milestone_interface_dto):
     project_milestone_uid: str
     project_milestone_name: str
     tenant_uid: str
     client_uid: str
     project_instance_uid: str
     project_budget_uid: str | None
+    project_phase_uid: str | None
     start_date: datetime.datetime
     end_date: datetime.datetime
     status_name: str
@@ -7393,13 +9682,14 @@ class project_milestone_read_dto(base_read_dto, project_milestone_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.project_milestone_uid = project_milestone_uid
         self.project_milestone_name = project_milestone_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
         self.project_budget_uid = project_budget_uid
+        self.project_phase_uid = project_phase_uid
         self.start_date = start_date
         self.end_date = end_date
         self.status_name = status_name
@@ -7419,41 +9709,43 @@ class project_milestone_read_dto(base_read_dto, project_milestone_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
-        return cls(0, project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(0, project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: project_milestone_write_dto):
-        return cls(0, dto.project_milestone_uid, dto.project_milestone_name, dto.tenant_uid, dto.client_uid, dto.project_instance_uid, dto.project_budget_uid, dto.start_date, dto.end_date, dto.status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.project_milestone_uid, dto.project_milestone_name, dto.tenant_uid, dto.client_uid, dto.project_instance_uid, dto.project_budget_uid, dto.project_phase_uid, dto.start_date, dto.end_date, dto.status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return project_milestone_read_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return project_milestone_read_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["project_milestone_uid"], d["project_milestone_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["start_date"], d["end_date"], d["status_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["project_milestone_uid"], d["project_milestone_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["project_phase_uid"], d["start_date"], d["end_date"], d["status_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> project_milestone_write_dto:
-        return project_milestone_write_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+        return project_milestone_write_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
     def to_thin(self) -> project_milestone_thin_dto:
         return project_milestone_thin_dto(self.project_milestone_uid, self.project_milestone_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_milestone_normal_dto:
+        return project_milestone_normal_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_milestone_uid]
+        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_milestone_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -7463,7 +9755,107 @@ class project_milestone_read_dto(base_read_dto, project_milestone_write_dto):
 
 
 @dataclass(frozen=False)
-class project_type_read_dto(base_read_dto, project_type_write_dto):
+class project_phase_read_dto(base_read_dto, project_phase_write_dto, project_phase_interface_dto):
+    project_phase_uid: str
+    project_phase_name: str
+    tenant_uid: str
+    client_uid: str
+    project_instance_uid: str
+    project_budget_uid: str | None
+    previous_project_phase_uid: str | None
+    client_contract_uid: str | None
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    status_name: str
+    row_instance: str
+    row_lock: str | None
+    row_owner: str
+    row_seq: int
+    row_guid: str
+    row_version: int
+    is_active: int
+    created_date: datetime.datetime
+    created_by: str
+    last_updated_date: datetime.datetime
+    last_updated_by: str
+    removed_date: datetime.datetime | None
+    removed_by: str | None
+    custom_attributes: str
+    def __init__(self, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        self.project_phase_uid = project_phase_uid
+        self.project_phase_name = project_phase_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.project_instance_uid = project_instance_uid
+        self.project_budget_uid = project_budget_uid
+        self.previous_project_phase_uid = previous_project_phase_uid
+        self.client_contract_uid = client_contract_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.status_name = status_name
+        self.row_instance = row_instance
+        self.row_lock = row_lock
+        self.row_owner = row_owner
+        self.row_seq = row_seq
+        self.row_guid = row_guid
+        self.row_version = row_version
+        self.is_active = is_active
+        self.created_date = created_date
+        self.created_by = created_by
+        self.last_updated_date = last_updated_date
+        self.last_updated_by = last_updated_by
+        self.removed_date = removed_date
+        self.removed_by = removed_by
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_read(cls):
+        return cls(0, "", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def default_read(cls):
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def random_read(cls):
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_default(cls, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(0, project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    @classmethod
+    def new_read_full(cls, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    @classmethod
+    def from_write(cls, dto: project_phase_write_dto):
+        return cls(0, dto.project_phase_uid, dto.project_phase_name, dto.tenant_uid, dto.client_uid, dto.project_instance_uid, dto.project_budget_uid, dto.previous_project_phase_uid, dto.client_contract_uid, dto.start_date, dto.end_date, dto.status_name, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+    def clone_read(self):
+        return project_phase_read_dto(self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["project_phase_uid"], d["project_phase_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["previous_project_phase_uid"], d["client_contract_uid"], d["start_date"], d["end_date"], d["status_name"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+    def to_read_dict(self) -> dict:
+        return asdict(self)
+    def to_write(self) -> project_phase_write_dto:
+        return project_phase_write_dto(self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+    def to_thin(self) -> project_phase_thin_dto:
+        return project_phase_thin_dto(self.project_phase_uid, self.project_phase_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_phase_normal_dto:
+        return project_phase_normal_dto(self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.created_date, self.created_by)
+    def touch(self, updated_by: str = "system"):
+        self.last_updated_date = datetime.datetime.now()
+        self.last_updated_by = updated_by
+        self.row_version = self.row_version+1
+    def get_list_all_values(self) -> list[any]:
+        return [self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+    def get_list_update_values(self, updated_by: str) -> list[any]:
+        return [self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_phase_uid]
+    def is_older_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date < dt
+    def is_newer_than(self, dt: datetime.datetime) -> bool:
+        return self.created_date > dt
+    def to_json_read(self) -> str:
+        return json.dumps(self.to_read_dict())
+
+
+@dataclass(frozen=False)
+class project_type_read_dto(base_read_dto, project_type_write_dto, project_type_interface_dto):
     project_type_uid: str
     project_type_name: str
     project_type_description: str
@@ -7528,6 +9920,8 @@ class project_type_read_dto(base_read_dto, project_type_write_dto):
         return project_type_write_dto(self.project_type_uid, self.project_type_name, self.project_type_description, self.custom_attributes)
     def to_thin(self) -> project_type_thin_dto:
         return project_type_thin_dto(self.project_type_uid, self.project_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> project_type_normal_dto:
+        return project_type_normal_dto(self.project_type_uid, self.project_type_name, self.project_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7545,7 +9939,7 @@ class project_type_read_dto(base_read_dto, project_type_write_dto):
 
 
 @dataclass(frozen=False)
-class report_read_dto(base_read_dto, report_write_dto):
+class report_read_dto(base_read_dto, report_write_dto, report_interface_dto):
     report_uid: str
     report_name: str
     tenant_uid: str
@@ -7618,6 +10012,8 @@ class report_read_dto(base_read_dto, report_write_dto):
         return report_write_dto(self.report_uid, self.report_name, self.tenant_uid, self.account_uid, self.report_status_uid, self.report_query, self.report_parameters, self.custom_attributes)
     def to_thin(self) -> report_thin_dto:
         return report_thin_dto(self.report_uid, self.report_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_normal_dto:
+        return report_normal_dto(self.report_uid, self.report_name, self.tenant_uid, self.account_uid, self.report_status_uid, self.report_query, self.report_parameters, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7635,7 +10031,7 @@ class report_read_dto(base_read_dto, report_write_dto):
 
 
 @dataclass(frozen=False)
-class report_content_type_read_dto(base_read_dto, report_content_type_write_dto):
+class report_content_type_read_dto(base_read_dto, report_content_type_write_dto, report_content_type_interface_dto):
     report_content_type_uid: str
     report_content_type_name: str
     row_instance: str
@@ -7698,6 +10094,8 @@ class report_content_type_read_dto(base_read_dto, report_content_type_write_dto)
         return report_content_type_write_dto(self.report_content_type_uid, self.report_content_type_name, self.custom_attributes)
     def to_thin(self) -> report_content_type_thin_dto:
         return report_content_type_thin_dto(self.report_content_type_uid, self.report_content_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_content_type_normal_dto:
+        return report_content_type_normal_dto(self.report_content_type_uid, self.report_content_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7715,7 +10113,7 @@ class report_content_type_read_dto(base_read_dto, report_content_type_write_dto)
 
 
 @dataclass(frozen=False)
-class report_format_read_dto(base_read_dto, report_format_write_dto):
+class report_format_read_dto(base_read_dto, report_format_write_dto, report_format_interface_dto):
     report_format_uid: str
     report_format_name: str
     class_name: str
@@ -7780,6 +10178,8 @@ class report_format_read_dto(base_read_dto, report_format_write_dto):
         return report_format_write_dto(self.report_format_uid, self.report_format_name, self.class_name, self.custom_attributes)
     def to_thin(self) -> report_format_thin_dto:
         return report_format_thin_dto(self.report_format_uid, self.report_format_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_format_normal_dto:
+        return report_format_normal_dto(self.report_format_uid, self.report_format_name, self.class_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7797,7 +10197,7 @@ class report_format_read_dto(base_read_dto, report_format_write_dto):
 
 
 @dataclass(frozen=False)
-class report_run_read_dto(base_read_dto, report_run_write_dto):
+class report_run_read_dto(base_read_dto, report_run_write_dto, report_run_interface_dto):
     report_run_uid: str
     report_run_name: str
     tenant_uid: str
@@ -7880,6 +10280,8 @@ class report_run_read_dto(base_read_dto, report_run_write_dto):
         return report_run_write_dto(self.report_run_uid, self.report_run_name, self.tenant_uid, self.account_uid, self.report_uid, self.report_format_uid, self.report_status_uid, self.report_content_type_uid, self.input_parameters_json, self.run_time_ms, self.returned_rows, self.content_size, self.custom_attributes)
     def to_thin(self) -> report_run_thin_dto:
         return report_run_thin_dto(self.report_run_uid, self.report_run_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_run_normal_dto:
+        return report_run_normal_dto(self.report_run_uid, self.report_run_name, self.tenant_uid, self.account_uid, self.report_uid, self.report_format_uid, self.report_status_uid, self.report_content_type_uid, self.input_parameters_json, self.run_time_ms, self.returned_rows, self.content_size, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7897,7 +10299,7 @@ class report_run_read_dto(base_read_dto, report_run_write_dto):
 
 
 @dataclass(frozen=False)
-class report_status_read_dto(base_read_dto, report_status_write_dto):
+class report_status_read_dto(base_read_dto, report_status_write_dto, report_status_interface_dto):
     report_status_uid: str
     report_status_name: str
     row_instance: str
@@ -7960,6 +10362,8 @@ class report_status_read_dto(base_read_dto, report_status_write_dto):
         return report_status_write_dto(self.report_status_uid, self.report_status_name, self.custom_attributes)
     def to_thin(self) -> report_status_thin_dto:
         return report_status_thin_dto(self.report_status_uid, self.report_status_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_status_normal_dto:
+        return report_status_normal_dto(self.report_status_uid, self.report_status_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -7977,7 +10381,7 @@ class report_status_read_dto(base_read_dto, report_status_write_dto):
 
 
 @dataclass(frozen=False)
-class report_type_read_dto(base_read_dto, report_type_write_dto):
+class report_type_read_dto(base_read_dto, report_type_write_dto, report_type_interface_dto):
     report_type_uid: str
     report_type_name: str
     row_instance: str
@@ -8040,6 +10444,8 @@ class report_type_read_dto(base_read_dto, report_type_write_dto):
         return report_type_write_dto(self.report_type_uid, self.report_type_name, self.custom_attributes)
     def to_thin(self) -> report_type_thin_dto:
         return report_type_thin_dto(self.report_type_uid, self.report_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> report_type_normal_dto:
+        return report_type_normal_dto(self.report_type_uid, self.report_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8057,7 +10463,7 @@ class report_type_read_dto(base_read_dto, report_type_write_dto):
 
 
 @dataclass(frozen=False)
-class storage_read_dto(base_read_dto, storage_write_dto):
+class storage_read_dto(base_read_dto, storage_write_dto, storage_interface_dto):
     storage_uid: str
     storage_name: str
     tenant_uid: str
@@ -8130,6 +10536,8 @@ class storage_read_dto(base_read_dto, storage_write_dto):
         return storage_write_dto(self.storage_uid, self.storage_name, self.tenant_uid, self.account_uid, self.storage_type_uid, self.storage_category_uid, self.storage_parameters_json, self.custom_attributes)
     def to_thin(self) -> storage_thin_dto:
         return storage_thin_dto(self.storage_uid, self.storage_name, self.created_date, self.is_active)
+    def to_normal(self) -> storage_normal_dto:
+        return storage_normal_dto(self.storage_uid, self.storage_name, self.tenant_uid, self.account_uid, self.storage_type_uid, self.storage_category_uid, self.storage_parameters_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8147,7 +10555,7 @@ class storage_read_dto(base_read_dto, storage_write_dto):
 
 
 @dataclass(frozen=False)
-class storage_category_read_dto(base_read_dto, storage_category_write_dto):
+class storage_category_read_dto(base_read_dto, storage_category_write_dto, storage_category_interface_dto):
     storage_category_uid: str
     storage_category_name: str
     row_instance: str
@@ -8210,6 +10618,8 @@ class storage_category_read_dto(base_read_dto, storage_category_write_dto):
         return storage_category_write_dto(self.storage_category_uid, self.storage_category_name, self.custom_attributes)
     def to_thin(self) -> storage_category_thin_dto:
         return storage_category_thin_dto(self.storage_category_uid, self.storage_category_name, self.created_date, self.is_active)
+    def to_normal(self) -> storage_category_normal_dto:
+        return storage_category_normal_dto(self.storage_category_uid, self.storage_category_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8227,7 +10637,7 @@ class storage_category_read_dto(base_read_dto, storage_category_write_dto):
 
 
 @dataclass(frozen=False)
-class storage_connection_read_dto(base_read_dto, storage_connection_write_dto):
+class storage_connection_read_dto(base_read_dto, storage_connection_write_dto, storage_connection_interface_dto):
     storage_connection_uid: str
     storage_connection_name: str
     storage_uid: str
@@ -8296,6 +10706,8 @@ class storage_connection_read_dto(base_read_dto, storage_connection_write_dto):
         return storage_connection_write_dto(self.storage_connection_uid, self.storage_connection_name, self.storage_uid, self.connection_type, self.storage_parameters_json, self.custom_attributes)
     def to_thin(self) -> storage_connection_thin_dto:
         return storage_connection_thin_dto(self.storage_connection_uid, self.storage_connection_name, self.created_date, self.is_active)
+    def to_normal(self) -> storage_connection_normal_dto:
+        return storage_connection_normal_dto(self.storage_connection_uid, self.storage_connection_name, self.storage_uid, self.connection_type, self.storage_parameters_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8313,7 +10725,7 @@ class storage_connection_read_dto(base_read_dto, storage_connection_write_dto):
 
 
 @dataclass(frozen=False)
-class storage_query_read_dto(base_read_dto, storage_query_write_dto):
+class storage_query_read_dto(base_read_dto, storage_query_write_dto, storage_query_interface_dto):
     storage_query_uid: str
     storage_query_name: str
     storage_uid: str
@@ -8388,6 +10800,8 @@ class storage_query_read_dto(base_read_dto, storage_query_write_dto):
         return storage_query_write_dto(self.storage_query_uid, self.storage_query_name, self.storage_uid, self.query_content, self.query_parameters_json, self.execution_status, self.execution_time, self.execution_rows, self.custom_attributes)
     def to_thin(self) -> storage_query_thin_dto:
         return storage_query_thin_dto(self.storage_query_uid, self.storage_query_name, self.created_date, self.is_active)
+    def to_normal(self) -> storage_query_normal_dto:
+        return storage_query_normal_dto(self.storage_query_uid, self.storage_query_name, self.storage_uid, self.query_content, self.query_parameters_json, self.execution_status, self.execution_time, self.execution_rows, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8405,7 +10819,7 @@ class storage_query_read_dto(base_read_dto, storage_query_write_dto):
 
 
 @dataclass(frozen=False)
-class storage_type_read_dto(base_read_dto, storage_type_write_dto):
+class storage_type_read_dto(base_read_dto, storage_type_write_dto, storage_type_interface_dto):
     storage_type_uid: str
     storage_type_name: str
     storage_class: str
@@ -8470,6 +10884,8 @@ class storage_type_read_dto(base_read_dto, storage_type_write_dto):
         return storage_type_write_dto(self.storage_type_uid, self.storage_type_name, self.storage_class, self.custom_attributes)
     def to_thin(self) -> storage_type_thin_dto:
         return storage_type_thin_dto(self.storage_type_uid, self.storage_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> storage_type_normal_dto:
+        return storage_type_normal_dto(self.storage_type_uid, self.storage_type_name, self.storage_class, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8487,7 +10903,7 @@ class storage_type_read_dto(base_read_dto, storage_type_write_dto):
 
 
 @dataclass(frozen=False)
-class synchronization_read_dto(base_read_dto, synchronization_write_dto):
+class synchronization_read_dto(base_read_dto, synchronization_write_dto, synchronization_interface_dto):
     synchronization_uid: str
     synchronization_name: str
     tenant_uid: str
@@ -8568,6 +10984,8 @@ class synchronization_read_dto(base_read_dto, synchronization_write_dto):
         return synchronization_write_dto(self.synchronization_uid, self.synchronization_name, self.tenant_uid, self.synchronization_type_uid, self.storage_uid, self.sync_expression, self.sync_query, self.sync_definition, self.sync_priority, self.last_run_date, self.last_run_seconds, self.custom_attributes)
     def to_thin(self) -> synchronization_thin_dto:
         return synchronization_thin_dto(self.synchronization_uid, self.synchronization_name, self.created_date, self.is_active)
+    def to_normal(self) -> synchronization_normal_dto:
+        return synchronization_normal_dto(self.synchronization_uid, self.synchronization_name, self.tenant_uid, self.synchronization_type_uid, self.storage_uid, self.sync_expression, self.sync_query, self.sync_definition, self.sync_priority, self.last_run_date, self.last_run_seconds, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8585,7 +11003,7 @@ class synchronization_read_dto(base_read_dto, synchronization_write_dto):
 
 
 @dataclass(frozen=False)
-class synchronization_run_read_dto(base_read_dto, synchronization_run_write_dto):
+class synchronization_run_read_dto(base_read_dto, synchronization_run_write_dto, synchronization_run_interface_dto):
     synchronization_run_uid: str
     synchronization_run_name: str
     synchronization_uid: str
@@ -8656,6 +11074,8 @@ class synchronization_run_read_dto(base_read_dto, synchronization_run_write_dto)
         return synchronization_run_write_dto(self.synchronization_run_uid, self.synchronization_run_name, self.synchronization_uid, self.run_status, self.run_time_seconds, self.copied_items, self.custom_attributes)
     def to_thin(self) -> synchronization_run_thin_dto:
         return synchronization_run_thin_dto(self.synchronization_run_uid, self.synchronization_run_name, self.created_date, self.is_active)
+    def to_normal(self) -> synchronization_run_normal_dto:
+        return synchronization_run_normal_dto(self.synchronization_run_uid, self.synchronization_run_name, self.synchronization_uid, self.run_status, self.run_time_seconds, self.copied_items, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8673,7 +11093,7 @@ class synchronization_run_read_dto(base_read_dto, synchronization_run_write_dto)
 
 
 @dataclass(frozen=False)
-class synchronization_type_read_dto(base_read_dto, synchronization_type_write_dto):
+class synchronization_type_read_dto(base_read_dto, synchronization_type_write_dto, synchronization_type_interface_dto):
     synchronization_type_uid: str
     synchronization_type_name: str
     sync_type: str
@@ -8740,6 +11160,8 @@ class synchronization_type_read_dto(base_read_dto, synchronization_type_write_dt
         return synchronization_type_write_dto(self.synchronization_type_uid, self.synchronization_type_name, self.sync_type, self.sync_class_name, self.custom_attributes)
     def to_thin(self) -> synchronization_type_thin_dto:
         return synchronization_type_thin_dto(self.synchronization_type_uid, self.synchronization_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> synchronization_type_normal_dto:
+        return synchronization_type_normal_dto(self.synchronization_type_uid, self.synchronization_type_name, self.sync_type, self.sync_class_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8757,7 +11179,7 @@ class synchronization_type_read_dto(base_read_dto, synchronization_type_write_dt
 
 
 @dataclass(frozen=False)
-class system_attribute_read_dto(base_read_dto, system_attribute_write_dto):
+class system_attribute_read_dto(base_read_dto, system_attribute_write_dto, system_attribute_interface_dto):
     system_attribute_uid: str
     system_attribute_name: str
     system_table_uid: str
@@ -8842,6 +11264,8 @@ class system_attribute_read_dto(base_read_dto, system_attribute_write_dto):
         return system_attribute_write_dto(self.system_attribute_uid, self.system_attribute_name, self.system_table_uid, self.column_name, self.attribute_type, self.attribute_category, self.attribute_label, self.attribute_description, self.ordinal_position, self.is_hidden, self.is_meta, self.is_secret, self.is_full_search, self.custom_attributes)
     def to_thin(self) -> system_attribute_thin_dto:
         return system_attribute_thin_dto(self.system_attribute_uid, self.system_attribute_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_attribute_normal_dto:
+        return system_attribute_normal_dto(self.system_attribute_uid, self.system_attribute_name, self.system_table_uid, self.column_name, self.attribute_type, self.attribute_category, self.attribute_label, self.attribute_description, self.ordinal_position, self.is_hidden, self.is_meta, self.is_secret, self.is_full_search, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8859,7 +11283,7 @@ class system_attribute_read_dto(base_read_dto, system_attribute_write_dto):
 
 
 @dataclass(frozen=False)
-class system_constraint_read_dto(base_read_dto, system_constraint_write_dto):
+class system_constraint_read_dto(base_read_dto, system_constraint_write_dto, system_constraint_interface_dto):
     system_constraint_uid: str
     system_constraint_name: str
     system_table_uid: str
@@ -8932,6 +11356,8 @@ class system_constraint_read_dto(base_read_dto, system_constraint_write_dto):
         return system_constraint_write_dto(self.system_constraint_uid, self.system_constraint_name, self.system_table_uid, self.system_attribute_uid, self.tenant_uid, self.constraint_class, self.constraint_params_json, self.custom_attributes)
     def to_thin(self) -> system_constraint_thin_dto:
         return system_constraint_thin_dto(self.system_constraint_uid, self.system_constraint_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_constraint_normal_dto:
+        return system_constraint_normal_dto(self.system_constraint_uid, self.system_constraint_name, self.system_table_uid, self.system_attribute_uid, self.tenant_uid, self.constraint_class, self.constraint_params_json, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -8949,7 +11375,7 @@ class system_constraint_read_dto(base_read_dto, system_constraint_write_dto):
 
 
 @dataclass(frozen=False)
-class system_database_read_dto(base_read_dto, system_database_write_dto):
+class system_database_read_dto(base_read_dto, system_database_write_dto, system_database_interface_dto):
     system_database_uid: str
     system_database_name: str
     db_url: str
@@ -8958,6 +11384,8 @@ class system_database_read_dto(base_read_dto, system_database_write_dto):
     db_user: str
     last_status_name: str
     last_db_size: int
+    created_connections: int
+    released_connections: int
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -8972,7 +11400,7 @@ class system_database_read_dto(base_read_dto, system_database_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.system_database_uid = system_database_uid
         self.system_database_name = system_database_name
         self.db_url = db_url
@@ -8981,6 +11409,8 @@ class system_database_read_dto(base_read_dto, system_database_write_dto):
         self.db_user = db_user
         self.last_status_name = last_status_name
         self.last_db_size = last_db_size
+        self.created_connections = created_connections
+        self.released_connections = released_connections
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -8997,41 +11427,43 @@ class system_database_read_dto(base_read_dto, system_database_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", "", "", 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", "", 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, 0, 0, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int):
-        return cls(0, system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int):
+        return cls(0, system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: system_database_write_dto):
-        return cls(0, dto.system_database_uid, dto.system_database_name, dto.db_url, dto.db_host, dto.db_name, dto.db_user, dto.last_status_name, dto.last_db_size, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.system_database_uid, dto.system_database_name, dto.db_url, dto.db_host, dto.db_name, dto.db_user, dto.last_status_name, dto.last_db_size, dto.created_connections, dto.released_connections, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return system_database_read_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return system_database_read_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["system_database_uid"], d["system_database_name"], d["db_url"], d["db_host"], d["db_name"], d["db_user"], d["last_status_name"], d["last_db_size"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["system_database_uid"], d["system_database_name"], d["db_url"], d["db_host"], d["db_name"], d["db_user"], d["last_status_name"], d["last_db_size"], d["created_connections"], d["released_connections"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> system_database_write_dto:
-        return system_database_write_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes)
+        return system_database_write_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes)
     def to_thin(self) -> system_database_thin_dto:
         return system_database_thin_dto(self.system_database_uid, self.system_database_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_database_normal_dto:
+        return system_database_normal_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes, updated_by, self.system_database_uid]
+        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes, updated_by, self.system_database_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -9041,7 +11473,7 @@ class system_database_read_dto(base_read_dto, system_database_write_dto):
 
 
 @dataclass(frozen=False)
-class system_exception_read_dto(base_read_dto, system_exception_write_dto):
+class system_exception_read_dto(base_read_dto, system_exception_write_dto, system_exception_interface_dto):
     system_exception_uid: str
     system_exception_name: str
     exception_class: str
@@ -9110,6 +11542,8 @@ class system_exception_read_dto(base_read_dto, system_exception_write_dto):
         return system_exception_write_dto(self.system_exception_uid, self.system_exception_name, self.exception_class, self.exception_message, self.exception_stacktrace, self.custom_attributes)
     def to_thin(self) -> system_exception_thin_dto:
         return system_exception_thin_dto(self.system_exception_uid, self.system_exception_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_exception_normal_dto:
+        return system_exception_normal_dto(self.system_exception_uid, self.system_exception_name, self.exception_class, self.exception_message, self.exception_stacktrace, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9127,7 +11561,7 @@ class system_exception_read_dto(base_read_dto, system_exception_write_dto):
 
 
 @dataclass(frozen=False)
-class system_instance_read_dto(base_read_dto, system_instance_write_dto):
+class system_instance_read_dto(base_read_dto, system_instance_write_dto, system_instance_interface_dto):
     system_instance_uid: str
     system_instance_name: str
     system_version_uid: str
@@ -9202,6 +11636,8 @@ class system_instance_read_dto(base_read_dto, system_instance_write_dto):
         return system_instance_write_dto(self.system_instance_uid, self.system_instance_name, self.system_version_uid, self.host_name, self.host_ip, self.local_path, self.mode_name, self.ticks_count, self.custom_attributes)
     def to_thin(self) -> system_instance_thin_dto:
         return system_instance_thin_dto(self.system_instance_uid, self.system_instance_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_instance_normal_dto:
+        return system_instance_normal_dto(self.system_instance_uid, self.system_instance_name, self.system_version_uid, self.host_name, self.host_ip, self.local_path, self.mode_name, self.ticks_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9219,10 +11655,11 @@ class system_instance_read_dto(base_read_dto, system_instance_write_dto):
 
 
 @dataclass(frozen=False)
-class system_license_read_dto(base_read_dto, system_license_write_dto):
+class system_license_read_dto(base_read_dto, system_license_write_dto, system_license_interface_dto):
     system_license_uid: str
     system_license_name: str
     class_name: str
+    license_definition_json: str
     license_description: str
     row_instance: str
     row_lock: str | None
@@ -9238,10 +11675,11 @@ class system_license_read_dto(base_read_dto, system_license_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.system_license_uid = system_license_uid
         self.system_license_name = system_license_name
         self.class_name = class_name
+        self.license_definition_json = license_definition_json
         self.license_description = license_description
         self.row_instance = row_instance
         self.row_lock = row_lock
@@ -9259,41 +11697,43 @@ class system_license_read_dto(base_read_dto, system_license_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, system_license_uid: str, system_license_name: str, class_name: str, license_description: str):
-        return cls(0, system_license_uid, system_license_name, class_name, license_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str):
+        return cls(0, system_license_uid, system_license_name, class_name, license_definition_json, license_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(system_license_uid, system_license_name, class_name, license_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(system_license_uid, system_license_name, class_name, license_definition_json, license_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: system_license_write_dto):
-        return cls(0, dto.system_license_uid, dto.system_license_name, dto.class_name, dto.license_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.system_license_uid, dto.system_license_name, dto.class_name, dto.license_definition_json, dto.license_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return system_license_read_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return system_license_read_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["system_license_uid"], d["system_license_name"], d["class_name"], d["license_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["system_license_uid"], d["system_license_name"], d["class_name"], d["license_definition_json"], d["license_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> system_license_write_dto:
-        return system_license_write_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.custom_attributes)
+        return system_license_write_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes)
     def to_thin(self) -> system_license_thin_dto:
         return system_license_thin_dto(self.system_license_uid, self.system_license_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_license_normal_dto:
+        return system_license_normal_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.system_license_name, self.class_name, self.license_description, self.custom_attributes, updated_by, self.system_license_uid]
+        return [self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes, updated_by, self.system_license_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -9303,7 +11743,7 @@ class system_license_read_dto(base_read_dto, system_license_write_dto):
 
 
 @dataclass(frozen=False)
-class system_lock_read_dto(base_read_dto, system_lock_write_dto):
+class system_lock_read_dto(base_read_dto, system_lock_write_dto, system_lock_interface_dto):
     system_lock_uid: str
     system_lock_name: str
     lock_account_uid: str
@@ -9372,6 +11812,8 @@ class system_lock_read_dto(base_read_dto, system_lock_write_dto):
         return system_lock_write_dto(self.system_lock_uid, self.system_lock_name, self.lock_account_uid, self.lock_comment, self.lock_reason, self.custom_attributes)
     def to_thin(self) -> system_lock_thin_dto:
         return system_lock_thin_dto(self.system_lock_uid, self.system_lock_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_lock_normal_dto:
+        return system_lock_normal_dto(self.system_lock_uid, self.system_lock_name, self.lock_account_uid, self.lock_comment, self.lock_reason, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9389,7 +11831,7 @@ class system_lock_read_dto(base_read_dto, system_lock_write_dto):
 
 
 @dataclass(frozen=False)
-class system_module_read_dto(base_read_dto, system_module_write_dto):
+class system_module_read_dto(base_read_dto, system_module_write_dto, system_module_interface_dto):
     system_module_uid: str
     system_module_name: str
     system_module_description: str
@@ -9454,6 +11896,8 @@ class system_module_read_dto(base_read_dto, system_module_write_dto):
         return system_module_write_dto(self.system_module_uid, self.system_module_name, self.system_module_description, self.custom_attributes)
     def to_thin(self) -> system_module_thin_dto:
         return system_module_thin_dto(self.system_module_uid, self.system_module_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_module_normal_dto:
+        return system_module_normal_dto(self.system_module_uid, self.system_module_name, self.system_module_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9471,7 +11915,7 @@ class system_module_read_dto(base_read_dto, system_module_write_dto):
 
 
 @dataclass(frozen=False)
-class system_query_read_dto(base_read_dto, system_query_write_dto):
+class system_query_read_dto(base_read_dto, system_query_write_dto, system_query_interface_dto):
     system_query_uid: str
     system_query_name: str
     time_start: int
@@ -9556,6 +12000,8 @@ class system_query_read_dto(base_read_dto, system_query_write_dto):
         return system_query_write_dto(self.system_query_uid, self.system_query_name, self.time_start, self.total_query_time, self.query_seq, self.execution_counter, self.connection_counter, self.release_counter, self.current_active, self.current_idle, self.table_name, self.rows_count, self.sql, self.custom_attributes)
     def to_thin(self) -> system_query_thin_dto:
         return system_query_thin_dto(self.system_query_uid, self.system_query_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_query_normal_dto:
+        return system_query_normal_dto(self.system_query_uid, self.system_query_name, self.time_start, self.total_query_time, self.query_seq, self.execution_counter, self.connection_counter, self.release_counter, self.current_active, self.current_idle, self.table_name, self.rows_count, self.sql, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9573,7 +12019,7 @@ class system_query_read_dto(base_read_dto, system_query_write_dto):
 
 
 @dataclass(frozen=False)
-class system_request_read_dto(base_read_dto, system_request_write_dto):
+class system_request_read_dto(base_read_dto, system_request_write_dto, system_request_interface_dto):
     system_request_uid: str
     system_request_name: str
     account_uid: str | None
@@ -9650,6 +12096,8 @@ class system_request_read_dto(base_read_dto, system_request_write_dto):
         return system_request_write_dto(self.system_request_uid, self.system_request_name, self.account_uid, self.request_method, self.request_url, self.request_body_size, self.request_host, self.request_time, self.response_code, self.custom_attributes)
     def to_thin(self) -> system_request_thin_dto:
         return system_request_thin_dto(self.system_request_uid, self.system_request_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_request_normal_dto:
+        return system_request_normal_dto(self.system_request_uid, self.system_request_name, self.account_uid, self.request_method, self.request_url, self.request_body_size, self.request_host, self.request_time, self.response_code, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9667,7 +12115,7 @@ class system_request_read_dto(base_read_dto, system_request_write_dto):
 
 
 @dataclass(frozen=False)
-class system_setting_read_dto(base_read_dto, system_setting_write_dto):
+class system_setting_read_dto(base_read_dto, system_setting_write_dto, system_setting_interface_dto):
     system_setting_uid: str
     system_setting_name: str
     setting_value: str
@@ -9736,6 +12184,8 @@ class system_setting_read_dto(base_read_dto, system_setting_write_dto):
         return system_setting_write_dto(self.system_setting_uid, self.system_setting_name, self.setting_value, self.setting_type, self.is_public, self.custom_attributes)
     def to_thin(self) -> system_setting_thin_dto:
         return system_setting_thin_dto(self.system_setting_uid, self.system_setting_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_setting_normal_dto:
+        return system_setting_normal_dto(self.system_setting_uid, self.system_setting_name, self.setting_value, self.setting_type, self.is_public, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9753,7 +12203,7 @@ class system_setting_read_dto(base_read_dto, system_setting_write_dto):
 
 
 @dataclass(frozen=False)
-class system_setting_account_read_dto(base_read_dto, system_setting_account_write_dto):
+class system_setting_account_read_dto(base_read_dto, system_setting_account_write_dto, system_setting_account_interface_dto):
     system_setting_account_uid: str
     system_setting_account_name: str
     account_uid: str
@@ -9822,6 +12272,8 @@ class system_setting_account_read_dto(base_read_dto, system_setting_account_writ
         return system_setting_account_write_dto(self.system_setting_account_uid, self.system_setting_account_name, self.account_uid, self.setting_value, self.is_public, self.custom_attributes)
     def to_thin(self) -> system_setting_account_thin_dto:
         return system_setting_account_thin_dto(self.system_setting_account_uid, self.system_setting_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_setting_account_normal_dto:
+        return system_setting_account_normal_dto(self.system_setting_account_uid, self.system_setting_account_name, self.account_uid, self.setting_value, self.is_public, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9839,7 +12291,7 @@ class system_setting_account_read_dto(base_read_dto, system_setting_account_writ
 
 
 @dataclass(frozen=False)
-class system_state_read_dto(base_read_dto, system_state_write_dto):
+class system_state_read_dto(base_read_dto, system_state_write_dto, system_state_interface_dto):
     system_state_uid: str
     system_state_name: str
     mem_free: int
@@ -9908,6 +12360,8 @@ class system_state_read_dto(base_read_dto, system_state_write_dto):
         return system_state_write_dto(self.system_state_uid, self.system_state_name, self.mem_free, self.mem_max, self.objects_count, self.custom_attributes)
     def to_thin(self) -> system_state_thin_dto:
         return system_state_thin_dto(self.system_state_uid, self.system_state_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_state_normal_dto:
+        return system_state_normal_dto(self.system_state_uid, self.system_state_name, self.mem_free, self.mem_max, self.objects_count, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -9925,7 +12379,7 @@ class system_state_read_dto(base_read_dto, system_state_write_dto):
 
 
 @dataclass(frozen=False)
-class system_table_read_dto(base_read_dto, system_table_write_dto):
+class system_table_read_dto(base_read_dto, system_table_write_dto, system_table_interface_dto):
     system_table_uid: str
     system_table_name: str
     parent_system_table_uid: str | None
@@ -10014,6 +12468,8 @@ class system_table_read_dto(base_read_dto, system_table_write_dto):
         return system_table_write_dto(self.system_table_uid, self.system_table_name, self.parent_system_table_uid, self.table_label, self.uid_name, self.table_group, self.table_code, self.table_type, self.table_category, self.cardinality, self.is_object, self.is_rich, self.is_tenant, self.is_local, self.table_comment, self.custom_attributes)
     def to_thin(self) -> system_table_thin_dto:
         return system_table_thin_dto(self.system_table_uid, self.system_table_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_table_normal_dto:
+        return system_table_normal_dto(self.system_table_uid, self.system_table_name, self.parent_system_table_uid, self.table_label, self.uid_name, self.table_group, self.table_code, self.table_type, self.table_category, self.cardinality, self.is_object, self.is_rich, self.is_tenant, self.is_local, self.table_comment, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10031,7 +12487,7 @@ class system_table_read_dto(base_read_dto, system_table_write_dto):
 
 
 @dataclass(frozen=False)
-class system_thread_read_dto(base_read_dto, system_thread_write_dto):
+class system_thread_read_dto(base_read_dto, system_thread_write_dto, system_thread_interface_dto):
     system_thread_uid: str
     system_thread_name: str
     thread_name: str
@@ -10106,6 +12562,8 @@ class system_thread_read_dto(base_read_dto, system_thread_write_dto):
         return system_thread_write_dto(self.system_thread_uid, self.system_thread_name, self.thread_name, self.thread_id, self.parent_object, self.ticks_count, self.is_alive, self.sleep_time, self.custom_attributes)
     def to_thin(self) -> system_thread_thin_dto:
         return system_thread_thin_dto(self.system_thread_uid, self.system_thread_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_thread_normal_dto:
+        return system_thread_normal_dto(self.system_thread_uid, self.system_thread_name, self.thread_name, self.thread_id, self.parent_object, self.ticks_count, self.is_alive, self.sleep_time, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10123,7 +12581,7 @@ class system_thread_read_dto(base_read_dto, system_thread_write_dto):
 
 
 @dataclass(frozen=False)
-class system_version_read_dto(base_read_dto, system_version_write_dto):
+class system_version_read_dto(base_read_dto, system_version_write_dto, system_version_interface_dto):
     system_version_uid: str
     system_version_name: str
     version_description: str
@@ -10188,6 +12646,8 @@ class system_version_read_dto(base_read_dto, system_version_write_dto):
         return system_version_write_dto(self.system_version_uid, self.system_version_name, self.version_description, self.custom_attributes)
     def to_thin(self) -> system_version_thin_dto:
         return system_version_thin_dto(self.system_version_uid, self.system_version_name, self.created_date, self.is_active)
+    def to_normal(self) -> system_version_normal_dto:
+        return system_version_normal_dto(self.system_version_uid, self.system_version_name, self.version_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10205,12 +12665,13 @@ class system_version_read_dto(base_read_dto, system_version_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_read_dto(base_read_dto, tenant_write_dto):
+class tenant_read_dto(base_read_dto, tenant_write_dto, tenant_interface_dto):
     tenant_uid: str
     tenant_name: str
     country_uid: str
     tenant_type_uid: str
     tenant_category_uid: str
+    tenant_status_uid: str
     tenant_code: str
     tenant_description: str
     start_date: datetime.datetime
@@ -10233,12 +12694,13 @@ class tenant_read_dto(base_read_dto, tenant_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.tenant_uid = tenant_uid
         self.tenant_name = tenant_name
         self.country_uid = country_uid
         self.tenant_type_uid = tenant_type_uid
         self.tenant_category_uid = tenant_category_uid
+        self.tenant_status_uid = tenant_status_uid
         self.tenant_code = tenant_code
         self.tenant_description = tenant_description
         self.start_date = start_date
@@ -10263,41 +12725,43 @@ class tenant_read_dto(base_read_dto, tenant_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
-        return cls(0, tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
+        return cls(0, tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: tenant_write_dto):
-        return cls(0, dto.tenant_uid, dto.tenant_name, dto.country_uid, dto.tenant_type_uid, dto.tenant_category_uid, dto.tenant_code, dto.tenant_description, dto.start_date, dto.end_date, dto.is_internal, dto.is_system, dto.is_test, dto.account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.tenant_uid, dto.tenant_name, dto.country_uid, dto.tenant_type_uid, dto.tenant_category_uid, dto.tenant_status_uid, dto.tenant_code, dto.tenant_description, dto.start_date, dto.end_date, dto.is_internal, dto.is_system, dto.is_test, dto.account_uid, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return tenant_read_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return tenant_read_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["tenant_uid"], d["tenant_name"], d["country_uid"], d["tenant_type_uid"], d["tenant_category_uid"], d["tenant_code"], d["tenant_description"], d["start_date"], d["end_date"], d["is_internal"], d["is_system"], d["is_test"], d["account_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["tenant_uid"], d["tenant_name"], d["country_uid"], d["tenant_type_uid"], d["tenant_category_uid"], d["tenant_status_uid"], d["tenant_code"], d["tenant_description"], d["start_date"], d["end_date"], d["is_internal"], d["is_system"], d["is_test"], d["account_uid"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> tenant_write_dto:
-        return tenant_write_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
+        return tenant_write_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
     def to_thin(self) -> tenant_thin_dto:
         return tenant_thin_dto(self.tenant_uid, self.tenant_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_normal_dto:
+        return tenant_normal_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes, updated_by, self.tenant_uid]
+        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes, updated_by, self.tenant_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -10307,7 +12771,7 @@ class tenant_read_dto(base_read_dto, tenant_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_account_read_dto(base_read_dto, tenant_account_write_dto):
+class tenant_account_read_dto(base_read_dto, tenant_account_write_dto, tenant_account_interface_dto):
     tenant_account_uid: str
     tenant_account_name: str
     tenant_uid: str
@@ -10376,6 +12840,8 @@ class tenant_account_read_dto(base_read_dto, tenant_account_write_dto):
         return tenant_account_write_dto(self.tenant_account_uid, self.tenant_account_name, self.tenant_uid, self.account_uid, self.tenant_role_uid, self.custom_attributes)
     def to_thin(self) -> tenant_account_thin_dto:
         return tenant_account_thin_dto(self.tenant_account_uid, self.tenant_account_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_account_normal_dto:
+        return tenant_account_normal_dto(self.tenant_account_uid, self.tenant_account_name, self.tenant_uid, self.account_uid, self.tenant_role_uid, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10393,7 +12859,7 @@ class tenant_account_read_dto(base_read_dto, tenant_account_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_category_read_dto(base_read_dto, tenant_category_write_dto):
+class tenant_category_read_dto(base_read_dto, tenant_category_write_dto, tenant_category_interface_dto):
     tenant_category_uid: str
     tenant_category_name: str
     tenant_category_description: str
@@ -10458,6 +12924,8 @@ class tenant_category_read_dto(base_read_dto, tenant_category_write_dto):
         return tenant_category_write_dto(self.tenant_category_uid, self.tenant_category_name, self.tenant_category_description, self.custom_attributes)
     def to_thin(self) -> tenant_category_thin_dto:
         return tenant_category_thin_dto(self.tenant_category_uid, self.tenant_category_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_category_normal_dto:
+        return tenant_category_normal_dto(self.tenant_category_uid, self.tenant_category_name, self.tenant_category_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10475,7 +12943,7 @@ class tenant_category_read_dto(base_read_dto, tenant_category_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_country_read_dto(base_read_dto, tenant_country_write_dto):
+class tenant_country_read_dto(base_read_dto, tenant_country_write_dto, tenant_country_interface_dto):
     tenant_country_uid: str
     tenant_country_name: str
     country_uid: str
@@ -10544,6 +13012,8 @@ class tenant_country_read_dto(base_read_dto, tenant_country_write_dto):
         return tenant_country_write_dto(self.tenant_country_uid, self.tenant_country_name, self.country_uid, self.tenant_uid, self.country_priority, self.custom_attributes)
     def to_thin(self) -> tenant_country_thin_dto:
         return tenant_country_thin_dto(self.tenant_country_uid, self.tenant_country_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_country_normal_dto:
+        return tenant_country_normal_dto(self.tenant_country_uid, self.tenant_country_name, self.country_uid, self.tenant_uid, self.country_priority, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10561,7 +13031,7 @@ class tenant_country_read_dto(base_read_dto, tenant_country_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_license_read_dto(base_read_dto, tenant_license_write_dto):
+class tenant_license_read_dto(base_read_dto, tenant_license_write_dto, tenant_license_interface_dto):
     tenant_license_uid: str
     tenant_license_name: str
     tenant_uid: str
@@ -10636,6 +13106,8 @@ class tenant_license_read_dto(base_read_dto, tenant_license_write_dto):
         return tenant_license_write_dto(self.tenant_license_uid, self.tenant_license_name, self.tenant_uid, self.system_license_uid, self.start_date, self.end_date, self.accounts_count, self.is_approved, self.custom_attributes)
     def to_thin(self) -> tenant_license_thin_dto:
         return tenant_license_thin_dto(self.tenant_license_uid, self.tenant_license_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_license_normal_dto:
+        return tenant_license_normal_dto(self.tenant_license_uid, self.tenant_license_name, self.tenant_uid, self.system_license_uid, self.start_date, self.end_date, self.accounts_count, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10653,7 +13125,7 @@ class tenant_license_read_dto(base_read_dto, tenant_license_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_payment_read_dto(base_read_dto, tenant_payment_write_dto):
+class tenant_payment_read_dto(base_read_dto, tenant_payment_write_dto, tenant_payment_interface_dto):
     tenant_payment_uid: str
     tenant_payment_name: str
     tenant_uid: str
@@ -10736,6 +13208,8 @@ class tenant_payment_read_dto(base_read_dto, tenant_payment_write_dto):
         return tenant_payment_write_dto(self.tenant_payment_uid, self.tenant_payment_name, self.tenant_uid, self.account_uid, self.currency_uid, self.tenant_payment_type_uid, self.start_date, self.end_date, self.payment_value, self.source_number, self.source_reference, self.is_approved, self.custom_attributes)
     def to_thin(self) -> tenant_payment_thin_dto:
         return tenant_payment_thin_dto(self.tenant_payment_uid, self.tenant_payment_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_payment_normal_dto:
+        return tenant_payment_normal_dto(self.tenant_payment_uid, self.tenant_payment_name, self.tenant_uid, self.account_uid, self.currency_uid, self.tenant_payment_type_uid, self.start_date, self.end_date, self.payment_value, self.source_number, self.source_reference, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10753,7 +13227,7 @@ class tenant_payment_read_dto(base_read_dto, tenant_payment_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_payment_type_read_dto(base_read_dto, tenant_payment_type_write_dto):
+class tenant_payment_type_read_dto(base_read_dto, tenant_payment_type_write_dto, tenant_payment_type_interface_dto):
     tenant_payment_type_uid: str
     tenant_payment_type_name: str
     row_instance: str
@@ -10816,6 +13290,8 @@ class tenant_payment_type_read_dto(base_read_dto, tenant_payment_type_write_dto)
         return tenant_payment_type_write_dto(self.tenant_payment_type_uid, self.tenant_payment_type_name, self.custom_attributes)
     def to_thin(self) -> tenant_payment_type_thin_dto:
         return tenant_payment_type_thin_dto(self.tenant_payment_type_uid, self.tenant_payment_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_payment_type_normal_dto:
+        return tenant_payment_type_normal_dto(self.tenant_payment_type_uid, self.tenant_payment_type_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10833,7 +13309,7 @@ class tenant_payment_type_read_dto(base_read_dto, tenant_payment_type_write_dto)
 
 
 @dataclass(frozen=False)
-class tenant_role_read_dto(base_read_dto, tenant_role_write_dto):
+class tenant_role_read_dto(base_read_dto, tenant_role_write_dto, tenant_role_interface_dto):
     tenant_role_uid: str
     tenant_role_name: str
     role_description: str
@@ -10898,6 +13374,8 @@ class tenant_role_read_dto(base_read_dto, tenant_role_write_dto):
         return tenant_role_write_dto(self.tenant_role_uid, self.tenant_role_name, self.role_description, self.custom_attributes)
     def to_thin(self) -> tenant_role_thin_dto:
         return tenant_role_thin_dto(self.tenant_role_uid, self.tenant_role_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_role_normal_dto:
+        return tenant_role_normal_dto(self.tenant_role_uid, self.tenant_role_name, self.role_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10915,7 +13393,7 @@ class tenant_role_read_dto(base_read_dto, tenant_role_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_status_read_dto(base_read_dto, tenant_status_write_dto):
+class tenant_status_read_dto(base_read_dto, tenant_status_write_dto, tenant_status_interface_dto):
     tenant_status_uid: str
     tenant_status_name: str
     tenant_status_description: str
@@ -10980,6 +13458,8 @@ class tenant_status_read_dto(base_read_dto, tenant_status_write_dto):
         return tenant_status_write_dto(self.tenant_status_uid, self.tenant_status_name, self.tenant_status_description, self.custom_attributes)
     def to_thin(self) -> tenant_status_thin_dto:
         return tenant_status_thin_dto(self.tenant_status_uid, self.tenant_status_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_status_normal_dto:
+        return tenant_status_normal_dto(self.tenant_status_uid, self.tenant_status_name, self.tenant_status_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -10997,10 +13477,11 @@ class tenant_status_read_dto(base_read_dto, tenant_status_write_dto):
 
 
 @dataclass(frozen=False)
-class tenant_type_read_dto(base_read_dto, tenant_type_write_dto):
+class tenant_type_read_dto(base_read_dto, tenant_type_write_dto, tenant_type_interface_dto):
     tenant_type_uid: str
     tenant_type_name: str
     tenant_type_description: str
+    tenant_class: str
     row_instance: str
     row_lock: str | None
     row_owner: str
@@ -11015,10 +13496,11 @@ class tenant_type_read_dto(base_read_dto, tenant_type_write_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str
-    def __init__(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+    def __init__(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
         self.tenant_type_uid = tenant_type_uid
         self.tenant_type_name = tenant_type_name
         self.tenant_type_description = tenant_type_description
+        self.tenant_class = tenant_class
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -11035,41 +13517,43 @@ class tenant_type_read_dto(base_read_dto, tenant_type_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_read(cls):
-        return cls(0, "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, "", "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def default_read(cls):
-        return cls(0, base_dto.get_random_uid(), "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), "", "", "", "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
     def random_read(cls):
-        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+        return cls(0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_default(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str):
-        return cls(0, tenant_type_uid, tenant_type_name, tenant_type_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
+    def new_read_default(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str):
+        return cls(0, tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, "{}")
     @classmethod
-    def new_read_full(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
-        return cls(tenant_type_uid, tenant_type_name, tenant_type_description, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
+    def new_read_full(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str, row_instance: str, row_lock: str | None, row_owner: str, row_seq: int, row_guid: str, row_version: int, is_active: int, created_date: datetime.datetime, created_by: str, last_updated_date: datetime.datetime, last_updated_by: str, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str):
+        return cls(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class, row_instance, row_lock, row_owner, row_seq, row_guid, row_version, is_active, created_date, created_by, last_updated_date, last_updated_by, removed_date, removed_by, custom_attributes)
     @classmethod
     def from_write(cls, dto: tenant_type_write_dto):
-        return cls(0, dto.tenant_type_uid, dto.tenant_type_name, dto.tenant_type_description, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
+        return cls(0, dto.tenant_type_uid, dto.tenant_type_name, dto.tenant_type_description, dto.tenant_class, "", 0, 1, datetime.datetime.now(), "system", datetime.datetime.now(), "system", None, None, dto.custom_attributes)
     def clone_read(self):
-        return tenant_type_read_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
+        return tenant_type_read_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes)
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["tenant_type_uid"], d["tenant_type_name"], d["tenant_type_description"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
+        return cls(d["tenant_type_uid"], d["tenant_type_name"], d["tenant_type_description"], d["tenant_class"], d["row_instance"], d["row_lock"], d["row_owner"], d["row_seq"], d["row_guid"], d["row_version"], d["is_active"], d["created_date"], d["created_by"], d["last_updated_date"], d["last_updated_by"], d["removed_date"], d["removed_by"], d["custom_attributes"])
     def to_read_dict(self) -> dict:
         return asdict(self)
     def to_write(self) -> tenant_type_write_dto:
-        return tenant_type_write_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.custom_attributes)
+        return tenant_type_write_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes)
     def to_thin(self) -> tenant_type_thin_dto:
         return tenant_type_thin_dto(self.tenant_type_uid, self.tenant_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> tenant_type_normal_dto:
+        return tenant_type_normal_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
         self.row_version = self.row_version+1
     def get_list_all_values(self) -> list[any]:
-        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
     def get_list_update_values(self, updated_by: str) -> list[any]:
-        return [self.tenant_type_name, self.tenant_type_description, self.custom_attributes, updated_by, self.tenant_type_uid]
+        return [self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes, updated_by, self.tenant_type_uid]
     def is_older_than(self, dt: datetime.datetime) -> bool:
         return self.created_date < dt
     def is_newer_than(self, dt: datetime.datetime) -> bool:
@@ -11079,7 +13563,7 @@ class tenant_type_read_dto(base_read_dto, tenant_type_write_dto):
 
 
 @dataclass(frozen=False)
-class time_approval_read_dto(base_read_dto, time_approval_write_dto):
+class time_approval_read_dto(base_read_dto, time_approval_write_dto, time_approval_interface_dto):
     time_approval_uid: str
     time_approval_name: str
     tenant_uid: str
@@ -11150,6 +13634,8 @@ class time_approval_read_dto(base_read_dto, time_approval_write_dto):
         return time_approval_write_dto(self.time_approval_uid, self.time_approval_name, self.tenant_uid, self.account_uid, self.time_entry_uid, self.approval_comment, self.custom_attributes)
     def to_thin(self) -> time_approval_thin_dto:
         return time_approval_thin_dto(self.time_approval_uid, self.time_approval_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_approval_normal_dto:
+        return time_approval_normal_dto(self.time_approval_uid, self.time_approval_name, self.tenant_uid, self.account_uid, self.time_entry_uid, self.approval_comment, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11167,7 +13653,7 @@ class time_approval_read_dto(base_read_dto, time_approval_write_dto):
 
 
 @dataclass(frozen=False)
-class time_entry_read_dto(base_read_dto, time_entry_write_dto):
+class time_entry_read_dto(base_read_dto, time_entry_write_dto, time_entry_interface_dto):
     time_entry_uid: str
     time_entry_name: str
     time_submit_uid: str
@@ -11258,6 +13744,8 @@ class time_entry_read_dto(base_read_dto, time_entry_write_dto):
         return time_entry_write_dto(self.time_entry_uid, self.time_entry_name, self.time_submit_uid, self.tenant_uid, self.account_uid, self.project_instance_uid, self.project_milestone_uid, self.period_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_row, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.custom_attributes)
     def to_thin(self) -> time_entry_thin_dto:
         return time_entry_thin_dto(self.time_entry_uid, self.time_entry_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_entry_normal_dto:
+        return time_entry_normal_dto(self.time_entry_uid, self.time_entry_name, self.time_submit_uid, self.tenant_uid, self.account_uid, self.project_instance_uid, self.project_milestone_uid, self.period_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_row, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11275,7 +13763,7 @@ class time_entry_read_dto(base_read_dto, time_entry_write_dto):
 
 
 @dataclass(frozen=False)
-class time_entry_final_read_dto(base_read_dto, time_entry_final_write_dto):
+class time_entry_final_read_dto(base_read_dto, time_entry_final_write_dto, time_entry_final_interface_dto):
     time_entry_final_uid: str
     time_entry_final_name: str
     tenant_uid: str
@@ -11362,6 +13850,8 @@ class time_entry_final_read_dto(base_read_dto, time_entry_final_write_dto):
         return time_entry_final_write_dto(self.time_entry_final_uid, self.time_entry_final_name, self.tenant_uid, self.account_uid, self.project_instance_uid, self.project_milestone_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_uid, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.custom_attributes)
     def to_thin(self) -> time_entry_final_thin_dto:
         return time_entry_final_thin_dto(self.time_entry_final_uid, self.time_entry_final_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_entry_final_normal_dto:
+        return time_entry_final_normal_dto(self.time_entry_final_uid, self.time_entry_final_name, self.tenant_uid, self.account_uid, self.project_instance_uid, self.project_milestone_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_uid, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11379,7 +13869,7 @@ class time_entry_final_read_dto(base_read_dto, time_entry_final_write_dto):
 
 
 @dataclass(frozen=False)
-class time_entry_invoice_read_dto(base_read_dto, time_entry_invoice_write_dto):
+class time_entry_invoice_read_dto(base_read_dto, time_entry_invoice_write_dto, time_entry_invoice_interface_dto):
     time_entry_invoice_uid: str
     time_entry_invoice_name: str
     tenant_uid: str
@@ -11472,6 +13962,8 @@ class time_entry_invoice_read_dto(base_read_dto, time_entry_invoice_write_dto):
         return time_entry_invoice_write_dto(self.time_entry_invoice_uid, self.time_entry_invoice_name, self.tenant_uid, self.account_uid, self.time_submit_uid, self.time_entry_uid, self.project_instance_uid, self.project_milestone_uid, self.period_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_row, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.custom_attributes)
     def to_thin(self) -> time_entry_invoice_thin_dto:
         return time_entry_invoice_thin_dto(self.time_entry_invoice_uid, self.time_entry_invoice_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_entry_invoice_normal_dto:
+        return time_entry_invoice_normal_dto(self.time_entry_invoice_uid, self.time_entry_invoice_name, self.tenant_uid, self.account_uid, self.time_submit_uid, self.time_entry_uid, self.project_instance_uid, self.project_milestone_uid, self.period_uid, self.invoice_instance_uid, self.entry_period, self.entry_note, self.lock_row, self.start_date, self.end_date, self.entry_minutes, self.is_approved, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11489,7 +13981,7 @@ class time_entry_invoice_read_dto(base_read_dto, time_entry_invoice_write_dto):
 
 
 @dataclass(frozen=False)
-class time_rule_read_dto(base_read_dto, time_rule_write_dto):
+class time_rule_read_dto(base_read_dto, time_rule_write_dto, time_rule_interface_dto):
     time_rule_uid: str
     time_rule_name: str
     row_instance: str
@@ -11552,6 +14044,8 @@ class time_rule_read_dto(base_read_dto, time_rule_write_dto):
         return time_rule_write_dto(self.time_rule_uid, self.time_rule_name, self.custom_attributes)
     def to_thin(self) -> time_rule_thin_dto:
         return time_rule_thin_dto(self.time_rule_uid, self.time_rule_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_rule_normal_dto:
+        return time_rule_normal_dto(self.time_rule_uid, self.time_rule_name, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11569,7 +14063,7 @@ class time_rule_read_dto(base_read_dto, time_rule_write_dto):
 
 
 @dataclass(frozen=False)
-class time_rule_client_read_dto(base_read_dto, time_rule_client_write_dto):
+class time_rule_client_read_dto(base_read_dto, time_rule_client_write_dto, time_rule_client_interface_dto):
     time_rule_client_uid: str
     time_rule_client_name: str
     time_rule_definition: str
@@ -11634,6 +14128,8 @@ class time_rule_client_read_dto(base_read_dto, time_rule_client_write_dto):
         return time_rule_client_write_dto(self.time_rule_client_uid, self.time_rule_client_name, self.time_rule_definition, self.custom_attributes)
     def to_thin(self) -> time_rule_client_thin_dto:
         return time_rule_client_thin_dto(self.time_rule_client_uid, self.time_rule_client_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_rule_client_normal_dto:
+        return time_rule_client_normal_dto(self.time_rule_client_uid, self.time_rule_client_name, self.time_rule_definition, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11651,7 +14147,7 @@ class time_rule_client_read_dto(base_read_dto, time_rule_client_write_dto):
 
 
 @dataclass(frozen=False)
-class time_submit_read_dto(base_read_dto, time_submit_write_dto):
+class time_submit_read_dto(base_read_dto, time_submit_write_dto, time_submit_interface_dto):
     time_submit_uid: str
     time_submit_name: str
     tenant_uid: str
@@ -11722,6 +14218,8 @@ class time_submit_read_dto(base_read_dto, time_submit_write_dto):
         return time_submit_write_dto(self.time_submit_uid, self.time_submit_name, self.tenant_uid, self.account_uid, self.period_uid, self.time_submit_description, self.custom_attributes)
     def to_thin(self) -> time_submit_thin_dto:
         return time_submit_thin_dto(self.time_submit_uid, self.time_submit_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_submit_normal_dto:
+        return time_submit_normal_dto(self.time_submit_uid, self.time_submit_name, self.tenant_uid, self.account_uid, self.period_uid, self.time_submit_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by
@@ -11739,7 +14237,7 @@ class time_submit_read_dto(base_read_dto, time_submit_write_dto):
 
 
 @dataclass(frozen=False)
-class time_submit_type_read_dto(base_read_dto, time_submit_type_write_dto):
+class time_submit_type_read_dto(base_read_dto, time_submit_type_write_dto, time_submit_type_interface_dto):
     time_submit_type_uid: str
     time_submit_type_name: str
     time_submit_type_description: str
@@ -11804,6 +14302,8 @@ class time_submit_type_read_dto(base_read_dto, time_submit_type_write_dto):
         return time_submit_type_write_dto(self.time_submit_type_uid, self.time_submit_type_name, self.time_submit_type_description, self.custom_attributes)
     def to_thin(self) -> time_submit_type_thin_dto:
         return time_submit_type_thin_dto(self.time_submit_type_uid, self.time_submit_type_name, self.created_date, self.is_active)
+    def to_normal(self) -> time_submit_type_normal_dto:
+        return time_submit_type_normal_dto(self.time_submit_type_uid, self.time_submit_type_name, self.time_submit_type_description, self.created_date, self.created_by)
     def touch(self, updated_by: str = "system"):
         self.last_updated_date = datetime.datetime.now()
         self.last_updated_by = updated_by

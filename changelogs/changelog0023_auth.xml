@@ -30,9 +30,10 @@
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
+        <createIndex indexName="idx_auth_identity_auth_identity_name" tableName="auth_identity" unique="true"><column name="auth_identity_name" /></createIndex>
 
         <createTable tableName="auth_identity_tenant" remarks="possible identity types for authentication with configuration parameters" >
-            <column name="auth_identity_tenant_uid" type="text" defaultValueComputed="generate_uid('arat')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_identity_tenant_uid" type="text" defaultValueComputed="generate_uid('arit')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_identity_tenant_name" type="text" remarks="name of identifying method, class to authenticate user or client"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
@@ -203,9 +204,8 @@
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
-        <createIndex indexName="idx_auth_identity_auth_identity_name" tableName="auth_identity" unique="true"><column name="auth_identity_name" /></createIndex>
 
-        <createTable tableName="auth_token_type" remarks="type of token: access, id, refresh, code" >
+        <createTable tableName="auth_token_type" remarks="type of token: access, id, refresh, code, external" >
             <column name="auth_token_type_uid" type="text" defaultValueComputed="generate_uid('autt')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_token_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -231,6 +231,7 @@
             <column name="auth_token_uid" type="text" defaultValueComputed="generate_uid('auto')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="auth_token_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
+            <column name="auth_attempt_uid" type="text" remarks="connected attempt of login"><constraints nullable="false"/></column>
             <column name="auth_token_type_uid" type="text" remarks="type of token"><constraints nullable="false"/></column>
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this token"><constraints nullable="false"/></column>
@@ -292,13 +293,13 @@
         </createTable>
         <createIndex indexName="idx_auth_role_auth_role_name" tableName="auth_role" unique="true"><column name="auth_role_name" /></createIndex>
 
-        <createTable tableName="auth_role_uri" remarks="mapping between role and URIs" >
-            <column name="auth_role_uri_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="auth_role_uri_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
+        <createTable tableName="auth_role_uri" remarks="mapping between role and URIs to have access to" >
+            <column name="auth_role_uri_uid" type="text" defaultValueComputed="generate_uid('auru')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_role_uri_name" type="text" defaultValueComputed="generate_uid('auru')"><constraints nullable="false"/></column>
             <!-- FKs -->
-            <column name="auth_role_uid" type="text" remarks="type=fk,parent;description=" />
+            <column name="auth_role_uid" type="text" remarks="FK to role" />
             <!-- attribute columns -->
-            <column name="uri" type="text" defaultValue=""><constraints nullable="false"/></column>
+            <column name="uri" type="text" defaultValue="" remarks="URI to have access for specified role"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
@@ -316,10 +317,9 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-
         <createTable tableName="auth_permission_type" remarks="type of permission" >
-            <column name="auth_permission_type_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="auth_permission_type_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
+            <column name="auth_permission_type_uid" type="text" defaultValueComputed="generate_uid('aupt')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_permission_type_name" type="text" defaultValueComputed="generate_uid('aupt')"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->
             <!-- FKs -->
@@ -340,10 +340,9 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-
         <createTable tableName="auth_permission" remarks="permission assigned to account and role with optional project or client" >
-            <column name="auth_permission_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="auth_permission_name" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints nullable="false"/></column>
+            <column name="auth_permission_uid" type="text" defaultValueComputed="generate_uid('aupe')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_permission_name" type="text" defaultValueComputed="generate_uid('aupe')"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="UID of tenant"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this token"><constraints nullable="false"/></column>
@@ -429,8 +428,8 @@
         <createIndex indexName="idx_auth_password_account_uid" tableName="auth_password" unique="false"><column name="account_uid" /></createIndex>
 
         <createTable tableName="auth_password_current" remarks="password set by user - only current valid password" >
-            <column name="auth_password_current_uid" type="text" remarks="account UID" defaultValueComputed="generate_uid('aupc')"><constraints primaryKey="true" nullable="false"/></column>
-            <column name="auth_password_current_name" type="text"><constraints nullable="false"/></column>
+            <column name="auth_password_current_uid" type="text" remarks="current password UID" defaultValueComputed="generate_uid('aupc')"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="auth_password_current_name" type="text" defaultValueComputed="generate_uid('aupc')"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="parent account of this password"><constraints nullable="false"/></column>
@@ -519,7 +518,7 @@
             <column name="removed_by" type="text" remarks="account UID of person that removed this row" />
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
-        <createIndex indexName="idx_auth_pin_account_uid" tableName="auth_password" unique="false"><column name="account_uid" /></createIndex>
+        <createIndex indexName="idx_auth_pin_account_uid" tableName="auth_pin" unique="false"><column name="account_uid" /></createIndex>
 
     </changeSet>
 

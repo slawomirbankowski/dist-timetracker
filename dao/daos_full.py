@@ -51,6 +51,15 @@ class account_skill_full_dao(account_skill_dao):
         super().__init__()
 
 
+class account_skill_assignment_full_dao(account_skill_assignment_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class account_skill_group_full_dao(account_skill_group_dao):
+    def __init__(self):
+        super().__init__()
+
 class account_team_full_dao(account_team_dao):
     def __init__(self):
         super().__init__()
@@ -133,6 +142,16 @@ class auth_permission_full_dao(auth_permission_dao):
         super().__init__()
 
 
+class auth_permission_type_full_dao(auth_permission_type_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class auth_pin_full_dao(auth_pin_dao):
+    def __init__(self):
+        super().__init__()
+
+
 class auth_request_full_dao(auth_request_dao):
     def __init__(self):
         super().__init__()
@@ -167,6 +186,12 @@ class auth_sso_full_dao(auth_sso_dao):
 class auth_token_full_dao(auth_token_dao):
     def __init__(self):
         super().__init__()
+
+
+class auth_token_type_full_dao(auth_token_type_dao):
+    def __init__(self):
+        super().__init__()
+
 
 
 class calendar_account_full_dao(calendar_account_dao):
@@ -214,6 +239,10 @@ class client_account_full_dao(client_account_dao):
         super().__init__()
 
 
+class client_contract_full_dao(client_contract_dao):
+    def __init__(self):
+        super().__init__()
+
 class client_country_full_dao(client_country_dao):
     def __init__(self):
         super().__init__()
@@ -235,6 +264,66 @@ class client_status_full_dao(client_status_dao):
 
 
 class client_type_full_dao(client_type_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_entry_full_dao(competency_entry_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_entry_account_full_dao(competency_entry_account_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_full_dao(competency_group_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_account_full_dao(competency_group_account_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_group_type_full_dao(competency_group_type_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_full_dao(competency_item_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_account_full_dao(competency_item_account_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_item_type_full_dao(competency_item_type_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_full_dao(competency_process_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_account_full_dao(competency_process_account_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_process_type_full_dao(competency_process_type_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class competency_ranking_full_dao(competency_ranking_dao):
     def __init__(self):
         super().__init__()
 
@@ -263,6 +352,15 @@ class currency_full_dao(currency_dao):
     def __init__(self):
         super().__init__()
 
+
+class currency_rate_full_dao(currency_rate_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class currency_source_full_dao(currency_source_dao):
+    def __init__(self):
+        super().__init__()
 
 class event_acknowledge_full_dao(event_acknowledge_dao):
     def __init__(self):
@@ -354,6 +452,16 @@ class invoice_type_full_dao(invoice_type_dao):
         super().__init__()
 
 
+class location_hierarchy_full_dao(location_hierarchy_dao):
+    def __init__(self):
+        super().__init__()
+
+class location_region_full_dao(location_region_dao):
+    def __init__(self):
+        super().__init__()
+
+
+
 class monitor_full_dao(monitor_dao):
     def __init__(self):
         super().__init__()
@@ -377,6 +485,11 @@ class period_full_dao(period_dao):
 class process_full_dao(process_dao):
     def __init__(self):
         super().__init__()
+
+class process_result_full_dao(process_result_dao):
+    def __init__(self):
+        super().__init__()
+
 
 
 class process_run_full_dao(process_run_dao):
@@ -410,6 +523,11 @@ class project_instance_full_dao(project_instance_dao):
 
 
 class project_milestone_full_dao(project_milestone_dao):
+    def __init__(self):
+        super().__init__()
+
+
+class project_phase_full_dao(project_phase_dao):
     def __init__(self):
         super().__init__()
 

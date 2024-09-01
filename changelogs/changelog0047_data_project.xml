@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0047_data_invoice.xml">
+
+    <changeSet id="0047 - dictionary data for invoice tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Project table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into project_group(project_group_uid, project_group_name, tenant_uid, project_group_description)
+            values ('System', 'System', 'System', '');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

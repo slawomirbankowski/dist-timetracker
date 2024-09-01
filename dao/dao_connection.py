@@ -53,6 +53,12 @@ class DaoConnection(DaoConnectionBase):
                                                           host=db_host, port='5432', database=db_name)
         self.pool_created_date = datetime.datetime.now()
 
+    def initialize_master_table(self):
+        logging.info("Create or replace master file and enter values into master file depends on ENV variables and desired version")
+        # TODO: create or replace master table to control databases
+
+
+
     def get_base_dict_custom_info(self) -> dict[str, any]:
         return {
             "created_date": str(self.created_date),
@@ -98,7 +104,7 @@ class DaoConnection(DaoConnectionBase):
         self.connections_opened += 1
         return self.db_pool.getconn()
 
-    def close(self, db_conn) -> None:
+    def close(self, db_conn: connection) -> None:
         """close this connection; consider using with_connection instead"""
         self.connections_closed += 1
         self.db_pool.putconn(db_conn)
@@ -118,26 +124,12 @@ class DaoConnection(DaoConnectionBase):
         #self.executed_queries = self.executed_queries+1
         return results
 
-    def with_connection(self, exec: Callable[[connection], any]) -> any:
+    def with_connection(self, to_execute: Callable[[connection], any]) -> any:
         """execute exec method with connection"""
         conn = self.get_connection()
-        res = exec(conn)
+        res = to_execute(conn)
         self.close(conn)
         return res
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # DAO connections to main database and all other client databases
@@ -153,7 +145,9 @@ class DaoConnections(DaoConnectionsBase):
     connections_opened: int = 0
     connections_closed: int = 0
     main_connection = DaoConnection()
+    tx_connection = DaoConnection()
     connections: dict[str, DaoConnection] = {}
+    created_connections: list[connection]
 
     # initializing DB connections to main database and client databases
     def __init__(self):
@@ -172,6 +166,8 @@ class DaoConnections(DaoConnectionsBase):
     def initialize_main_connection(self, db_url: str, db_host: str, db_name: str, db_user: str, db_pass: str) -> None:
         logging.debug("Initializing DaoConnections: main connection, object_id: " + self.object_id)
         self.main_connection.initialize_connection(db_url, db_host, db_name, db_user, db_pass)
+        #TODO: change initialization of schema depends on run master file
+        self.main_connection.initialize_master_table()
         self.main_connection.initialize_schema()
         self.is_initialized = True
         self.db_url = db_url
@@ -195,7 +191,6 @@ class DaoConnections(DaoConnectionsBase):
             db_user = f.read()
         with open(db_pass_file, 'rt') as f:
             db_pass = f.read()
-
         logging.info(f"Main database URL ={db_url}, HOST={db_host}, DB_NAME={db_name}, USER={db_user}")
         self.initialize_main_connection(db_url, db_host, db_name, db_user, db_pass)
 
@@ -205,8 +200,8 @@ class DaoConnections(DaoConnectionsBase):
 
     # handler for closing application
     def close_connections(self) -> None:
-        #TODO: close all connections
-
+        #TODO: close all connections\
+        #self.main_connection.close()
         logging.info("Closing ALL Connections, object_id: " + self.object_id)
 
     def get_base_dict_custom_info(self) -> dict:
@@ -231,11 +226,14 @@ class DaoConnections(DaoConnectionsBase):
         tenant_connection.initialize_connection(db_url, db_host, db_name, db_user, db_pass)
         self.connections[db_name] = tenant_connection
 
-    def get_connection(self):
+    def get_connection(self) -> connection:
         self.connections_opened += 1
         return self.main_connection.get_connection()
 
-    def close(self, db_conn):
+    def get_main_connection(self) -> DaoConnectionBase:
+        return self.main_connection
+
+    def close(self, db_conn) -> None:
         self.connections_closed += 1
         self.main_connection.close(db_conn)
 

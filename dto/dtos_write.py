@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_write - START at 2024-04-21 11:58:39.692801+00
+# auto-generated - v_definition_python_dtos_write - START at 2024-08-04 09:35:51.351118+00
 import datetime
 from abc import abstractmethod
 from dataclasses import dataclass, asdict
@@ -623,7 +623,9 @@ class account_rate_write_dto(base_write_dto):
     rate: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    def __init__(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, custom_attributes: str = "{}"):
+    rate_note: str
+    is_default: str
+    def __init__(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, custom_attributes: str = "{}"):
         self.account_rate_uid = account_rate_uid
         self.account_rate_name = account_rate_name
         self.tenant_uid = tenant_uid
@@ -632,39 +634,41 @@ class account_rate_write_dto(base_write_dto):
         self.rate = rate
         self.start_date = start_date
         self.end_date = end_date
+        self.rate_note = rate_note
+        self.is_default = is_default
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+        return cls("", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", datetime.datetime.now(), datetime.datetime.now())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), "")
     @classmethod
-    def new_write(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime):
-        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+    def new_write(cls, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str):
+        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default)
     @classmethod
-    def new_write_with_defaults(cls, account_rate_uid: str = "", account_rate_name: str = "", tenant_uid: str = "", account_uid: str = "", currency_uid: str = "", rate: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now()):
-        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+    def new_write_with_defaults(cls, account_rate_uid: str = "", account_rate_name: str = "", tenant_uid: str = "", account_uid: str = "", currency_uid: str = "", rate: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), rate_note: str = "", is_default: str = ""):
+        return cls(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default)
     @classmethod
-    def new_write_random_uid(cls, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime):
-        return cls(base_dto.get_random_uid(), account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date)
+    def new_write_random_uid(cls, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str):
+        return cls(base_dto.get_random_uid(), account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.account_rate_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["account_rate_uid"], d["account_rate_name"], d["tenant_uid"], d["account_uid"], d["currency_uid"], d["rate"], d["start_date"], d["end_date"])
+        return cls(d["account_rate_uid"], d["account_rate_name"], d["tenant_uid"], d["account_uid"], d["currency_uid"], d["rate"], d["start_date"], d["end_date"], d["rate_note"], d["is_default"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return account_rate_write_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes)
+        return account_rate_write_dto(self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes)
     def clone_write_new_uid(self):
-        return account_rate_write_dto(base_dto.get_random_uid(), self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes)
+        return account_rate_write_dto(base_dto.get_random_uid(), self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return account_rate_write_dto(uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes)
+        return account_rate_write_dto(uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.account_rate_model
     def get_uid(self) -> str:
@@ -672,24 +676,24 @@ class account_rate_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.account_rate_name
     def get_list_values(self) -> list[any]:
-        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes]
+        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date]
+        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes, updated_by, self.account_rate_uid]
+        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes, updated_by, self.account_rate_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, created_by, created_by, self.custom_attributes]
+        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date]
+        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.custom_attributes]
+        return [self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.account_rate_uid = uid
-    def update_uid_attributes(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime):
+    def update_uid_attributes(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str):
         self.account_rate_uid = account_rate_uid
         self.account_rate_name = account_rate_name
         self.tenant_uid = tenant_uid
@@ -698,7 +702,9 @@ class account_rate_write_dto(base_write_dto):
         self.rate = rate
         self.start_date = start_date
         self.end_date = end_date
-    def update_attributes(self, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime):
+        self.rate_note = rate_note
+        self.is_default = is_default
+    def update_attributes(self, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str):
         self.account_rate_name = account_rate_name
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
@@ -706,50 +712,58 @@ class account_rate_write_dto(base_write_dto):
         self.rate = rate
         self.start_date = start_date
         self.end_date = end_date
+        self.rate_note = rate_note
+        self.is_default = is_default
 
 
 @dataclass(frozen=False)
 class account_skill_write_dto(base_write_dto):
     account_skill_uid: str
     account_skill_name: str
-    account_skill_description: str
-    def __init__(self, account_skill_uid: str, account_skill_name: str, account_skill_description: str, custom_attributes: str = "{}"):
+    account_skill_group_uid: str
+    skill_title: str
+    skill_code: str
+    skill_description: str
+    def __init__(self, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, custom_attributes: str = "{}"):
         self.account_skill_uid = account_skill_uid
         self.account_skill_name = account_skill_name
-        self.account_skill_description = account_skill_description
+        self.account_skill_group_uid = account_skill_group_uid
+        self.skill_title = skill_title
+        self.skill_code = skill_code
+        self.skill_description = skill_description
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "")
+        return cls("", "", "", "", "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "")
+        return cls(base_dto.get_random_uid(), "", "", "", "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, account_skill_uid: str, account_skill_name: str, account_skill_description: str):
-        return cls(account_skill_uid, account_skill_name, account_skill_description)
+    def new_write(cls, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str):
+        return cls(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description)
     @classmethod
-    def new_write_with_defaults(cls, account_skill_uid: str = "", account_skill_name: str = "", account_skill_description: str = ""):
-        return cls(account_skill_uid, account_skill_name, account_skill_description)
+    def new_write_with_defaults(cls, account_skill_uid: str = "", account_skill_name: str = "", account_skill_group_uid: str = "", skill_title: str = "", skill_code: str = "", skill_description: str = ""):
+        return cls(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description)
     @classmethod
-    def new_write_random_uid(cls, account_skill_name: str, account_skill_description: str):
-        return cls(base_dto.get_random_uid(), account_skill_name, account_skill_description)
+    def new_write_random_uid(cls, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str):
+        return cls(base_dto.get_random_uid(), account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.account_skill_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["account_skill_uid"], d["account_skill_name"], d["account_skill_description"])
+        return cls(d["account_skill_uid"], d["account_skill_name"], d["account_skill_group_uid"], d["skill_title"], d["skill_code"], d["skill_description"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return account_skill_write_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.custom_attributes)
+        return account_skill_write_dto(self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes)
     def clone_write_new_uid(self):
-        return account_skill_write_dto(base_dto.get_random_uid(), self.account_skill_name, self.account_skill_description, self.custom_attributes)
+        return account_skill_write_dto(base_dto.get_random_uid(), self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return account_skill_write_dto(uid, self.account_skill_name, self.account_skill_description, self.custom_attributes)
+        return account_skill_write_dto(uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.account_skill_model
     def get_uid(self) -> str:
@@ -757,30 +771,198 @@ class account_skill_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.account_skill_name
     def get_list_values(self) -> list[any]:
-        return [self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.custom_attributes]
+        return [self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.account_skill_uid, self.account_skill_name, self.account_skill_description]
+        return [self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.account_skill_name, self.account_skill_description, self.custom_attributes, updated_by, self.account_skill_uid]
+        return [self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes, updated_by, self.account_skill_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.account_skill_uid, self.account_skill_name, self.account_skill_description, created_by, created_by, self.custom_attributes]
+        return [self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.account_skill_name, self.account_skill_description]
+        return [self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.account_skill_name, self.account_skill_description, self.custom_attributes]
+        return [self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.account_skill_uid = uid
-    def update_uid_attributes(self, account_skill_uid: str, account_skill_name: str, account_skill_description: str):
+    def update_uid_attributes(self, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str):
         self.account_skill_uid = account_skill_uid
         self.account_skill_name = account_skill_name
-        self.account_skill_description = account_skill_description
-    def update_attributes(self, account_skill_name: str, account_skill_description: str):
+        self.account_skill_group_uid = account_skill_group_uid
+        self.skill_title = skill_title
+        self.skill_code = skill_code
+        self.skill_description = skill_description
+    def update_attributes(self, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str):
         self.account_skill_name = account_skill_name
+        self.account_skill_group_uid = account_skill_group_uid
+        self.skill_title = skill_title
+        self.skill_code = skill_code
+        self.skill_description = skill_description
+
+
+@dataclass(frozen=False)
+class account_skill_assignment_write_dto(base_write_dto):
+    account_skill_assignment_uid: str
+    account_skill_assignment_name: str
+    tenant_uid: str
+    account_uid: str
+    account_skill_uid: str
+    skill_rate: str
+    account_skill_description: str
+    def __init__(self, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, custom_attributes: str = "{}"):
+        self.account_skill_assignment_uid = account_skill_assignment_uid
+        self.account_skill_assignment_name = account_skill_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.account_skill_uid = account_skill_uid
+        self.skill_rate = skill_rate
         self.account_skill_description = account_skill_description
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str):
+        return cls(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description)
+    @classmethod
+    def new_write_with_defaults(cls, account_skill_assignment_uid: str = "", account_skill_assignment_name: str = "", tenant_uid: str = "", account_uid: str = "", account_skill_uid: str = "", skill_rate: str = "", account_skill_description: str = ""):
+        return cls(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description)
+    @classmethod
+    def new_write_random_uid(cls, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str):
+        return cls(base_dto.get_random_uid(), account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.account_skill_assignment_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["account_skill_assignment_uid"], d["account_skill_assignment_name"], d["tenant_uid"], d["account_uid"], d["account_skill_uid"], d["skill_rate"], d["account_skill_description"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return account_skill_assignment_write_dto(self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return account_skill_assignment_write_dto(base_dto.get_random_uid(), self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return account_skill_assignment_write_dto(uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.account_skill_assignment_model
+    def get_uid(self) -> str:
+        return self.account_skill_assignment_uid
+    def get_name(self) -> str:
+        return self.account_skill_assignment_name
+    def get_list_values(self) -> list[any]:
+        return [self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes, updated_by, self.account_skill_assignment_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.account_skill_assignment_uid, self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.account_skill_assignment_name, self.tenant_uid, self.account_uid, self.account_skill_uid, self.skill_rate, self.account_skill_description, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.account_skill_assignment_uid = uid
+    def update_uid_attributes(self, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str):
+        self.account_skill_assignment_uid = account_skill_assignment_uid
+        self.account_skill_assignment_name = account_skill_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.account_skill_uid = account_skill_uid
+        self.skill_rate = skill_rate
+        self.account_skill_description = account_skill_description
+    def update_attributes(self, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str):
+        self.account_skill_assignment_name = account_skill_assignment_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.account_skill_uid = account_skill_uid
+        self.skill_rate = skill_rate
+        self.account_skill_description = account_skill_description
+
+
+@dataclass(frozen=False)
+class account_skill_group_write_dto(base_write_dto):
+    account_skill_group_uid: str
+    account_skill_group_name: str
+    def __init__(self, account_skill_group_uid: str, account_skill_group_name: str, custom_attributes: str = "{}"):
+        self.account_skill_group_uid = account_skill_group_uid
+        self.account_skill_group_name = account_skill_group_name
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, account_skill_group_uid: str, account_skill_group_name: str):
+        return cls(account_skill_group_uid, account_skill_group_name)
+    @classmethod
+    def new_write_with_defaults(cls, account_skill_group_uid: str = "", account_skill_group_name: str = ""):
+        return cls(account_skill_group_uid, account_skill_group_name)
+    @classmethod
+    def new_write_random_uid(cls, account_skill_group_name: str):
+        return cls(base_dto.get_random_uid(), account_skill_group_name)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.account_skill_group_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["account_skill_group_uid"], d["account_skill_group_name"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return account_skill_group_write_dto(self.account_skill_group_uid, self.account_skill_group_name, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return account_skill_group_write_dto(base_dto.get_random_uid(), self.account_skill_group_name, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return account_skill_group_write_dto(uid, self.account_skill_group_name, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.account_skill_group_model
+    def get_uid(self) -> str:
+        return self.account_skill_group_uid
+    def get_name(self) -> str:
+        return self.account_skill_group_name
+    def get_list_values(self) -> list[any]:
+        return [self.account_skill_group_uid, self.account_skill_group_name, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.account_skill_group_uid, self.account_skill_group_name]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.account_skill_group_name, self.custom_attributes, updated_by, self.account_skill_group_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.account_skill_group_uid, self.account_skill_group_name, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.account_skill_group_name]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.account_skill_group_name, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.account_skill_group_uid = uid
+    def update_uid_attributes(self, account_skill_group_uid: str, account_skill_group_name: str):
+        self.account_skill_group_uid = account_skill_group_uid
+        self.account_skill_group_name = account_skill_group_name
+    def update_attributes(self, account_skill_group_name: str):
+        self.account_skill_group_name = account_skill_group_name
 
 
 @dataclass(frozen=False)
@@ -1468,45 +1650,47 @@ class auth_identity_write_dto(base_write_dto):
     auth_identity_uid: str
     auth_identity_name: str
     class_name: str
+    auth_url: str
     default_parameters_json: str
-    def __init__(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str, custom_attributes: str = "{}"):
+    def __init__(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, custom_attributes: str = "{}"):
         self.auth_identity_uid = auth_identity_uid
         self.auth_identity_name = auth_identity_name
         self.class_name = class_name
+        self.auth_url = auth_url
         self.default_parameters_json = default_parameters_json
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "")
+        return cls("", "", "", "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "")
+        return cls(base_dto.get_random_uid(), "", "", "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str):
-        return cls(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+    def new_write(cls, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str):
+        return cls(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json)
     @classmethod
-    def new_write_with_defaults(cls, auth_identity_uid: str = "", auth_identity_name: str = "", class_name: str = "", default_parameters_json: str = ""):
-        return cls(auth_identity_uid, auth_identity_name, class_name, default_parameters_json)
+    def new_write_with_defaults(cls, auth_identity_uid: str = "", auth_identity_name: str = "", class_name: str = "", auth_url: str = "", default_parameters_json: str = ""):
+        return cls(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json)
     @classmethod
-    def new_write_random_uid(cls, auth_identity_name: str, class_name: str, default_parameters_json: str):
-        return cls(base_dto.get_random_uid(), auth_identity_name, class_name, default_parameters_json)
+    def new_write_random_uid(cls, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str):
+        return cls(base_dto.get_random_uid(), auth_identity_name, class_name, auth_url, default_parameters_json)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.auth_identity_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_identity_uid"], d["auth_identity_name"], d["class_name"], d["default_parameters_json"])
+        return cls(d["auth_identity_uid"], d["auth_identity_name"], d["class_name"], d["auth_url"], d["default_parameters_json"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return auth_identity_write_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes)
+        return auth_identity_write_dto(self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes)
     def clone_write_new_uid(self):
-        return auth_identity_write_dto(base_dto.get_random_uid(), self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes)
+        return auth_identity_write_dto(base_dto.get_random_uid(), self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return auth_identity_write_dto(uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes)
+        return auth_identity_write_dto(uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.auth_identity_model
     def get_uid(self) -> str:
@@ -1514,31 +1698,33 @@ class auth_identity_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.auth_identity_name
     def get_list_values(self) -> list[any]:
-        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes]
+        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json]
+        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes, updated_by, self.auth_identity_uid]
+        return [self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes, updated_by, self.auth_identity_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, created_by, created_by, self.custom_attributes]
+        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.auth_identity_name, self.class_name, self.default_parameters_json]
+        return [self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.auth_identity_name, self.class_name, self.default_parameters_json, self.custom_attributes]
+        return [self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.auth_identity_uid = uid
-    def update_uid_attributes(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str):
+    def update_uid_attributes(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str):
         self.auth_identity_uid = auth_identity_uid
         self.auth_identity_name = auth_identity_name
         self.class_name = class_name
+        self.auth_url = auth_url
         self.default_parameters_json = default_parameters_json
-    def update_attributes(self, auth_identity_name: str, class_name: str, default_parameters_json: str):
+    def update_attributes(self, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str):
         self.auth_identity_name = auth_identity_name
         self.class_name = class_name
+        self.auth_url = auth_url
         self.default_parameters_json = default_parameters_json
 
 
@@ -2106,9 +2292,10 @@ class auth_permission_write_dto(base_write_dto):
     auth_role_uid: str
     client_uid: str | None
     project_instance_uid: str | None
+    auth_permission_type_uid: str | None
     valid_from_date: datetime.datetime
     valid_till_date: datetime.datetime
-    def __init__(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, custom_attributes: str = "{}"):
+    def __init__(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, custom_attributes: str = "{}"):
         self.auth_permission_uid = auth_permission_uid
         self.auth_permission_name = auth_permission_name
         self.tenant_uid = tenant_uid
@@ -2116,41 +2303,42 @@ class auth_permission_write_dto(base_write_dto):
         self.auth_role_uid = auth_role_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
+        self.auth_permission_type_uid = auth_permission_type_uid
         self.valid_from_date = valid_from_date
         self.valid_till_date = valid_till_date
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+        return cls("", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now())
     @classmethod
-    def new_write(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
-        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date)
+    def new_write(cls, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
+        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date)
     @classmethod
-    def new_write_with_defaults(cls, auth_permission_uid: str = "", auth_permission_name: str = "", tenant_uid: str = "", account_uid: str = "", auth_role_uid: str = "", client_uid: str | None = "", project_instance_uid: str | None = "", valid_from_date: datetime.datetime = datetime.datetime.now(), valid_till_date: datetime.datetime = datetime.datetime.now()):
-        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date)
+    def new_write_with_defaults(cls, auth_permission_uid: str = "", auth_permission_name: str = "", tenant_uid: str = "", account_uid: str = "", auth_role_uid: str = "", client_uid: str | None = "", project_instance_uid: str | None = "", auth_permission_type_uid: str | None = "", valid_from_date: datetime.datetime = datetime.datetime.now(), valid_till_date: datetime.datetime = datetime.datetime.now()):
+        return cls(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date)
     @classmethod
-    def new_write_random_uid(cls, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
-        return cls(base_dto.get_random_uid(), auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date)
+    def new_write_random_uid(cls, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
+        return cls(base_dto.get_random_uid(), auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.auth_permission_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_permission_uid"], d["auth_permission_name"], d["tenant_uid"], d["account_uid"], d["auth_role_uid"], d["client_uid"], d["project_instance_uid"], d["valid_from_date"], d["valid_till_date"])
+        return cls(d["auth_permission_uid"], d["auth_permission_name"], d["tenant_uid"], d["account_uid"], d["auth_role_uid"], d["client_uid"], d["project_instance_uid"], d["auth_permission_type_uid"], d["valid_from_date"], d["valid_till_date"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return auth_permission_write_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
+        return auth_permission_write_dto(self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
     def clone_write_new_uid(self):
-        return auth_permission_write_dto(base_dto.get_random_uid(), self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
+        return auth_permission_write_dto(base_dto.get_random_uid(), self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return auth_permission_write_dto(uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
+        return auth_permission_write_dto(uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.auth_permission_model
     def get_uid(self) -> str:
@@ -2158,24 +2346,24 @@ class auth_permission_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.auth_permission_name
     def get_list_values(self) -> list[any]:
-        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes]
+        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date]
+        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes, updated_by, self.auth_permission_uid]
+        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes, updated_by, self.auth_permission_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, created_by, created_by, self.custom_attributes]
+        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date]
+        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes]
+        return [self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.auth_permission_uid = uid
-    def update_uid_attributes(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
+    def update_uid_attributes(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
         self.auth_permission_uid = auth_permission_uid
         self.auth_permission_name = auth_permission_name
         self.tenant_uid = tenant_uid
@@ -2183,17 +2371,177 @@ class auth_permission_write_dto(base_write_dto):
         self.auth_role_uid = auth_role_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
+        self.auth_permission_type_uid = auth_permission_type_uid
         self.valid_from_date = valid_from_date
         self.valid_till_date = valid_till_date
-    def update_attributes(self, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
+    def update_attributes(self, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime):
         self.auth_permission_name = auth_permission_name
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.auth_role_uid = auth_role_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
+        self.auth_permission_type_uid = auth_permission_type_uid
         self.valid_from_date = valid_from_date
         self.valid_till_date = valid_till_date
+
+
+@dataclass(frozen=False)
+class auth_permission_type_write_dto(base_write_dto):
+    auth_permission_type_uid: str
+    auth_permission_type_name: str
+    def __init__(self, auth_permission_type_uid: str, auth_permission_type_name: str, custom_attributes: str = "{}"):
+        self.auth_permission_type_uid = auth_permission_type_uid
+        self.auth_permission_type_name = auth_permission_type_name
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, auth_permission_type_uid: str, auth_permission_type_name: str):
+        return cls(auth_permission_type_uid, auth_permission_type_name)
+    @classmethod
+    def new_write_with_defaults(cls, auth_permission_type_uid: str = "", auth_permission_type_name: str = ""):
+        return cls(auth_permission_type_uid, auth_permission_type_name)
+    @classmethod
+    def new_write_random_uid(cls, auth_permission_type_name: str):
+        return cls(base_dto.get_random_uid(), auth_permission_type_name)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.auth_permission_type_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_permission_type_uid"], d["auth_permission_type_name"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return auth_permission_type_write_dto(self.auth_permission_type_uid, self.auth_permission_type_name, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return auth_permission_type_write_dto(base_dto.get_random_uid(), self.auth_permission_type_name, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return auth_permission_type_write_dto(uid, self.auth_permission_type_name, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.auth_permission_type_model
+    def get_uid(self) -> str:
+        return self.auth_permission_type_uid
+    def get_name(self) -> str:
+        return self.auth_permission_type_name
+    def get_list_values(self) -> list[any]:
+        return [self.auth_permission_type_uid, self.auth_permission_type_name, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.auth_permission_type_uid, self.auth_permission_type_name]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.auth_permission_type_name, self.custom_attributes, updated_by, self.auth_permission_type_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.auth_permission_type_uid, self.auth_permission_type_name, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.auth_permission_type_name]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.auth_permission_type_name, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.auth_permission_type_uid = uid
+    def update_uid_attributes(self, auth_permission_type_uid: str, auth_permission_type_name: str):
+        self.auth_permission_type_uid = auth_permission_type_uid
+        self.auth_permission_type_name = auth_permission_type_name
+    def update_attributes(self, auth_permission_type_name: str):
+        self.auth_permission_type_name = auth_permission_type_name
+
+
+@dataclass(frozen=False)
+class auth_pin_write_dto(base_write_dto):
+    auth_pin_uid: str
+    auth_pin_name: str
+    tenant_uid: str
+    account_uid: str
+    pin_hash: str
+    pin_salt: str
+    def __init__(self, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, custom_attributes: str = "{}"):
+        self.auth_pin_uid = auth_pin_uid
+        self.auth_pin_name = auth_pin_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.pin_hash = pin_hash
+        self.pin_salt = pin_salt
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str):
+        return cls(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt)
+    @classmethod
+    def new_write_with_defaults(cls, auth_pin_uid: str = "", auth_pin_name: str = "", tenant_uid: str = "", account_uid: str = "", pin_hash: str = "", pin_salt: str = ""):
+        return cls(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt)
+    @classmethod
+    def new_write_random_uid(cls, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str):
+        return cls(base_dto.get_random_uid(), auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.auth_pin_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_pin_uid"], d["auth_pin_name"], d["tenant_uid"], d["account_uid"], d["pin_hash"], d["pin_salt"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return auth_pin_write_dto(self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return auth_pin_write_dto(base_dto.get_random_uid(), self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return auth_pin_write_dto(uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.auth_pin_model
+    def get_uid(self) -> str:
+        return self.auth_pin_uid
+    def get_name(self) -> str:
+        return self.auth_pin_name
+    def get_list_values(self) -> list[any]:
+        return [self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes, updated_by, self.auth_pin_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.auth_pin_uid, self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.auth_pin_name, self.tenant_uid, self.account_uid, self.pin_hash, self.pin_salt, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.auth_pin_uid = uid
+    def update_uid_attributes(self, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str):
+        self.auth_pin_uid = auth_pin_uid
+        self.auth_pin_name = auth_pin_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.pin_hash = pin_hash
+        self.pin_salt = pin_salt
+    def update_attributes(self, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str):
+        self.auth_pin_name = auth_pin_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.pin_hash = pin_hash
+        self.pin_salt = pin_salt
 
 
 @dataclass(frozen=False)
@@ -2711,6 +3059,8 @@ class auth_sso_write_dto(base_write_dto):
 class auth_token_write_dto(base_write_dto):
     auth_token_uid: str
     auth_token_name: str
+    auth_attempt_uid: str
+    auth_token_type_uid: str
     tenant_uid: str
     account_uid: str
     token_seq: int
@@ -2719,9 +3069,12 @@ class auth_token_write_dto(base_write_dto):
     valid_till_date: datetime.datetime | None
     last_use_date: datetime.datetime | None
     is_last: int
-    def __init__(self, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, custom_attributes: str = "{}"):
+    token_scope: str
+    def __init__(self, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, custom_attributes: str = "{}"):
         self.auth_token_uid = auth_token_uid
         self.auth_token_name = auth_token_name
+        self.auth_attempt_uid = auth_attempt_uid
+        self.auth_token_type_uid = auth_token_type_uid
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.token_seq = token_seq
@@ -2730,39 +3083,40 @@ class auth_token_write_dto(base_write_dto):
         self.valid_till_date = valid_till_date
         self.last_use_date = last_use_date
         self.is_last = is_last
+        self.token_scope = token_scope
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0)
+        return cls("", "", "", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0)
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", 0, "", "", datetime.datetime.now(), datetime.datetime.now(), 0, "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0)
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int):
-        return cls(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last)
+    def new_write(cls, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str):
+        return cls(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope)
     @classmethod
-    def new_write_with_defaults(cls, auth_token_uid: str = "", auth_token_name: str = "", tenant_uid: str = "", account_uid: str = "", token_seq: int = 0, token_hash: str = "", token_salt: str = "", valid_till_date: datetime.datetime | None = datetime.datetime.now(), last_use_date: datetime.datetime | None = datetime.datetime.now(), is_last: int = 0):
-        return cls(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last)
+    def new_write_with_defaults(cls, auth_token_uid: str = "", auth_token_name: str = "", auth_attempt_uid: str = "", auth_token_type_uid: str = "", tenant_uid: str = "", account_uid: str = "", token_seq: int = 0, token_hash: str = "", token_salt: str = "", valid_till_date: datetime.datetime | None = datetime.datetime.now(), last_use_date: datetime.datetime | None = datetime.datetime.now(), is_last: int = 0, token_scope: str = ""):
+        return cls(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope)
     @classmethod
-    def new_write_random_uid(cls, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int):
-        return cls(base_dto.get_random_uid(), auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last)
+    def new_write_random_uid(cls, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str):
+        return cls(base_dto.get_random_uid(), auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.auth_token_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["auth_token_uid"], d["auth_token_name"], d["tenant_uid"], d["account_uid"], d["token_seq"], d["token_hash"], d["token_salt"], d["valid_till_date"], d["last_use_date"], d["is_last"])
+        return cls(d["auth_token_uid"], d["auth_token_name"], d["auth_attempt_uid"], d["auth_token_type_uid"], d["tenant_uid"], d["account_uid"], d["token_seq"], d["token_hash"], d["token_salt"], d["valid_till_date"], d["last_use_date"], d["is_last"], d["token_scope"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return auth_token_write_dto(self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes)
+        return auth_token_write_dto(self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes)
     def clone_write_new_uid(self):
-        return auth_token_write_dto(base_dto.get_random_uid(), self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes)
+        return auth_token_write_dto(base_dto.get_random_uid(), self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return auth_token_write_dto(uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes)
+        return auth_token_write_dto(uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.auth_token_model
     def get_uid(self) -> str:
@@ -2770,26 +3124,28 @@ class auth_token_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.auth_token_name
     def get_list_values(self) -> list[any]:
-        return [self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes]
+        return [self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last]
+        return [self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes, updated_by, self.auth_token_uid]
+        return [self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes, updated_by, self.auth_token_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, created_by, created_by, self.custom_attributes]
+        return [self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last]
+        return [self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.custom_attributes]
+        return [self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.auth_token_uid = uid
-    def update_uid_attributes(self, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int):
+    def update_uid_attributes(self, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str):
         self.auth_token_uid = auth_token_uid
         self.auth_token_name = auth_token_name
+        self.auth_attempt_uid = auth_attempt_uid
+        self.auth_token_type_uid = auth_token_type_uid
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.token_seq = token_seq
@@ -2798,8 +3154,11 @@ class auth_token_write_dto(base_write_dto):
         self.valid_till_date = valid_till_date
         self.last_use_date = last_use_date
         self.is_last = is_last
-    def update_attributes(self, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int):
+        self.token_scope = token_scope
+    def update_attributes(self, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str):
         self.auth_token_name = auth_token_name
+        self.auth_attempt_uid = auth_attempt_uid
+        self.auth_token_type_uid = auth_token_type_uid
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.token_seq = token_seq
@@ -2808,6 +3167,78 @@ class auth_token_write_dto(base_write_dto):
         self.valid_till_date = valid_till_date
         self.last_use_date = last_use_date
         self.is_last = is_last
+        self.token_scope = token_scope
+
+
+@dataclass(frozen=False)
+class auth_token_type_write_dto(base_write_dto):
+    auth_token_type_uid: str
+    auth_token_type_name: str
+    def __init__(self, auth_token_type_uid: str, auth_token_type_name: str, custom_attributes: str = "{}"):
+        self.auth_token_type_uid = auth_token_type_uid
+        self.auth_token_type_name = auth_token_type_name
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, auth_token_type_uid: str, auth_token_type_name: str):
+        return cls(auth_token_type_uid, auth_token_type_name)
+    @classmethod
+    def new_write_with_defaults(cls, auth_token_type_uid: str = "", auth_token_type_name: str = ""):
+        return cls(auth_token_type_uid, auth_token_type_name)
+    @classmethod
+    def new_write_random_uid(cls, auth_token_type_name: str):
+        return cls(base_dto.get_random_uid(), auth_token_type_name)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.auth_token_type_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["auth_token_type_uid"], d["auth_token_type_name"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return auth_token_type_write_dto(self.auth_token_type_uid, self.auth_token_type_name, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return auth_token_type_write_dto(base_dto.get_random_uid(), self.auth_token_type_name, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return auth_token_type_write_dto(uid, self.auth_token_type_name, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.auth_token_type_model
+    def get_uid(self) -> str:
+        return self.auth_token_type_uid
+    def get_name(self) -> str:
+        return self.auth_token_type_name
+    def get_list_values(self) -> list[any]:
+        return [self.auth_token_type_uid, self.auth_token_type_name, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.auth_token_type_uid, self.auth_token_type_name]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.auth_token_type_name, self.custom_attributes, updated_by, self.auth_token_type_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.auth_token_type_uid, self.auth_token_type_name, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.auth_token_type_name]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.auth_token_type_name, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.auth_token_type_uid = uid
+    def update_uid_attributes(self, auth_token_type_uid: str, auth_token_type_name: str):
+        self.auth_token_type_uid = auth_token_type_uid
+        self.auth_token_type_name = auth_token_type_name
+    def update_attributes(self, auth_token_type_name: str):
+        self.auth_token_type_name = auth_token_type_name
 
 
 @dataclass(frozen=False)
@@ -3614,6 +4045,101 @@ class client_account_write_dto(base_write_dto):
 
 
 @dataclass(frozen=False)
+class client_contract_write_dto(base_write_dto):
+    client_contract_uid: str
+    client_contract_name: str
+    tenant_uid: str
+    client_uid: str
+    parent_client_contract_uid: str | None
+    contract_text: str
+    contract_value: str
+    currency_uid: str
+    def __init__(self, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, custom_attributes: str = "{}"):
+        self.client_contract_uid = client_contract_uid
+        self.client_contract_name = client_contract_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.parent_client_contract_uid = parent_client_contract_uid
+        self.contract_text = contract_text
+        self.contract_value = contract_value
+        self.currency_uid = currency_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str):
+        return cls(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid)
+    @classmethod
+    def new_write_with_defaults(cls, client_contract_uid: str = "", client_contract_name: str = "", tenant_uid: str = "", client_uid: str = "", parent_client_contract_uid: str | None = "", contract_text: str = "", contract_value: str = "", currency_uid: str = ""):
+        return cls(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid)
+    @classmethod
+    def new_write_random_uid(cls, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str):
+        return cls(base_dto.get_random_uid(), client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.client_contract_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["client_contract_uid"], d["client_contract_name"], d["tenant_uid"], d["client_uid"], d["parent_client_contract_uid"], d["contract_text"], d["contract_value"], d["currency_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return client_contract_write_dto(self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return client_contract_write_dto(base_dto.get_random_uid(), self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return client_contract_write_dto(uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.client_contract_model
+    def get_uid(self) -> str:
+        return self.client_contract_uid
+    def get_name(self) -> str:
+        return self.client_contract_name
+    def get_list_values(self) -> list[any]:
+        return [self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes, updated_by, self.client_contract_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.client_contract_uid, self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.client_contract_name, self.tenant_uid, self.client_uid, self.parent_client_contract_uid, self.contract_text, self.contract_value, self.currency_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.client_contract_uid = uid
+    def update_uid_attributes(self, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str):
+        self.client_contract_uid = client_contract_uid
+        self.client_contract_name = client_contract_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.parent_client_contract_uid = parent_client_contract_uid
+        self.contract_text = contract_text
+        self.contract_value = contract_value
+        self.currency_uid = currency_uid
+    def update_attributes(self, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str):
+        self.client_contract_name = client_contract_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.parent_client_contract_uid = parent_client_contract_uid
+        self.contract_text = contract_text
+        self.contract_value = contract_value
+        self.currency_uid = currency_uid
+
+
+@dataclass(frozen=False)
 class client_country_write_dto(base_write_dto):
     client_country_uid: str
     client_country_name: str
@@ -4042,6 +4568,1102 @@ class client_type_write_dto(base_write_dto):
     def update_attributes(self, client_type_name: str, client_type_description: str):
         self.client_type_name = client_type_name
         self.client_type_description = client_type_description
+
+
+@dataclass(frozen=False)
+class competency_entry_write_dto(base_write_dto):
+    competency_entry_uid: str
+    competency_entry_name: str
+    tenant_uid: str
+    competency_item_uid: str
+    account_uid: str
+    entry_template: str
+    def __init__(self, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, custom_attributes: str = "{}"):
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_entry_name = competency_entry_name
+        self.tenant_uid = tenant_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.entry_template = entry_template
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str):
+        return cls(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template)
+    @classmethod
+    def new_write_with_defaults(cls, competency_entry_uid: str = "", competency_entry_name: str = "", tenant_uid: str = "", competency_item_uid: str = "", account_uid: str = "", entry_template: str = ""):
+        return cls(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template)
+    @classmethod
+    def new_write_random_uid(cls, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str):
+        return cls(base_dto.get_random_uid(), competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_entry_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_entry_uid"], d["competency_entry_name"], d["tenant_uid"], d["competency_item_uid"], d["account_uid"], d["entry_template"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_entry_write_dto(self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_entry_write_dto(base_dto.get_random_uid(), self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_entry_write_dto(uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_entry_model
+    def get_uid(self) -> str:
+        return self.competency_entry_uid
+    def get_name(self) -> str:
+        return self.competency_entry_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes, updated_by, self.competency_entry_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_entry_uid, self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_entry_name, self.tenant_uid, self.competency_item_uid, self.account_uid, self.entry_template, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_entry_uid = uid
+    def update_uid_attributes(self, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str):
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_entry_name = competency_entry_name
+        self.tenant_uid = tenant_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.entry_template = entry_template
+    def update_attributes(self, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str):
+        self.competency_entry_name = competency_entry_name
+        self.tenant_uid = tenant_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.entry_template = entry_template
+
+
+@dataclass(frozen=False)
+class competency_entry_account_write_dto(base_write_dto):
+    competency_entry_account_uid: str
+    competency_entry_account_name: str
+    tenant_uid: str
+    account_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_entry_uid: str
+    competency_item_account_uid: str
+    entry_title: str | None
+    entry_content: str | None
+    entry_value: str | None
+    competency_ranking_uid: str
+    def __init__(self, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, custom_attributes: str = "{}"):
+        self.competency_entry_account_uid = competency_entry_account_uid
+        self.competency_entry_account_name = competency_entry_account_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_item_account_uid = competency_item_account_uid
+        self.entry_title = entry_title
+        self.entry_content = entry_content
+        self.entry_value = entry_value
+        self.competency_ranking_uid = competency_ranking_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str):
+        return cls(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_entry_account_uid: str = "", competency_entry_account_name: str = "", tenant_uid: str = "", account_uid: str = "", competency_process_account_uid: str = "", competency_group_account_uid: str = "", competency_entry_uid: str = "", competency_item_account_uid: str = "", entry_title: str | None = "", entry_content: str | None = "", entry_value: str | None = "", competency_ranking_uid: str = ""):
+        return cls(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str):
+        return cls(base_dto.get_random_uid(), competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_entry_account_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_entry_account_uid"], d["competency_entry_account_name"], d["tenant_uid"], d["account_uid"], d["competency_process_account_uid"], d["competency_group_account_uid"], d["competency_entry_uid"], d["competency_item_account_uid"], d["entry_title"], d["entry_content"], d["entry_value"], d["competency_ranking_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_entry_account_write_dto(self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_entry_account_write_dto(base_dto.get_random_uid(), self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_entry_account_write_dto(uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_entry_account_model
+    def get_uid(self) -> str:
+        return self.competency_entry_account_uid
+    def get_name(self) -> str:
+        return self.competency_entry_account_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes, updated_by, self.competency_entry_account_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_entry_account_uid, self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_entry_account_name, self.tenant_uid, self.account_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_entry_uid, self.competency_item_account_uid, self.entry_title, self.entry_content, self.entry_value, self.competency_ranking_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_entry_account_uid = uid
+    def update_uid_attributes(self, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str):
+        self.competency_entry_account_uid = competency_entry_account_uid
+        self.competency_entry_account_name = competency_entry_account_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_item_account_uid = competency_item_account_uid
+        self.entry_title = entry_title
+        self.entry_content = entry_content
+        self.entry_value = entry_value
+        self.competency_ranking_uid = competency_ranking_uid
+    def update_attributes(self, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str):
+        self.competency_entry_account_name = competency_entry_account_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_entry_uid = competency_entry_uid
+        self.competency_item_account_uid = competency_item_account_uid
+        self.entry_title = entry_title
+        self.entry_content = entry_content
+        self.entry_value = entry_value
+        self.competency_ranking_uid = competency_ranking_uid
+
+
+@dataclass(frozen=False)
+class competency_group_write_dto(base_write_dto):
+    competency_group_uid: str
+    competency_group_name: str
+    competency_process_uid: str
+    tenant_uid: str
+    account_uid: str
+    def __init__(self, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, custom_attributes: str = "{}"):
+        self.competency_group_uid = competency_group_uid
+        self.competency_group_name = competency_group_name
+        self.competency_process_uid = competency_process_uid
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str):
+        return cls(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_group_uid: str = "", competency_group_name: str = "", competency_process_uid: str = "", tenant_uid: str = "", account_uid: str = ""):
+        return cls(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str):
+        return cls(base_dto.get_random_uid(), competency_group_name, competency_process_uid, tenant_uid, account_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_group_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_uid"], d["competency_group_name"], d["competency_process_uid"], d["tenant_uid"], d["account_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_group_write_dto(self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_group_write_dto(base_dto.get_random_uid(), self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_group_write_dto(uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_group_model
+    def get_uid(self) -> str:
+        return self.competency_group_uid
+    def get_name(self) -> str:
+        return self.competency_group_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes, updated_by, self.competency_group_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_group_uid, self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_group_name, self.competency_process_uid, self.tenant_uid, self.account_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_group_uid = uid
+    def update_uid_attributes(self, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str):
+        self.competency_group_uid = competency_group_uid
+        self.competency_group_name = competency_group_name
+        self.competency_process_uid = competency_process_uid
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+    def update_attributes(self, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str):
+        self.competency_group_name = competency_group_name
+        self.competency_process_uid = competency_process_uid
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+
+
+@dataclass(frozen=False)
+class competency_group_account_write_dto(base_write_dto):
+    competency_group_account_uid: str
+    competency_group_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_process_account_uid: str
+    competency_group_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    final_group_result: str | None
+    def __init__(self, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, custom_attributes: str = "{}"):
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_group_account_name = competency_group_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.final_group_result = final_group_result
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None):
+        return cls(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result)
+    @classmethod
+    def new_write_with_defaults(cls, competency_group_account_uid: str = "", competency_group_account_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", competency_process_account_uid: str = "", competency_group_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), final_group_result: str | None = ""):
+        return cls(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result)
+    @classmethod
+    def new_write_random_uid(cls, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None):
+        return cls(base_dto.get_random_uid(), competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_group_account_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_account_uid"], d["competency_group_account_name"], d["tenant_uid"], d["competency_process_uid"], d["competency_process_account_uid"], d["competency_group_uid"], d["account_uid"], d["start_date"], d["end_date"], d["final_group_result"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_group_account_write_dto(self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_group_account_write_dto(base_dto.get_random_uid(), self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_group_account_write_dto(uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_group_account_model
+    def get_uid(self) -> str:
+        return self.competency_group_account_uid
+    def get_name(self) -> str:
+        return self.competency_group_account_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes, updated_by, self.competency_group_account_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_group_account_uid, self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_group_account_name, self.tenant_uid, self.competency_process_uid, self.competency_process_account_uid, self.competency_group_uid, self.account_uid, self.start_date, self.end_date, self.final_group_result, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_group_account_uid = uid
+    def update_uid_attributes(self, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None):
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_group_account_name = competency_group_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.final_group_result = final_group_result
+    def update_attributes(self, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None):
+        self.competency_group_account_name = competency_group_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.final_group_result = final_group_result
+
+
+@dataclass(frozen=False)
+class competency_group_type_write_dto(base_write_dto):
+    competency_group_type_uid: str
+    competency_group_type_name: str
+    tenant_uid: str
+    def __init__(self, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str, custom_attributes: str = "{}"):
+        self.competency_group_type_uid = competency_group_type_uid
+        self.competency_group_type_name = competency_group_type_name
+        self.tenant_uid = tenant_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str):
+        return cls(competency_group_type_uid, competency_group_type_name, tenant_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_group_type_uid: str = "", competency_group_type_name: str = "", tenant_uid: str = ""):
+        return cls(competency_group_type_uid, competency_group_type_name, tenant_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_group_type_name: str, tenant_uid: str):
+        return cls(base_dto.get_random_uid(), competency_group_type_name, tenant_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_group_type_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_group_type_uid"], d["competency_group_type_name"], d["tenant_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_group_type_write_dto(self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_group_type_write_dto(base_dto.get_random_uid(), self.competency_group_type_name, self.tenant_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_group_type_write_dto(uid, self.competency_group_type_name, self.tenant_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_group_type_model
+    def get_uid(self) -> str:
+        return self.competency_group_type_uid
+    def get_name(self) -> str:
+        return self.competency_group_type_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_group_type_name, self.tenant_uid, self.custom_attributes, updated_by, self.competency_group_type_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_group_type_uid, self.competency_group_type_name, self.tenant_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_group_type_name, self.tenant_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_group_type_name, self.tenant_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_group_type_uid = uid
+    def update_uid_attributes(self, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str):
+        self.competency_group_type_uid = competency_group_type_uid
+        self.competency_group_type_name = competency_group_type_name
+        self.tenant_uid = tenant_uid
+    def update_attributes(self, competency_group_type_name: str, tenant_uid: str):
+        self.competency_group_type_name = competency_group_type_name
+        self.tenant_uid = tenant_uid
+
+
+@dataclass(frozen=False)
+class competency_item_write_dto(base_write_dto):
+    competency_item_uid: str
+    competency_item_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    competency_item_type_uid: str
+    competency_group_uid: str
+    account_uid: str
+    item_template: str
+    def __init__(self, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, custom_attributes: str = "{}"):
+        self.competency_item_uid = competency_item_uid
+        self.competency_item_name = competency_item_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.item_template = item_template
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str):
+        return cls(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template)
+    @classmethod
+    def new_write_with_defaults(cls, competency_item_uid: str = "", competency_item_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", competency_item_type_uid: str = "", competency_group_uid: str = "", account_uid: str = "", item_template: str = ""):
+        return cls(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template)
+    @classmethod
+    def new_write_random_uid(cls, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str):
+        return cls(base_dto.get_random_uid(), competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_item_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_uid"], d["competency_item_name"], d["tenant_uid"], d["competency_process_uid"], d["competency_item_type_uid"], d["competency_group_uid"], d["account_uid"], d["item_template"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_item_write_dto(self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_item_write_dto(base_dto.get_random_uid(), self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_item_write_dto(uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_item_model
+    def get_uid(self) -> str:
+        return self.competency_item_uid
+    def get_name(self) -> str:
+        return self.competency_item_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes, updated_by, self.competency_item_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_item_uid, self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_item_name, self.tenant_uid, self.competency_process_uid, self.competency_item_type_uid, self.competency_group_uid, self.account_uid, self.item_template, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_item_uid = uid
+    def update_uid_attributes(self, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str):
+        self.competency_item_uid = competency_item_uid
+        self.competency_item_name = competency_item_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.item_template = item_template
+    def update_attributes(self, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str):
+        self.competency_item_name = competency_item_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_group_uid = competency_group_uid
+        self.account_uid = account_uid
+        self.item_template = item_template
+
+
+@dataclass(frozen=False)
+class competency_item_account_write_dto(base_write_dto):
+    competency_item_account_uid: str
+    competency_item_account_name: str
+    tenant_uid: str
+    competency_process_account_uid: str
+    competency_group_account_uid: str
+    competency_item_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime | None
+    item_title: str | None
+    item_content: str | None
+    item_value: str | None
+    competency_ranking_uid: str
+    def __init__(self, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, custom_attributes: str = "{}"):
+        self.competency_item_account_uid = competency_item_account_uid
+        self.competency_item_account_name = competency_item_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.item_title = item_title
+        self.item_content = item_content
+        self.item_value = item_value
+        self.competency_ranking_uid = competency_ranking_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str):
+        return cls(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_item_account_uid: str = "", competency_item_account_name: str = "", tenant_uid: str = "", competency_process_account_uid: str = "", competency_group_account_uid: str = "", competency_item_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), item_title: str | None = "", item_content: str | None = "", item_value: str | None = "", competency_ranking_uid: str = ""):
+        return cls(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str):
+        return cls(base_dto.get_random_uid(), competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_item_account_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_account_uid"], d["competency_item_account_name"], d["tenant_uid"], d["competency_process_account_uid"], d["competency_group_account_uid"], d["competency_item_uid"], d["account_uid"], d["start_date"], d["end_date"], d["item_title"], d["item_content"], d["item_value"], d["competency_ranking_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_item_account_write_dto(self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_item_account_write_dto(base_dto.get_random_uid(), self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_item_account_write_dto(uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_item_account_model
+    def get_uid(self) -> str:
+        return self.competency_item_account_uid
+    def get_name(self) -> str:
+        return self.competency_item_account_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes, updated_by, self.competency_item_account_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_item_account_uid, self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_item_account_name, self.tenant_uid, self.competency_process_account_uid, self.competency_group_account_uid, self.competency_item_uid, self.account_uid, self.start_date, self.end_date, self.item_title, self.item_content, self.item_value, self.competency_ranking_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_item_account_uid = uid
+    def update_uid_attributes(self, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str):
+        self.competency_item_account_uid = competency_item_account_uid
+        self.competency_item_account_name = competency_item_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.item_title = item_title
+        self.item_content = item_content
+        self.item_value = item_value
+        self.competency_ranking_uid = competency_ranking_uid
+    def update_attributes(self, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str):
+        self.competency_item_account_name = competency_item_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_group_account_uid = competency_group_account_uid
+        self.competency_item_uid = competency_item_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.item_title = item_title
+        self.item_content = item_content
+        self.item_value = item_value
+        self.competency_ranking_uid = competency_ranking_uid
+
+
+@dataclass(frozen=False)
+class competency_item_type_write_dto(base_write_dto):
+    competency_item_type_uid: str
+    competency_item_type_name: str
+    tenant_uid: str
+    def __init__(self, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str, custom_attributes: str = "{}"):
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_item_type_name = competency_item_type_name
+        self.tenant_uid = tenant_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str):
+        return cls(competency_item_type_uid, competency_item_type_name, tenant_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_item_type_uid: str = "", competency_item_type_name: str = "", tenant_uid: str = ""):
+        return cls(competency_item_type_uid, competency_item_type_name, tenant_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_item_type_name: str, tenant_uid: str):
+        return cls(base_dto.get_random_uid(), competency_item_type_name, tenant_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_item_type_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_item_type_uid"], d["competency_item_type_name"], d["tenant_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_item_type_write_dto(self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_item_type_write_dto(base_dto.get_random_uid(), self.competency_item_type_name, self.tenant_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_item_type_write_dto(uid, self.competency_item_type_name, self.tenant_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_item_type_model
+    def get_uid(self) -> str:
+        return self.competency_item_type_uid
+    def get_name(self) -> str:
+        return self.competency_item_type_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_item_type_name, self.tenant_uid, self.custom_attributes, updated_by, self.competency_item_type_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_item_type_uid, self.competency_item_type_name, self.tenant_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_item_type_name, self.tenant_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_item_type_name, self.tenant_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_item_type_uid = uid
+    def update_uid_attributes(self, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str):
+        self.competency_item_type_uid = competency_item_type_uid
+        self.competency_item_type_name = competency_item_type_name
+        self.tenant_uid = tenant_uid
+    def update_attributes(self, competency_item_type_name: str, tenant_uid: str):
+        self.competency_item_type_name = competency_item_type_name
+        self.tenant_uid = tenant_uid
+
+
+@dataclass(frozen=False)
+class competency_process_write_dto(base_write_dto):
+    competency_process_uid: str
+    competency_process_name: str
+    competency_process_type_uid: str
+    tenant_uid: str
+    account_group_uid: str
+    is_required: int
+    process_description: str
+    due_date: datetime.datetime
+    def __init__(self, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, custom_attributes: str = "{}"):
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_name = competency_process_name
+        self.competency_process_type_uid = competency_process_type_uid
+        self.tenant_uid = tenant_uid
+        self.account_group_uid = account_group_uid
+        self.is_required = is_required
+        self.process_description = process_description
+        self.due_date = due_date
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", 0, "", datetime.datetime.now())
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", 0, "", datetime.datetime.now())
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now())
+    @classmethod
+    def new_write(cls, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime):
+        return cls(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date)
+    @classmethod
+    def new_write_with_defaults(cls, competency_process_uid: str = "", competency_process_name: str = "", competency_process_type_uid: str = "", tenant_uid: str = "", account_group_uid: str = "", is_required: int = 0, process_description: str = "", due_date: datetime.datetime = datetime.datetime.now()):
+        return cls(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date)
+    @classmethod
+    def new_write_random_uid(cls, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime):
+        return cls(base_dto.get_random_uid(), competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_process_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_uid"], d["competency_process_name"], d["competency_process_type_uid"], d["tenant_uid"], d["account_group_uid"], d["is_required"], d["process_description"], d["due_date"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_process_write_dto(self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_process_write_dto(base_dto.get_random_uid(), self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_process_write_dto(uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_process_model
+    def get_uid(self) -> str:
+        return self.competency_process_uid
+    def get_name(self) -> str:
+        return self.competency_process_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes, updated_by, self.competency_process_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_process_uid, self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_process_name, self.competency_process_type_uid, self.tenant_uid, self.account_group_uid, self.is_required, self.process_description, self.due_date, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_process_uid = uid
+    def update_uid_attributes(self, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime):
+        self.competency_process_uid = competency_process_uid
+        self.competency_process_name = competency_process_name
+        self.competency_process_type_uid = competency_process_type_uid
+        self.tenant_uid = tenant_uid
+        self.account_group_uid = account_group_uid
+        self.is_required = is_required
+        self.process_description = process_description
+        self.due_date = due_date
+    def update_attributes(self, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime):
+        self.competency_process_name = competency_process_name
+        self.competency_process_type_uid = competency_process_type_uid
+        self.tenant_uid = tenant_uid
+        self.account_group_uid = account_group_uid
+        self.is_required = is_required
+        self.process_description = process_description
+        self.due_date = due_date
+
+
+@dataclass(frozen=False)
+class competency_process_account_write_dto(base_write_dto):
+    competency_process_account_uid: str
+    competency_process_account_name: str
+    tenant_uid: str
+    competency_process_uid: str
+    account_uid: str
+    start_date: datetime.datetime
+    due_date: datetime.datetime
+    end_date: datetime.datetime | None
+    is_closed: int
+    final_result: str | None
+    def __init__(self, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, custom_attributes: str = "{}"):
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_process_account_name = competency_process_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.due_date = due_date
+        self.end_date = end_date
+        self.is_closed = is_closed
+        self.final_result = final_result
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), datetime.datetime.now(), 0, base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None):
+        return cls(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result)
+    @classmethod
+    def new_write_with_defaults(cls, competency_process_account_uid: str = "", competency_process_account_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), due_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_closed: int = 0, final_result: str | None = ""):
+        return cls(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result)
+    @classmethod
+    def new_write_random_uid(cls, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None):
+        return cls(base_dto.get_random_uid(), competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_process_account_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_account_uid"], d["competency_process_account_name"], d["tenant_uid"], d["competency_process_uid"], d["account_uid"], d["start_date"], d["due_date"], d["end_date"], d["is_closed"], d["final_result"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_process_account_write_dto(self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_process_account_write_dto(base_dto.get_random_uid(), self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_process_account_write_dto(uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_process_account_model
+    def get_uid(self) -> str:
+        return self.competency_process_account_uid
+    def get_name(self) -> str:
+        return self.competency_process_account_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes, updated_by, self.competency_process_account_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_process_account_uid, self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_process_account_name, self.tenant_uid, self.competency_process_uid, self.account_uid, self.start_date, self.due_date, self.end_date, self.is_closed, self.final_result, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_process_account_uid = uid
+    def update_uid_attributes(self, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None):
+        self.competency_process_account_uid = competency_process_account_uid
+        self.competency_process_account_name = competency_process_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.due_date = due_date
+        self.end_date = end_date
+        self.is_closed = is_closed
+        self.final_result = final_result
+    def update_attributes(self, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None):
+        self.competency_process_account_name = competency_process_account_name
+        self.tenant_uid = tenant_uid
+        self.competency_process_uid = competency_process_uid
+        self.account_uid = account_uid
+        self.start_date = start_date
+        self.due_date = due_date
+        self.end_date = end_date
+        self.is_closed = is_closed
+        self.final_result = final_result
+
+
+@dataclass(frozen=False)
+class competency_process_type_write_dto(base_write_dto):
+    competency_process_type_uid: str
+    competency_process_type_name: str
+    competency_class_name: str
+    def __init__(self, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str, custom_attributes: str = "{}"):
+        self.competency_process_type_uid = competency_process_type_uid
+        self.competency_process_type_name = competency_process_type_name
+        self.competency_class_name = competency_class_name
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str):
+        return cls(competency_process_type_uid, competency_process_type_name, competency_class_name)
+    @classmethod
+    def new_write_with_defaults(cls, competency_process_type_uid: str = "", competency_process_type_name: str = "", competency_class_name: str = ""):
+        return cls(competency_process_type_uid, competency_process_type_name, competency_class_name)
+    @classmethod
+    def new_write_random_uid(cls, competency_process_type_name: str, competency_class_name: str):
+        return cls(base_dto.get_random_uid(), competency_process_type_name, competency_class_name)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_process_type_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_process_type_uid"], d["competency_process_type_name"], d["competency_class_name"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_process_type_write_dto(self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_process_type_write_dto(base_dto.get_random_uid(), self.competency_process_type_name, self.competency_class_name, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_process_type_write_dto(uid, self.competency_process_type_name, self.competency_class_name, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_process_type_model
+    def get_uid(self) -> str:
+        return self.competency_process_type_uid
+    def get_name(self) -> str:
+        return self.competency_process_type_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_process_type_name, self.competency_class_name, self.custom_attributes, updated_by, self.competency_process_type_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_process_type_uid, self.competency_process_type_name, self.competency_class_name, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_process_type_name, self.competency_class_name]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_process_type_name, self.competency_class_name, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_process_type_uid = uid
+    def update_uid_attributes(self, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str):
+        self.competency_process_type_uid = competency_process_type_uid
+        self.competency_process_type_name = competency_process_type_name
+        self.competency_class_name = competency_class_name
+    def update_attributes(self, competency_process_type_name: str, competency_class_name: str):
+        self.competency_process_type_name = competency_process_type_name
+        self.competency_class_name = competency_class_name
+
+
+@dataclass(frozen=False)
+class competency_ranking_write_dto(base_write_dto):
+    competency_ranking_uid: str
+    competency_ranking_name: str
+    tenant_uid: str
+    competency_group_uid: str
+    def __init__(self, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, custom_attributes: str = "{}"):
+        self.competency_ranking_uid = competency_ranking_uid
+        self.competency_ranking_name = competency_ranking_name
+        self.tenant_uid = tenant_uid
+        self.competency_group_uid = competency_group_uid
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str):
+        return cls(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid)
+    @classmethod
+    def new_write_with_defaults(cls, competency_ranking_uid: str = "", competency_ranking_name: str = "", tenant_uid: str = "", competency_group_uid: str = ""):
+        return cls(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid)
+    @classmethod
+    def new_write_random_uid(cls, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str):
+        return cls(base_dto.get_random_uid(), competency_ranking_name, tenant_uid, competency_group_uid)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.competency_ranking_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["competency_ranking_uid"], d["competency_ranking_name"], d["tenant_uid"], d["competency_group_uid"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return competency_ranking_write_dto(self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return competency_ranking_write_dto(base_dto.get_random_uid(), self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return competency_ranking_write_dto(uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.competency_ranking_model
+    def get_uid(self) -> str:
+        return self.competency_ranking_uid
+    def get_name(self) -> str:
+        return self.competency_ranking_name
+    def get_list_values(self) -> list[any]:
+        return [self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes, updated_by, self.competency_ranking_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.competency_ranking_uid, self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.competency_ranking_name, self.tenant_uid, self.competency_group_uid]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.competency_ranking_name, self.tenant_uid, self.competency_group_uid, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.competency_ranking_uid = uid
+    def update_uid_attributes(self, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str):
+        self.competency_ranking_uid = competency_ranking_uid
+        self.competency_ranking_name = competency_ranking_name
+        self.tenant_uid = tenant_uid
+        self.competency_group_uid = competency_group_uid
+    def update_attributes(self, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str):
+        self.competency_ranking_name = competency_ranking_name
+        self.tenant_uid = tenant_uid
+        self.competency_group_uid = competency_group_uid
 
 
 @dataclass(frozen=False)
@@ -4644,6 +6266,180 @@ class currency_write_dto(base_write_dto):
         self.currency_name = currency_name
         self.is_focused = is_focused
         self.priority = priority
+
+
+@dataclass(frozen=False)
+class currency_rate_write_dto(base_write_dto):
+    currency_rate_uid: str
+    currency_rate_name: str
+    tenant_uid: str
+    currency_source_uid: str
+    from_currency_uid: str
+    to_currency_uid: str
+    start_date: datetime.datetime | None
+    end_date: datetime.datetime | None
+    def __init__(self, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, custom_attributes: str = "{}"):
+        self.currency_rate_uid = currency_rate_uid
+        self.currency_rate_name = currency_rate_name
+        self.tenant_uid = tenant_uid
+        self.currency_source_uid = currency_source_uid
+        self.from_currency_uid = from_currency_uid
+        self.to_currency_uid = to_currency_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now())
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now())
+    @classmethod
+    def new_write(cls, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None):
+        return cls(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date)
+    @classmethod
+    def new_write_with_defaults(cls, currency_rate_uid: str = "", currency_rate_name: str = "", tenant_uid: str = "", currency_source_uid: str = "", from_currency_uid: str = "", to_currency_uid: str = "", start_date: datetime.datetime | None = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now()):
+        return cls(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date)
+    @classmethod
+    def new_write_random_uid(cls, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None):
+        return cls(base_dto.get_random_uid(), currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.currency_rate_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["currency_rate_uid"], d["currency_rate_name"], d["tenant_uid"], d["currency_source_uid"], d["from_currency_uid"], d["to_currency_uid"], d["start_date"], d["end_date"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return currency_rate_write_dto(self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return currency_rate_write_dto(base_dto.get_random_uid(), self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return currency_rate_write_dto(uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.currency_rate_model
+    def get_uid(self) -> str:
+        return self.currency_rate_uid
+    def get_name(self) -> str:
+        return self.currency_rate_name
+    def get_list_values(self) -> list[any]:
+        return [self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes, updated_by, self.currency_rate_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.currency_rate_uid, self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.currency_rate_name, self.tenant_uid, self.currency_source_uid, self.from_currency_uid, self.to_currency_uid, self.start_date, self.end_date, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.currency_rate_uid = uid
+    def update_uid_attributes(self, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None):
+        self.currency_rate_uid = currency_rate_uid
+        self.currency_rate_name = currency_rate_name
+        self.tenant_uid = tenant_uid
+        self.currency_source_uid = currency_source_uid
+        self.from_currency_uid = from_currency_uid
+        self.to_currency_uid = to_currency_uid
+        self.start_date = start_date
+        self.end_date = end_date
+    def update_attributes(self, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None):
+        self.currency_rate_name = currency_rate_name
+        self.tenant_uid = tenant_uid
+        self.currency_source_uid = currency_source_uid
+        self.from_currency_uid = from_currency_uid
+        self.to_currency_uid = to_currency_uid
+        self.start_date = start_date
+        self.end_date = end_date
+
+
+@dataclass(frozen=False)
+class currency_source_write_dto(base_write_dto):
+    currency_source_uid: str
+    currency_source_name: str
+    tenant_uid: str
+    source_url: str
+    def __init__(self, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str, custom_attributes: str = "{}"):
+        self.currency_source_uid = currency_source_uid
+        self.currency_source_name = currency_source_name
+        self.tenant_uid = tenant_uid
+        self.source_url = source_url
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str):
+        return cls(currency_source_uid, currency_source_name, tenant_uid, source_url)
+    @classmethod
+    def new_write_with_defaults(cls, currency_source_uid: str = "", currency_source_name: str = "", tenant_uid: str = "", source_url: str = ""):
+        return cls(currency_source_uid, currency_source_name, tenant_uid, source_url)
+    @classmethod
+    def new_write_random_uid(cls, currency_source_name: str, tenant_uid: str, source_url: str):
+        return cls(base_dto.get_random_uid(), currency_source_name, tenant_uid, source_url)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.currency_source_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["currency_source_uid"], d["currency_source_name"], d["tenant_uid"], d["source_url"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return currency_source_write_dto(self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return currency_source_write_dto(base_dto.get_random_uid(), self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return currency_source_write_dto(uid, self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.currency_source_model
+    def get_uid(self) -> str:
+        return self.currency_source_uid
+    def get_name(self) -> str:
+        return self.currency_source_name
+    def get_list_values(self) -> list[any]:
+        return [self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes, updated_by, self.currency_source_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.currency_source_uid, self.currency_source_name, self.tenant_uid, self.source_url, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.currency_source_name, self.tenant_uid, self.source_url]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.currency_source_name, self.tenant_uid, self.source_url, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.currency_source_uid = uid
+    def update_uid_attributes(self, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str):
+        self.currency_source_uid = currency_source_uid
+        self.currency_source_name = currency_source_name
+        self.tenant_uid = tenant_uid
+        self.source_url = source_url
+    def update_attributes(self, currency_source_name: str, tenant_uid: str, source_url: str):
+        self.currency_source_name = currency_source_name
+        self.tenant_uid = tenant_uid
+        self.source_url = source_url
 
 
 @dataclass(frozen=False)
@@ -6201,6 +7997,89 @@ class invoice_type_write_dto(base_write_dto):
 
 
 @dataclass(frozen=False)
+class location_hierarchy_write_dto(base_write_dto):
+    location_hierarchy_uid: str
+    location_hierarchy_name: str
+    tenant_uid: str
+    country_uid: str | None
+    hierarchy_description: str
+    def __init__(self, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, custom_attributes: str = "{}"):
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_hierarchy_name = location_hierarchy_name
+        self.tenant_uid = tenant_uid
+        self.country_uid = country_uid
+        self.hierarchy_description = hierarchy_description
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str):
+        return cls(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description)
+    @classmethod
+    def new_write_with_defaults(cls, location_hierarchy_uid: str = "", location_hierarchy_name: str = "", tenant_uid: str = "", country_uid: str | None = "", hierarchy_description: str = ""):
+        return cls(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description)
+    @classmethod
+    def new_write_random_uid(cls, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str):
+        return cls(base_dto.get_random_uid(), location_hierarchy_name, tenant_uid, country_uid, hierarchy_description)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.location_hierarchy_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["location_hierarchy_uid"], d["location_hierarchy_name"], d["tenant_uid"], d["country_uid"], d["hierarchy_description"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return location_hierarchy_write_dto(self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return location_hierarchy_write_dto(base_dto.get_random_uid(), self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return location_hierarchy_write_dto(uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.location_hierarchy_model
+    def get_uid(self) -> str:
+        return self.location_hierarchy_uid
+    def get_name(self) -> str:
+        return self.location_hierarchy_name
+    def get_list_values(self) -> list[any]:
+        return [self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes, updated_by, self.location_hierarchy_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.location_hierarchy_uid, self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.location_hierarchy_name, self.tenant_uid, self.country_uid, self.hierarchy_description, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.location_hierarchy_uid = uid
+    def update_uid_attributes(self, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str):
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_hierarchy_name = location_hierarchy_name
+        self.tenant_uid = tenant_uid
+        self.country_uid = country_uid
+        self.hierarchy_description = hierarchy_description
+    def update_attributes(self, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str):
+        self.location_hierarchy_name = location_hierarchy_name
+        self.tenant_uid = tenant_uid
+        self.country_uid = country_uid
+        self.hierarchy_description = hierarchy_description
+
+
+@dataclass(frozen=False)
 class location_postal_code_write_dto(base_write_dto):
     location_postal_code_uid: str
     location_postal_code_name: str
@@ -6297,6 +8176,109 @@ class location_postal_code_write_dto(base_write_dto):
         self.county_name = county_name
         self.state_name = state_name
         self.region_name = region_name
+
+
+@dataclass(frozen=False)
+class location_region_write_dto(base_write_dto):
+    location_region_uid: str
+    location_region_name: str
+    tenant_uid: str
+    location_hierarchy_uid: str
+    location_territory_uid: str | None
+    parent_location_region_uid: str | None
+    country_uid: str | None
+    region_latitude: str
+    region_longitude: str
+    region_description: str
+    def __init__(self, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, custom_attributes: str = "{}"):
+        self.location_region_uid = location_region_uid
+        self.location_region_name = location_region_name
+        self.tenant_uid = tenant_uid
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_territory_uid = location_territory_uid
+        self.parent_location_region_uid = parent_location_region_uid
+        self.country_uid = country_uid
+        self.region_latitude = region_latitude
+        self.region_longitude = region_longitude
+        self.region_description = region_description
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), "", "", base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str):
+        return cls(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description)
+    @classmethod
+    def new_write_with_defaults(cls, location_region_uid: str = "", location_region_name: str = "", tenant_uid: str = "", location_hierarchy_uid: str = "", location_territory_uid: str | None = "", parent_location_region_uid: str | None = "", country_uid: str | None = "", region_latitude: str = "", region_longitude: str = "", region_description: str = ""):
+        return cls(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description)
+    @classmethod
+    def new_write_random_uid(cls, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str):
+        return cls(base_dto.get_random_uid(), location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.location_region_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["location_region_uid"], d["location_region_name"], d["tenant_uid"], d["location_hierarchy_uid"], d["location_territory_uid"], d["parent_location_region_uid"], d["country_uid"], d["region_latitude"], d["region_longitude"], d["region_description"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return location_region_write_dto(self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return location_region_write_dto(base_dto.get_random_uid(), self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return location_region_write_dto(uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.location_region_model
+    def get_uid(self) -> str:
+        return self.location_region_uid
+    def get_name(self) -> str:
+        return self.location_region_name
+    def get_list_values(self) -> list[any]:
+        return [self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes, updated_by, self.location_region_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.location_region_uid, self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.location_region_name, self.tenant_uid, self.location_hierarchy_uid, self.location_territory_uid, self.parent_location_region_uid, self.country_uid, self.region_latitude, self.region_longitude, self.region_description, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.location_region_uid = uid
+    def update_uid_attributes(self, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str):
+        self.location_region_uid = location_region_uid
+        self.location_region_name = location_region_name
+        self.tenant_uid = tenant_uid
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_territory_uid = location_territory_uid
+        self.parent_location_region_uid = parent_location_region_uid
+        self.country_uid = country_uid
+        self.region_latitude = region_latitude
+        self.region_longitude = region_longitude
+        self.region_description = region_description
+    def update_attributes(self, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str):
+        self.location_region_name = location_region_name
+        self.tenant_uid = tenant_uid
+        self.location_hierarchy_uid = location_hierarchy_uid
+        self.location_territory_uid = location_territory_uid
+        self.parent_location_region_uid = parent_location_region_uid
+        self.country_uid = country_uid
+        self.region_latitude = region_latitude
+        self.region_longitude = region_longitude
+        self.region_description = region_description
 
 
 @dataclass(frozen=False)
@@ -6687,60 +8669,76 @@ class monitor_type_write_dto(base_write_dto):
 class period_write_dto(base_write_dto):
     period_uid: str
     period_name: str
+    period_full_name: str
     period_number: int
     period_type: str
     period_start_time: datetime.datetime
     period_end_time: datetime.datetime
     period_year: int | None
+    period_semester: int | None
+    period_trimester: int | None
     period_quarter: int | None
     period_month: int | None
     period_week: int | None
     period_day: int | None
-    def __init__(self, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, custom_attributes: str = "{}"):
+    period_day_of_year: int | None
+    parent_year_period_uid: str | None
+    parent_quarter_period_uid: str | None
+    parent_month_period_uid: str | None
+    parent_week_period_uid: str | None
+    def __init__(self, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, custom_attributes: str = "{}"):
         self.period_uid = period_uid
         self.period_name = period_name
+        self.period_full_name = period_full_name
         self.period_number = period_number
         self.period_type = period_type
         self.period_start_time = period_start_time
         self.period_end_time = period_end_time
         self.period_year = period_year
+        self.period_semester = period_semester
+        self.period_trimester = period_trimester
         self.period_quarter = period_quarter
         self.period_month = period_month
         self.period_week = period_week
         self.period_day = period_day
+        self.period_day_of_year = period_day_of_year
+        self.parent_year_period_uid = parent_year_period_uid
+        self.parent_quarter_period_uid = parent_quarter_period_uid
+        self.parent_month_period_uid = parent_month_period_uid
+        self.parent_week_period_uid = parent_week_period_uid
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0)
+        return cls("", "", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, "", "", "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0)
+        return cls(base_dto.get_random_uid(), "", "", 0, "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, "", "", "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0)
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0, 0, 0, 0, 0, base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None):
-        return cls(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day)
+    def new_write(cls, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None):
+        return cls(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid)
     @classmethod
-    def new_write_with_defaults(cls, period_uid: str = "", period_name: str = "", period_number: int = 0, period_type: str = "", period_start_time: datetime.datetime = datetime.datetime.now(), period_end_time: datetime.datetime = datetime.datetime.now(), period_year: int | None = 0, period_quarter: int | None = 0, period_month: int | None = 0, period_week: int | None = 0, period_day: int | None = 0):
-        return cls(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day)
+    def new_write_with_defaults(cls, period_uid: str = "", period_name: str = "", period_full_name: str = "", period_number: int = 0, period_type: str = "", period_start_time: datetime.datetime = datetime.datetime.now(), period_end_time: datetime.datetime = datetime.datetime.now(), period_year: int | None = 0, period_semester: int | None = 0, period_trimester: int | None = 0, period_quarter: int | None = 0, period_month: int | None = 0, period_week: int | None = 0, period_day: int | None = 0, period_day_of_year: int | None = 0, parent_year_period_uid: str | None = "", parent_quarter_period_uid: str | None = "", parent_month_period_uid: str | None = "", parent_week_period_uid: str | None = ""):
+        return cls(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid)
     @classmethod
-    def new_write_random_uid(cls, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None):
-        return cls(base_dto.get_random_uid(), period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day)
+    def new_write_random_uid(cls, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None):
+        return cls(base_dto.get_random_uid(), period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.period_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["period_uid"], d["period_name"], d["period_number"], d["period_type"], d["period_start_time"], d["period_end_time"], d["period_year"], d["period_quarter"], d["period_month"], d["period_week"], d["period_day"])
+        return cls(d["period_uid"], d["period_name"], d["period_full_name"], d["period_number"], d["period_type"], d["period_start_time"], d["period_end_time"], d["period_year"], d["period_semester"], d["period_trimester"], d["period_quarter"], d["period_month"], d["period_week"], d["period_day"], d["period_day_of_year"], d["parent_year_period_uid"], d["parent_quarter_period_uid"], d["parent_month_period_uid"], d["parent_week_period_uid"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return period_write_dto(self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes)
+        return period_write_dto(self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes)
     def clone_write_new_uid(self):
-        return period_write_dto(base_dto.get_random_uid(), self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes)
+        return period_write_dto(base_dto.get_random_uid(), self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return period_write_dto(uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes)
+        return period_write_dto(uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.period_model
     def get_uid(self) -> str:
@@ -6748,46 +8746,62 @@ class period_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.period_name
     def get_list_values(self) -> list[any]:
-        return [self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes]
+        return [self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day]
+        return [self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes, updated_by, self.period_uid]
+        return [self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes, updated_by, self.period_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, created_by, created_by, self.custom_attributes]
+        return [self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day]
+        return [self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.custom_attributes]
+        return [self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.period_uid = uid
-    def update_uid_attributes(self, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None):
+    def update_uid_attributes(self, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None):
         self.period_uid = period_uid
         self.period_name = period_name
+        self.period_full_name = period_full_name
         self.period_number = period_number
         self.period_type = period_type
         self.period_start_time = period_start_time
         self.period_end_time = period_end_time
         self.period_year = period_year
+        self.period_semester = period_semester
+        self.period_trimester = period_trimester
         self.period_quarter = period_quarter
         self.period_month = period_month
         self.period_week = period_week
         self.period_day = period_day
-    def update_attributes(self, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None):
+        self.period_day_of_year = period_day_of_year
+        self.parent_year_period_uid = parent_year_period_uid
+        self.parent_quarter_period_uid = parent_quarter_period_uid
+        self.parent_month_period_uid = parent_month_period_uid
+        self.parent_week_period_uid = parent_week_period_uid
+    def update_attributes(self, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None):
         self.period_name = period_name
+        self.period_full_name = period_full_name
         self.period_number = period_number
         self.period_type = period_type
         self.period_start_time = period_start_time
         self.period_end_time = period_end_time
         self.period_year = period_year
+        self.period_semester = period_semester
+        self.period_trimester = period_trimester
         self.period_quarter = period_quarter
         self.period_month = period_month
         self.period_week = period_week
         self.period_day = period_day
+        self.period_day_of_year = period_day_of_year
+        self.parent_year_period_uid = parent_year_period_uid
+        self.parent_quarter_period_uid = parent_quarter_period_uid
+        self.parent_month_period_uid = parent_month_period_uid
+        self.parent_week_period_uid = parent_week_period_uid
 
 
 @dataclass(frozen=False)
@@ -6875,6 +8889,101 @@ class process_write_dto(base_write_dto):
         self.account_uid = account_uid
         self.process_type_uid = process_type_uid
         self.status_name = status_name
+
+
+@dataclass(frozen=False)
+class process_result_write_dto(base_write_dto):
+    process_result_uid: str
+    process_result_name: str
+    tenant_uid: str
+    account_uid: str
+    process_uid: str
+    process_run_uid: str
+    result_type: str
+    result_text: str
+    def __init__(self, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, custom_attributes: str = "{}"):
+        self.process_result_uid = process_result_uid
+        self.process_result_name = process_result_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.process_uid = process_uid
+        self.process_run_uid = process_run_uid
+        self.result_type = result_type
+        self.result_text = result_text
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str):
+        return cls(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text)
+    @classmethod
+    def new_write_with_defaults(cls, process_result_uid: str = "", process_result_name: str = "", tenant_uid: str = "", account_uid: str = "", process_uid: str = "", process_run_uid: str = "", result_type: str = "", result_text: str = ""):
+        return cls(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text)
+    @classmethod
+    def new_write_random_uid(cls, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str):
+        return cls(base_dto.get_random_uid(), process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.process_result_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["process_result_uid"], d["process_result_name"], d["tenant_uid"], d["account_uid"], d["process_uid"], d["process_run_uid"], d["result_type"], d["result_text"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return process_result_write_dto(self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return process_result_write_dto(base_dto.get_random_uid(), self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return process_result_write_dto(uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.process_result_model
+    def get_uid(self) -> str:
+        return self.process_result_uid
+    def get_name(self) -> str:
+        return self.process_result_name
+    def get_list_values(self) -> list[any]:
+        return [self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes, updated_by, self.process_result_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.process_result_uid, self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.process_result_name, self.tenant_uid, self.account_uid, self.process_uid, self.process_run_uid, self.result_type, self.result_text, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.process_result_uid = uid
+    def update_uid_attributes(self, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str):
+        self.process_result_uid = process_result_uid
+        self.process_result_name = process_result_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.process_uid = process_uid
+        self.process_run_uid = process_run_uid
+        self.result_type = result_type
+        self.result_text = result_text
+    def update_attributes(self, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str):
+        self.process_result_name = process_result_name
+        self.tenant_uid = tenant_uid
+        self.account_uid = account_uid
+        self.process_uid = process_uid
+        self.process_run_uid = process_run_uid
+        self.result_type = result_type
+        self.result_text = result_text
 
 
 @dataclass(frozen=False)
@@ -7443,52 +9552,54 @@ class project_milestone_write_dto(base_write_dto):
     client_uid: str
     project_instance_uid: str
     project_budget_uid: str | None
+    project_phase_uid: str | None
     start_date: datetime.datetime
     end_date: datetime.datetime
     status_name: str
-    def __init__(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, custom_attributes: str = "{}"):
+    def __init__(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, custom_attributes: str = "{}"):
         self.project_milestone_uid = project_milestone_uid
         self.project_milestone_name = project_milestone_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
         self.project_budget_uid = project_budget_uid
+        self.project_phase_uid = project_phase_uid
         self.start_date = start_date
         self.end_date = end_date
         self.status_name = status_name
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+        return cls("", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
-        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name)
+    def new_write(cls, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name)
     @classmethod
-    def new_write_with_defaults(cls, project_milestone_uid: str = "", project_milestone_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = ""):
-        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name)
+    def new_write_with_defaults(cls, project_milestone_uid: str = "", project_milestone_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", project_phase_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = ""):
+        return cls(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name)
     @classmethod
-    def new_write_random_uid(cls, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
-        return cls(base_dto.get_random_uid(), project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name)
+    def new_write_random_uid(cls, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(base_dto.get_random_uid(), project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.project_milestone_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["project_milestone_uid"], d["project_milestone_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["start_date"], d["end_date"], d["status_name"])
+        return cls(d["project_milestone_uid"], d["project_milestone_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["project_phase_uid"], d["start_date"], d["end_date"], d["status_name"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return project_milestone_write_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+        return project_milestone_write_dto(self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
     def clone_write_new_uid(self):
-        return project_milestone_write_dto(base_dto.get_random_uid(), self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+        return project_milestone_write_dto(base_dto.get_random_uid(), self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return project_milestone_write_dto(uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+        return project_milestone_write_dto(uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.project_milestone_model
     def get_uid(self) -> str:
@@ -7496,39 +9607,148 @@ class project_milestone_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.project_milestone_name
     def get_list_values(self) -> list[any]:
-        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
+        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name]
+        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_milestone_uid]
+        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_milestone_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, created_by, created_by, self.custom_attributes]
+        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name]
+        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
+        return [self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.project_milestone_uid = uid
-    def update_uid_attributes(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+    def update_uid_attributes(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
         self.project_milestone_uid = project_milestone_uid
         self.project_milestone_name = project_milestone_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
         self.project_budget_uid = project_budget_uid
+        self.project_phase_uid = project_phase_uid
         self.start_date = start_date
         self.end_date = end_date
         self.status_name = status_name
-    def update_attributes(self, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+    def update_attributes(self, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
         self.project_milestone_name = project_milestone_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
         self.project_budget_uid = project_budget_uid
+        self.project_phase_uid = project_phase_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.status_name = status_name
+
+
+@dataclass(frozen=False)
+class project_phase_write_dto(base_write_dto):
+    project_phase_uid: str
+    project_phase_name: str
+    tenant_uid: str
+    client_uid: str
+    project_instance_uid: str
+    project_budget_uid: str | None
+    previous_project_phase_uid: str | None
+    client_contract_uid: str | None
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    status_name: str
+    def __init__(self, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, custom_attributes: str = "{}"):
+        self.project_phase_uid = project_phase_uid
+        self.project_phase_name = project_phase_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.project_instance_uid = project_instance_uid
+        self.project_budget_uid = project_budget_uid
+        self.previous_project_phase_uid = previous_project_phase_uid
+        self.client_contract_uid = client_contract_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.status_name = status_name
+        self.custom_attributes = custom_attributes
+    @classmethod
+    def empty_write(cls):
+        return cls("", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+    @classmethod
+    def default_write(cls):
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), "")
+    @classmethod
+    def random_write(cls):
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), base_dto.get_random_uid())
+    @classmethod
+    def new_write(cls, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name)
+    @classmethod
+    def new_write_with_defaults(cls, project_phase_uid: str = "", project_phase_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", previous_project_phase_uid: str | None = "", client_contract_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = ""):
+        return cls(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name)
+    @classmethod
+    def new_write_random_uid(cls, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        return cls(base_dto.get_random_uid(), project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name)
+    @classmethod
+    def get_class_model(cls) -> base_model:
+        return db_models.project_phase_model
+    @classmethod
+    def from_dictionary(cls, d: dict[str, any]):
+        return cls(d["project_phase_uid"], d["project_phase_name"], d["tenant_uid"], d["client_uid"], d["project_instance_uid"], d["project_budget_uid"], d["previous_project_phase_uid"], d["client_contract_uid"], d["start_date"], d["end_date"], d["status_name"])
+    def to_write_dict(self) -> dict:
+        return asdict(self)
+    def clone_write(self):
+        return project_phase_write_dto(self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+    def clone_write_new_uid(self):
+        return project_phase_write_dto(base_dto.get_random_uid(), self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+    def clone_with_uid(self, uid: str):
+        return project_phase_write_dto(uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes)
+    def get_model(self) -> base_model:
+        return db_models.project_phase_model
+    def get_uid(self) -> str:
+        return self.project_phase_uid
+    def get_name(self) -> str:
+        return self.project_phase_name
+    def get_list_values(self) -> list[any]:
+        return [self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
+    def get_list_values_no_custom(self) -> list[any]:
+        return [self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name]
+    def get_list_write_update(self, updated_by: str) -> list[any]:
+        return [self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes, updated_by, self.project_phase_uid]
+    def get_list_write_insert(self, created_by: str) -> list[any]:
+        return [self.project_phase_uid, self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, created_by, created_by, self.custom_attributes]
+    def get_nonkey_values(self) -> list[any]:
+        return [self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name]
+    def get_nonkey_values_with_custom(self) -> list[any]:
+        return [self.project_phase_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.previous_project_phase_uid, self.client_contract_uid, self.start_date, self.end_date, self.status_name, self.custom_attributes]
+    def to_json_write(self) -> str:
+        return json.dumps(self.to_write_dict())
+    def compare_uid(self, obj: base_write_dto) -> bool:
+        return self.get_uid() == obj.get_uid()
+    def update_uid(self, uid: str):
+        self.project_phase_uid = uid
+    def update_uid_attributes(self, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        self.project_phase_uid = project_phase_uid
+        self.project_phase_name = project_phase_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.project_instance_uid = project_instance_uid
+        self.project_budget_uid = project_budget_uid
+        self.previous_project_phase_uid = previous_project_phase_uid
+        self.client_contract_uid = client_contract_uid
+        self.start_date = start_date
+        self.end_date = end_date
+        self.status_name = status_name
+    def update_attributes(self, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str):
+        self.project_phase_name = project_phase_name
+        self.tenant_uid = tenant_uid
+        self.client_uid = client_uid
+        self.project_instance_uid = project_instance_uid
+        self.project_budget_uid = project_budget_uid
+        self.previous_project_phase_uid = previous_project_phase_uid
+        self.client_contract_uid = client_contract_uid
         self.start_date = start_date
         self.end_date = end_date
         self.status_name = status_name
@@ -9003,7 +11223,9 @@ class system_database_write_dto(base_write_dto):
     db_user: str
     last_status_name: str
     last_db_size: int
-    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, custom_attributes: str = "{}"):
+    created_connections: int
+    released_connections: int
+    def __init__(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, custom_attributes: str = "{}"):
         self.system_database_uid = system_database_uid
         self.system_database_name = system_database_name
         self.db_url = db_url
@@ -9012,39 +11234,41 @@ class system_database_write_dto(base_write_dto):
         self.db_user = db_user
         self.last_status_name = last_status_name
         self.last_db_size = last_db_size
+        self.created_connections = created_connections
+        self.released_connections = released_connections
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", "", "", "", 0)
+        return cls("", "", "", "", "", "", "", 0, 0, 0)
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", 0)
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", 0, 0, 0)
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0)
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), 0, 0, 0)
     @classmethod
-    def new_write(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int):
-        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size)
+    def new_write(cls, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int):
+        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections)
     @classmethod
-    def new_write_with_defaults(cls, system_database_uid: str = "", system_database_name: str = "", db_url: str = "", db_host: str = "", db_name: str = "", db_user: str = "", last_status_name: str = "", last_db_size: int = 0):
-        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size)
+    def new_write_with_defaults(cls, system_database_uid: str = "", system_database_name: str = "", db_url: str = "", db_host: str = "", db_name: str = "", db_user: str = "", last_status_name: str = "", last_db_size: int = 0, created_connections: int = 0, released_connections: int = 0):
+        return cls(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections)
     @classmethod
-    def new_write_random_uid(cls, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int):
-        return cls(base_dto.get_random_uid(), system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size)
+    def new_write_random_uid(cls, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int):
+        return cls(base_dto.get_random_uid(), system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.system_database_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["system_database_uid"], d["system_database_name"], d["db_url"], d["db_host"], d["db_name"], d["db_user"], d["last_status_name"], d["last_db_size"])
+        return cls(d["system_database_uid"], d["system_database_name"], d["db_url"], d["db_host"], d["db_name"], d["db_user"], d["last_status_name"], d["last_db_size"], d["created_connections"], d["released_connections"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return system_database_write_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes)
+        return system_database_write_dto(self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes)
     def clone_write_new_uid(self):
-        return system_database_write_dto(base_dto.get_random_uid(), self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes)
+        return system_database_write_dto(base_dto.get_random_uid(), self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return system_database_write_dto(uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes)
+        return system_database_write_dto(uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.system_database_model
     def get_uid(self) -> str:
@@ -9052,24 +11276,24 @@ class system_database_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.system_database_name
     def get_list_values(self) -> list[any]:
-        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes]
+        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size]
+        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes, updated_by, self.system_database_uid]
+        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes, updated_by, self.system_database_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, created_by, created_by, self.custom_attributes]
+        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size]
+        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.custom_attributes]
+        return [self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.system_database_uid = uid
-    def update_uid_attributes(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int):
+    def update_uid_attributes(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int):
         self.system_database_uid = system_database_uid
         self.system_database_name = system_database_name
         self.db_url = db_url
@@ -9078,7 +11302,9 @@ class system_database_write_dto(base_write_dto):
         self.db_user = db_user
         self.last_status_name = last_status_name
         self.last_db_size = last_db_size
-    def update_attributes(self, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int):
+        self.created_connections = created_connections
+        self.released_connections = released_connections
+    def update_attributes(self, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int):
         self.system_database_name = system_database_name
         self.db_url = db_url
         self.db_host = db_host
@@ -9086,6 +11312,8 @@ class system_database_write_dto(base_write_dto):
         self.db_user = db_user
         self.last_status_name = last_status_name
         self.last_db_size = last_db_size
+        self.created_connections = created_connections
+        self.released_connections = released_connections
 
 
 @dataclass(frozen=False)
@@ -9271,45 +11499,47 @@ class system_license_write_dto(base_write_dto):
     system_license_uid: str
     system_license_name: str
     class_name: str
+    license_definition_json: str
     license_description: str
-    def __init__(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, custom_attributes: str = "{}"):
+    def __init__(self, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, custom_attributes: str = "{}"):
         self.system_license_uid = system_license_uid
         self.system_license_name = system_license_name
         self.class_name = class_name
+        self.license_definition_json = license_definition_json
         self.license_description = license_description
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "")
+        return cls("", "", "", "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "")
+        return cls(base_dto.get_random_uid(), "", "", "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, system_license_uid: str, system_license_name: str, class_name: str, license_description: str):
-        return cls(system_license_uid, system_license_name, class_name, license_description)
+    def new_write(cls, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str):
+        return cls(system_license_uid, system_license_name, class_name, license_definition_json, license_description)
     @classmethod
-    def new_write_with_defaults(cls, system_license_uid: str = "", system_license_name: str = "", class_name: str = "", license_description: str = ""):
-        return cls(system_license_uid, system_license_name, class_name, license_description)
+    def new_write_with_defaults(cls, system_license_uid: str = "", system_license_name: str = "", class_name: str = "", license_definition_json: str = "", license_description: str = ""):
+        return cls(system_license_uid, system_license_name, class_name, license_definition_json, license_description)
     @classmethod
-    def new_write_random_uid(cls, system_license_name: str, class_name: str, license_description: str):
-        return cls(base_dto.get_random_uid(), system_license_name, class_name, license_description)
+    def new_write_random_uid(cls, system_license_name: str, class_name: str, license_definition_json: str, license_description: str):
+        return cls(base_dto.get_random_uid(), system_license_name, class_name, license_definition_json, license_description)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.system_license_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["system_license_uid"], d["system_license_name"], d["class_name"], d["license_description"])
+        return cls(d["system_license_uid"], d["system_license_name"], d["class_name"], d["license_definition_json"], d["license_description"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return system_license_write_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.custom_attributes)
+        return system_license_write_dto(self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes)
     def clone_write_new_uid(self):
-        return system_license_write_dto(base_dto.get_random_uid(), self.system_license_name, self.class_name, self.license_description, self.custom_attributes)
+        return system_license_write_dto(base_dto.get_random_uid(), self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return system_license_write_dto(uid, self.system_license_name, self.class_name, self.license_description, self.custom_attributes)
+        return system_license_write_dto(uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.system_license_model
     def get_uid(self) -> str:
@@ -9317,31 +11547,33 @@ class system_license_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.system_license_name
     def get_list_values(self) -> list[any]:
-        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.custom_attributes]
+        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_description]
+        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.system_license_name, self.class_name, self.license_description, self.custom_attributes, updated_by, self.system_license_uid]
+        return [self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes, updated_by, self.system_license_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_description, created_by, created_by, self.custom_attributes]
+        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.system_license_name, self.class_name, self.license_description]
+        return [self.system_license_name, self.class_name, self.license_definition_json, self.license_description]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.system_license_name, self.class_name, self.license_description, self.custom_attributes]
+        return [self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.system_license_uid = uid
-    def update_uid_attributes(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str):
+    def update_uid_attributes(self, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str):
         self.system_license_uid = system_license_uid
         self.system_license_name = system_license_name
         self.class_name = class_name
+        self.license_definition_json = license_definition_json
         self.license_description = license_description
-    def update_attributes(self, system_license_name: str, class_name: str, license_description: str):
+    def update_attributes(self, system_license_name: str, class_name: str, license_definition_json: str, license_description: str):
         self.system_license_name = system_license_name
         self.class_name = class_name
+        self.license_definition_json = license_definition_json
         self.license_description = license_description
 
 
@@ -10266,6 +12498,7 @@ class tenant_write_dto(base_write_dto):
     country_uid: str
     tenant_type_uid: str
     tenant_category_uid: str
+    tenant_status_uid: str
     tenant_code: str
     tenant_description: str
     start_date: datetime.datetime
@@ -10274,12 +12507,13 @@ class tenant_write_dto(base_write_dto):
     is_system: int
     is_test: int
     account_uid: str | None
-    def __init__(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, custom_attributes: str = "{}"):
+    def __init__(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, custom_attributes: str = "{}"):
         self.tenant_uid = tenant_uid
         self.tenant_name = tenant_name
         self.country_uid = country_uid
         self.tenant_type_uid = tenant_type_uid
         self.tenant_category_uid = tenant_category_uid
+        self.tenant_status_uid = tenant_status_uid
         self.tenant_code = tenant_code
         self.tenant_description = tenant_description
         self.start_date = start_date
@@ -10291,36 +12525,36 @@ class tenant_write_dto(base_write_dto):
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "")
+        return cls("", "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "")
+        return cls(base_dto.get_random_uid(), "", "", "", "", "", "", "", datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
-        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
+    def new_write(cls, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
+        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
     @classmethod
-    def new_write_with_defaults(cls, tenant_uid: str = "", tenant_name: str = "", country_uid: str = "", tenant_type_uid: str = "", tenant_category_uid: str = "", tenant_code: str = "", tenant_description: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_internal: int = 0, is_system: int = 0, is_test: int = 0, account_uid: str | None = ""):
-        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
+    def new_write_with_defaults(cls, tenant_uid: str = "", tenant_name: str = "", country_uid: str = "", tenant_type_uid: str = "", tenant_category_uid: str = "", tenant_status_uid: str = "", tenant_code: str = "", tenant_description: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_internal: int = 0, is_system: int = 0, is_test: int = 0, account_uid: str | None = ""):
+        return cls(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
     @classmethod
-    def new_write_random_uid(cls, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
-        return cls(base_dto.get_random_uid(), tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
+    def new_write_random_uid(cls, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
+        return cls(base_dto.get_random_uid(), tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.tenant_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["tenant_uid"], d["tenant_name"], d["country_uid"], d["tenant_type_uid"], d["tenant_category_uid"], d["tenant_code"], d["tenant_description"], d["start_date"], d["end_date"], d["is_internal"], d["is_system"], d["is_test"], d["account_uid"])
+        return cls(d["tenant_uid"], d["tenant_name"], d["country_uid"], d["tenant_type_uid"], d["tenant_category_uid"], d["tenant_status_uid"], d["tenant_code"], d["tenant_description"], d["start_date"], d["end_date"], d["is_internal"], d["is_system"], d["is_test"], d["account_uid"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return tenant_write_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
+        return tenant_write_dto(self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
     def clone_write_new_uid(self):
-        return tenant_write_dto(base_dto.get_random_uid(), self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
+        return tenant_write_dto(base_dto.get_random_uid(), self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return tenant_write_dto(uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
+        return tenant_write_dto(uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.tenant_model
     def get_uid(self) -> str:
@@ -10328,29 +12562,30 @@ class tenant_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.tenant_name
     def get_list_values(self) -> list[any]:
-        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes]
+        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid]
+        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes, updated_by, self.tenant_uid]
+        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes, updated_by, self.tenant_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, created_by, created_by, self.custom_attributes]
+        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid]
+        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes]
+        return [self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.tenant_uid = uid
-    def update_uid_attributes(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
+    def update_uid_attributes(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
         self.tenant_uid = tenant_uid
         self.tenant_name = tenant_name
         self.country_uid = country_uid
         self.tenant_type_uid = tenant_type_uid
         self.tenant_category_uid = tenant_category_uid
+        self.tenant_status_uid = tenant_status_uid
         self.tenant_code = tenant_code
         self.tenant_description = tenant_description
         self.start_date = start_date
@@ -10359,11 +12594,12 @@ class tenant_write_dto(base_write_dto):
         self.is_system = is_system
         self.is_test = is_test
         self.account_uid = account_uid
-    def update_attributes(self, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
+    def update_attributes(self, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None):
         self.tenant_name = tenant_name
         self.country_uid = country_uid
         self.tenant_type_uid = tenant_type_uid
         self.tenant_category_uid = tenant_category_uid
+        self.tenant_status_uid = tenant_status_uid
         self.tenant_code = tenant_code
         self.tenant_description = tenant_description
         self.start_date = start_date
@@ -11047,43 +13283,45 @@ class tenant_type_write_dto(base_write_dto):
     tenant_type_uid: str
     tenant_type_name: str
     tenant_type_description: str
-    def __init__(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, custom_attributes: str = "{}"):
+    tenant_class: str
+    def __init__(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str, custom_attributes: str = "{}"):
         self.tenant_type_uid = tenant_type_uid
         self.tenant_type_name = tenant_type_name
         self.tenant_type_description = tenant_type_description
+        self.tenant_class = tenant_class
         self.custom_attributes = custom_attributes
     @classmethod
     def empty_write(cls):
-        return cls("", "", "")
+        return cls("", "", "", "")
     @classmethod
     def default_write(cls):
-        return cls(base_dto.get_random_uid(), "", "")
+        return cls(base_dto.get_random_uid(), "", "", "")
     @classmethod
     def random_write(cls):
-        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
+        return cls(base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid(), base_dto.get_random_uid())
     @classmethod
-    def new_write(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str):
-        return cls(tenant_type_uid, tenant_type_name, tenant_type_description)
+    def new_write(cls, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str):
+        return cls(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class)
     @classmethod
-    def new_write_with_defaults(cls, tenant_type_uid: str = "", tenant_type_name: str = "", tenant_type_description: str = ""):
-        return cls(tenant_type_uid, tenant_type_name, tenant_type_description)
+    def new_write_with_defaults(cls, tenant_type_uid: str = "", tenant_type_name: str = "", tenant_type_description: str = "", tenant_class: str = ""):
+        return cls(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class)
     @classmethod
-    def new_write_random_uid(cls, tenant_type_name: str, tenant_type_description: str):
-        return cls(base_dto.get_random_uid(), tenant_type_name, tenant_type_description)
+    def new_write_random_uid(cls, tenant_type_name: str, tenant_type_description: str, tenant_class: str):
+        return cls(base_dto.get_random_uid(), tenant_type_name, tenant_type_description, tenant_class)
     @classmethod
     def get_class_model(cls) -> base_model:
         return db_models.tenant_type_model
     @classmethod
     def from_dictionary(cls, d: dict[str, any]):
-        return cls(d["tenant_type_uid"], d["tenant_type_name"], d["tenant_type_description"])
+        return cls(d["tenant_type_uid"], d["tenant_type_name"], d["tenant_type_description"], d["tenant_class"])
     def to_write_dict(self) -> dict:
         return asdict(self)
     def clone_write(self):
-        return tenant_type_write_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.custom_attributes)
+        return tenant_type_write_dto(self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes)
     def clone_write_new_uid(self):
-        return tenant_type_write_dto(base_dto.get_random_uid(), self.tenant_type_name, self.tenant_type_description, self.custom_attributes)
+        return tenant_type_write_dto(base_dto.get_random_uid(), self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes)
     def clone_with_uid(self, uid: str):
-        return tenant_type_write_dto(uid, self.tenant_type_name, self.tenant_type_description, self.custom_attributes)
+        return tenant_type_write_dto(uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes)
     def get_model(self) -> base_model:
         return db_models.tenant_type_model
     def get_uid(self) -> str:
@@ -11091,30 +13329,32 @@ class tenant_type_write_dto(base_write_dto):
     def get_name(self) -> str:
         return self.tenant_type_name
     def get_list_values(self) -> list[any]:
-        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.custom_attributes]
+        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes]
     def get_list_values_no_custom(self) -> list[any]:
-        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description]
+        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class]
     def get_list_write_update(self, updated_by: str) -> list[any]:
-        return [self.tenant_type_name, self.tenant_type_description, self.custom_attributes, updated_by, self.tenant_type_uid]
+        return [self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes, updated_by, self.tenant_type_uid]
     def get_list_write_insert(self, created_by: str) -> list[any]:
-        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, created_by, created_by, self.custom_attributes]
+        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, created_by, created_by, self.custom_attributes]
     def get_nonkey_values(self) -> list[any]:
-        return [self.tenant_type_name, self.tenant_type_description]
+        return [self.tenant_type_name, self.tenant_type_description, self.tenant_class]
     def get_nonkey_values_with_custom(self) -> list[any]:
-        return [self.tenant_type_name, self.tenant_type_description, self.custom_attributes]
+        return [self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.custom_attributes]
     def to_json_write(self) -> str:
         return json.dumps(self.to_write_dict())
     def compare_uid(self, obj: base_write_dto) -> bool:
         return self.get_uid() == obj.get_uid()
     def update_uid(self, uid: str):
         self.tenant_type_uid = uid
-    def update_uid_attributes(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str):
+    def update_uid_attributes(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str):
         self.tenant_type_uid = tenant_type_uid
         self.tenant_type_name = tenant_type_name
         self.tenant_type_description = tenant_type_description
-    def update_attributes(self, tenant_type_name: str, tenant_type_description: str):
+        self.tenant_class = tenant_class
+    def update_attributes(self, tenant_type_name: str, tenant_type_description: str, tenant_class: str):
         self.tenant_type_name = tenant_type_name
         self.tenant_type_description = tenant_type_description
+        self.tenant_class = tenant_class
 
 
 @dataclass(frozen=False)

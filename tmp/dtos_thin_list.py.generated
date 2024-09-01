@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_thin_list - START at 2024-04-21 11:58:43.42314+00
+# auto-generated - v_definition_python_dtos_thin_list - START at 2024-08-04 09:36:03.51999+00
 from __future__ import annotations
 from datetime import datetime
 from abc import abstractmethod
@@ -289,6 +289,68 @@ class account_skill_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.account_skill_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class account_skill_assignment_thin_dtos(base_dtos):
+    dtos: list[account_skill_assignment_thin_dto]
+    def __init__(self, dtos: list[account_skill_assignment_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_skill_assignment_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_skill_assignment_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[account_skill_assignment_thin_dto], dtos2: list[account_skill_assignment_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> account_skill_assignment_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.account_skill_assignment_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_skill_assignment_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_skill_assignment_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class account_skill_group_thin_dtos(base_dtos):
+    dtos: list[account_skill_group_thin_dto]
+    def __init__(self, dtos: list[account_skill_group_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[account_skill_group_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: account_skill_group_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[account_skill_group_thin_dto], dtos2: list[account_skill_group_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> account_skill_group_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.account_skill_group_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, account_skill_group_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.account_skill_group_uid] = dto
         return res
 
 
@@ -789,6 +851,68 @@ class auth_permission_thin_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class auth_permission_type_thin_dtos(base_dtos):
+    dtos: list[auth_permission_type_thin_dto]
+    def __init__(self, dtos: list[auth_permission_type_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[auth_permission_type_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: auth_permission_type_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[auth_permission_type_thin_dto], dtos2: list[auth_permission_type_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> auth_permission_type_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.auth_permission_type_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, auth_permission_type_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.auth_permission_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class auth_pin_thin_dtos(base_dtos):
+    dtos: list[auth_pin_thin_dto]
+    def __init__(self, dtos: list[auth_pin_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[auth_pin_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: auth_pin_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[auth_pin_thin_dto], dtos2: list[auth_pin_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> auth_pin_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.auth_pin_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, auth_pin_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.auth_pin_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
 class auth_request_thin_dtos(base_dtos):
     dtos: list[auth_request_thin_dto]
     def __init__(self, dtos: list[auth_request_thin_dto]):
@@ -971,6 +1095,37 @@ class auth_token_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.auth_token_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class auth_token_type_thin_dtos(base_dtos):
+    dtos: list[auth_token_type_thin_dto]
+    def __init__(self, dtos: list[auth_token_type_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[auth_token_type_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: auth_token_type_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[auth_token_type_thin_dto], dtos2: list[auth_token_type_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> auth_token_type_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.auth_token_type_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, auth_token_type_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.auth_token_type_uid] = dto
         return res
 
 
@@ -1254,6 +1409,37 @@ class client_account_thin_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class client_contract_thin_dtos(base_dtos):
+    dtos: list[client_contract_thin_dto]
+    def __init__(self, dtos: list[client_contract_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[client_contract_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: client_contract_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[client_contract_thin_dto], dtos2: list[client_contract_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> client_contract_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.client_contract_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, client_contract_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.client_contract_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
 class client_country_thin_dtos(base_dtos):
     dtos: list[client_country_thin_dto]
     def __init__(self, dtos: list[client_country_thin_dto]):
@@ -1405,6 +1591,378 @@ class client_type_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.client_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_entry_thin_dtos(base_dtos):
+    dtos: list[competency_entry_thin_dto]
+    def __init__(self, dtos: list[competency_entry_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_entry_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_entry_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_entry_thin_dto], dtos2: list[competency_entry_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_entry_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_entry_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_entry_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_entry_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_entry_account_thin_dtos(base_dtos):
+    dtos: list[competency_entry_account_thin_dto]
+    def __init__(self, dtos: list[competency_entry_account_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_entry_account_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_entry_account_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_entry_account_thin_dto], dtos2: list[competency_entry_account_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_entry_account_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_entry_account_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_entry_account_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_entry_account_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_group_thin_dtos(base_dtos):
+    dtos: list[competency_group_thin_dto]
+    def __init__(self, dtos: list[competency_group_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_group_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_group_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_group_thin_dto], dtos2: list[competency_group_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_group_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_group_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_group_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_group_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_group_account_thin_dtos(base_dtos):
+    dtos: list[competency_group_account_thin_dto]
+    def __init__(self, dtos: list[competency_group_account_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_group_account_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_group_account_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_group_account_thin_dto], dtos2: list[competency_group_account_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_group_account_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_group_account_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_group_account_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_group_account_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_group_type_thin_dtos(base_dtos):
+    dtos: list[competency_group_type_thin_dto]
+    def __init__(self, dtos: list[competency_group_type_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_group_type_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_group_type_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_group_type_thin_dto], dtos2: list[competency_group_type_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_group_type_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_group_type_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_group_type_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_group_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_item_thin_dtos(base_dtos):
+    dtos: list[competency_item_thin_dto]
+    def __init__(self, dtos: list[competency_item_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_item_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_item_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_item_thin_dto], dtos2: list[competency_item_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_item_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_item_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_item_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_item_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_item_account_thin_dtos(base_dtos):
+    dtos: list[competency_item_account_thin_dto]
+    def __init__(self, dtos: list[competency_item_account_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_item_account_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_item_account_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_item_account_thin_dto], dtos2: list[competency_item_account_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_item_account_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_item_account_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_item_account_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_item_account_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_item_type_thin_dtos(base_dtos):
+    dtos: list[competency_item_type_thin_dto]
+    def __init__(self, dtos: list[competency_item_type_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_item_type_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_item_type_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_item_type_thin_dto], dtos2: list[competency_item_type_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_item_type_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_item_type_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_item_type_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_item_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_process_thin_dtos(base_dtos):
+    dtos: list[competency_process_thin_dto]
+    def __init__(self, dtos: list[competency_process_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_process_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_process_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_process_thin_dto], dtos2: list[competency_process_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_process_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_process_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_process_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_process_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_process_account_thin_dtos(base_dtos):
+    dtos: list[competency_process_account_thin_dto]
+    def __init__(self, dtos: list[competency_process_account_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_process_account_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_process_account_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_process_account_thin_dto], dtos2: list[competency_process_account_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_process_account_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_process_account_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_process_account_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_process_account_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_process_type_thin_dtos(base_dtos):
+    dtos: list[competency_process_type_thin_dto]
+    def __init__(self, dtos: list[competency_process_type_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_process_type_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_process_type_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_process_type_thin_dto], dtos2: list[competency_process_type_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_process_type_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_process_type_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_process_type_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_process_type_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class competency_ranking_thin_dtos(base_dtos):
+    dtos: list[competency_ranking_thin_dto]
+    def __init__(self, dtos: list[competency_ranking_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[competency_ranking_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: competency_ranking_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[competency_ranking_thin_dto], dtos2: list[competency_ranking_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> competency_ranking_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.competency_ranking_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, competency_ranking_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.competency_ranking_uid] = dto
         return res
 
 
@@ -1591,6 +2149,68 @@ class currency_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.currency_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class currency_rate_thin_dtos(base_dtos):
+    dtos: list[currency_rate_thin_dto]
+    def __init__(self, dtos: list[currency_rate_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[currency_rate_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: currency_rate_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[currency_rate_thin_dto], dtos2: list[currency_rate_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> currency_rate_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.currency_rate_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, currency_rate_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.currency_rate_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class currency_source_thin_dtos(base_dtos):
+    dtos: list[currency_source_thin_dto]
+    def __init__(self, dtos: list[currency_source_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[currency_source_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: currency_source_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[currency_source_thin_dto], dtos2: list[currency_source_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> currency_source_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.currency_source_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, currency_source_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.currency_source_uid] = dto
         return res
 
 
@@ -2153,6 +2773,37 @@ class invoice_type_thin_dtos(base_dtos):
 
 
 @dataclass(frozen=False)
+class location_hierarchy_thin_dtos(base_dtos):
+    dtos: list[location_hierarchy_thin_dto]
+    def __init__(self, dtos: list[location_hierarchy_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[location_hierarchy_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: location_hierarchy_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[location_hierarchy_thin_dto], dtos2: list[location_hierarchy_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> location_hierarchy_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.location_hierarchy_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, location_hierarchy_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.location_hierarchy_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
 class location_postal_code_thin_dtos(base_dtos):
     dtos: list[location_postal_code_thin_dto]
     def __init__(self, dtos: list[location_postal_code_thin_dto]):
@@ -2180,6 +2831,37 @@ class location_postal_code_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.location_postal_code_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class location_region_thin_dtos(base_dtos):
+    dtos: list[location_region_thin_dto]
+    def __init__(self, dtos: list[location_region_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[location_region_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: location_region_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[location_region_thin_dto], dtos2: list[location_region_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> location_region_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.location_region_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, location_region_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.location_region_uid] = dto
         return res
 
 
@@ -2366,6 +3048,37 @@ class process_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.process_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class process_result_thin_dtos(base_dtos):
+    dtos: list[process_result_thin_dto]
+    def __init__(self, dtos: list[process_result_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[process_result_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: process_result_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[process_result_thin_dto], dtos2: list[process_result_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> process_result_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.process_result_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, process_result_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.process_result_uid] = dto
         return res
 
 
@@ -2583,6 +3296,37 @@ class project_milestone_thin_dtos(base_dtos):
         res = {}
         for dto in self.dtos:
             res[dto.project_milestone_uid] = dto
+        return res
+
+
+@dataclass(frozen=False)
+class project_phase_thin_dtos(base_dtos):
+    dtos: list[project_phase_thin_dto]
+    def __init__(self, dtos: list[project_phase_thin_dto]):
+        super().__init__(dtos)
+        self.dtos = dtos
+    @classmethod
+    def empty_list(cls):
+        return cls(list())
+    @classmethod
+    def from_list(cls, dtos: list[project_phase_thin_dto]):
+        return cls(dtos)
+    @classmethod
+    def from_object(cls, dto: project_phase_thin_dto):
+        return cls([dto])
+    @classmethod
+    def from_lists(cls, dtos1: list[project_phase_thin_dto], dtos2: list[project_phase_thin_dto]):
+        return cls(dtos1 + dtos2)
+    def find_by_uid(self, uid: str) -> project_phase_thin_dto | None:
+        found_dtos = list(filter(lambda x: x.project_phase_uid == uid, self.dtos))
+        if len(found_dtos)>0:
+            return found_dtos[0]
+        else:
+            return None
+    def map_by_uid(self) -> dict[str, project_phase_thin_dto]:
+        res = {}
+        for dto in self.dtos:
+            res[dto.project_phase_uid] = dto
         return res
 
 

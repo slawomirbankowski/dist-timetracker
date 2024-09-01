@@ -67,6 +67,8 @@
             <column name="db_user" type="text" remarks="user of tenant database" defaultValue="postgres"><constraints nullable="false"/></column>
             <column name="last_status_name" type="text" remarks="last known status of this database" defaultValue="Unknown"><constraints nullable="false"/></column>
             <column name="last_db_size" type="bigint" remarks="last known size of database" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="created_connections" type="bigint" remarks="number of created connections" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="released_connections" type="bigint" remarks="number of released connections" defaultValueNumeric="0"><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" defaultValue="1.0.0" remarks="FK to system instance produced this state"><constraints nullable="false"/></column>
             <column name="row_lock" type="text" remarks="FK to table system_lock - logical lock of current row" />
@@ -162,7 +164,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="system_exception" remarks="type=system,append;cardinality=10000;description=exception or error thrown in backend or frontend application, it is for diagnostic, debugging and checking reasons" >
+        <createTable tableName="system_exception" remarks="exception or error thrown in backend or frontend application, it is for diagnostic, debugging and checking reasons" >
             <column name="system_exception_uid" type="text" remarks="PK of exception thrown on system instance"><constraints primaryKey="true" nullable="false"/></column>
             <column name="system_exception_name" type="text" remarks="friendly name of this exception"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -316,7 +318,7 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="system_setting" remarks="global settings for application - global" >
+        <createTable tableName="system_setting" remarks="settings for application - global" >
             <column name="system_setting_uid" type="text" remarks="UID of setting"><constraints primaryKey="true" nullable="false"/></column>
             <column name="system_setting_name" type="text" remarks="name of setting"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -424,6 +426,7 @@
             <!-- FKs -->
             <!-- attribute columns -->
             <column name="class_name" type="text" remarks="name of class that can check and apply license" defaultValue=""><constraints nullable="false"/></column>
+            <column name="license_definition_json" type="text" remarks="full definition of license" defaultValue=""><constraints nullable="false"/></column>
             <column name="license_description" type="text" remarks="description of license" defaultValue=""><constraints nullable="false"/></column>
             <!-- metadata columns -->
             <column name="row_instance" type="text" remarks="FK to system instance" defaultValue="1.0.0"><constraints nullable="false"/></column>

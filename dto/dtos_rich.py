@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_rich - START at 2024-04-21 14:56:16.094161+02
+# auto-generated - v_definition_python_dtos_rich - START at 2024-08-04 09:35:55.962902+00
 import datetime
 from datetime import datetime
 from abc import abstractmethod
@@ -618,6 +618,8 @@ class account_rate_rich_dto(account_rate_read_dto):
     rate: str | None
     start_date: datetime.datetime | None
     end_date: datetime.datetime | None
+    rate_note: str | None
+    is_default: str | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -659,7 +661,7 @@ class account_rate_rich_dto(account_rate_read_dto):
     currency__currency_name: str | None
     currency__is_focused: int | None
     currency__priority: int | None
-    def __init__(self, account_rate_uid: str | None, account_rate_name: str | None, tenant_uid: str | None, account_uid: str | None, currency_uid: str | None, rate: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None, currency__currency_name: str | None, currency__is_focused: int | None, currency__priority: int | None):
+    def __init__(self, account_rate_uid: str | None, account_rate_name: str | None, tenant_uid: str | None, account_uid: str | None, currency_uid: str | None, rate: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, rate_note: str | None, is_default: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None, currency__currency_name: str | None, currency__is_focused: int | None, currency__priority: int | None):
         self.account_rate_uid = account_rate_uid
         self.account_rate_name = account_rate_name
         self.tenant_uid = tenant_uid
@@ -668,6 +670,8 @@ class account_rate_rich_dto(account_rate_read_dto):
         self.rate = rate
         self.start_date = start_date
         self.end_date = end_date
+        self.rate_note = rate_note
+        self.is_default = is_default
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -712,14 +716,17 @@ class account_rate_rich_dto(account_rate_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system, self.currency__currency_name, self.currency__is_focused, self.currency__priority]
+        return [self.account_rate_uid, self.account_rate_name, self.tenant_uid, self.account_uid, self.currency_uid, self.rate, self.start_date, self.end_date, self.rate_note, self.is_default, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system, self.currency__currency_name, self.currency__is_focused, self.currency__priority]
 
 
 @dataclass(frozen=False)
 class account_skill_rich_dto(account_skill_read_dto):
     account_skill_uid: str | None
     account_skill_name: str | None
-    account_skill_description: str | None
+    account_skill_group_uid: str | None
+    skill_title: str | None
+    skill_code: str | None
+    skill_description: str | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -734,10 +741,13 @@ class account_skill_rich_dto(account_skill_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, account_skill_uid: str | None, account_skill_name: str | None, account_skill_description: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, account_skill_uid: str | None, account_skill_name: str | None, account_skill_group_uid: str | None, skill_title: str | None, skill_code: str | None, skill_description: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.account_skill_uid = account_skill_uid
         self.account_skill_name = account_skill_name
-        self.account_skill_description = account_skill_description
+        self.account_skill_group_uid = account_skill_group_uid
+        self.skill_title = skill_title
+        self.skill_code = skill_code
+        self.skill_description = skill_description
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -755,7 +765,7 @@ class account_skill_rich_dto(account_skill_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.account_skill_uid, self.account_skill_name, self.account_skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.account_skill_uid, self.account_skill_name, self.account_skill_group_uid, self.skill_title, self.skill_code, self.skill_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)
@@ -1337,6 +1347,7 @@ class auth_identity_rich_dto(auth_identity_read_dto):
     auth_identity_uid: str | None
     auth_identity_name: str | None
     class_name: str | None
+    auth_url: str | None
     default_parameters_json: str | None
     row_instance: str | None
     row_lock: str | None
@@ -1352,10 +1363,11 @@ class auth_identity_rich_dto(auth_identity_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, auth_identity_uid: str | None, auth_identity_name: str | None, class_name: str | None, default_parameters_json: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, auth_identity_uid: str | None, auth_identity_name: str | None, class_name: str | None, auth_url: str | None, default_parameters_json: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.auth_identity_uid = auth_identity_uid
         self.auth_identity_name = auth_identity_name
         self.class_name = class_name
+        self.auth_url = auth_url
         self.default_parameters_json = default_parameters_json
         self.row_instance = row_instance
         self.row_lock = row_lock
@@ -1374,7 +1386,7 @@ class auth_identity_rich_dto(auth_identity_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.auth_identity_uid, self.auth_identity_name, self.class_name, self.auth_url, self.default_parameters_json, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)
@@ -1936,6 +1948,7 @@ class auth_permission_rich_dto(auth_permission_read_dto):
     auth_role_uid: str | None
     client_uid: str | None
     project_instance_uid: str | None
+    auth_permission_type_uid: str | None
     valid_from_date: datetime.datetime | None
     valid_till_date: datetime.datetime | None
     row_instance: str | None
@@ -2011,7 +2024,7 @@ class auth_permission_rich_dto(auth_permission_read_dto):
     project_instance__end_date: datetime.datetime | None
     project_instance__current_billed: str | None
     project_instance__budget: str | None
-    def __init__(self, auth_permission_uid: str | None, auth_permission_name: str | None, tenant_uid: str | None, account_uid: str | None, auth_role_uid: str | None, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime | None, valid_till_date: datetime.datetime | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None, auth_role__auth_role_name: str | None, auth_role__parent_auth_role_uid: str | None, auth_role__tenant_uid: str | None, auth_role__role_description: str | None, auth_role__access_uris: str | None, auth_role__is_project: int | None, auth_role__is_tenant: int | None, auth_role__is_client: int | None, auth_role__is_custom: int | None, client__client_name: str | None, client__tenant_uid: str | None, client__country_uid: str | None, client__client_type_uid: str | None, client__client_category_uid: str | None, client__account_uid: str | None, client__client_code: str | None, client__client_description: str | None, client__start_date: datetime.datetime | None, client__end_date: datetime.datetime | None, client__is_internal: int | None, client__is_system: int | None, client__is_test: int | None, project_instance__project_instance_name: str | None, project_instance__tenant_uid: str | None, project_instance__client_uid: str | None, project_instance__project_type_uid: str | None, project_instance__manager_account_uid: str | None, project_instance__project_group_uid: str | None, project_instance__project_code: str | None, project_instance__project_description: str | None, project_instance__is_billable: int | None, project_instance__start_date: datetime.datetime | None, project_instance__end_date: datetime.datetime | None, project_instance__current_billed: str | None, project_instance__budget: str | None):
+    def __init__(self, auth_permission_uid: str | None, auth_permission_name: str | None, tenant_uid: str | None, account_uid: str | None, auth_role_uid: str | None, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime | None, valid_till_date: datetime.datetime | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None, auth_role__auth_role_name: str | None, auth_role__parent_auth_role_uid: str | None, auth_role__tenant_uid: str | None, auth_role__role_description: str | None, auth_role__access_uris: str | None, auth_role__is_project: int | None, auth_role__is_tenant: int | None, auth_role__is_client: int | None, auth_role__is_custom: int | None, client__client_name: str | None, client__tenant_uid: str | None, client__country_uid: str | None, client__client_type_uid: str | None, client__client_category_uid: str | None, client__account_uid: str | None, client__client_code: str | None, client__client_description: str | None, client__start_date: datetime.datetime | None, client__end_date: datetime.datetime | None, client__is_internal: int | None, client__is_system: int | None, client__is_test: int | None, project_instance__project_instance_name: str | None, project_instance__tenant_uid: str | None, project_instance__client_uid: str | None, project_instance__project_type_uid: str | None, project_instance__manager_account_uid: str | None, project_instance__project_group_uid: str | None, project_instance__project_code: str | None, project_instance__project_description: str | None, project_instance__is_billable: int | None, project_instance__start_date: datetime.datetime | None, project_instance__end_date: datetime.datetime | None, project_instance__current_billed: str | None, project_instance__budget: str | None):
         self.auth_permission_uid = auth_permission_uid
         self.auth_permission_name = auth_permission_name
         self.tenant_uid = tenant_uid
@@ -2019,6 +2032,7 @@ class auth_permission_rich_dto(auth_permission_read_dto):
         self.auth_role_uid = auth_role_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
+        self.auth_permission_type_uid = auth_permission_type_uid
         self.valid_from_date = valid_from_date
         self.valid_till_date = valid_till_date
         self.row_instance = row_instance
@@ -2097,7 +2111,7 @@ class auth_permission_rich_dto(auth_permission_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system, self.auth_role__auth_role_name, self.auth_role__parent_auth_role_uid, self.auth_role__tenant_uid, self.auth_role__role_description, self.auth_role__access_uris, self.auth_role__is_project, self.auth_role__is_tenant, self.auth_role__is_client, self.auth_role__is_custom, self.client__client_name, self.client__tenant_uid, self.client__country_uid, self.client__client_type_uid, self.client__client_category_uid, self.client__account_uid, self.client__client_code, self.client__client_description, self.client__start_date, self.client__end_date, self.client__is_internal, self.client__is_system, self.client__is_test, self.project_instance__project_instance_name, self.project_instance__tenant_uid, self.project_instance__client_uid, self.project_instance__project_type_uid, self.project_instance__manager_account_uid, self.project_instance__project_group_uid, self.project_instance__project_code, self.project_instance__project_description, self.project_instance__is_billable, self.project_instance__start_date, self.project_instance__end_date, self.project_instance__current_billed, self.project_instance__budget]
+        return [self.auth_permission_uid, self.auth_permission_name, self.tenant_uid, self.account_uid, self.auth_role_uid, self.client_uid, self.project_instance_uid, self.auth_permission_type_uid, self.valid_from_date, self.valid_till_date, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system, self.auth_role__auth_role_name, self.auth_role__parent_auth_role_uid, self.auth_role__tenant_uid, self.auth_role__role_description, self.auth_role__access_uris, self.auth_role__is_project, self.auth_role__is_tenant, self.auth_role__is_client, self.auth_role__is_custom, self.client__client_name, self.client__tenant_uid, self.client__country_uid, self.client__client_type_uid, self.client__client_category_uid, self.client__account_uid, self.client__client_code, self.client__client_description, self.client__start_date, self.client__end_date, self.client__is_internal, self.client__is_system, self.client__is_test, self.project_instance__project_instance_name, self.project_instance__tenant_uid, self.project_instance__client_uid, self.project_instance__project_type_uid, self.project_instance__manager_account_uid, self.project_instance__project_group_uid, self.project_instance__project_code, self.project_instance__project_description, self.project_instance__is_billable, self.project_instance__start_date, self.project_instance__end_date, self.project_instance__current_billed, self.project_instance__budget]
 
 
 @dataclass(frozen=False)
@@ -2589,6 +2603,8 @@ class auth_sso_rich_dto(auth_sso_read_dto):
 class auth_token_rich_dto(auth_token_read_dto):
     auth_token_uid: str | None
     auth_token_name: str | None
+    auth_attempt_uid: str | None
+    auth_token_type_uid: str | None
     tenant_uid: str | None
     account_uid: str | None
     token_seq: int | None
@@ -2597,6 +2613,7 @@ class auth_token_rich_dto(auth_token_read_dto):
     valid_till_date: datetime.datetime | None
     last_use_date: datetime.datetime | None
     is_last: int | None
+    token_scope: str | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -2635,9 +2652,11 @@ class auth_token_rich_dto(auth_token_read_dto):
     account__account_address: str | None
     account__is_verified: int | None
     account__is_system: int | None
-    def __init__(self, auth_token_uid: str | None, auth_token_name: str | None, tenant_uid: str | None, account_uid: str | None, token_seq: int | None, token_hash: str | None, token_salt: str | None, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None):
+    def __init__(self, auth_token_uid: str | None, auth_token_name: str | None, auth_attempt_uid: str | None, auth_token_type_uid: str | None, tenant_uid: str | None, account_uid: str | None, token_seq: int | None, token_hash: str | None, token_salt: str | None, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int | None, token_scope: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None):
         self.auth_token_uid = auth_token_uid
         self.auth_token_name = auth_token_name
+        self.auth_attempt_uid = auth_attempt_uid
+        self.auth_token_type_uid = auth_token_type_uid
         self.tenant_uid = tenant_uid
         self.account_uid = account_uid
         self.token_seq = token_seq
@@ -2646,6 +2665,7 @@ class auth_token_rich_dto(auth_token_read_dto):
         self.valid_till_date = valid_till_date
         self.last_use_date = last_use_date
         self.is_last = is_last
+        self.token_scope = token_scope
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -2687,7 +2707,7 @@ class auth_token_rich_dto(auth_token_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.auth_token_uid, self.auth_token_name, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system]
+        return [self.auth_token_uid, self.auth_token_name, self.auth_attempt_uid, self.auth_token_type_uid, self.tenant_uid, self.account_uid, self.token_seq, self.token_hash, self.token_salt, self.valid_till_date, self.last_use_date, self.is_last, self.token_scope, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system]
 
 
 @dataclass(frozen=False)
@@ -6453,15 +6473,23 @@ class monitor_type_rich_dto(monitor_type_read_dto):
 class period_rich_dto(period_read_dto):
     period_uid: str | None
     period_name: str | None
+    period_full_name: str | None
     period_number: int | None
     period_type: str | None
     period_start_time: datetime.datetime | None
     period_end_time: datetime.datetime | None
     period_year: int | None
+    period_semester: int | None
+    period_trimester: int | None
     period_quarter: int | None
     period_month: int | None
     period_week: int | None
     period_day: int | None
+    period_day_of_year: int | None
+    parent_year_period_uid: str | None
+    parent_quarter_period_uid: str | None
+    parent_month_period_uid: str | None
+    parent_week_period_uid: str | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -6476,18 +6504,26 @@ class period_rich_dto(period_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, period_uid: str | None, period_name: str | None, period_number: int | None, period_type: str | None, period_start_time: datetime.datetime | None, period_end_time: datetime.datetime | None, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, period_uid: str | None, period_name: str | None, period_full_name: str | None, period_number: int | None, period_type: str | None, period_start_time: datetime.datetime | None, period_end_time: datetime.datetime | None, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.period_uid = period_uid
         self.period_name = period_name
+        self.period_full_name = period_full_name
         self.period_number = period_number
         self.period_type = period_type
         self.period_start_time = period_start_time
         self.period_end_time = period_end_time
         self.period_year = period_year
+        self.period_semester = period_semester
+        self.period_trimester = period_trimester
         self.period_quarter = period_quarter
         self.period_month = period_month
         self.period_week = period_week
         self.period_day = period_day
+        self.period_day_of_year = period_day_of_year
+        self.parent_year_period_uid = parent_year_period_uid
+        self.parent_quarter_period_uid = parent_quarter_period_uid
+        self.parent_month_period_uid = parent_month_period_uid
+        self.parent_week_period_uid = parent_week_period_uid
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -6505,7 +6541,7 @@ class period_rich_dto(period_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.period_uid, self.period_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_quarter, self.period_month, self.period_week, self.period_day, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.period_uid, self.period_name, self.period_full_name, self.period_number, self.period_type, self.period_start_time, self.period_end_time, self.period_year, self.period_semester, self.period_trimester, self.period_quarter, self.period_month, self.period_week, self.period_day, self.period_day_of_year, self.parent_year_period_uid, self.parent_quarter_period_uid, self.parent_month_period_uid, self.parent_week_period_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)
@@ -7301,6 +7337,7 @@ class project_milestone_rich_dto(project_milestone_read_dto):
     client_uid: str | None
     project_instance_uid: str | None
     project_budget_uid: str | None
+    project_phase_uid: str | None
     start_date: datetime.datetime | None
     end_date: datetime.datetime | None
     status_name: str | None
@@ -7364,13 +7401,14 @@ class project_milestone_rich_dto(project_milestone_read_dto):
     project_budget__budget_value: str | None
     project_budget__is_approved: int | None
     project_budget__is_current: int | None
-    def __init__(self, project_milestone_uid: str | None, project_milestone_name: str | None, tenant_uid: str | None, client_uid: str | None, project_instance_uid: str | None, project_budget_uid: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, status_name: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, client__client_name: str | None, client__tenant_uid: str | None, client__country_uid: str | None, client__client_type_uid: str | None, client__client_category_uid: str | None, client__account_uid: str | None, client__client_code: str | None, client__client_description: str | None, client__start_date: datetime.datetime | None, client__end_date: datetime.datetime | None, client__is_internal: int | None, client__is_system: int | None, client__is_test: int | None, project_instance__project_instance_name: str | None, project_instance__tenant_uid: str | None, project_instance__client_uid: str | None, project_instance__project_type_uid: str | None, project_instance__manager_account_uid: str | None, project_instance__project_group_uid: str | None, project_instance__project_code: str | None, project_instance__project_description: str | None, project_instance__is_billable: int | None, project_instance__start_date: datetime.datetime | None, project_instance__end_date: datetime.datetime | None, project_instance__current_billed: str | None, project_instance__budget: str | None, project_budget__project_budget_name: str | None, project_budget__tenant_uid: str | None, project_budget__client_uid: str | None, project_budget__project_instance_uid: str | None, project_budget__currency_uid: str | None, project_budget__budget_value: str | None, project_budget__is_approved: int | None, project_budget__is_current: int | None):
+    def __init__(self, project_milestone_uid: str | None, project_milestone_name: str | None, tenant_uid: str | None, client_uid: str | None, project_instance_uid: str | None, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, status_name: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, tenant__tenant_name: str | None, tenant__country_uid: str | None, tenant__tenant_type_uid: str | None, tenant__tenant_category_uid: str | None, tenant__tenant_code: str | None, tenant__tenant_description: str | None, tenant__start_date: datetime.datetime | None, tenant__end_date: datetime.datetime | None, tenant__is_internal: int | None, tenant__is_system: int | None, tenant__is_test: int | None, tenant__account_uid: str | None, client__client_name: str | None, client__tenant_uid: str | None, client__country_uid: str | None, client__client_type_uid: str | None, client__client_category_uid: str | None, client__account_uid: str | None, client__client_code: str | None, client__client_description: str | None, client__start_date: datetime.datetime | None, client__end_date: datetime.datetime | None, client__is_internal: int | None, client__is_system: int | None, client__is_test: int | None, project_instance__project_instance_name: str | None, project_instance__tenant_uid: str | None, project_instance__client_uid: str | None, project_instance__project_type_uid: str | None, project_instance__manager_account_uid: str | None, project_instance__project_group_uid: str | None, project_instance__project_code: str | None, project_instance__project_description: str | None, project_instance__is_billable: int | None, project_instance__start_date: datetime.datetime | None, project_instance__end_date: datetime.datetime | None, project_instance__current_billed: str | None, project_instance__budget: str | None, project_budget__project_budget_name: str | None, project_budget__tenant_uid: str | None, project_budget__client_uid: str | None, project_budget__project_instance_uid: str | None, project_budget__currency_uid: str | None, project_budget__budget_value: str | None, project_budget__is_approved: int | None, project_budget__is_current: int | None):
         self.project_milestone_uid = project_milestone_uid
         self.project_milestone_name = project_milestone_name
         self.tenant_uid = tenant_uid
         self.client_uid = client_uid
         self.project_instance_uid = project_instance_uid
         self.project_budget_uid = project_budget_uid
+        self.project_phase_uid = project_phase_uid
         self.start_date = start_date
         self.end_date = end_date
         self.status_name = status_name
@@ -7437,7 +7475,7 @@ class project_milestone_rich_dto(project_milestone_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.client__client_name, self.client__tenant_uid, self.client__country_uid, self.client__client_type_uid, self.client__client_category_uid, self.client__account_uid, self.client__client_code, self.client__client_description, self.client__start_date, self.client__end_date, self.client__is_internal, self.client__is_system, self.client__is_test, self.project_instance__project_instance_name, self.project_instance__tenant_uid, self.project_instance__client_uid, self.project_instance__project_type_uid, self.project_instance__manager_account_uid, self.project_instance__project_group_uid, self.project_instance__project_code, self.project_instance__project_description, self.project_instance__is_billable, self.project_instance__start_date, self.project_instance__end_date, self.project_instance__current_billed, self.project_instance__budget, self.project_budget__project_budget_name, self.project_budget__tenant_uid, self.project_budget__client_uid, self.project_budget__project_instance_uid, self.project_budget__currency_uid, self.project_budget__budget_value, self.project_budget__is_approved, self.project_budget__is_current]
+        return [self.project_milestone_uid, self.project_milestone_name, self.tenant_uid, self.client_uid, self.project_instance_uid, self.project_budget_uid, self.project_phase_uid, self.start_date, self.end_date, self.status_name, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.tenant__tenant_name, self.tenant__country_uid, self.tenant__tenant_type_uid, self.tenant__tenant_category_uid, self.tenant__tenant_code, self.tenant__tenant_description, self.tenant__start_date, self.tenant__end_date, self.tenant__is_internal, self.tenant__is_system, self.tenant__is_test, self.tenant__account_uid, self.client__client_name, self.client__tenant_uid, self.client__country_uid, self.client__client_type_uid, self.client__client_category_uid, self.client__account_uid, self.client__client_code, self.client__client_description, self.client__start_date, self.client__end_date, self.client__is_internal, self.client__is_system, self.client__is_test, self.project_instance__project_instance_name, self.project_instance__tenant_uid, self.project_instance__client_uid, self.project_instance__project_type_uid, self.project_instance__manager_account_uid, self.project_instance__project_group_uid, self.project_instance__project_code, self.project_instance__project_description, self.project_instance__is_billable, self.project_instance__start_date, self.project_instance__end_date, self.project_instance__current_billed, self.project_instance__budget, self.project_budget__project_budget_name, self.project_budget__tenant_uid, self.project_budget__client_uid, self.project_budget__project_instance_uid, self.project_budget__currency_uid, self.project_budget__budget_value, self.project_budget__is_approved, self.project_budget__is_current]
 
 
 @dataclass(frozen=False)
@@ -8635,6 +8673,8 @@ class system_database_rich_dto(system_database_read_dto):
     db_user: str | None
     last_status_name: str | None
     last_db_size: int | None
+    created_connections: int | None
+    released_connections: int | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -8649,7 +8689,7 @@ class system_database_rich_dto(system_database_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, system_database_uid: str | None, system_database_name: str | None, db_url: str | None, db_host: str | None, db_name: str | None, db_user: str | None, last_status_name: str | None, last_db_size: int | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, system_database_uid: str | None, system_database_name: str | None, db_url: str | None, db_host: str | None, db_name: str | None, db_user: str | None, last_status_name: str | None, last_db_size: int | None, created_connections: int | None, released_connections: int | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.system_database_uid = system_database_uid
         self.system_database_name = system_database_name
         self.db_url = db_url
@@ -8658,6 +8698,8 @@ class system_database_rich_dto(system_database_read_dto):
         self.db_user = db_user
         self.last_status_name = last_status_name
         self.last_db_size = last_db_size
+        self.created_connections = created_connections
+        self.released_connections = released_connections
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -8675,7 +8717,7 @@ class system_database_rich_dto(system_database_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.system_database_uid, self.system_database_name, self.db_url, self.db_host, self.db_name, self.db_user, self.last_status_name, self.last_db_size, self.created_connections, self.released_connections, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)
@@ -8787,6 +8829,7 @@ class system_license_rich_dto(system_license_read_dto):
     system_license_uid: str | None
     system_license_name: str | None
     class_name: str | None
+    license_definition_json: str | None
     license_description: str | None
     row_instance: str | None
     row_lock: str | None
@@ -8802,10 +8845,11 @@ class system_license_rich_dto(system_license_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, system_license_uid: str | None, system_license_name: str | None, class_name: str | None, license_description: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, system_license_uid: str | None, system_license_name: str | None, class_name: str | None, license_definition_json: str | None, license_description: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.system_license_uid = system_license_uid
         self.system_license_name = system_license_name
         self.class_name = class_name
+        self.license_definition_json = license_definition_json
         self.license_description = license_description
         self.row_instance = row_instance
         self.row_lock = row_lock
@@ -8824,7 +8868,7 @@ class system_license_rich_dto(system_license_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.system_license_uid, self.system_license_name, self.class_name, self.license_definition_json, self.license_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)
@@ -9442,6 +9486,7 @@ class tenant_rich_dto(tenant_read_dto):
     country_uid: str | None
     tenant_type_uid: str | None
     tenant_category_uid: str | None
+    tenant_status_uid: str | None
     tenant_code: str | None
     tenant_description: str | None
     start_date: datetime.datetime | None
@@ -9500,12 +9545,13 @@ class tenant_rich_dto(tenant_read_dto):
     account__account_address: str | None
     account__is_verified: int | None
     account__is_system: int | None
-    def __init__(self, tenant_uid: str | None, tenant_name: str | None, country_uid: str | None, tenant_type_uid: str | None, tenant_category_uid: str | None, tenant_code: str | None, tenant_description: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, is_internal: int | None, is_system: int | None, is_test: int | None, account_uid: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, country__country_name: str | None, country__continent_name: str | None, country__continent_code: str | None, country__country_iso3: str | None, country__country_code: str | None, country__phone_code: str | None, country__currency_code: str | None, country__capital_name: str | None, country__region_name: str | None, country__subregion_name: str | None, country__region_code: str | None, country__latitude: str | None, country__longitude: str | None, country__currency_name: str | None, country__population: str | None, country__languages: str | None, country__area: str | None, country__bar_code: str | None, country__top_level_domain: str | None, country__is_focused: int | None, tenant_type__tenant_type_name: str | None, tenant_type__tenant_type_description: str | None, tenant_category__tenant_category_name: str | None, tenant_category__tenant_category_description: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None):
+    def __init__(self, tenant_uid: str | None, tenant_name: str | None, country_uid: str | None, tenant_type_uid: str | None, tenant_category_uid: str | None, tenant_status_uid: str | None, tenant_code: str | None, tenant_description: str | None, start_date: datetime.datetime | None, end_date: datetime.datetime | None, is_internal: int | None, is_system: int | None, is_test: int | None, account_uid: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None, country__country_name: str | None, country__continent_name: str | None, country__continent_code: str | None, country__country_iso3: str | None, country__country_code: str | None, country__phone_code: str | None, country__currency_code: str | None, country__capital_name: str | None, country__region_name: str | None, country__subregion_name: str | None, country__region_code: str | None, country__latitude: str | None, country__longitude: str | None, country__currency_name: str | None, country__population: str | None, country__languages: str | None, country__area: str | None, country__bar_code: str | None, country__top_level_domain: str | None, country__is_focused: int | None, tenant_type__tenant_type_name: str | None, tenant_type__tenant_type_description: str | None, tenant_category__tenant_category_name: str | None, tenant_category__tenant_category_description: str | None, account__account_name: str | None, account__tenant_uid: str | None, account__account_type_uid: str | None, account__account_title_uid: str | None, account__account_division_uid: str | None, account__account_group_uid: str | None, account__auth_identity_uid: str | None, account__account_email: str | None, account__display_name: str | None, account__account_address: str | None, account__is_verified: int | None, account__is_system: int | None):
         self.tenant_uid = tenant_uid
         self.tenant_name = tenant_name
         self.country_uid = country_uid
         self.tenant_type_uid = tenant_type_uid
         self.tenant_category_uid = tenant_category_uid
+        self.tenant_status_uid = tenant_status_uid
         self.tenant_code = tenant_code
         self.tenant_description = tenant_description
         self.start_date = start_date
@@ -9567,7 +9613,7 @@ class tenant_rich_dto(tenant_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.country__country_name, self.country__continent_name, self.country__continent_code, self.country__country_iso3, self.country__country_code, self.country__phone_code, self.country__currency_code, self.country__capital_name, self.country__region_name, self.country__subregion_name, self.country__region_code, self.country__latitude, self.country__longitude, self.country__currency_name, self.country__population, self.country__languages, self.country__area, self.country__bar_code, self.country__top_level_domain, self.country__is_focused, self.tenant_type__tenant_type_name, self.tenant_type__tenant_type_description, self.tenant_category__tenant_category_name, self.tenant_category__tenant_category_description, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system]
+        return [self.tenant_uid, self.tenant_name, self.country_uid, self.tenant_type_uid, self.tenant_category_uid, self.tenant_status_uid, self.tenant_code, self.tenant_description, self.start_date, self.end_date, self.is_internal, self.is_system, self.is_test, self.account_uid, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes, self.country__country_name, self.country__continent_name, self.country__continent_code, self.country__country_iso3, self.country__country_code, self.country__phone_code, self.country__currency_code, self.country__capital_name, self.country__region_name, self.country__subregion_name, self.country__region_code, self.country__latitude, self.country__longitude, self.country__currency_name, self.country__population, self.country__languages, self.country__area, self.country__bar_code, self.country__top_level_domain, self.country__is_focused, self.tenant_type__tenant_type_name, self.tenant_type__tenant_type_description, self.tenant_category__tenant_category_name, self.tenant_category__tenant_category_description, self.account__account_name, self.account__tenant_uid, self.account__account_type_uid, self.account__account_title_uid, self.account__account_division_uid, self.account__account_group_uid, self.account__auth_identity_uid, self.account__account_email, self.account__display_name, self.account__account_address, self.account__is_verified, self.account__is_system]
 
 
 @dataclass(frozen=False)
@@ -10219,6 +10265,7 @@ class tenant_type_rich_dto(tenant_type_read_dto):
     tenant_type_uid: str | None
     tenant_type_name: str | None
     tenant_type_description: str | None
+    tenant_class: str | None
     row_instance: str | None
     row_lock: str | None
     row_owner: str | None
@@ -10233,10 +10280,11 @@ class tenant_type_rich_dto(tenant_type_read_dto):
     removed_date: datetime.datetime | None
     removed_by: str | None
     custom_attributes: str | None
-    def __init__(self, tenant_type_uid: str | None, tenant_type_name: str | None, tenant_type_description: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
+    def __init__(self, tenant_type_uid: str | None, tenant_type_name: str | None, tenant_type_description: str | None, tenant_class: str | None, row_instance: str | None, row_lock: str | None, row_owner: str | None, row_seq: int | None, row_guid: str | None, row_version: int | None, is_active: int | None, created_date: datetime.datetime | None, created_by: str | None, last_updated_date: datetime.datetime | None, last_updated_by: str | None, removed_date: datetime.datetime | None, removed_by: str | None, custom_attributes: str | None):
         self.tenant_type_uid = tenant_type_uid
         self.tenant_type_name = tenant_type_name
         self.tenant_type_description = tenant_type_description
+        self.tenant_class = tenant_class
         self.row_instance = row_instance
         self.row_lock = row_lock
         self.row_owner = row_owner
@@ -10254,7 +10302,7 @@ class tenant_type_rich_dto(tenant_type_read_dto):
     def to_rich_dict(self) -> dict:
         return asdict(self)
     def get_rich_all_values(self) -> list[any]:
-        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
+        return [self.tenant_type_uid, self.tenant_type_name, self.tenant_type_description, self.tenant_class, self.row_instance, self.row_lock, self.row_owner, self.row_seq, self.row_guid, self.row_version, self.is_active, self.created_date, self.created_by, self.last_updated_date, self.last_updated_by, self.removed_date, self.removed_by, self.custom_attributes]
 
 
 @dataclass(frozen=False)

@@ -6,7 +6,7 @@
 
     <changeSet id="0026 - time tables" author="slawomir.bankowski">
 
-        <createTable tableName="time_submit_type" remarks="type of submitting time" >
+        <createTable tableName="time_submit_type" remarks="type of submitting time: Check, Save, Submit, Approve, Reject, Pending" >
             <column name="time_submit_type_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_submit_type_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
@@ -29,13 +29,13 @@
             <column name="custom_attributes" type="text" defaultValue="{}"><constraints nullable="false"/></column>
         </createTable>
 
-        <createTable tableName="time_submit" remarks="single submit of time for selected account to many projects wihtin one period" >
+        <createTable tableName="time_submit" remarks="single submit of time for selected account to many projects within one period" >
             <column name="time_submit_uid" type="text"><constraints primaryKey="true" nullable="false"/></column>
             <column name="time_submit_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <column name="tenant_uid" type="text" remarks="tenant UID"><constraints nullable="false"/></column>
             <column name="account_uid" type="text" remarks="Email of account - FK to account"><constraints nullable="false"/></column>
-            <column name="period_uid" type="text" remarks=""><constraints nullable="false"/></column>
+            <column name="period_uid" type="text" remarks="period of this submit - week or month"><constraints nullable="false"/></column>
             <!-- attribute columns -->
             <column name="time_submit_description" type="text" remarks=""><constraints nullable="false"/></column>
             <!-- Defaults -->

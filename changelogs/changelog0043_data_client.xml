@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0043_data_client.xml">
+
+    <changeSet id="0043 - dictionary data for client tables" author="slawomir.bankowski">
+
+        <!-- ____________________________ Client table dictionary ____________________________ -->
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_type(client_type_uid, client_type_name, client_type_description) values ('Default', 'Default', '');
+            insert into client_type(client_type_uid, client_type_name, client_type_description) values ('System', 'System', '');
+            insert into client_type(client_type_uid, client_type_name, client_type_description) values ('Test', 'Test', '');
+            insert into client_type(client_type_uid, client_type_name, client_type_description) values ('Individual', 'Individual', '');
+            insert into client_type(client_type_uid, client_type_name, client_type_description) values ('Corporate', 'Corporate', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_status(client_status_uid, client_status_name) values ('New', 'New');
+            insert into client_status(client_status_uid, client_status_name) values ('Pending', 'Pending');
+            insert into client_status(client_status_uid, client_status_name) values ('Active', 'Active');
+            insert into client_status(client_status_uid, client_status_name) values ('Closing', 'Closing');
+            insert into client_status(client_status_uid, client_status_name) values ('Closed', 'Closed');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('System', 'System', 'System', 'XX', 'System', 'System', 'SYS', 'System client - default one', now(), 1, 1, 0);
+            insert into client(client_uid, client_name, tenant_uid, country_uid, client_type_uid, client_category_uid, client_code, client_description, start_date, is_internal, is_system, is_test)
+            values ('Test', 'Test', 'Test', 'XX', 'Test', 'Test', 'TST', 'Test client - default one', now(), 1, 1, 0);
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_country(country_uid, tenant_uid ,client_uid) values ('XX', 'System', 'System');
+            insert into client_country(country_uid, tenant_uid ,client_uid) values ('XX', 'Test', 'Test');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Owner', 'Owner', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Administrator', 'Administrator', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('HR', 'HR', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Manager', 'Manager', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Leader', 'Leader', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Reporter', 'Reporter', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Contractor', 'Contractor', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('User', 'User', '');
+            insert into client_role(client_role_uid, client_role_name, role_description) values ('Viewer', 'Viewer', '');
+        </sql>
+
+        <sql splitStatements="false" stripComments="false">
+            insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', 'System', 'System', 'system', 'Administrator');
+            insert into client_account(client_account_name, tenant_uid, client_uid, account_uid, client_role_uid)
+            values ('Assignment of Administrator role to system client', 'Test', 'Test', 'test_user', 'Administrator');
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

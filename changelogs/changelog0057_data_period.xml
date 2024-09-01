@@ -1,0 +1,274 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="conf/changelog0057_data_period.xml">
+
+    <changeSet id="0057 - periods" author="slawomir.bankowski">
+
+        <!-- YEAR -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year)
+            select concat('Y', y.str) as period_uid
+            , concat('Y', y.str) as period_name
+            , concat('Year ', y.str) as period_full_name
+            , y.num as period_number
+            , 'year' as period_type
+            , cast(concat(y.str, '-01-01 00:00:00') as timestamp) as period_start_time
+            , cast(concat(y.str, '-12-31 23:59:59.999') as timestamp) as period_end_time
+            , y.num
+            from (
+                select gs.i as num, cast(gs.i as text) as str
+                from generate_series(1900, 2099, 1) gs(i)
+            ) y
+        </sql>
+
+        <!-- SEMESTER -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, parent_year_period_uid)
+            select concat('S', x.year_num, x.semester_num) as period_uid
+             , concat('Y', x.year_num, 'S', x.semester_num) as period_name
+             , concat('Year ', x.year_num, ' Semester ', x.semester_num) as period_full_name
+             , x.year_num*10+x.semester_num as period_number
+             , 'semester' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , x.year_num*10 + x.semester_num as period_semester
+            ,  concat('Y', x.year_num) as parent_year_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num
+               , EXTRACT(month FROM dd) as month_num
+               , cast((EXTRACT(month FROM dd)+5)/6 as int) as semester_num
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '6 month'::interval) dd
+            ) x
+            where x.period_end_time is not null
+        </sql>
+
+        <!-- TRIMESTER -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_trimester, parent_year_period_uid)
+            select concat('T', x.year_num, x.trimester_num) as period_uid
+             , concat('Y', x.year_num, 'T', x.trimester_num) as period_name
+             , concat('Year ', x.year_num, ' Trimester ', x.trimester_num) as period_full_name
+             , x.year_num as period_number
+             , 'trimester' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , x.year_num*10 + x.trimester_num as period_trimester
+            ,  concat('Y', x.year_num) as parent_year_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num, EXTRACT(month FROM dd) as month_num
+                , cast((EXTRACT(month FROM dd)+3)/4 as int) as trimester_num
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '4 month'::interval) dd
+            ) x
+            where x.period_end_time is not null
+        </sql>
+
+        <!-- QUARTER -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, parent_year_period_uid)
+            select concat('Q', x.year_num, x.quarter_num) as period_uid
+             , concat('Y', x.year_num, 'Q', x.quarter_num) as period_name
+             , concat('Year ', x.year_num, ' Quarter ', x.quarter_num) as period_full_name
+             , x.year_num as period_number
+             , 'quarter' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , (x.month_num+2)/3 as period_quarter
+            ,  concat('Y', x.year_num) as parent_year_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num, EXTRACT(month FROM dd) as month_num, cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '3 month'::interval) dd
+            ) x
+            where x.period_end_time is not null
+        </sql>
+
+        <!-- BI-MONTH -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, parent_year_period_uid, parent_quarter_period_uid)
+            select concat('BM', x.year_str, x.month_str) as period_uid
+             , concat('Y', x.year_str, 'BM', x.month_str) as period_name
+             , concat('Year ', x.year_str, ' Bi-Month ', x.month_str) as period_full_name
+             , x.year_num*1000+x.week_num as period_number
+             , 'bimonth' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , x.semester_num as semester_num
+             , x.trimester_num as trimester_num
+             , cast((x.month_num+1)/3 as int) as period_quarter
+             , x.month_num as period_month
+             ,  concat('Y', x.year_num) as parent_year_period_uid
+             , concat('Q', x.year_num, x.quarter_num) as parent_quarter_period_uid
+            from (
+                SELECT dd, cast(dd as text) as dd_str
+                , substring(cast(dd as text), 1, 4) as year_str
+                , substring(cast(dd as text), 6, 2) as month_str
+                , substring(cast(dd as text), 8, 2) as day_str
+                , EXTRACT(year FROM dd) as year_num
+                , cast((EXTRACT(month FROM dd)+2)/6 as int) as semester_num
+                , cast((EXTRACT(month FROM dd)+1)/4 as int) as trimester_num
+                , cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                , EXTRACT(month FROM dd) as month_num
+                , EXTRACT(week FROM dd) as week_num
+                , EXTRACT(day FROM dd) as day_num
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '2 month'::interval) dd
+            ) x
+            where x.period_end_time is not null
+            order by x.dd
+        </sql>
+
+        <!-- MONTH -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, parent_year_period_uid, parent_quarter_period_uid)
+            select concat('M', x.year_str, x.month_str) as period_uid
+             , concat('Y', x.year_str, 'M', x.month_str) as period_name
+             , concat('Year ', x.year_str, ' Month ', x.month_str) as period_full_name
+             , x.year_num*100+x.month_num as period_number
+             , 'month' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , x.semester_num as semester_num
+             , x.trimester_num as trimester_num
+             , cast((x.month_num+1)/3 as int) as period_quarter
+             , x.month_num as period_month
+             , concat('Y', x.year_str) as parent_year_period_uid
+             , concat('Q', x.year_str, x.quarter_num) as parent_quarter_period_uid
+            from (
+                SELECT dd, cast(dd as text) as dd_str
+                , substring(cast(dd as text), 1, 4) as year_str
+                , substring(cast(dd as text), 6, 2) as month_str
+                , substring(cast(dd as text), 8, 2) as day_str
+                , EXTRACT(year FROM dd) as year_num
+                , cast((EXTRACT(month FROM dd)+2)/6 as int) as semester_num
+                , cast((EXTRACT(month FROM dd)+1)/4 as int) as trimester_num
+                , cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                , EXTRACT(month FROM dd) as month_num
+                , EXTRACT(week FROM dd) as week_num
+                , EXTRACT(day FROM dd) as day_num
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '1 month'::interval) dd
+            ) x
+            where x.period_end_time is not null
+            order by x.dd
+        </sql>
+
+        <!-- BI-WEEK -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid)
+            select concat('BW', cast(x.year_num*100000+x.month_num*100+x.week_num as text)) as period_uid
+             , concat('Y', x.year_str, 'M', x.month_str, 'BW', x.week_num) as period_name
+             , concat('Year ', x.year_str, ' Month ', x.month_str, ' BiWeek', x.week_num) as period_full_name
+             , x.year_num*1000+x.week_num as period_number
+             , 'biweek' as period_type
+             , dd as period_start_time
+             , x.period_end_time as period_end_time
+             , x.year_num as period_year
+             , x.semester_num as semester_num
+             , x.trimester_num as trimester_num
+             , x.quarter_num
+             , x.month_num as period_month
+             , x.week_num as period_week
+             , x.day_num as period_day
+             , concat('Y', x.year_str) as parent_year_period_uid
+             , concat('Q', x.year_str, x.quarter_num) as parent_quarter_period_uid
+             , concat('M', x.year_str, x.month_str) as parent_month_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num
+                , cast((EXTRACT(month FROM dd)+2)/6 as int) as semester_num
+                , cast((EXTRACT(month FROM dd)+1)/4 as int) as trimester_num
+                , cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                , EXTRACT(month FROM dd) as month_num
+                , EXTRACT(week FROM dd) as week_num
+                , EXTRACT(day FROM dd) as day_num
+                , date_part('doy', dd) as day_of_year
+                , substring(cast(dd as text), 1, 4) as year_str
+                , substring(cast(dd as text), 6, 2) as month_str
+                , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-02-01'::timestamp, '2099-12-31'::timestamp, '2 week'::interval) dd
+            ) x
+            where x.period_end_time is not null
+            order by x.dd
+        </sql>
+
+        <!-- WEEK -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid)
+            select concat('W', cast(x.year_num*100000+x.month_num*100+x.week_num as text)) as period_uid
+             , concat('Y', x.year_str, 'M', x.month_str, 'W', x.week_num) as period_name
+             , concat('Y', x.year_str, 'M', x.month_str, 'W', x.week_num) as period_full_name
+             , x.year_num*1000+x.week_num as period_number
+             , 'week' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , cast((x.month_num+1)/3 as int) as period_quarter
+             , x.month_num as period_month
+             , x.week_num as period_week
+             , x.day_num as period_day
+             , concat('Y', x.year_str) as parent_year_period_uid
+             , concat('Q', x.year_str, x.quarter_num) as parent_quarter_period_uid
+             ,  concat('M', x.year_str, x.month_str) as parent_month_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num
+                 , cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                 , EXTRACT(month FROM dd) as month_num
+                 , EXTRACT(week FROM dd) as week_num
+                 , EXTRACT(day FROM dd) as day_num
+                 , substring(cast(dd as text), 1, 4) as year_str
+                 , substring(cast(dd as text), 6, 2) as month_str
+                 , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '1 week'::interval) dd
+            ) x
+            where x.period_end_time is not null
+            order by x.dd
+        </sql>
+
+        <!-- DAY -->
+        <sql splitStatements="false" stripComments="false">
+            insert into period(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid)
+            select concat('D', x.year_str, x.month_str, x.day_str) as period_uid
+             , concat('Y', x.year_str, 'M', x.month_str, 'D', x.day_str)  as period_name
+             , concat('Year ', x.year_str, ' Quarter ', x.quarter_num, ' Month ', x.month_str, ' Week ', x.week_num, ' Day ', x.day_str)  as period_full_name
+             , x.year_num*10000+x.month_num*100+x.day_num as period_number
+             , 'day' as period_type
+             , dd as period_start_time
+             , x.period_end_time
+             , x.year_num as period_year
+             , cast((x.month_num+1)/3 as int) as period_quarter
+             , x.month_num as period_month
+             , x.week_num as period_week
+             , x.day_num as period_day
+             , x.day_of_year as period_day_of_year
+             , concat('Y', x.year_str) as parent_year_period_uid
+             , concat('Q', x.year_str, x.quarter_num) as parent_quarter_period_uid
+             , concat('M', x.year_str, x.month_str) as parent_month_period_uid
+             , concat('W', cast(x.year_num*1000+x.week_num as text)) as parent_week_period_uid
+            from (
+                SELECT dd, EXTRACT(year FROM dd) as year_num
+                , cast((EXTRACT(month FROM dd)+2)/3 as int) as quarter_num
+                , EXTRACT(month FROM dd) as month_num
+                , EXTRACT(week FROM dd) as week_num
+                , EXTRACT(day FROM dd) as day_num
+                , extract('doy' from dd) as day_of_year
+                , substring(cast(dd as text), 1, 4) as year_str
+                , substring(cast(dd as text), 6, 2) as month_str
+                , substring(cast(dd as text), 9, 2) as day_str
+                 , lead(dd) over (order by dd) as period_end_time
+                FROM generate_series( '2000-01-01'::timestamp, '2099-12-31'::timestamp, '1 day'::interval) dd
+            ) x
+            where x.period_end_time is not null
+            order by x.dd
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

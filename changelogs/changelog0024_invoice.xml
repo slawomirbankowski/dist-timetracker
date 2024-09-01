@@ -7,7 +7,7 @@
     <changeSet id="0024 - invoice tables" author="slawomir.bankowski">
 
         <createTable tableName="invoice_flow" remarks="pre-defined flow of invoice" >
-            <column name="invoice_flow_uid" type="text" defaultValueComputed="cast(uuid_generate_v4() as text)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="invoice_flow_uid" type="text" defaultValueComputed="generate_uid('infl')"><constraints primaryKey="true" nullable="false"/></column>
             <column name="invoice_flow_name" type="text"><constraints nullable="false"/></column>
             <!-- FKs -->
             <!-- attribute columns -->

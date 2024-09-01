@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_dtos_full - START at 2024-04-21 11:58:42.660215+00
+# auto-generated - v_definition_python_dtos_full - START at 2024-08-04 09:36:00.666831+00
 import datetime
 from datetime import datetime
 from abc import abstractmethod
@@ -67,6 +67,20 @@ class account_rate_full_dto(account_rate_read_dto):
 
 @dataclass(frozen=False)
 class account_skill_full_dto(account_skill_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class account_skill_assignment_full_dto(account_skill_assignment_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class account_skill_group_full_dto(account_skill_group_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -185,6 +199,20 @@ class auth_permission_full_dto(auth_permission_read_dto):
 
 
 @dataclass(frozen=False)
+class auth_permission_type_full_dto(auth_permission_type_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class auth_pin_full_dto(auth_pin_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
 class auth_request_full_dto(auth_request_read_dto):
     is_active: int
     def __init__(self):
@@ -221,6 +249,13 @@ class auth_sso_full_dto(auth_sso_read_dto):
 
 @dataclass(frozen=False)
 class auth_token_full_dto(auth_token_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class auth_token_type_full_dto(auth_token_type_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -290,6 +325,13 @@ class client_account_full_dto(client_account_read_dto):
 
 
 @dataclass(frozen=False)
+class client_contract_full_dto(client_contract_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
 class client_country_full_dto(client_country_read_dto):
     is_active: int
     def __init__(self):
@@ -319,6 +361,90 @@ class client_status_full_dto(client_status_read_dto):
 
 @dataclass(frozen=False)
 class client_type_full_dto(client_type_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_entry_full_dto(competency_entry_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_entry_account_full_dto(competency_entry_account_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_group_full_dto(competency_group_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_group_account_full_dto(competency_group_account_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_group_type_full_dto(competency_group_type_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_item_full_dto(competency_item_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_item_account_full_dto(competency_item_account_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_item_type_full_dto(competency_item_type_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_process_full_dto(competency_process_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_process_account_full_dto(competency_process_account_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_process_type_full_dto(competency_process_type_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class competency_ranking_full_dto(competency_ranking_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -361,6 +487,20 @@ class country_full_dto(country_read_dto):
 
 @dataclass(frozen=False)
 class currency_full_dto(currency_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class currency_rate_full_dto(currency_rate_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class currency_source_full_dto(currency_source_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -493,7 +633,21 @@ class invoice_type_full_dto(invoice_type_read_dto):
 
 
 @dataclass(frozen=False)
+class location_hierarchy_full_dto(location_hierarchy_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
 class location_postal_code_full_dto(location_postal_code_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class location_region_full_dto(location_region_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -536,6 +690,13 @@ class period_full_dto(period_read_dto):
 
 @dataclass(frozen=False)
 class process_full_dto(process_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class process_result_full_dto(process_result_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1
@@ -585,6 +746,13 @@ class project_instance_full_dto(project_instance_read_dto):
 
 @dataclass(frozen=False)
 class project_milestone_full_dto(project_milestone_read_dto):
+    is_active: int
+    def __init__(self):
+        self.is_active = 1
+
+
+@dataclass(frozen=False)
+class project_phase_full_dto(project_phase_read_dto):
     is_active: int
     def __init__(self):
         self.is_active = 1

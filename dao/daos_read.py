@@ -1,4 +1,4 @@
-# auto-generated - v_definition_python_daos_read - START at 2024-04-21 11:58:43.503038+00
+# auto-generated - v_definition_python_daos_read - START at 2024-08-04 09:36:03.873277+00
 from __future__ import annotations
 from datetime import datetime
 from abc import abstractmethod
@@ -678,12 +678,16 @@ class account_rate_dao(base_dao):
         return self.select_rows_read_by_any_column('start_date', start_date, n)
     def select_rows_read_by_end_date(self, end_date: datetime.datetime, n: int = 1000) -> account_rate_read_dtos:
         return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def select_rows_read_by_rate_note(self, rate_note: str, n: int = 1000) -> account_rate_read_dtos:
+        return self.select_rows_read_by_any_column('rate_note', rate_note, n)
+    def select_rows_read_by_is_default(self, is_default: str, n: int = 1000) -> account_rate_read_dtos:
+        return self.select_rows_read_by_any_column('is_default', is_default, n)
     def insert_dto(self, dto: account_rate_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, account_rate_uid: str = "", account_rate_name: str = "", tenant_uid: str = "", account_uid: str = "", currency_uid: str = "", rate: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date), created_by)
-    def insert_row_random_uid(self, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(account_rate_write_dto.new_write_random_uid(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date), created_by)
+    def insert_row(self, account_rate_uid: str = "", account_rate_name: str = "", tenant_uid: str = "", account_uid: str = "", currency_uid: str = "", rate: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), rate_note: str = "", is_default: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default), created_by)
+    def insert_row_random_uid(self, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_rate_write_dto.new_write_random_uid(account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default), created_by)
     def insert_dtos(self, dtos: list[account_rate_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: account_rate_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -695,11 +699,11 @@ class account_rate_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: account_rate_write_dtos, created_by: str = objects.created_by_default) -> account_rate_read_dtos:
         return account_rate_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, updated_by: str=objects.created_by_default) -> int:
-        params = account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date).get_list_write_insert(updated_by)
+    def upsert_row(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, updated_by: str=objects.created_by_default) -> int:
+        params = account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, updated_by: str = objects.created_by_default) -> account_rate_read_dto | None:
-        params = account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, account_rate_uid: str, account_rate_name: str, tenant_uid: str, account_uid: str, currency_uid: str, rate: str, start_date: datetime.datetime, end_date: datetime.datetime, rate_note: str, is_default: str, updated_by: str = objects.created_by_default) -> account_rate_read_dto | None:
+        params = account_rate_write_dto.new_write(account_rate_uid, account_rate_name, tenant_uid, account_uid, currency_uid, rate, start_date, end_date, rate_note, is_default).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(account_rate_uid)
     def delete_logical_dtos(self, dtos: list[account_rate_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -756,14 +760,20 @@ class account_skill_dao(base_dao):
         return self.select_rows_read_by_any_column('account_skill_uid', account_skill_uid, n)
     def select_rows_read_by_account_skill_name(self, account_skill_name: str, n: int = 1000) -> account_skill_read_dtos:
         return self.select_rows_read_by_any_column('account_skill_name', account_skill_name, n)
-    def select_rows_read_by_account_skill_description(self, account_skill_description: str, n: int = 1000) -> account_skill_read_dtos:
-        return self.select_rows_read_by_any_column('account_skill_description', account_skill_description, n)
+    def select_rows_read_by_account_skill_group_uid(self, account_skill_group_uid: str, n: int = 1000) -> account_skill_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_group_uid', account_skill_group_uid, n)
+    def select_rows_read_by_skill_title(self, skill_title: str, n: int = 1000) -> account_skill_read_dtos:
+        return self.select_rows_read_by_any_column('skill_title', skill_title, n)
+    def select_rows_read_by_skill_code(self, skill_code: str, n: int = 1000) -> account_skill_read_dtos:
+        return self.select_rows_read_by_any_column('skill_code', skill_code, n)
+    def select_rows_read_by_skill_description(self, skill_description: str, n: int = 1000) -> account_skill_read_dtos:
+        return self.select_rows_read_by_any_column('skill_description', skill_description, n)
     def insert_dto(self, dto: account_skill_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, account_skill_uid: str = "", account_skill_name: str = "", account_skill_description: str = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_description), created_by)
-    def insert_row_random_uid(self, account_skill_name: str, account_skill_description: str, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(account_skill_write_dto.new_write_random_uid(account_skill_name, account_skill_description), created_by)
+    def insert_row(self, account_skill_uid: str = "", account_skill_name: str = "", account_skill_group_uid: str = "", skill_title: str = "", skill_code: str = "", skill_description: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description), created_by)
+    def insert_row_random_uid(self, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_write_dto.new_write_random_uid(account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description), created_by)
     def insert_dtos(self, dtos: list[account_skill_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: account_skill_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -775,17 +785,183 @@ class account_skill_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: account_skill_write_dtos, created_by: str = objects.created_by_default) -> account_skill_read_dtos:
         return account_skill_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, account_skill_uid: str, account_skill_name: str, account_skill_description: str, updated_by: str=objects.created_by_default) -> int:
-        params = account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_description).get_list_write_insert(updated_by)
+    def upsert_row(self, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, updated_by: str=objects.created_by_default) -> int:
+        params = account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, account_skill_uid: str, account_skill_name: str, account_skill_description: str, updated_by: str = objects.created_by_default) -> account_skill_read_dto | None:
-        params = account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_description).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, account_skill_uid: str, account_skill_name: str, account_skill_group_uid: str, skill_title: str, skill_code: str, skill_description: str, updated_by: str = objects.created_by_default) -> account_skill_read_dto | None:
+        params = account_skill_write_dto.new_write(account_skill_uid, account_skill_name, account_skill_group_uid, skill_title, skill_code, skill_description).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(account_skill_uid)
     def delete_logical_dtos(self, dtos: list[account_skill_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: account_skill_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class account_skill_assignment_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.account_skill_assignment_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> account_skill_assignment_read_dtos:
+        return account_skill_assignment_read_dtos(list(map(lambda r: account_skill_assignment_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> account_skill_assignment_write_dtos:
+        return account_skill_assignment_write_dtos(list(map(lambda r: account_skill_assignment_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> account_skill_assignment_thin_dtos:
+        return account_skill_assignment_thin_dtos(list(map(lambda r: account_skill_assignment_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> account_skill_assignment_rich_dtos:
+        return account_skill_assignment_rich_dtos(list(map(lambda r: account_skill_assignment_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> account_skill_assignment_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> account_skill_assignment_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> account_skill_assignment_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> account_skill_assignment_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> account_skill_assignment_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> account_skill_assignment_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> account_skill_assignment_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> account_skill_assignment_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_account_skill_assignment_uid(self, account_skill_assignment_uid: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_assignment_uid', account_skill_assignment_uid, n)
+    def select_rows_read_by_account_skill_assignment_name(self, account_skill_assignment_name: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_assignment_name', account_skill_assignment_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_account_skill_uid(self, account_skill_uid: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_uid', account_skill_uid, n)
+    def select_rows_read_by_skill_rate(self, skill_rate: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('skill_rate', skill_rate, n)
+    def select_rows_read_by_account_skill_description(self, account_skill_description: str, n: int = 1000) -> account_skill_assignment_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_description', account_skill_description, n)
+    def insert_dto(self, dto: account_skill_assignment_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, account_skill_assignment_uid: str = "", account_skill_assignment_name: str = "", tenant_uid: str = "", account_uid: str = "", account_skill_uid: str = "", skill_rate: str = "", account_skill_description: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_assignment_write_dto.new_write(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description), created_by)
+    def insert_row_random_uid(self, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_assignment_write_dto.new_write_random_uid(account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description), created_by)
+    def insert_dtos(self, dtos: list[account_skill_assignment_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: account_skill_assignment_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: account_skill_assignment_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: account_skill_assignment_write_dto, created_by: str = objects.created_by_default) -> account_skill_assignment_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: account_skill_assignment_write_dtos, created_by: str = objects.created_by_default) -> account_skill_assignment_read_dtos:
+        return account_skill_assignment_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, updated_by: str=objects.created_by_default) -> int:
+        params = account_skill_assignment_write_dto.new_write(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, account_skill_assignment_uid: str, account_skill_assignment_name: str, tenant_uid: str, account_uid: str, account_skill_uid: str, skill_rate: str, account_skill_description: str, updated_by: str = objects.created_by_default) -> account_skill_assignment_read_dto | None:
+        params = account_skill_assignment_write_dto.new_write(account_skill_assignment_uid, account_skill_assignment_name, tenant_uid, account_uid, account_skill_uid, skill_rate, account_skill_description).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(account_skill_assignment_uid)
+    def delete_logical_dtos(self, dtos: list[account_skill_assignment_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: account_skill_assignment_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class account_skill_group_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.account_skill_group_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> account_skill_group_read_dtos:
+        return account_skill_group_read_dtos(list(map(lambda r: account_skill_group_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> account_skill_group_write_dtos:
+        return account_skill_group_write_dtos(list(map(lambda r: account_skill_group_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> account_skill_group_thin_dtos:
+        return account_skill_group_thin_dtos(list(map(lambda r: account_skill_group_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> account_skill_group_rich_dtos:
+        return account_skill_group_rich_dtos(list(map(lambda r: account_skill_group_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> account_skill_group_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> account_skill_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> account_skill_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> account_skill_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> account_skill_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> account_skill_group_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> account_skill_group_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> account_skill_group_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_account_skill_group_uid(self, account_skill_group_uid: str, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_group_uid', account_skill_group_uid, n)
+    def select_rows_read_by_account_skill_group_name(self, account_skill_group_name: str, n: int = 1000) -> account_skill_group_read_dtos:
+        return self.select_rows_read_by_any_column('account_skill_group_name', account_skill_group_name, n)
+    def insert_dto(self, dto: account_skill_group_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, account_skill_group_uid: str = "", account_skill_group_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_group_write_dto.new_write(account_skill_group_uid, account_skill_group_name), created_by)
+    def insert_row_random_uid(self, account_skill_group_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(account_skill_group_write_dto.new_write_random_uid(account_skill_group_name), created_by)
+    def insert_dtos(self, dtos: list[account_skill_group_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: account_skill_group_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: account_skill_group_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: account_skill_group_write_dto, created_by: str = objects.created_by_default) -> account_skill_group_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: account_skill_group_write_dtos, created_by: str = objects.created_by_default) -> account_skill_group_read_dtos:
+        return account_skill_group_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, account_skill_group_uid: str, account_skill_group_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = account_skill_group_write_dto.new_write(account_skill_group_uid, account_skill_group_name).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, account_skill_group_uid: str, account_skill_group_name: str, updated_by: str = objects.created_by_default) -> account_skill_group_read_dto | None:
+        params = account_skill_group_write_dto.new_write(account_skill_group_uid, account_skill_group_name).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(account_skill_group_uid)
+    def delete_logical_dtos(self, dtos: list[account_skill_group_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: account_skill_group_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -1518,14 +1694,16 @@ class auth_identity_dao(base_dao):
         return self.select_rows_read_by_any_column('auth_identity_name', auth_identity_name, n)
     def select_rows_read_by_class_name(self, class_name: str, n: int = 1000) -> auth_identity_read_dtos:
         return self.select_rows_read_by_any_column('class_name', class_name, n)
+    def select_rows_read_by_auth_url(self, auth_url: str, n: int = 1000) -> auth_identity_read_dtos:
+        return self.select_rows_read_by_any_column('auth_url', auth_url, n)
     def select_rows_read_by_default_parameters_json(self, default_parameters_json: str, n: int = 1000) -> auth_identity_read_dtos:
         return self.select_rows_read_by_any_column('default_parameters_json', default_parameters_json, n)
     def insert_dto(self, dto: auth_identity_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, auth_identity_uid: str = "", auth_identity_name: str = "", class_name: str = "", default_parameters_json: str = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, default_parameters_json), created_by)
-    def insert_row_random_uid(self, auth_identity_name: str, class_name: str, default_parameters_json: str, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_identity_write_dto.new_write_random_uid(auth_identity_name, class_name, default_parameters_json), created_by)
+    def insert_row(self, auth_identity_uid: str = "", auth_identity_name: str = "", class_name: str = "", auth_url: str = "", default_parameters_json: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json), created_by)
+    def insert_row_random_uid(self, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_identity_write_dto.new_write_random_uid(auth_identity_name, class_name, auth_url, default_parameters_json), created_by)
     def insert_dtos(self, dtos: list[auth_identity_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: auth_identity_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -1537,11 +1715,11 @@ class auth_identity_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: auth_identity_write_dtos, created_by: str = objects.created_by_default) -> auth_identity_read_dtos:
         return auth_identity_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str, updated_by: str=objects.created_by_default) -> int:
-        params = auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, default_parameters_json).get_list_write_insert(updated_by)
+    def upsert_row(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, updated_by: str=objects.created_by_default) -> int:
+        params = auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, default_parameters_json: str, updated_by: str = objects.created_by_default) -> auth_identity_read_dto | None:
-        params = auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, default_parameters_json).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, auth_identity_uid: str, auth_identity_name: str, class_name: str, auth_url: str, default_parameters_json: str, updated_by: str = objects.created_by_default) -> auth_identity_read_dto | None:
+        params = auth_identity_write_dto.new_write(auth_identity_uid, auth_identity_name, class_name, auth_url, default_parameters_json).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(auth_identity_uid)
     def delete_logical_dtos(self, dtos: list[auth_identity_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -2075,7 +2253,7 @@ class auth_password_rule_dao(base_dao):
     def upsert_row_and_get(self, auth_password_uid: str, auth_password_name: str, rule_type: int, rule_parameters: str, user_scope: str, updated_by: str = objects.created_by_default) -> auth_password_rule_read_dto | None:
         params = auth_password_rule_write_dto.new_write(auth_password_uid, auth_password_name, rule_type, rule_parameters, user_scope).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
-        return self.select_row_read_by_uid(auth_password_uid)
+        return self.select_row_read_by_uid(auth_password_rule_uid)
     def delete_logical_dtos(self, dtos: list[auth_password_rule_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
@@ -2140,16 +2318,18 @@ class auth_permission_dao(base_dao):
         return self.select_rows_read_by_any_column('client_uid', client_uid, n)
     def select_rows_read_by_project_instance_uid(self, project_instance_uid: str | None, n: int = 1000) -> auth_permission_read_dtos:
         return self.select_rows_read_by_any_column('project_instance_uid', project_instance_uid, n)
+    def select_rows_read_by_auth_permission_type_uid(self, auth_permission_type_uid: str | None, n: int = 1000) -> auth_permission_read_dtos:
+        return self.select_rows_read_by_any_column('auth_permission_type_uid', auth_permission_type_uid, n)
     def select_rows_read_by_valid_from_date(self, valid_from_date: datetime.datetime, n: int = 1000) -> auth_permission_read_dtos:
         return self.select_rows_read_by_any_column('valid_from_date', valid_from_date, n)
     def select_rows_read_by_valid_till_date(self, valid_till_date: datetime.datetime, n: int = 1000) -> auth_permission_read_dtos:
         return self.select_rows_read_by_any_column('valid_till_date', valid_till_date, n)
     def insert_dto(self, dto: auth_permission_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, auth_permission_uid: str = "", auth_permission_name: str = "", tenant_uid: str = "", account_uid: str = "", auth_role_uid: str = "", client_uid: str | None = "", project_instance_uid: str | None = "", valid_from_date: datetime.datetime = datetime.datetime.now(), valid_till_date: datetime.datetime = datetime.datetime.now(), created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date), created_by)
-    def insert_row_random_uid(self, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_permission_write_dto.new_write_random_uid(auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date), created_by)
+    def insert_row(self, auth_permission_uid: str = "", auth_permission_name: str = "", tenant_uid: str = "", account_uid: str = "", auth_role_uid: str = "", client_uid: str | None = "", project_instance_uid: str | None = "", auth_permission_type_uid: str | None = "", valid_from_date: datetime.datetime = datetime.datetime.now(), valid_till_date: datetime.datetime = datetime.datetime.now(), created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date), created_by)
+    def insert_row_random_uid(self, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_permission_write_dto.new_write_random_uid(auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date), created_by)
     def insert_dtos(self, dtos: list[auth_permission_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: auth_permission_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -2161,17 +2341,181 @@ class auth_permission_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: auth_permission_write_dtos, created_by: str = objects.created_by_default) -> auth_permission_read_dtos:
         return auth_permission_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, updated_by: str=objects.created_by_default) -> int:
-        params = auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date).get_list_write_insert(updated_by)
+    def upsert_row(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, updated_by: str=objects.created_by_default) -> int:
+        params = auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, updated_by: str = objects.created_by_default) -> auth_permission_read_dto | None:
-        params = auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, valid_from_date, valid_till_date).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, auth_permission_uid: str, auth_permission_name: str, tenant_uid: str, account_uid: str, auth_role_uid: str, client_uid: str | None, project_instance_uid: str | None, auth_permission_type_uid: str | None, valid_from_date: datetime.datetime, valid_till_date: datetime.datetime, updated_by: str = objects.created_by_default) -> auth_permission_read_dto | None:
+        params = auth_permission_write_dto.new_write(auth_permission_uid, auth_permission_name, tenant_uid, account_uid, auth_role_uid, client_uid, project_instance_uid, auth_permission_type_uid, valid_from_date, valid_till_date).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(auth_permission_uid)
     def delete_logical_dtos(self, dtos: list[auth_permission_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: auth_permission_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class auth_permission_type_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.auth_permission_type_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> auth_permission_type_read_dtos:
+        return auth_permission_type_read_dtos(list(map(lambda r: auth_permission_type_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> auth_permission_type_write_dtos:
+        return auth_permission_type_write_dtos(list(map(lambda r: auth_permission_type_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> auth_permission_type_thin_dtos:
+        return auth_permission_type_thin_dtos(list(map(lambda r: auth_permission_type_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> auth_permission_type_rich_dtos:
+        return auth_permission_type_rich_dtos(list(map(lambda r: auth_permission_type_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> auth_permission_type_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> auth_permission_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> auth_permission_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> auth_permission_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> auth_permission_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> auth_permission_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> auth_permission_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> auth_permission_type_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_auth_permission_type_uid(self, auth_permission_type_uid: str, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_any_column('auth_permission_type_uid', auth_permission_type_uid, n)
+    def select_rows_read_by_auth_permission_type_name(self, auth_permission_type_name: str, n: int = 1000) -> auth_permission_type_read_dtos:
+        return self.select_rows_read_by_any_column('auth_permission_type_name', auth_permission_type_name, n)
+    def insert_dto(self, dto: auth_permission_type_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, auth_permission_type_uid: str = "", auth_permission_type_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_permission_type_write_dto.new_write(auth_permission_type_uid, auth_permission_type_name), created_by)
+    def insert_row_random_uid(self, auth_permission_type_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_permission_type_write_dto.new_write_random_uid(auth_permission_type_name), created_by)
+    def insert_dtos(self, dtos: list[auth_permission_type_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: auth_permission_type_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: auth_permission_type_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: auth_permission_type_write_dto, created_by: str = objects.created_by_default) -> auth_permission_type_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: auth_permission_type_write_dtos, created_by: str = objects.created_by_default) -> auth_permission_type_read_dtos:
+        return auth_permission_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, auth_permission_type_uid: str, auth_permission_type_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = auth_permission_type_write_dto.new_write(auth_permission_type_uid, auth_permission_type_name).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, auth_permission_type_uid: str, auth_permission_type_name: str, updated_by: str = objects.created_by_default) -> auth_permission_type_read_dto | None:
+        params = auth_permission_type_write_dto.new_write(auth_permission_type_uid, auth_permission_type_name).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(auth_permission_type_uid)
+    def delete_logical_dtos(self, dtos: list[auth_permission_type_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: auth_permission_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class auth_pin_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.auth_pin_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> auth_pin_read_dtos:
+        return auth_pin_read_dtos(list(map(lambda r: auth_pin_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> auth_pin_write_dtos:
+        return auth_pin_write_dtos(list(map(lambda r: auth_pin_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> auth_pin_thin_dtos:
+        return auth_pin_thin_dtos(list(map(lambda r: auth_pin_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> auth_pin_rich_dtos:
+        return auth_pin_rich_dtos(list(map(lambda r: auth_pin_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> auth_pin_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> auth_pin_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> auth_pin_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> auth_pin_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> auth_pin_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> auth_pin_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> auth_pin_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> auth_pin_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_auth_pin_uid(self, auth_pin_uid: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('auth_pin_uid', auth_pin_uid, n)
+    def select_rows_read_by_auth_pin_name(self, auth_pin_name: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('auth_pin_name', auth_pin_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_pin_hash(self, pin_hash: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('pin_hash', pin_hash, n)
+    def select_rows_read_by_pin_salt(self, pin_salt: str, n: int = 1000) -> auth_pin_read_dtos:
+        return self.select_rows_read_by_any_column('pin_salt', pin_salt, n)
+    def insert_dto(self, dto: auth_pin_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, auth_pin_uid: str = "", auth_pin_name: str = "", tenant_uid: str = "", account_uid: str = "", pin_hash: str = "", pin_salt: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_pin_write_dto.new_write(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt), created_by)
+    def insert_row_random_uid(self, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_pin_write_dto.new_write_random_uid(auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt), created_by)
+    def insert_dtos(self, dtos: list[auth_pin_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: auth_pin_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: auth_pin_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: auth_pin_write_dto, created_by: str = objects.created_by_default) -> auth_pin_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: auth_pin_write_dtos, created_by: str = objects.created_by_default) -> auth_pin_read_dtos:
+        return auth_pin_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, updated_by: str=objects.created_by_default) -> int:
+        params = auth_pin_write_dto.new_write(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, auth_pin_uid: str, auth_pin_name: str, tenant_uid: str, account_uid: str, pin_hash: str, pin_salt: str, updated_by: str = objects.created_by_default) -> auth_pin_read_dto | None:
+        params = auth_pin_write_dto.new_write(auth_pin_uid, auth_pin_name, tenant_uid, account_uid, pin_hash, pin_salt).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(auth_pin_uid)
+    def delete_logical_dtos(self, dtos: list[auth_pin_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: auth_pin_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -2250,7 +2594,7 @@ class auth_request_dao(base_dao):
         return self.select_rows_read_by_any_column('event_notification_uid', event_notification_uid, n)
     def insert_dto(self, dto: auth_request_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, auth_request_uid: str = "", auth_request_name: str = "", tenant_uid: str = "", account_uid: str = "", requestor_email: str = "", reset_guid: str = "", valid_till_date: datetime.datetime = datetime.datetime.now(), lock_guid: str | None = "", lock_by: str | None = "", lock_date: datetime.datetime | None = datetime.datetime.now(), is_checked: int = 0, is_used: int = 0, check_date: datetime.datetime | None = None, use_date: datetime.datetime | None = None, event_notification_uid: str | None = None, created_by: str = objects.created_by_default) -> int:
+    def insert_row(self, auth_request_uid: str = "", auth_request_name: str = "", tenant_uid: str = "", account_uid: str = "", requestor_email: str = "", reset_guid: str = "", valid_till_date: datetime.datetime = datetime.datetime.now(), lock_guid: str | None = "", lock_by: str | None = "", lock_date: datetime.datetime | None = datetime.datetime.now(), is_checked: int = 0, is_used: int = 0, check_date: datetime.datetime | None = datetime.datetime.now(), use_date: datetime.datetime | None = datetime.datetime.now(), event_notification_uid: str | None = "", created_by: str = objects.created_by_default) -> int:
         return self.insert_single(auth_request_write_dto.new_write(auth_request_uid, auth_request_name, tenant_uid, account_uid, requestor_email, reset_guid, valid_till_date, lock_guid, lock_by, lock_date, is_checked, is_used, check_date, use_date, event_notification_uid), created_by)
     def insert_row_random_uid(self, auth_request_name: str, tenant_uid: str, account_uid: str, requestor_email: str, reset_guid: str, valid_till_date: datetime.datetime, lock_guid: str | None, lock_by: str | None, lock_date: datetime.datetime | None, is_checked: int, is_used: int, check_date: datetime.datetime | None, use_date: datetime.datetime | None, event_notification_uid: str | None, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(auth_request_write_dto.new_write_random_uid(auth_request_name, tenant_uid, account_uid, requestor_email, reset_guid, valid_till_date, lock_guid, lock_by, lock_date, is_checked, is_used, check_date, use_date, event_notification_uid), created_by)
@@ -2690,6 +3034,10 @@ class auth_token_dao(base_dao):
         return self.select_rows_read_by_any_column('auth_token_uid', auth_token_uid, n)
     def select_rows_read_by_auth_token_name(self, auth_token_name: str, n: int = 1000) -> auth_token_read_dtos:
         return self.select_rows_read_by_any_column('auth_token_name', auth_token_name, n)
+    def select_rows_read_by_auth_attempt_uid(self, auth_attempt_uid: str, n: int = 1000) -> auth_token_read_dtos:
+        return self.select_rows_read_by_any_column('auth_attempt_uid', auth_attempt_uid, n)
+    def select_rows_read_by_auth_token_type_uid(self, auth_token_type_uid: str, n: int = 1000) -> auth_token_read_dtos:
+        return self.select_rows_read_by_any_column('auth_token_type_uid', auth_token_type_uid, n)
     def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> auth_token_read_dtos:
         return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
     def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> auth_token_read_dtos:
@@ -2706,12 +3054,14 @@ class auth_token_dao(base_dao):
         return self.select_rows_read_by_any_column('last_use_date', last_use_date, n)
     def select_rows_read_by_is_last(self, is_last: int, n: int = 1000) -> auth_token_read_dtos:
         return self.select_rows_read_by_any_column('is_last', is_last, n)
+    def select_rows_read_by_token_scope(self, token_scope: str, n: int = 1000) -> auth_token_read_dtos:
+        return self.select_rows_read_by_any_column('token_scope', token_scope, n)
     def insert_dto(self, dto: auth_token_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, auth_token_uid: str = "", auth_token_name: str = "", tenant_uid: str = "", account_uid: str = "", token_seq: int = 0, token_hash: str = "", token_salt: str = "", valid_till_date: datetime.datetime | None = datetime.datetime.now(), last_use_date: datetime.datetime | None = datetime.datetime.now(), is_last: int = 0, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_token_write_dto.new_write(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last), created_by)
-    def insert_row_random_uid(self, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(auth_token_write_dto.new_write_random_uid(auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last), created_by)
+    def insert_row(self, auth_token_uid: str = "", auth_token_name: str = "", auth_attempt_uid: str = "", auth_token_type_uid: str = "", tenant_uid: str = "", account_uid: str = "", token_seq: int = 0, token_hash: str = "", token_salt: str = "", valid_till_date: datetime.datetime | None = datetime.datetime.now(), last_use_date: datetime.datetime | None = datetime.datetime.now(), is_last: int = 0, token_scope: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_token_write_dto.new_write(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope), created_by)
+    def insert_row_random_uid(self, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_token_write_dto.new_write_random_uid(auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope), created_by)
     def insert_dtos(self, dtos: list[auth_token_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: auth_token_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -2723,17 +3073,95 @@ class auth_token_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: auth_token_write_dtos, created_by: str = objects.created_by_default) -> auth_token_read_dtos:
         return auth_token_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, updated_by: str=objects.created_by_default) -> int:
-        params = auth_token_write_dto.new_write(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last).get_list_write_insert(updated_by)
+    def upsert_row(self, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, updated_by: str=objects.created_by_default) -> int:
+        params = auth_token_write_dto.new_write(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, auth_token_uid: str, auth_token_name: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, updated_by: str = objects.created_by_default) -> auth_token_read_dto | None:
-        params = auth_token_write_dto.new_write(auth_token_uid, auth_token_name, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, auth_token_uid: str, auth_token_name: str, auth_attempt_uid: str, auth_token_type_uid: str, tenant_uid: str, account_uid: str, token_seq: int, token_hash: str, token_salt: str, valid_till_date: datetime.datetime | None, last_use_date: datetime.datetime | None, is_last: int, token_scope: str, updated_by: str = objects.created_by_default) -> auth_token_read_dto | None:
+        params = auth_token_write_dto.new_write(auth_token_uid, auth_token_name, auth_attempt_uid, auth_token_type_uid, tenant_uid, account_uid, token_seq, token_hash, token_salt, valid_till_date, last_use_date, is_last, token_scope).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(auth_token_uid)
     def delete_logical_dtos(self, dtos: list[auth_token_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: auth_token_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class auth_token_type_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.auth_token_type_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> auth_token_type_read_dtos:
+        return auth_token_type_read_dtos(list(map(lambda r: auth_token_type_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> auth_token_type_write_dtos:
+        return auth_token_type_write_dtos(list(map(lambda r: auth_token_type_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> auth_token_type_thin_dtos:
+        return auth_token_type_thin_dtos(list(map(lambda r: auth_token_type_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> auth_token_type_rich_dtos:
+        return auth_token_type_rich_dtos(list(map(lambda r: auth_token_type_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> auth_token_type_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> auth_token_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> auth_token_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> auth_token_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> auth_token_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> auth_token_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> auth_token_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> auth_token_type_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_auth_token_type_uid(self, auth_token_type_uid: str, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_any_column('auth_token_type_uid', auth_token_type_uid, n)
+    def select_rows_read_by_auth_token_type_name(self, auth_token_type_name: str, n: int = 1000) -> auth_token_type_read_dtos:
+        return self.select_rows_read_by_any_column('auth_token_type_name', auth_token_type_name, n)
+    def insert_dto(self, dto: auth_token_type_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, auth_token_type_uid: str = "", auth_token_type_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_token_type_write_dto.new_write(auth_token_type_uid, auth_token_type_name), created_by)
+    def insert_row_random_uid(self, auth_token_type_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(auth_token_type_write_dto.new_write_random_uid(auth_token_type_name), created_by)
+    def insert_dtos(self, dtos: list[auth_token_type_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: auth_token_type_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: auth_token_type_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: auth_token_type_write_dto, created_by: str = objects.created_by_default) -> auth_token_type_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: auth_token_type_write_dtos, created_by: str = objects.created_by_default) -> auth_token_type_read_dtos:
+        return auth_token_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, auth_token_type_uid: str, auth_token_type_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = auth_token_type_write_dto.new_write(auth_token_type_uid, auth_token_type_name).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, auth_token_type_uid: str, auth_token_type_name: str, updated_by: str = objects.created_by_default) -> auth_token_type_read_dto | None:
+        params = auth_token_type_write_dto.new_write(auth_token_type_uid, auth_token_type_name).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(auth_token_type_uid)
+    def delete_logical_dtos(self, dtos: list[auth_token_type_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: auth_token_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -3521,6 +3949,96 @@ class client_account_dao(base_dao):
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
+class client_contract_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.client_contract_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> client_contract_read_dtos:
+        return client_contract_read_dtos(list(map(lambda r: client_contract_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> client_contract_write_dtos:
+        return client_contract_write_dtos(list(map(lambda r: client_contract_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> client_contract_thin_dtos:
+        return client_contract_thin_dtos(list(map(lambda r: client_contract_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> client_contract_rich_dtos:
+        return client_contract_rich_dtos(list(map(lambda r: client_contract_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> client_contract_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> client_contract_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> client_contract_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> client_contract_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> client_contract_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> client_contract_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> client_contract_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> client_contract_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_client_contract_uid(self, client_contract_uid: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('client_contract_uid', client_contract_uid, n)
+    def select_rows_read_by_client_contract_name(self, client_contract_name: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('client_contract_name', client_contract_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_client_uid(self, client_uid: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('client_uid', client_uid, n)
+    def select_rows_read_by_parent_client_contract_uid(self, parent_client_contract_uid: str | None, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('parent_client_contract_uid', parent_client_contract_uid, n)
+    def select_rows_read_by_contract_text(self, contract_text: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('contract_text', contract_text, n)
+    def select_rows_read_by_contract_value(self, contract_value: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('contract_value', contract_value, n)
+    def select_rows_read_by_currency_uid(self, currency_uid: str, n: int = 1000) -> client_contract_read_dtos:
+        return self.select_rows_read_by_any_column('currency_uid', currency_uid, n)
+    def insert_dto(self, dto: client_contract_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, client_contract_uid: str = "", client_contract_name: str = "", tenant_uid: str = "", client_uid: str = "", parent_client_contract_uid: str | None = "", contract_text: str = "", contract_value: str = "", currency_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(client_contract_write_dto.new_write(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid), created_by)
+    def insert_row_random_uid(self, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(client_contract_write_dto.new_write_random_uid(client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid), created_by)
+    def insert_dtos(self, dtos: list[client_contract_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: client_contract_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: client_contract_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: client_contract_write_dto, created_by: str = objects.created_by_default) -> client_contract_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: client_contract_write_dtos, created_by: str = objects.created_by_default) -> client_contract_read_dtos:
+        return client_contract_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = client_contract_write_dto.new_write(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, client_contract_uid: str, client_contract_name: str, tenant_uid: str, client_uid: str, parent_client_contract_uid: str | None, contract_text: str, contract_value: str, currency_uid: str, updated_by: str = objects.created_by_default) -> client_contract_read_dto | None:
+        params = client_contract_write_dto.new_write(client_contract_uid, client_contract_name, tenant_uid, client_uid, parent_client_contract_uid, contract_text, contract_value, currency_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(client_contract_uid)
+    def delete_logical_dtos(self, dtos: list[client_contract_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: client_contract_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
 class client_country_dao(base_dao):
     def __init__(self):
         super().__init__()
@@ -3946,6 +4464,1064 @@ class client_type_dao(base_dao):
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: client_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_entry_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_entry_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_entry_read_dtos:
+        return competency_entry_read_dtos(list(map(lambda r: competency_entry_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_entry_write_dtos:
+        return competency_entry_write_dtos(list(map(lambda r: competency_entry_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_entry_thin_dtos:
+        return competency_entry_thin_dtos(list(map(lambda r: competency_entry_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_entry_rich_dtos:
+        return competency_entry_rich_dtos(list(map(lambda r: competency_entry_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_entry_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_entry_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_entry_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_entry_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_entry_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_entry_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_entry_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_entry_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_entry_uid(self, competency_entry_uid: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('competency_entry_uid', competency_entry_uid, n)
+    def select_rows_read_by_competency_entry_name(self, competency_entry_name: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('competency_entry_name', competency_entry_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_item_uid(self, competency_item_uid: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_uid', competency_item_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_entry_template(self, entry_template: str, n: int = 1000) -> competency_entry_read_dtos:
+        return self.select_rows_read_by_any_column('entry_template', entry_template, n)
+    def insert_dto(self, dto: competency_entry_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_entry_uid: str = "", competency_entry_name: str = "", tenant_uid: str = "", competency_item_uid: str = "", account_uid: str = "", entry_template: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_entry_write_dto.new_write(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template), created_by)
+    def insert_row_random_uid(self, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_entry_write_dto.new_write_random_uid(competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template), created_by)
+    def insert_dtos(self, dtos: list[competency_entry_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_entry_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_entry_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_entry_write_dto, created_by: str = objects.created_by_default) -> competency_entry_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_entry_write_dtos, created_by: str = objects.created_by_default) -> competency_entry_read_dtos:
+        return competency_entry_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_entry_write_dto.new_write(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_entry_uid: str, competency_entry_name: str, tenant_uid: str, competency_item_uid: str, account_uid: str, entry_template: str, updated_by: str = objects.created_by_default) -> competency_entry_read_dto | None:
+        params = competency_entry_write_dto.new_write(competency_entry_uid, competency_entry_name, tenant_uid, competency_item_uid, account_uid, entry_template).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_entry_uid)
+    def delete_logical_dtos(self, dtos: list[competency_entry_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_entry_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_entry_account_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_entry_account_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_entry_account_read_dtos:
+        return competency_entry_account_read_dtos(list(map(lambda r: competency_entry_account_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_entry_account_write_dtos:
+        return competency_entry_account_write_dtos(list(map(lambda r: competency_entry_account_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_entry_account_thin_dtos:
+        return competency_entry_account_thin_dtos(list(map(lambda r: competency_entry_account_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_entry_account_rich_dtos:
+        return competency_entry_account_rich_dtos(list(map(lambda r: competency_entry_account_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_entry_account_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_entry_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_entry_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_entry_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_entry_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_entry_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_entry_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_entry_account_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_entry_account_uid(self, competency_entry_account_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_entry_account_uid', competency_entry_account_uid, n)
+    def select_rows_read_by_competency_entry_account_name(self, competency_entry_account_name: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_entry_account_name', competency_entry_account_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_competency_process_account_uid(self, competency_process_account_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_account_uid', competency_process_account_uid, n)
+    def select_rows_read_by_competency_group_account_uid(self, competency_group_account_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_account_uid', competency_group_account_uid, n)
+    def select_rows_read_by_competency_entry_uid(self, competency_entry_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_entry_uid', competency_entry_uid, n)
+    def select_rows_read_by_competency_item_account_uid(self, competency_item_account_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_account_uid', competency_item_account_uid, n)
+    def select_rows_read_by_entry_title(self, entry_title: str | None, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('entry_title', entry_title, n)
+    def select_rows_read_by_entry_content(self, entry_content: str | None, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('entry_content', entry_content, n)
+    def select_rows_read_by_entry_value(self, entry_value: str | None, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('entry_value', entry_value, n)
+    def select_rows_read_by_competency_ranking_uid(self, competency_ranking_uid: str, n: int = 1000) -> competency_entry_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_ranking_uid', competency_ranking_uid, n)
+    def insert_dto(self, dto: competency_entry_account_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_entry_account_uid: str = "", competency_entry_account_name: str = "", tenant_uid: str = "", account_uid: str = "", competency_process_account_uid: str = "", competency_group_account_uid: str = "", competency_entry_uid: str = "", competency_item_account_uid: str = "", entry_title: str | None = "", entry_content: str | None = "", entry_value: str | None = "", competency_ranking_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_entry_account_write_dto.new_write(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid), created_by)
+    def insert_row_random_uid(self, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_entry_account_write_dto.new_write_random_uid(competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_entry_account_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_entry_account_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_entry_account_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_entry_account_write_dto, created_by: str = objects.created_by_default) -> competency_entry_account_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_entry_account_write_dtos, created_by: str = objects.created_by_default) -> competency_entry_account_read_dtos:
+        return competency_entry_account_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_entry_account_write_dto.new_write(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_entry_account_uid: str, competency_entry_account_name: str, tenant_uid: str, account_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_entry_uid: str, competency_item_account_uid: str, entry_title: str | None, entry_content: str | None, entry_value: str | None, competency_ranking_uid: str, updated_by: str = objects.created_by_default) -> competency_entry_account_read_dto | None:
+        params = competency_entry_account_write_dto.new_write(competency_entry_account_uid, competency_entry_account_name, tenant_uid, account_uid, competency_process_account_uid, competency_group_account_uid, competency_entry_uid, competency_item_account_uid, entry_title, entry_content, entry_value, competency_ranking_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_entry_account_uid)
+    def delete_logical_dtos(self, dtos: list[competency_entry_account_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_entry_account_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_group_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_group_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_group_read_dtos:
+        return competency_group_read_dtos(list(map(lambda r: competency_group_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_group_write_dtos:
+        return competency_group_write_dtos(list(map(lambda r: competency_group_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_group_thin_dtos:
+        return competency_group_thin_dtos(list(map(lambda r: competency_group_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_group_rich_dtos:
+        return competency_group_rich_dtos(list(map(lambda r: competency_group_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_group_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_group_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_group_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_group_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_group_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_group_uid(self, competency_group_uid: str, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_uid', competency_group_uid, n)
+    def select_rows_read_by_competency_group_name(self, competency_group_name: str, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_name', competency_group_name, n)
+    def select_rows_read_by_competency_process_uid(self, competency_process_uid: str, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_uid', competency_process_uid, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_group_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def insert_dto(self, dto: competency_group_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_group_uid: str = "", competency_group_name: str = "", competency_process_uid: str = "", tenant_uid: str = "", account_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_write_dto.new_write(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid), created_by)
+    def insert_row_random_uid(self, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_write_dto.new_write_random_uid(competency_group_name, competency_process_uid, tenant_uid, account_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_group_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_group_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_group_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_group_write_dto, created_by: str = objects.created_by_default) -> competency_group_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_group_write_dtos, created_by: str = objects.created_by_default) -> competency_group_read_dtos:
+        return competency_group_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_group_write_dto.new_write(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_group_uid: str, competency_group_name: str, competency_process_uid: str, tenant_uid: str, account_uid: str, updated_by: str = objects.created_by_default) -> competency_group_read_dto | None:
+        params = competency_group_write_dto.new_write(competency_group_uid, competency_group_name, competency_process_uid, tenant_uid, account_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_group_uid)
+    def delete_logical_dtos(self, dtos: list[competency_group_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_group_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_group_account_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_group_account_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_group_account_read_dtos:
+        return competency_group_account_read_dtos(list(map(lambda r: competency_group_account_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_group_account_write_dtos:
+        return competency_group_account_write_dtos(list(map(lambda r: competency_group_account_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_group_account_thin_dtos:
+        return competency_group_account_thin_dtos(list(map(lambda r: competency_group_account_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_group_account_rich_dtos:
+        return competency_group_account_rich_dtos(list(map(lambda r: competency_group_account_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_group_account_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_group_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_group_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_group_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_group_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_group_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_group_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_group_account_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_group_account_uid(self, competency_group_account_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_account_uid', competency_group_account_uid, n)
+    def select_rows_read_by_competency_group_account_name(self, competency_group_account_name: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_account_name', competency_group_account_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_process_uid(self, competency_process_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_uid', competency_process_uid, n)
+    def select_rows_read_by_competency_process_account_uid(self, competency_process_account_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_account_uid', competency_process_account_uid, n)
+    def select_rows_read_by_competency_group_uid(self, competency_group_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_uid', competency_group_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_start_date(self, start_date: datetime.datetime, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('start_date', start_date, n)
+    def select_rows_read_by_end_date(self, end_date: datetime.datetime | None, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def select_rows_read_by_final_group_result(self, final_group_result: str | None, n: int = 1000) -> competency_group_account_read_dtos:
+        return self.select_rows_read_by_any_column('final_group_result', final_group_result, n)
+    def insert_dto(self, dto: competency_group_account_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_group_account_uid: str = "", competency_group_account_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", competency_process_account_uid: str = "", competency_group_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), final_group_result: str | None = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_account_write_dto.new_write(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result), created_by)
+    def insert_row_random_uid(self, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_account_write_dto.new_write_random_uid(competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result), created_by)
+    def insert_dtos(self, dtos: list[competency_group_account_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_group_account_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_group_account_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_group_account_write_dto, created_by: str = objects.created_by_default) -> competency_group_account_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_group_account_write_dtos, created_by: str = objects.created_by_default) -> competency_group_account_read_dtos:
+        return competency_group_account_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, updated_by: str=objects.created_by_default) -> int:
+        params = competency_group_account_write_dto.new_write(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_group_account_uid: str, competency_group_account_name: str, tenant_uid: str, competency_process_uid: str, competency_process_account_uid: str, competency_group_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, final_group_result: str | None, updated_by: str = objects.created_by_default) -> competency_group_account_read_dto | None:
+        params = competency_group_account_write_dto.new_write(competency_group_account_uid, competency_group_account_name, tenant_uid, competency_process_uid, competency_process_account_uid, competency_group_uid, account_uid, start_date, end_date, final_group_result).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_group_account_uid)
+    def delete_logical_dtos(self, dtos: list[competency_group_account_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_group_account_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_group_type_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_group_type_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_group_type_read_dtos:
+        return competency_group_type_read_dtos(list(map(lambda r: competency_group_type_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_group_type_write_dtos:
+        return competency_group_type_write_dtos(list(map(lambda r: competency_group_type_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_group_type_thin_dtos:
+        return competency_group_type_thin_dtos(list(map(lambda r: competency_group_type_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_group_type_rich_dtos:
+        return competency_group_type_rich_dtos(list(map(lambda r: competency_group_type_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_group_type_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_group_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_group_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_group_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_group_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_group_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_group_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_group_type_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_group_type_uid(self, competency_group_type_uid: str, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_type_uid', competency_group_type_uid, n)
+    def select_rows_read_by_competency_group_type_name(self, competency_group_type_name: str, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_type_name', competency_group_type_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_group_type_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def insert_dto(self, dto: competency_group_type_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_group_type_uid: str = "", competency_group_type_name: str = "", tenant_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_type_write_dto.new_write(competency_group_type_uid, competency_group_type_name, tenant_uid), created_by)
+    def insert_row_random_uid(self, competency_group_type_name: str, tenant_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_group_type_write_dto.new_write_random_uid(competency_group_type_name, tenant_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_group_type_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_group_type_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_group_type_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_group_type_write_dto, created_by: str = objects.created_by_default) -> competency_group_type_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_group_type_write_dtos, created_by: str = objects.created_by_default) -> competency_group_type_read_dtos:
+        return competency_group_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_group_type_write_dto.new_write(competency_group_type_uid, competency_group_type_name, tenant_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_group_type_uid: str, competency_group_type_name: str, tenant_uid: str, updated_by: str = objects.created_by_default) -> competency_group_type_read_dto | None:
+        params = competency_group_type_write_dto.new_write(competency_group_type_uid, competency_group_type_name, tenant_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_group_type_uid)
+    def delete_logical_dtos(self, dtos: list[competency_group_type_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_group_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_item_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_item_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_item_read_dtos:
+        return competency_item_read_dtos(list(map(lambda r: competency_item_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_item_write_dtos:
+        return competency_item_write_dtos(list(map(lambda r: competency_item_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_item_thin_dtos:
+        return competency_item_thin_dtos(list(map(lambda r: competency_item_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_item_rich_dtos:
+        return competency_item_rich_dtos(list(map(lambda r: competency_item_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_item_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_item_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_item_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_item_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_item_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_item_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_item_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_item_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_item_uid(self, competency_item_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_uid', competency_item_uid, n)
+    def select_rows_read_by_competency_item_name(self, competency_item_name: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_name', competency_item_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_process_uid(self, competency_process_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_uid', competency_process_uid, n)
+    def select_rows_read_by_competency_item_type_uid(self, competency_item_type_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_type_uid', competency_item_type_uid, n)
+    def select_rows_read_by_competency_group_uid(self, competency_group_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_uid', competency_group_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_item_template(self, item_template: str, n: int = 1000) -> competency_item_read_dtos:
+        return self.select_rows_read_by_any_column('item_template', item_template, n)
+    def insert_dto(self, dto: competency_item_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_item_uid: str = "", competency_item_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", competency_item_type_uid: str = "", competency_group_uid: str = "", account_uid: str = "", item_template: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_write_dto.new_write(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template), created_by)
+    def insert_row_random_uid(self, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_write_dto.new_write_random_uid(competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template), created_by)
+    def insert_dtos(self, dtos: list[competency_item_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_item_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_item_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_item_write_dto, created_by: str = objects.created_by_default) -> competency_item_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_item_write_dtos, created_by: str = objects.created_by_default) -> competency_item_read_dtos:
+        return competency_item_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_item_write_dto.new_write(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_item_uid: str, competency_item_name: str, tenant_uid: str, competency_process_uid: str, competency_item_type_uid: str, competency_group_uid: str, account_uid: str, item_template: str, updated_by: str = objects.created_by_default) -> competency_item_read_dto | None:
+        params = competency_item_write_dto.new_write(competency_item_uid, competency_item_name, tenant_uid, competency_process_uid, competency_item_type_uid, competency_group_uid, account_uid, item_template).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_item_uid)
+    def delete_logical_dtos(self, dtos: list[competency_item_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_item_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_item_account_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_item_account_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_item_account_read_dtos:
+        return competency_item_account_read_dtos(list(map(lambda r: competency_item_account_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_item_account_write_dtos:
+        return competency_item_account_write_dtos(list(map(lambda r: competency_item_account_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_item_account_thin_dtos:
+        return competency_item_account_thin_dtos(list(map(lambda r: competency_item_account_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_item_account_rich_dtos:
+        return competency_item_account_rich_dtos(list(map(lambda r: competency_item_account_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_item_account_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_item_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_item_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_item_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_item_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_item_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_item_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_item_account_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_item_account_uid(self, competency_item_account_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_account_uid', competency_item_account_uid, n)
+    def select_rows_read_by_competency_item_account_name(self, competency_item_account_name: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_account_name', competency_item_account_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_process_account_uid(self, competency_process_account_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_account_uid', competency_process_account_uid, n)
+    def select_rows_read_by_competency_group_account_uid(self, competency_group_account_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_account_uid', competency_group_account_uid, n)
+    def select_rows_read_by_competency_item_uid(self, competency_item_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_uid', competency_item_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_start_date(self, start_date: datetime.datetime, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('start_date', start_date, n)
+    def select_rows_read_by_end_date(self, end_date: datetime.datetime | None, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def select_rows_read_by_item_title(self, item_title: str | None, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('item_title', item_title, n)
+    def select_rows_read_by_item_content(self, item_content: str | None, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('item_content', item_content, n)
+    def select_rows_read_by_item_value(self, item_value: str | None, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('item_value', item_value, n)
+    def select_rows_read_by_competency_ranking_uid(self, competency_ranking_uid: str, n: int = 1000) -> competency_item_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_ranking_uid', competency_ranking_uid, n)
+    def insert_dto(self, dto: competency_item_account_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_item_account_uid: str = "", competency_item_account_name: str = "", tenant_uid: str = "", competency_process_account_uid: str = "", competency_group_account_uid: str = "", competency_item_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), item_title: str | None = "", item_content: str | None = "", item_value: str | None = "", competency_ranking_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_account_write_dto.new_write(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid), created_by)
+    def insert_row_random_uid(self, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_account_write_dto.new_write_random_uid(competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_item_account_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_item_account_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_item_account_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_item_account_write_dto, created_by: str = objects.created_by_default) -> competency_item_account_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_item_account_write_dtos, created_by: str = objects.created_by_default) -> competency_item_account_read_dtos:
+        return competency_item_account_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_item_account_write_dto.new_write(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_item_account_uid: str, competency_item_account_name: str, tenant_uid: str, competency_process_account_uid: str, competency_group_account_uid: str, competency_item_uid: str, account_uid: str, start_date: datetime.datetime, end_date: datetime.datetime | None, item_title: str | None, item_content: str | None, item_value: str | None, competency_ranking_uid: str, updated_by: str = objects.created_by_default) -> competency_item_account_read_dto | None:
+        params = competency_item_account_write_dto.new_write(competency_item_account_uid, competency_item_account_name, tenant_uid, competency_process_account_uid, competency_group_account_uid, competency_item_uid, account_uid, start_date, end_date, item_title, item_content, item_value, competency_ranking_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_item_account_uid)
+    def delete_logical_dtos(self, dtos: list[competency_item_account_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_item_account_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_item_type_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_item_type_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_item_type_read_dtos:
+        return competency_item_type_read_dtos(list(map(lambda r: competency_item_type_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_item_type_write_dtos:
+        return competency_item_type_write_dtos(list(map(lambda r: competency_item_type_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_item_type_thin_dtos:
+        return competency_item_type_thin_dtos(list(map(lambda r: competency_item_type_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_item_type_rich_dtos:
+        return competency_item_type_rich_dtos(list(map(lambda r: competency_item_type_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_item_type_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_item_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_item_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_item_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_item_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_item_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_item_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_item_type_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_item_type_uid(self, competency_item_type_uid: str, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_type_uid', competency_item_type_uid, n)
+    def select_rows_read_by_competency_item_type_name(self, competency_item_type_name: str, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_item_type_name', competency_item_type_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_item_type_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def insert_dto(self, dto: competency_item_type_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_item_type_uid: str = "", competency_item_type_name: str = "", tenant_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_type_write_dto.new_write(competency_item_type_uid, competency_item_type_name, tenant_uid), created_by)
+    def insert_row_random_uid(self, competency_item_type_name: str, tenant_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_item_type_write_dto.new_write_random_uid(competency_item_type_name, tenant_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_item_type_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_item_type_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_item_type_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_item_type_write_dto, created_by: str = objects.created_by_default) -> competency_item_type_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_item_type_write_dtos, created_by: str = objects.created_by_default) -> competency_item_type_read_dtos:
+        return competency_item_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_item_type_write_dto.new_write(competency_item_type_uid, competency_item_type_name, tenant_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_item_type_uid: str, competency_item_type_name: str, tenant_uid: str, updated_by: str = objects.created_by_default) -> competency_item_type_read_dto | None:
+        params = competency_item_type_write_dto.new_write(competency_item_type_uid, competency_item_type_name, tenant_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_item_type_uid)
+    def delete_logical_dtos(self, dtos: list[competency_item_type_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_item_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_process_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_process_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_process_read_dtos:
+        return competency_process_read_dtos(list(map(lambda r: competency_process_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_process_write_dtos:
+        return competency_process_write_dtos(list(map(lambda r: competency_process_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_process_thin_dtos:
+        return competency_process_thin_dtos(list(map(lambda r: competency_process_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_process_rich_dtos:
+        return competency_process_rich_dtos(list(map(lambda r: competency_process_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_process_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_process_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_process_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_process_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_process_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_process_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_process_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_process_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_process_uid(self, competency_process_uid: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_uid', competency_process_uid, n)
+    def select_rows_read_by_competency_process_name(self, competency_process_name: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_name', competency_process_name, n)
+    def select_rows_read_by_competency_process_type_uid(self, competency_process_type_uid: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_type_uid', competency_process_type_uid, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_group_uid(self, account_group_uid: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('account_group_uid', account_group_uid, n)
+    def select_rows_read_by_is_required(self, is_required: int, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('is_required', is_required, n)
+    def select_rows_read_by_process_description(self, process_description: str, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('process_description', process_description, n)
+    def select_rows_read_by_due_date(self, due_date: datetime.datetime, n: int = 1000) -> competency_process_read_dtos:
+        return self.select_rows_read_by_any_column('due_date', due_date, n)
+    def insert_dto(self, dto: competency_process_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_process_uid: str = "", competency_process_name: str = "", competency_process_type_uid: str = "", tenant_uid: str = "", account_group_uid: str = "", is_required: int = 0, process_description: str = "", due_date: datetime.datetime = datetime.datetime.now(), created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_write_dto.new_write(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date), created_by)
+    def insert_row_random_uid(self, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_write_dto.new_write_random_uid(competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date), created_by)
+    def insert_dtos(self, dtos: list[competency_process_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_process_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_process_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_process_write_dto, created_by: str = objects.created_by_default) -> competency_process_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_process_write_dtos, created_by: str = objects.created_by_default) -> competency_process_read_dtos:
+        return competency_process_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, updated_by: str=objects.created_by_default) -> int:
+        params = competency_process_write_dto.new_write(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_process_uid: str, competency_process_name: str, competency_process_type_uid: str, tenant_uid: str, account_group_uid: str, is_required: int, process_description: str, due_date: datetime.datetime, updated_by: str = objects.created_by_default) -> competency_process_read_dto | None:
+        params = competency_process_write_dto.new_write(competency_process_uid, competency_process_name, competency_process_type_uid, tenant_uid, account_group_uid, is_required, process_description, due_date).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_process_uid)
+    def delete_logical_dtos(self, dtos: list[competency_process_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_process_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_process_account_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_process_account_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_process_account_read_dtos:
+        return competency_process_account_read_dtos(list(map(lambda r: competency_process_account_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_process_account_write_dtos:
+        return competency_process_account_write_dtos(list(map(lambda r: competency_process_account_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_process_account_thin_dtos:
+        return competency_process_account_thin_dtos(list(map(lambda r: competency_process_account_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_process_account_rich_dtos:
+        return competency_process_account_rich_dtos(list(map(lambda r: competency_process_account_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_process_account_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_process_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_process_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_process_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_process_account_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_process_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_process_account_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_process_account_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_process_account_uid(self, competency_process_account_uid: str, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_account_uid', competency_process_account_uid, n)
+    def select_rows_read_by_competency_process_account_name(self, competency_process_account_name: str, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_account_name', competency_process_account_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_process_uid(self, competency_process_uid: str, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_uid', competency_process_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_start_date(self, start_date: datetime.datetime, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('start_date', start_date, n)
+    def select_rows_read_by_due_date(self, due_date: datetime.datetime, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('due_date', due_date, n)
+    def select_rows_read_by_end_date(self, end_date: datetime.datetime | None, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def select_rows_read_by_is_closed(self, is_closed: int, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('is_closed', is_closed, n)
+    def select_rows_read_by_final_result(self, final_result: str | None, n: int = 1000) -> competency_process_account_read_dtos:
+        return self.select_rows_read_by_any_column('final_result', final_result, n)
+    def insert_dto(self, dto: competency_process_account_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_process_account_uid: str = "", competency_process_account_name: str = "", tenant_uid: str = "", competency_process_uid: str = "", account_uid: str = "", start_date: datetime.datetime = datetime.datetime.now(), due_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_closed: int = 0, final_result: str | None = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_account_write_dto.new_write(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result), created_by)
+    def insert_row_random_uid(self, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_account_write_dto.new_write_random_uid(competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result), created_by)
+    def insert_dtos(self, dtos: list[competency_process_account_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_process_account_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_process_account_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_process_account_write_dto, created_by: str = objects.created_by_default) -> competency_process_account_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_process_account_write_dtos, created_by: str = objects.created_by_default) -> competency_process_account_read_dtos:
+        return competency_process_account_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, updated_by: str=objects.created_by_default) -> int:
+        params = competency_process_account_write_dto.new_write(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_process_account_uid: str, competency_process_account_name: str, tenant_uid: str, competency_process_uid: str, account_uid: str, start_date: datetime.datetime, due_date: datetime.datetime, end_date: datetime.datetime | None, is_closed: int, final_result: str | None, updated_by: str = objects.created_by_default) -> competency_process_account_read_dto | None:
+        params = competency_process_account_write_dto.new_write(competency_process_account_uid, competency_process_account_name, tenant_uid, competency_process_uid, account_uid, start_date, due_date, end_date, is_closed, final_result).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_process_account_uid)
+    def delete_logical_dtos(self, dtos: list[competency_process_account_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_process_account_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_process_type_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_process_type_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_process_type_read_dtos:
+        return competency_process_type_read_dtos(list(map(lambda r: competency_process_type_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_process_type_write_dtos:
+        return competency_process_type_write_dtos(list(map(lambda r: competency_process_type_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_process_type_thin_dtos:
+        return competency_process_type_thin_dtos(list(map(lambda r: competency_process_type_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_process_type_rich_dtos:
+        return competency_process_type_rich_dtos(list(map(lambda r: competency_process_type_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_process_type_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_process_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_process_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_process_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_process_type_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_process_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_process_type_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_process_type_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_process_type_uid(self, competency_process_type_uid: str, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_type_uid', competency_process_type_uid, n)
+    def select_rows_read_by_competency_process_type_name(self, competency_process_type_name: str, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_process_type_name', competency_process_type_name, n)
+    def select_rows_read_by_competency_class_name(self, competency_class_name: str, n: int = 1000) -> competency_process_type_read_dtos:
+        return self.select_rows_read_by_any_column('competency_class_name', competency_class_name, n)
+    def insert_dto(self, dto: competency_process_type_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_process_type_uid: str = "", competency_process_type_name: str = "", competency_class_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_type_write_dto.new_write(competency_process_type_uid, competency_process_type_name, competency_class_name), created_by)
+    def insert_row_random_uid(self, competency_process_type_name: str, competency_class_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_process_type_write_dto.new_write_random_uid(competency_process_type_name, competency_class_name), created_by)
+    def insert_dtos(self, dtos: list[competency_process_type_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_process_type_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_process_type_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_process_type_write_dto, created_by: str = objects.created_by_default) -> competency_process_type_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_process_type_write_dtos, created_by: str = objects.created_by_default) -> competency_process_type_read_dtos:
+        return competency_process_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_process_type_write_dto.new_write(competency_process_type_uid, competency_process_type_name, competency_class_name).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_process_type_uid: str, competency_process_type_name: str, competency_class_name: str, updated_by: str = objects.created_by_default) -> competency_process_type_read_dto | None:
+        params = competency_process_type_write_dto.new_write(competency_process_type_uid, competency_process_type_name, competency_class_name).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_process_type_uid)
+    def delete_logical_dtos(self, dtos: list[competency_process_type_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_process_type_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class competency_ranking_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.competency_ranking_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> competency_ranking_read_dtos:
+        return competency_ranking_read_dtos(list(map(lambda r: competency_ranking_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> competency_ranking_write_dtos:
+        return competency_ranking_write_dtos(list(map(lambda r: competency_ranking_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> competency_ranking_thin_dtos:
+        return competency_ranking_thin_dtos(list(map(lambda r: competency_ranking_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> competency_ranking_rich_dtos:
+        return competency_ranking_rich_dtos(list(map(lambda r: competency_ranking_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> competency_ranking_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> competency_ranking_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> competency_ranking_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> competency_ranking_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> competency_ranking_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> competency_ranking_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> competency_ranking_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> competency_ranking_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_competency_ranking_uid(self, competency_ranking_uid: str, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_any_column('competency_ranking_uid', competency_ranking_uid, n)
+    def select_rows_read_by_competency_ranking_name(self, competency_ranking_name: str, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_any_column('competency_ranking_name', competency_ranking_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_competency_group_uid(self, competency_group_uid: str, n: int = 1000) -> competency_ranking_read_dtos:
+        return self.select_rows_read_by_any_column('competency_group_uid', competency_group_uid, n)
+    def insert_dto(self, dto: competency_ranking_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, competency_ranking_uid: str = "", competency_ranking_name: str = "", tenant_uid: str = "", competency_group_uid: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_ranking_write_dto.new_write(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid), created_by)
+    def insert_row_random_uid(self, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(competency_ranking_write_dto.new_write_random_uid(competency_ranking_name, tenant_uid, competency_group_uid), created_by)
+    def insert_dtos(self, dtos: list[competency_ranking_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: competency_ranking_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: competency_ranking_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: competency_ranking_write_dto, created_by: str = objects.created_by_default) -> competency_ranking_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: competency_ranking_write_dtos, created_by: str = objects.created_by_default) -> competency_ranking_read_dtos:
+        return competency_ranking_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, updated_by: str=objects.created_by_default) -> int:
+        params = competency_ranking_write_dto.new_write(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, competency_ranking_uid: str, competency_ranking_name: str, tenant_uid: str, competency_group_uid: str, updated_by: str = objects.created_by_default) -> competency_ranking_read_dto | None:
+        params = competency_ranking_write_dto.new_write(competency_ranking_uid, competency_ranking_name, tenant_uid, competency_group_uid).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(competency_ranking_uid)
+    def delete_logical_dtos(self, dtos: list[competency_ranking_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: competency_ranking_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -4502,6 +6078,178 @@ class currency_dao(base_dao):
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: currency_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class currency_rate_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.currency_rate_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> currency_rate_read_dtos:
+        return currency_rate_read_dtos(list(map(lambda r: currency_rate_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> currency_rate_write_dtos:
+        return currency_rate_write_dtos(list(map(lambda r: currency_rate_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> currency_rate_thin_dtos:
+        return currency_rate_thin_dtos(list(map(lambda r: currency_rate_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> currency_rate_rich_dtos:
+        return currency_rate_rich_dtos(list(map(lambda r: currency_rate_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> currency_rate_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> currency_rate_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> currency_rate_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> currency_rate_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> currency_rate_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> currency_rate_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> currency_rate_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> currency_rate_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_currency_rate_uid(self, currency_rate_uid: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('currency_rate_uid', currency_rate_uid, n)
+    def select_rows_read_by_currency_rate_name(self, currency_rate_name: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('currency_rate_name', currency_rate_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_currency_source_uid(self, currency_source_uid: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('currency_source_uid', currency_source_uid, n)
+    def select_rows_read_by_from_currency_uid(self, from_currency_uid: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('from_currency_uid', from_currency_uid, n)
+    def select_rows_read_by_to_currency_uid(self, to_currency_uid: str, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('to_currency_uid', to_currency_uid, n)
+    def select_rows_read_by_start_date(self, start_date: datetime.datetime | None, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('start_date', start_date, n)
+    def select_rows_read_by_end_date(self, end_date: datetime.datetime | None, n: int = 1000) -> currency_rate_read_dtos:
+        return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def insert_dto(self, dto: currency_rate_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, currency_rate_uid: str = "", currency_rate_name: str = "", tenant_uid: str = "", currency_source_uid: str = "", from_currency_uid: str = "", to_currency_uid: str = "", start_date: datetime.datetime | None = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(currency_rate_write_dto.new_write(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date), created_by)
+    def insert_row_random_uid(self, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(currency_rate_write_dto.new_write_random_uid(currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date), created_by)
+    def insert_dtos(self, dtos: list[currency_rate_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: currency_rate_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: currency_rate_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: currency_rate_write_dto, created_by: str = objects.created_by_default) -> currency_rate_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: currency_rate_write_dtos, created_by: str = objects.created_by_default) -> currency_rate_read_dtos:
+        return currency_rate_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, updated_by: str=objects.created_by_default) -> int:
+        params = currency_rate_write_dto.new_write(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, currency_rate_uid: str, currency_rate_name: str, tenant_uid: str, currency_source_uid: str, from_currency_uid: str, to_currency_uid: str, start_date: datetime.datetime | None, end_date: datetime.datetime | None, updated_by: str = objects.created_by_default) -> currency_rate_read_dto | None:
+        params = currency_rate_write_dto.new_write(currency_rate_uid, currency_rate_name, tenant_uid, currency_source_uid, from_currency_uid, to_currency_uid, start_date, end_date).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(currency_rate_uid)
+    def delete_logical_dtos(self, dtos: list[currency_rate_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: currency_rate_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class currency_source_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.currency_source_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> currency_source_read_dtos:
+        return currency_source_read_dtos(list(map(lambda r: currency_source_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> currency_source_write_dtos:
+        return currency_source_write_dtos(list(map(lambda r: currency_source_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> currency_source_thin_dtos:
+        return currency_source_thin_dtos(list(map(lambda r: currency_source_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> currency_source_rich_dtos:
+        return currency_source_rich_dtos(list(map(lambda r: currency_source_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> currency_source_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> currency_source_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> currency_source_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> currency_source_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> currency_source_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> currency_source_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> currency_source_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> currency_source_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_currency_source_uid(self, currency_source_uid: str, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_any_column('currency_source_uid', currency_source_uid, n)
+    def select_rows_read_by_currency_source_name(self, currency_source_name: str, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_any_column('currency_source_name', currency_source_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_source_url(self, source_url: str, n: int = 1000) -> currency_source_read_dtos:
+        return self.select_rows_read_by_any_column('source_url', source_url, n)
+    def insert_dto(self, dto: currency_source_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, currency_source_uid: str = "", currency_source_name: str = "", tenant_uid: str = "", source_url: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(currency_source_write_dto.new_write(currency_source_uid, currency_source_name, tenant_uid, source_url), created_by)
+    def insert_row_random_uid(self, currency_source_name: str, tenant_uid: str, source_url: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(currency_source_write_dto.new_write_random_uid(currency_source_name, tenant_uid, source_url), created_by)
+    def insert_dtos(self, dtos: list[currency_source_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: currency_source_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: currency_source_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: currency_source_write_dto, created_by: str = objects.created_by_default) -> currency_source_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: currency_source_write_dtos, created_by: str = objects.created_by_default) -> currency_source_read_dtos:
+        return currency_source_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str, updated_by: str=objects.created_by_default) -> int:
+        params = currency_source_write_dto.new_write(currency_source_uid, currency_source_name, tenant_uid, source_url).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, currency_source_uid: str, currency_source_name: str, tenant_uid: str, source_url: str, updated_by: str = objects.created_by_default) -> currency_source_read_dto | None:
+        params = currency_source_write_dto.new_write(currency_source_uid, currency_source_name, tenant_uid, source_url).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(currency_source_uid)
+    def delete_logical_dtos(self, dtos: list[currency_source_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: currency_source_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -6047,6 +7795,90 @@ class invoice_type_dao(base_dao):
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
+class location_hierarchy_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.location_hierarchy_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> location_hierarchy_read_dtos:
+        return location_hierarchy_read_dtos(list(map(lambda r: location_hierarchy_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> location_hierarchy_write_dtos:
+        return location_hierarchy_write_dtos(list(map(lambda r: location_hierarchy_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> location_hierarchy_thin_dtos:
+        return location_hierarchy_thin_dtos(list(map(lambda r: location_hierarchy_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> location_hierarchy_rich_dtos:
+        return location_hierarchy_rich_dtos(list(map(lambda r: location_hierarchy_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> location_hierarchy_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> location_hierarchy_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> location_hierarchy_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> location_hierarchy_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> location_hierarchy_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> location_hierarchy_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> location_hierarchy_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> location_hierarchy_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_location_hierarchy_uid(self, location_hierarchy_uid: str, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_any_column('location_hierarchy_uid', location_hierarchy_uid, n)
+    def select_rows_read_by_location_hierarchy_name(self, location_hierarchy_name: str, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_any_column('location_hierarchy_name', location_hierarchy_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_country_uid(self, country_uid: str | None, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_any_column('country_uid', country_uid, n)
+    def select_rows_read_by_hierarchy_description(self, hierarchy_description: str, n: int = 1000) -> location_hierarchy_read_dtos:
+        return self.select_rows_read_by_any_column('hierarchy_description', hierarchy_description, n)
+    def insert_dto(self, dto: location_hierarchy_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, location_hierarchy_uid: str = "", location_hierarchy_name: str = "", tenant_uid: str = "", country_uid: str | None = "", hierarchy_description: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(location_hierarchy_write_dto.new_write(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description), created_by)
+    def insert_row_random_uid(self, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(location_hierarchy_write_dto.new_write_random_uid(location_hierarchy_name, tenant_uid, country_uid, hierarchy_description), created_by)
+    def insert_dtos(self, dtos: list[location_hierarchy_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: location_hierarchy_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: location_hierarchy_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: location_hierarchy_write_dto, created_by: str = objects.created_by_default) -> location_hierarchy_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: location_hierarchy_write_dtos, created_by: str = objects.created_by_default) -> location_hierarchy_read_dtos:
+        return location_hierarchy_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, updated_by: str=objects.created_by_default) -> int:
+        params = location_hierarchy_write_dto.new_write(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, location_hierarchy_uid: str, location_hierarchy_name: str, tenant_uid: str, country_uid: str | None, hierarchy_description: str, updated_by: str = objects.created_by_default) -> location_hierarchy_read_dto | None:
+        params = location_hierarchy_write_dto.new_write(location_hierarchy_uid, location_hierarchy_name, tenant_uid, country_uid, hierarchy_description).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(location_hierarchy_uid)
+    def delete_logical_dtos(self, dtos: list[location_hierarchy_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: location_hierarchy_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
 class location_postal_code_dao(base_dao):
     def __init__(self):
         super().__init__()
@@ -6136,6 +7968,100 @@ class location_postal_code_dao(base_dao):
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: location_postal_code_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class location_region_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.location_region_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> location_region_read_dtos:
+        return location_region_read_dtos(list(map(lambda r: location_region_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> location_region_write_dtos:
+        return location_region_write_dtos(list(map(lambda r: location_region_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> location_region_thin_dtos:
+        return location_region_thin_dtos(list(map(lambda r: location_region_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> location_region_rich_dtos:
+        return location_region_rich_dtos(list(map(lambda r: location_region_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> location_region_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> location_region_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> location_region_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> location_region_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> location_region_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> location_region_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> location_region_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> location_region_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_location_region_uid(self, location_region_uid: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('location_region_uid', location_region_uid, n)
+    def select_rows_read_by_location_region_name(self, location_region_name: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('location_region_name', location_region_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_location_hierarchy_uid(self, location_hierarchy_uid: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('location_hierarchy_uid', location_hierarchy_uid, n)
+    def select_rows_read_by_location_territory_uid(self, location_territory_uid: str | None, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('location_territory_uid', location_territory_uid, n)
+    def select_rows_read_by_parent_location_region_uid(self, parent_location_region_uid: str | None, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('parent_location_region_uid', parent_location_region_uid, n)
+    def select_rows_read_by_country_uid(self, country_uid: str | None, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('country_uid', country_uid, n)
+    def select_rows_read_by_region_latitude(self, region_latitude: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('region_latitude', region_latitude, n)
+    def select_rows_read_by_region_longitude(self, region_longitude: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('region_longitude', region_longitude, n)
+    def select_rows_read_by_region_description(self, region_description: str, n: int = 1000) -> location_region_read_dtos:
+        return self.select_rows_read_by_any_column('region_description', region_description, n)
+    def insert_dto(self, dto: location_region_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, location_region_uid: str = "", location_region_name: str = "", tenant_uid: str = "", location_hierarchy_uid: str = "", location_territory_uid: str | None = "", parent_location_region_uid: str | None = "", country_uid: str | None = "", region_latitude: str = "", region_longitude: str = "", region_description: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(location_region_write_dto.new_write(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description), created_by)
+    def insert_row_random_uid(self, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(location_region_write_dto.new_write_random_uid(location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description), created_by)
+    def insert_dtos(self, dtos: list[location_region_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: location_region_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: location_region_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: location_region_write_dto, created_by: str = objects.created_by_default) -> location_region_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: location_region_write_dtos, created_by: str = objects.created_by_default) -> location_region_read_dtos:
+        return location_region_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, updated_by: str=objects.created_by_default) -> int:
+        params = location_region_write_dto.new_write(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, location_region_uid: str, location_region_name: str, tenant_uid: str, location_hierarchy_uid: str, location_territory_uid: str | None, parent_location_region_uid: str | None, country_uid: str | None, region_latitude: str, region_longitude: str, region_description: str, updated_by: str = objects.created_by_default) -> location_region_read_dto | None:
+        params = location_region_write_dto.new_write(location_region_uid, location_region_name, tenant_uid, location_hierarchy_uid, location_territory_uid, parent_location_region_uid, country_uid, region_latitude, region_longitude, region_description).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(location_region_uid)
+    def delete_logical_dtos(self, dtos: list[location_region_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: location_region_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -6548,6 +8474,8 @@ class period_dao(base_dao):
         return self.select_rows_read_by_any_column('period_uid', period_uid, n)
     def select_rows_read_by_period_name(self, period_name: str, n: int = 1000) -> period_read_dtos:
         return self.select_rows_read_by_any_column('period_name', period_name, n)
+    def select_rows_read_by_period_full_name(self, period_full_name: str, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('period_full_name', period_full_name, n)
     def select_rows_read_by_period_number(self, period_number: int, n: int = 1000) -> period_read_dtos:
         return self.select_rows_read_by_any_column('period_number', period_number, n)
     def select_rows_read_by_period_type(self, period_type: str, n: int = 1000) -> period_read_dtos:
@@ -6558,6 +8486,10 @@ class period_dao(base_dao):
         return self.select_rows_read_by_any_column('period_end_time', period_end_time, n)
     def select_rows_read_by_period_year(self, period_year: int | None, n: int = 1000) -> period_read_dtos:
         return self.select_rows_read_by_any_column('period_year', period_year, n)
+    def select_rows_read_by_period_semester(self, period_semester: int | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('period_semester', period_semester, n)
+    def select_rows_read_by_period_trimester(self, period_trimester: int | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('period_trimester', period_trimester, n)
     def select_rows_read_by_period_quarter(self, period_quarter: int | None, n: int = 1000) -> period_read_dtos:
         return self.select_rows_read_by_any_column('period_quarter', period_quarter, n)
     def select_rows_read_by_period_month(self, period_month: int | None, n: int = 1000) -> period_read_dtos:
@@ -6566,12 +8498,22 @@ class period_dao(base_dao):
         return self.select_rows_read_by_any_column('period_week', period_week, n)
     def select_rows_read_by_period_day(self, period_day: int | None, n: int = 1000) -> period_read_dtos:
         return self.select_rows_read_by_any_column('period_day', period_day, n)
+    def select_rows_read_by_period_day_of_year(self, period_day_of_year: int | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('period_day_of_year', period_day_of_year, n)
+    def select_rows_read_by_parent_year_period_uid(self, parent_year_period_uid: str | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('parent_year_period_uid', parent_year_period_uid, n)
+    def select_rows_read_by_parent_quarter_period_uid(self, parent_quarter_period_uid: str | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('parent_quarter_period_uid', parent_quarter_period_uid, n)
+    def select_rows_read_by_parent_month_period_uid(self, parent_month_period_uid: str | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('parent_month_period_uid', parent_month_period_uid, n)
+    def select_rows_read_by_parent_week_period_uid(self, parent_week_period_uid: str | None, n: int = 1000) -> period_read_dtos:
+        return self.select_rows_read_by_any_column('parent_week_period_uid', parent_week_period_uid, n)
     def insert_dto(self, dto: period_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, period_uid: str = "", period_name: str = "", period_number: int = 0, period_type: str = "", period_start_time: datetime.datetime = datetime.datetime.now(), period_end_time: datetime.datetime = datetime.datetime.now(), period_year: int | None = 0, period_quarter: int | None = 0, period_month: int | None = 0, period_week: int | None = 0, period_day: int | None = 0, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(period_write_dto.new_write(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day), created_by)
-    def insert_row_random_uid(self, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(period_write_dto.new_write_random_uid(period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day), created_by)
+    def insert_row(self, period_uid: str = "", period_name: str = "", period_full_name: str = "", period_number: int = 0, period_type: str = "", period_start_time: datetime.datetime = datetime.datetime.now(), period_end_time: datetime.datetime = datetime.datetime.now(), period_year: int | None = 0, period_semester: int | None = 0, period_trimester: int | None = 0, period_quarter: int | None = 0, period_month: int | None = 0, period_week: int | None = 0, period_day: int | None = 0, period_day_of_year: int | None = 0, parent_year_period_uid: str | None = "", parent_quarter_period_uid: str | None = "", parent_month_period_uid: str | None = "", parent_week_period_uid: str | None = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(period_write_dto.new_write(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid), created_by)
+    def insert_row_random_uid(self, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(period_write_dto.new_write_random_uid(period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid), created_by)
     def insert_dtos(self, dtos: list[period_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: period_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -6583,11 +8525,11 @@ class period_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: period_write_dtos, created_by: str = objects.created_by_default) -> period_read_dtos:
         return period_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, updated_by: str=objects.created_by_default) -> int:
-        params = period_write_dto.new_write(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day).get_list_write_insert(updated_by)
+    def upsert_row(self, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, updated_by: str=objects.created_by_default) -> int:
+        params = period_write_dto.new_write(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, period_uid: str, period_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, updated_by: str = objects.created_by_default) -> period_read_dto | None:
-        params = period_write_dto.new_write(period_uid, period_name, period_number, period_type, period_start_time, period_end_time, period_year, period_quarter, period_month, period_week, period_day).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, period_uid: str, period_name: str, period_full_name: str, period_number: int, period_type: str, period_start_time: datetime.datetime, period_end_time: datetime.datetime, period_year: int | None, period_semester: int | None, period_trimester: int | None, period_quarter: int | None, period_month: int | None, period_week: int | None, period_day: int | None, period_day_of_year: int | None, parent_year_period_uid: str | None, parent_quarter_period_uid: str | None, parent_month_period_uid: str | None, parent_week_period_uid: str | None, updated_by: str = objects.created_by_default) -> period_read_dto | None:
+        params = period_write_dto.new_write(period_uid, period_name, period_full_name, period_number, period_type, period_start_time, period_end_time, period_year, period_semester, period_trimester, period_quarter, period_month, period_week, period_day, period_day_of_year, parent_year_period_uid, parent_quarter_period_uid, parent_month_period_uid, parent_week_period_uid).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(period_uid)
     def delete_logical_dtos(self, dtos: list[period_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -6680,6 +8622,96 @@ class process_dao(base_dao):
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: process_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class process_result_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.process_result_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> process_result_read_dtos:
+        return process_result_read_dtos(list(map(lambda r: process_result_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> process_result_write_dtos:
+        return process_result_write_dtos(list(map(lambda r: process_result_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> process_result_thin_dtos:
+        return process_result_thin_dtos(list(map(lambda r: process_result_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> process_result_rich_dtos:
+        return process_result_rich_dtos(list(map(lambda r: process_result_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> process_result_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> process_result_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> process_result_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> process_result_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> process_result_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> process_result_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> process_result_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> process_result_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_process_result_uid(self, process_result_uid: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('process_result_uid', process_result_uid, n)
+    def select_rows_read_by_process_result_name(self, process_result_name: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('process_result_name', process_result_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_account_uid(self, account_uid: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('account_uid', account_uid, n)
+    def select_rows_read_by_process_uid(self, process_uid: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('process_uid', process_uid, n)
+    def select_rows_read_by_process_run_uid(self, process_run_uid: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('process_run_uid', process_run_uid, n)
+    def select_rows_read_by_result_type(self, result_type: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('result_type', result_type, n)
+    def select_rows_read_by_result_text(self, result_text: str, n: int = 1000) -> process_result_read_dtos:
+        return self.select_rows_read_by_any_column('result_text', result_text, n)
+    def insert_dto(self, dto: process_result_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, process_result_uid: str = "", process_result_name: str = "", tenant_uid: str = "", account_uid: str = "", process_uid: str = "", process_run_uid: str = "", result_type: str = "", result_text: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(process_result_write_dto.new_write(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text), created_by)
+    def insert_row_random_uid(self, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(process_result_write_dto.new_write_random_uid(process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text), created_by)
+    def insert_dtos(self, dtos: list[process_result_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: process_result_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: process_result_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: process_result_write_dto, created_by: str = objects.created_by_default) -> process_result_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: process_result_write_dtos, created_by: str = objects.created_by_default) -> process_result_read_dtos:
+        return process_result_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, updated_by: str=objects.created_by_default) -> int:
+        params = process_result_write_dto.new_write(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, process_result_uid: str, process_result_name: str, tenant_uid: str, account_uid: str, process_uid: str, process_run_uid: str, result_type: str, result_text: str, updated_by: str = objects.created_by_default) -> process_result_read_dto | None:
+        params = process_result_write_dto.new_write(process_result_uid, process_result_name, tenant_uid, account_uid, process_uid, process_run_uid, result_type, result_text).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(process_result_uid)
+    def delete_logical_dtos(self, dtos: list[process_result_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: process_result_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -7272,6 +9304,8 @@ class project_milestone_dao(base_dao):
         return self.select_rows_read_by_any_column('project_instance_uid', project_instance_uid, n)
     def select_rows_read_by_project_budget_uid(self, project_budget_uid: str | None, n: int = 1000) -> project_milestone_read_dtos:
         return self.select_rows_read_by_any_column('project_budget_uid', project_budget_uid, n)
+    def select_rows_read_by_project_phase_uid(self, project_phase_uid: str | None, n: int = 1000) -> project_milestone_read_dtos:
+        return self.select_rows_read_by_any_column('project_phase_uid', project_phase_uid, n)
     def select_rows_read_by_start_date(self, start_date: datetime.datetime, n: int = 1000) -> project_milestone_read_dtos:
         return self.select_rows_read_by_any_column('start_date', start_date, n)
     def select_rows_read_by_end_date(self, end_date: datetime.datetime, n: int = 1000) -> project_milestone_read_dtos:
@@ -7280,10 +9314,10 @@ class project_milestone_dao(base_dao):
         return self.select_rows_read_by_any_column('status_name', status_name, n)
     def insert_dto(self, dto: project_milestone_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, project_milestone_uid: str = "", project_milestone_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name), created_by)
-    def insert_row_random_uid(self, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(project_milestone_write_dto.new_write_random_uid(project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name), created_by)
+    def insert_row(self, project_milestone_uid: str = "", project_milestone_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", project_phase_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name), created_by)
+    def insert_row_random_uid(self, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(project_milestone_write_dto.new_write_random_uid(project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name), created_by)
     def insert_dtos(self, dtos: list[project_milestone_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: project_milestone_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -7295,17 +9329,113 @@ class project_milestone_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: project_milestone_write_dtos, created_by: str = objects.created_by_default) -> project_milestone_read_dtos:
         return project_milestone_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str=objects.created_by_default) -> int:
-        params = project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
+    def upsert_row(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str = objects.created_by_default) -> project_milestone_read_dto | None:
-        params = project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, project_milestone_uid: str, project_milestone_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, project_phase_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str = objects.created_by_default) -> project_milestone_read_dto | None:
+        params = project_milestone_write_dto.new_write(project_milestone_uid, project_milestone_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, project_phase_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(project_milestone_uid)
     def delete_logical_dtos(self, dtos: list[project_milestone_write_dto], removed_by: str = objects.created_by_default) -> int:
         uids = list(map(lambda dto: dto.get_uid(), dtos))
         return self.delete_logical_by_uids(uids, removed_by)
     def delete_logical_write_dtos(self, dtos: project_milestone_write_dtos, removed_by: str = objects.created_by_default) -> int:
+        return self.delete_logical_dtos(dtos.dtos, removed_by)
+
+
+class project_phase_dao(base_dao):
+    def __init__(self):
+        super().__init__()
+    def get_model(self) -> db_model:
+        return db_models.project_phase_model
+    def select_rows_read_by_query(self, sql: str, params: Iterable = []) -> project_phase_read_dtos:
+        return project_phase_read_dtos(list(map(lambda r: project_phase_read_dto(*r), self.get_objects(sql, params))))
+    def select_rows_write_by_query(self, sql: str, params: Iterable = []) -> project_phase_write_dtos:
+        return project_phase_write_dtos(list(map(lambda r: project_phase_write_dto(*r), self.get_objects(sql, params))))
+    def select_rows_thin_by_query(self, sql: str, params: Iterable = []) -> project_phase_thin_dtos:
+        return project_phase_thin_dtos(list(map(lambda r: project_phase_thin_dto(*r), self.get_objects(sql, params))))
+    def select_rows_rich_by_query(self, sql: str, params: Iterable = []) -> project_phase_rich_dtos:
+        return project_phase_rich_dtos(list(map(lambda r: project_phase_rich_dto(*r), self.get_objects(sql, params))))
+    def select_row_first_by_query(self, sql: str, params: Iterable = []) -> project_phase_read_dto | None:
+        return self.select_rows_read_by_query(sql, params).get_first()
+    def select_rows_read_order_by_column(self, col_name: str, params: Iterable = [], n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_order_by_query(col_name, n), params)
+    def select_rows_read_all(self, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_limit_sql(n))
+    def select_rows_read_active(self, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_limit_sql(n))
+    def select_rows_read_all_latest(self, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_all_latest_sql(n))
+    def select_rows_read_active_latest(self, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_latest_sql(n))
+    def select_rows_write_all(self, n: int = 1000) -> project_phase_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_limit_sql(n))
+    def select_rows_write_active(self, n: int = 1000) -> project_phase_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_limit_sql(n))
+    def select_rows_write_all_latest(self, n: int = 1000) -> project_phase_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_all_latest_sql(n))
+    def select_rows_write_active_latest(self, n: int = 1000) -> project_phase_write_dtos:
+        return self.select_rows_write_by_query(self.get_model().get_select_write_active_latest_sql(n))
+    def select_row_read_by_uid(self, uid: str) -> project_phase_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_key(), (uid,)).get_first()
+    def select_row_read_by_id(self, id: int) -> project_phase_read_dto | None:
+        return self.select_rows_read_by_query(self.get_model().get_select_by_id(), (id,)).get_first()
+    def select_rows_read_by_any_column(self, col_name: str, col_value: any, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column(col_name, n), (col_value,))
+    def select_rows_read_by_any_column_values(self, col_name: str, col_values: Iterable, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_query(self.get_model().get_select_active_by_any_column_values(col_name, col_values, n), col_values)
+    def select_rows_thin_all(self, n: int = 1000) -> project_phase_thin_dtos:
+        return self.select_rows_thin_by_query(self.get_model().get_select_thin_all_sql(n))
+    def select_rows_read_by_project_phase_uid(self, project_phase_uid: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('project_phase_uid', project_phase_uid, n)
+    def select_rows_read_by_project_phase_name(self, project_phase_name: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('project_phase_name', project_phase_name, n)
+    def select_rows_read_by_tenant_uid(self, tenant_uid: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_uid', tenant_uid, n)
+    def select_rows_read_by_client_uid(self, client_uid: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('client_uid', client_uid, n)
+    def select_rows_read_by_project_instance_uid(self, project_instance_uid: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('project_instance_uid', project_instance_uid, n)
+    def select_rows_read_by_project_budget_uid(self, project_budget_uid: str | None, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('project_budget_uid', project_budget_uid, n)
+    def select_rows_read_by_previous_project_phase_uid(self, previous_project_phase_uid: str | None, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('previous_project_phase_uid', previous_project_phase_uid, n)
+    def select_rows_read_by_client_contract_uid(self, client_contract_uid: str | None, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('client_contract_uid', client_contract_uid, n)
+    def select_rows_read_by_start_date(self, start_date: datetime.datetime, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('start_date', start_date, n)
+    def select_rows_read_by_end_date(self, end_date: datetime.datetime, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('end_date', end_date, n)
+    def select_rows_read_by_status_name(self, status_name: str, n: int = 1000) -> project_phase_read_dtos:
+        return self.select_rows_read_by_any_column('status_name', status_name, n)
+    def insert_dto(self, dto: project_phase_write_dto, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(dto, created_by)
+    def insert_row(self, project_phase_uid: str = "", project_phase_name: str = "", tenant_uid: str = "", client_uid: str = "", project_instance_uid: str = "", project_budget_uid: str | None = "", previous_project_phase_uid: str | None = "", client_contract_uid: str | None = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime = datetime.datetime.now(), status_name: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(project_phase_write_dto.new_write(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name), created_by)
+    def insert_row_random_uid(self, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(project_phase_write_dto.new_write_random_uid(project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name), created_by)
+    def insert_dtos(self, dtos: list[project_phase_write_dto], created_by: str = objects.created_by_default) -> int:
+        return self.insert_many(dtos, created_by)
+    def insert_write_dtos(self, dtos: project_phase_write_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.dtos, created_by)
+    def insert_read_dtos(self, dtos: project_phase_read_dtos, created_by: str = objects.created_by_default) -> int:
+        return self.insert_dtos(dtos.get_write_dtos(), created_by)
+    def insert_and_get(self, dto: project_phase_write_dto, created_by: str = objects.created_by_default) -> project_phase_read_dto | None:
+        self.insert_single(dto, created_by)
+        return self.select_row_read_by_uid(dto.get_uid())
+    def insert_and_get_many(self, dtos: project_phase_write_dtos, created_by: str = objects.created_by_default) -> project_phase_read_dtos:
+        return project_phase_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
+    def upsert_row(self, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str=objects.created_by_default) -> int:
+        params = project_phase_write_dto.new_write(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
+        return self.execute_query(self.get_model().upsert_attrs_sql, params)
+    def upsert_row_and_get(self, project_phase_uid: str, project_phase_name: str, tenant_uid: str, client_uid: str, project_instance_uid: str, project_budget_uid: str | None, previous_project_phase_uid: str | None, client_contract_uid: str | None, start_date: datetime.datetime, end_date: datetime.datetime, status_name: str, updated_by: str = objects.created_by_default) -> project_phase_read_dto | None:
+        params = project_phase_write_dto.new_write(project_phase_uid, project_phase_name, tenant_uid, client_uid, project_instance_uid, project_budget_uid, previous_project_phase_uid, client_contract_uid, start_date, end_date, status_name).get_list_write_insert(updated_by)
+        self.execute_query(self.get_model().upsert_attrs_sql, params)
+        return self.select_row_read_by_uid(project_phase_uid)
+    def delete_logical_dtos(self, dtos: list[project_phase_write_dto], removed_by: str = objects.created_by_default) -> int:
+        uids = list(map(lambda dto: dto.get_uid(), dtos))
+        return self.delete_logical_by_uids(uids, removed_by)
+    def delete_logical_write_dtos(self, dtos: project_phase_write_dtos, removed_by: str = objects.created_by_default) -> int:
         return self.delete_logical_dtos(dtos.dtos, removed_by)
 
 
@@ -8820,12 +10950,16 @@ class system_database_dao(base_dao):
         return self.select_rows_read_by_any_column('last_status_name', last_status_name, n)
     def select_rows_read_by_last_db_size(self, last_db_size: int, n: int = 1000) -> system_database_read_dtos:
         return self.select_rows_read_by_any_column('last_db_size', last_db_size, n)
+    def select_rows_read_by_created_connections(self, created_connections: int, n: int = 1000) -> system_database_read_dtos:
+        return self.select_rows_read_by_any_column('created_connections', created_connections, n)
+    def select_rows_read_by_released_connections(self, released_connections: int, n: int = 1000) -> system_database_read_dtos:
+        return self.select_rows_read_by_any_column('released_connections', released_connections, n)
     def insert_dto(self, dto: system_database_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, system_database_uid: str = "", system_database_name: str = "", db_url: str = "", db_host: str = "", db_name: str = "", db_user: str = "", last_status_name: str = "", last_db_size: int = 0, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size), created_by)
-    def insert_row_random_uid(self, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(system_database_write_dto.new_write_random_uid(system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size), created_by)
+    def insert_row(self, system_database_uid: str = "", system_database_name: str = "", db_url: str = "", db_host: str = "", db_name: str = "", db_user: str = "", last_status_name: str = "", last_db_size: int = 0, created_connections: int = 0, released_connections: int = 0, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections), created_by)
+    def insert_row_random_uid(self, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(system_database_write_dto.new_write_random_uid(system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections), created_by)
     def insert_dtos(self, dtos: list[system_database_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: system_database_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -8837,11 +10971,11 @@ class system_database_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: system_database_write_dtos, created_by: str = objects.created_by_default) -> system_database_read_dtos:
         return system_database_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, updated_by: str=objects.created_by_default) -> int:
-        params = system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size).get_list_write_insert(updated_by)
+    def upsert_row(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, updated_by: str=objects.created_by_default) -> int:
+        params = system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, updated_by: str = objects.created_by_default) -> system_database_read_dto | None:
-        params = system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, system_database_uid: str, system_database_name: str, db_url: str, db_host: str, db_name: str, db_user: str, last_status_name: str, last_db_size: int, created_connections: int, released_connections: int, updated_by: str = objects.created_by_default) -> system_database_read_dto | None:
+        params = system_database_write_dto.new_write(system_database_uid, system_database_name, db_url, db_host, db_name, db_user, last_status_name, last_db_size, created_connections, released_connections).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(system_database_uid)
     def delete_logical_dtos(self, dtos: list[system_database_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -9074,14 +11208,16 @@ class system_license_dao(base_dao):
         return self.select_rows_read_by_any_column('system_license_name', system_license_name, n)
     def select_rows_read_by_class_name(self, class_name: str, n: int = 1000) -> system_license_read_dtos:
         return self.select_rows_read_by_any_column('class_name', class_name, n)
+    def select_rows_read_by_license_definition_json(self, license_definition_json: str, n: int = 1000) -> system_license_read_dtos:
+        return self.select_rows_read_by_any_column('license_definition_json', license_definition_json, n)
     def select_rows_read_by_license_description(self, license_description: str, n: int = 1000) -> system_license_read_dtos:
         return self.select_rows_read_by_any_column('license_description', license_description, n)
     def insert_dto(self, dto: system_license_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, system_license_uid: str = "", system_license_name: str = "", class_name: str = "", license_description: str = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_description), created_by)
-    def insert_row_random_uid(self, system_license_name: str, class_name: str, license_description: str, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(system_license_write_dto.new_write_random_uid(system_license_name, class_name, license_description), created_by)
+    def insert_row(self, system_license_uid: str = "", system_license_name: str = "", class_name: str = "", license_definition_json: str = "", license_description: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_definition_json, license_description), created_by)
+    def insert_row_random_uid(self, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(system_license_write_dto.new_write_random_uid(system_license_name, class_name, license_definition_json, license_description), created_by)
     def insert_dtos(self, dtos: list[system_license_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: system_license_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -9093,11 +11229,11 @@ class system_license_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: system_license_write_dtos, created_by: str = objects.created_by_default) -> system_license_read_dtos:
         return system_license_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, updated_by: str=objects.created_by_default) -> int:
-        params = system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_description).get_list_write_insert(updated_by)
+    def upsert_row(self, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, updated_by: str=objects.created_by_default) -> int:
+        params = system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_definition_json, license_description).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, system_license_uid: str, system_license_name: str, class_name: str, license_description: str, updated_by: str = objects.created_by_default) -> system_license_read_dto | None:
-        params = system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_description).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, system_license_uid: str, system_license_name: str, class_name: str, license_definition_json: str, license_description: str, updated_by: str = objects.created_by_default) -> system_license_read_dto | None:
+        params = system_license_write_dto.new_write(system_license_uid, system_license_name, class_name, license_definition_json, license_description).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(system_license_uid)
     def delete_logical_dtos(self, dtos: list[system_license_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -10042,6 +12178,8 @@ class tenant_dao(base_dao):
         return self.select_rows_read_by_any_column('tenant_type_uid', tenant_type_uid, n)
     def select_rows_read_by_tenant_category_uid(self, tenant_category_uid: str, n: int = 1000) -> tenant_read_dtos:
         return self.select_rows_read_by_any_column('tenant_category_uid', tenant_category_uid, n)
+    def select_rows_read_by_tenant_status_uid(self, tenant_status_uid: str, n: int = 1000) -> tenant_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_status_uid', tenant_status_uid, n)
     def select_rows_read_by_tenant_code(self, tenant_code: str, n: int = 1000) -> tenant_read_dtos:
         return self.select_rows_read_by_any_column('tenant_code', tenant_code, n)
     def select_rows_read_by_tenant_description(self, tenant_description: str, n: int = 1000) -> tenant_read_dtos:
@@ -10060,10 +12198,10 @@ class tenant_dao(base_dao):
         return self.select_rows_read_by_any_column('account_uid', account_uid, n)
     def insert_dto(self, dto: tenant_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, tenant_uid: str = "", tenant_name: str = "", country_uid: str = "", tenant_type_uid: str = "", tenant_category_uid: str = "", tenant_code: str = "", tenant_description: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_internal: int = 0, is_system: int = 0, is_test: int = 0, account_uid: str | None = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid), created_by)
-    def insert_row_random_uid(self, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(tenant_write_dto.new_write_random_uid(tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid), created_by)
+    def insert_row(self, tenant_uid: str = "", tenant_name: str = "", country_uid: str = "", tenant_type_uid: str = "", tenant_category_uid: str = "", tenant_status_uid: str = "", tenant_code: str = "", tenant_description: str = "", start_date: datetime.datetime = datetime.datetime.now(), end_date: datetime.datetime | None = datetime.datetime.now(), is_internal: int = 0, is_system: int = 0, is_test: int = 0, account_uid: str | None = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid), created_by)
+    def insert_row_random_uid(self, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(tenant_write_dto.new_write_random_uid(tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid), created_by)
     def insert_dtos(self, dtos: list[tenant_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: tenant_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -10075,11 +12213,11 @@ class tenant_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: tenant_write_dtos, created_by: str = objects.created_by_default) -> tenant_read_dtos:
         return tenant_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, updated_by: str=objects.created_by_default) -> int:
-        params = tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid).get_list_write_insert(updated_by)
+    def upsert_row(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, updated_by: str=objects.created_by_default) -> int:
+        params = tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, updated_by: str = objects.created_by_default) -> tenant_read_dto | None:
-        params = tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, tenant_uid: str, tenant_name: str, country_uid: str, tenant_type_uid: str, tenant_category_uid: str, tenant_status_uid: str, tenant_code: str, tenant_description: str, start_date: datetime.datetime, end_date: datetime.datetime | None, is_internal: int, is_system: int, is_test: int, account_uid: str | None, updated_by: str = objects.created_by_default) -> tenant_read_dto | None:
+        params = tenant_write_dto.new_write(tenant_uid, tenant_name, country_uid, tenant_type_uid, tenant_category_uid, tenant_status_uid, tenant_code, tenant_description, start_date, end_date, is_internal, is_system, is_test, account_uid).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(tenant_uid)
     def delete_logical_dtos(self, dtos: list[tenant_write_dto], removed_by: str = objects.created_by_default) -> int:
@@ -10812,12 +12950,14 @@ class tenant_type_dao(base_dao):
         return self.select_rows_read_by_any_column('tenant_type_name', tenant_type_name, n)
     def select_rows_read_by_tenant_type_description(self, tenant_type_description: str, n: int = 1000) -> tenant_type_read_dtos:
         return self.select_rows_read_by_any_column('tenant_type_description', tenant_type_description, n)
+    def select_rows_read_by_tenant_class(self, tenant_class: str, n: int = 1000) -> tenant_type_read_dtos:
+        return self.select_rows_read_by_any_column('tenant_class', tenant_class, n)
     def insert_dto(self, dto: tenant_type_write_dto, created_by: str = objects.created_by_default) -> int:
         return self.insert_single(dto, created_by)
-    def insert_row(self, tenant_type_uid: str = "", tenant_type_name: str = "", tenant_type_description: str = "", created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description), created_by)
-    def insert_row_random_uid(self, tenant_type_name: str, tenant_type_description: str, created_by: str = objects.created_by_default) -> int:
-        return self.insert_single(tenant_type_write_dto.new_write_random_uid(tenant_type_name, tenant_type_description), created_by)
+    def insert_row(self, tenant_type_uid: str = "", tenant_type_name: str = "", tenant_type_description: str = "", tenant_class: str = "", created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class), created_by)
+    def insert_row_random_uid(self, tenant_type_name: str, tenant_type_description: str, tenant_class: str, created_by: str = objects.created_by_default) -> int:
+        return self.insert_single(tenant_type_write_dto.new_write_random_uid(tenant_type_name, tenant_type_description, tenant_class), created_by)
     def insert_dtos(self, dtos: list[tenant_type_write_dto], created_by: str = objects.created_by_default) -> int:
         return self.insert_many(dtos, created_by)
     def insert_write_dtos(self, dtos: tenant_type_write_dtos, created_by: str = objects.created_by_default) -> int:
@@ -10829,11 +12969,11 @@ class tenant_type_dao(base_dao):
         return self.select_row_read_by_uid(dto.get_uid())
     def insert_and_get_many(self, dtos: tenant_type_write_dtos, created_by: str = objects.created_by_default) -> tenant_type_read_dtos:
         return tenant_type_read_dtos(list(map(lambda dto: self.insert_and_get(dto, created_by), dtos.dtos)))
-    def upsert_row(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, updated_by: str=objects.created_by_default) -> int:
-        params = tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description).get_list_write_insert(updated_by)
+    def upsert_row(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str, updated_by: str=objects.created_by_default) -> int:
+        params = tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class).get_list_write_insert(updated_by)
         return self.execute_query(self.get_model().upsert_attrs_sql, params)
-    def upsert_row_and_get(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, updated_by: str = objects.created_by_default) -> tenant_type_read_dto | None:
-        params = tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description).get_list_write_insert(updated_by)
+    def upsert_row_and_get(self, tenant_type_uid: str, tenant_type_name: str, tenant_type_description: str, tenant_class: str, updated_by: str = objects.created_by_default) -> tenant_type_read_dto | None:
+        params = tenant_type_write_dto.new_write(tenant_type_uid, tenant_type_name, tenant_type_description, tenant_class).get_list_write_insert(updated_by)
         self.execute_query(self.get_model().upsert_attrs_sql, params)
         return self.select_row_read_by_uid(tenant_type_uid)
     def delete_logical_dtos(self, dtos: list[tenant_type_write_dto], removed_by: str = objects.created_by_default) -> int:

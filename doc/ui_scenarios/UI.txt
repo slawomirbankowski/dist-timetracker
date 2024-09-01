@@ -28,7 +28,7 @@ GET {{URL}}/service/endpoints
 200 - OK with result
 204 - OK without result
 400 - bad request, incorrect payload or parameters;
-401 - Unauthorized - it means that token is empty, incorrect or already expired; UI should log out - redirect to /login page
+401 - Unauthorized - it means that token is empty, incorrect or already expired; UI should log out - redirect to /logout page
 402 - Payment Required - just pay bro; UI should open page with Payment option: /payment
 403 - Forbidden - token is OK but account connected to that token has no rights to use this endpoint
 404 - NotFound - that method does not exist for controller within version, please check list of endpoints
