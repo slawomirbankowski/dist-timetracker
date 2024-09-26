@@ -8,4 +8,4 @@ COPY package.json /ui/
 COPY vite.config.js /ui/
 
 RUN npm install
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev", "--host"]
