@@ -6,7 +6,7 @@ from controller.controller_base import BaseController
 from controller.controller_calendar import CalendarController
 from controller.controller_client import ClientController
 from controller.controller_competency import CompetencyController
-from backend.controller.controller_connection import ConnectionController
+from controller.controller_connection import ConnectionController
 from controller.controller_event import EventController
 from controller.controller_invoice import InvoiceController
 from controller.controller_monitor import MonitorController

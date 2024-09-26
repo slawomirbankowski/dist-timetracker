@@ -1,6 +1,6 @@
 from base.base_objects import objects
-from backend.service import service_base, ServiceThreadBase
-from backend.dao.daos import daos
+from services_base import service_base, ServiceThreadBase
+from dao.daos import daos
 import psutil
 
 

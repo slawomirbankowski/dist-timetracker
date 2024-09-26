@@ -9,8 +9,8 @@ from base.base_utils import get_random_uid
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
-from backend.service import service_base, ServiceThreadBase
-from backend.dao.daos import daos
+from services_base import service_base, ServiceThreadBase
+from dao.daos import daos
 
 
 class PermissionService(ServiceThreadBase):

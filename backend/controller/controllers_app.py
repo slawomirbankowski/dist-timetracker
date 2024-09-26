@@ -7,9 +7,9 @@ import logging
 from logging import config
 import base.base_objects
 from base.base_constants import application_start_date, Roles
-from backend.service import services
+from service import services
 from dao.daos_instances import *
-from backend.dao.daos import daos
+from dao.daos import daos
 from controller.controllers import controllers
 from controller.controller_base import RequestSession, ControllerRoute, ResponseSession
 

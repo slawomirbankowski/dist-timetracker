@@ -1,4 +1,4 @@
-from backend.service import ServiceThreadBase
+from service.services_base import ServiceThreadBase
 
 
 class EventService(ServiceThreadBase):

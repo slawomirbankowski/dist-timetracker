@@ -6,14 +6,14 @@ from pyliquibase import Pyliquibase
 import psycopg2
 import psycopg2.pool
 import dao.dao_connection
-from backend.dao.daos import base_dao
-from backend.dao.daos import daos
+from dao.daos import base_dao
+from dao.daos import daos
 from dao.daos_read import account_division_dao
 from dto.dtos_read_list import account_division_read_dtos
 from dto.dtos_models import db_models
 from dto.dtos_read import account_division_read_dto
 from dto.dtos_write import account_division_write_dto
-from backend.service import services
+from service import services
 from controller.controllers_app import start_http_listening
 from controller.controllers import controllers
 

@@ -4,8 +4,8 @@ import logging
 from logging import config
 from flask import jsonify, abort, Request, Response
 from dao.daos_instances import *
-from backend.dao.daos import daos
-from backend.service import services
+from dao.daos import daos
+from service import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 

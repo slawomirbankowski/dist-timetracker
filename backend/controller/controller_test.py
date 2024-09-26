@@ -3,9 +3,9 @@ import json
 import logging
 from logging import config
 from flask import Flask, jsonify, abort, Request, Response
-from backend.dao.daos import daos
+from dao.daos import daos
 from dto.dtos import base_dto
-from backend.service import services
+from service import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 import hashlib
 

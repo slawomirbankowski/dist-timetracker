@@ -3,7 +3,7 @@ import logging
 
 from base.base_constants import TenantTypes, TenantCategories
 from dao.daos_instances import *
-from backend.dao.daos import daos
+from dao.daos import daos
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 

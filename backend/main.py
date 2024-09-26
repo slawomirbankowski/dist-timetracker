@@ -4,9 +4,9 @@ from base.base_constants import SystemVersions
 import dao.dao_connection
 from base.base_objects import objects
 from base.cache import cache
-from backend.dao.daos import daos
+from dao.daos import daos
 from dto.dtos_models import db_models
-from backend.service import services
+from service import services
 from controller.controllers_app import start_http_listening
 from controller.controllers import controllers
 import custom

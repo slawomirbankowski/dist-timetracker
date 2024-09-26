@@ -1,8 +1,8 @@
 import datetime
 
 from dto.dtos import base_dto
-from backend.service import ServiceThreadBase
-from backend.dao.daos import daos
+from services_base import ServiceThreadBase
+from dao.daos import daos
 
 
 class InvoiceService(ServiceThreadBase):

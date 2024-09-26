@@ -6,7 +6,7 @@ from dto.dtos_thin_list import *
 from dto.dtos_write_list import *
 import datetime
 from base.base_objects import objects
-from backend.dao.dao_base import base_dao
+from dao.dao_base import base_dao
 
 
 class account_dao(base_dao):

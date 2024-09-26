@@ -1,8 +1,8 @@
 # auto-generated - v_definition_python_services_object - START at 2024-03-30 03:38:48.881308+01
 import dao.dao_connection
 from dao.daos_read import *
-from backend.service import service_base
-from backend.dao.daos import daos
+from services_base import *
+from dao.daos import daos
 from dao.daos_full import *
 
 db_connections = dao.dao_connection.db_connections

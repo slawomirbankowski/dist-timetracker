@@ -1,25 +1,28 @@
 import logging
+from datetime import datetime
 
 from flask import Flask, jsonify, request, abort, Request, Response
 from typing import Dict, Callable
 
-from base.base_objects import AccountPermissionsBase, AccountSessionBase
-from backend.service import AccountService
-from backend.service import CalendarService
-from backend.service import ClientService
-from backend.service import CompetencyService
-from backend.service import ConnectionService
-from backend.service import EventService
-from backend.service import InvoiceService
-from backend.service import KeyService
-from backend.service import *
-from backend.service import PermissionService
-from backend.service import RoleService
-from backend.service import SystemStateService
-from backend.service import service_list_base
-from backend.service import *
+from base.base_objects import AccountPermissionsBase, AccountSessionBase, objects
+from service.service_login import LoginService
+from service.service_account import AccountService
+from service.service_calendar import CalendarService
+from service.service_client import ClientService
+from service.service_competency import CompetencyService
+from service.service_connection import ConnectionService
+from service.service_event import EventService
+from service.service_invoice import InvoiceService
+from service_key import KeyService
+from service import *
+from service_permission import PermissionService
+from service_role import RoleService
+from service_system_state import SystemStateService
+from services_base import service_base
+from services_base_list import service_list_base
+from service import *
 from controller.controller_base import RequestSession, ResponseSession
-
+from dao.daos import daos
 
 # class with list of services binded to DAOs
 class service_list(service_list_base):
@@ -103,7 +106,7 @@ class service_list(service_list_base):
                 auth_token_dto = daos.auth_token_dao_instance.select_row_read_by_uid(token)
                 if auth_token_dto is None:
                     logging.info("No token found in DB")
-                elif auth_token_dto.valid_till_date < datetime.datetime.now() or auth_token_dto.is_active == 0:
+                elif auth_token_dto.valid_till_date < datetime.now() or auth_token_dto.is_active == 0:
                     logging.info("Session found in database is already invalid")
                 elif auth_token_dto.auth_token_type_uid != "Access":
                     logging.info(f"Token is not Access type but type: {auth_token_dto.auth_token_type_uid}")

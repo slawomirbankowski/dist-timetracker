@@ -1,7 +1,7 @@
 import logging
 
 from base.base_objects import base_object, ThreadBase
-from backend.dao.dao_base import base_dao
+from dao.dao_base import base_dao
 
 
 # base class for all services

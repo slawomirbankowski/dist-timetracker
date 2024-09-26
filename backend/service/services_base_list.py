@@ -1,5 +1,7 @@
 # auto-generated - v_definition_python_services_object - START at 2024-03-30 03:45:14.272376+01
-from backend.service import *
+from service import *
+from service.service_object import *
+from service.services_base import service_base
 
 
 class service_list_base(base_object):

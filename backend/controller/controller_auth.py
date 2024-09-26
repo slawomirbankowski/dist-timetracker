@@ -7,10 +7,10 @@ from flask import Flask, jsonify, abort, Request, Response
 
 from base.base_objects import objects
 from base.cache import cache
-from backend.dao.daos import daos
+from dao.daos import daos
 from dto.dtos import base_dto
 from dto.dtos_read_list import auth_token_read_dtos
-from backend.service import services
+from service import services
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 import hashlib
 

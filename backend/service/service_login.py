@@ -9,8 +9,8 @@ from base.base_utils import get_random_uid, dict_to_json, get_random_uid_very_lo
 from controller.controller_base import ResponseSession, RequestSession
 from dto.dtos import base_dto
 from dto.dtos_read import auth_password_read_dto, account_read_dto
-from backend.service import service_base, ServiceThreadBase
-from backend.dao.daos import daos
+from service.services_base import ServiceThreadBase
+from dao.daos import daos
 
 
 class LoginService(ServiceThreadBase):

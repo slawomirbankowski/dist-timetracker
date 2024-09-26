@@ -4,9 +4,9 @@ from logging import config
 from base.base_objects import objects
 from base.cache import cache
 from dao.dao_connection import db_connections
-from backend.service import service_list
+from service import service_list
 from dao.daos_instances import *
-from backend.dao.daos import daos
+from dao.daos import daos
 from controller.controller_base import RequestSession, ResponseSession, BaseController
 
 
