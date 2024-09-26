@@ -69,7 +69,8 @@ class service_list(service_list_base):
         # self.login_service.close()
 
     def get_permissions_by_account(self, account_uid: str) -> AccountPermissionsBase:
-        perm_set = AccountPermissionsBase(account_uid)
+        perm_set = AccountPermissionsBase(account_uid) # TODO: fix this
+
         return perm_set
 
     def read_account_permission(self, account_session: AccountSessionBase) -> AccountPermissionsBase:
