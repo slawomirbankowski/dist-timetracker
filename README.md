@@ -1,5 +1,2 @@
-# dist-timetracker
-Planning 
-pip install psycopg2
-pip install pyliquibase
-pip install flask
+# TimeTracker Application to manage Time Tracking for clients.
+
