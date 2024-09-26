@@ -10,4 +10,6 @@ COPY eslint.config.js .
 COPY index.html .
 COPY vite.config.js .
 
+EXPOSE 8090
+
 CMD ["npm", "run", "dev"]
