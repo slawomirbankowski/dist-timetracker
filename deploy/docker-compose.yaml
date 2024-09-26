@@ -1,6 +1,7 @@
 name: timetracker
 
 services:
+
   proxy:
     image: "nginx:1.26"
     networks:
@@ -10,10 +11,29 @@ services:
     ports:
       - 8000:80
     depends_on:
-      app:
+      gui:
         condition: service_healthy
+
+  gui:
+    image: "timetracker-ui:1.0.0"
+    environment:
+      - APP_HOST=${APP_HOST}
+    networks:
+      - timetracker
+    secrets:
+      - db_server_user
+      - db_server_pass
+    depends_on:
+      app:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8090", "localhost:8090"]
+      start_period: 3s
+      interval: 10s
+      retries: 10
+
   app:
-    image: "timetracker:0.0.1"
+    image: "timetracker:1.0.0"
     environment:
       - JDBC_HOST=${DB_HOST}
       - JDBC_NAME=${DB_NAME}
@@ -34,6 +54,7 @@ services:
     depends_on:
       db:
         condition: service_started
+
   # App DB
   db:
     image: "postgres:16.3"
@@ -55,9 +76,10 @@ services:
       test: ["CMD", "pg_isready", "-U" , "${POSTGRES_USER}", "-d", "${POSTGRES_DB}", "-q"]
       interval: 2s
       retries: 10
+
   # Redis for cache
   redis:
-    image: redis:latest
+    image: redis/redis-stack:latest
     ports:
       - 6378:6379
     networks:
@@ -68,7 +90,7 @@ services:
       timeout: 30s
       retries: 50
     restart: always
-
+  
 networks:
   timetracker:
     driver: bridge
