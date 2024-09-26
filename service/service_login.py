@@ -67,7 +67,8 @@ class LoginService(ServiceThreadBase):
             reset_guid = get_random_uid_very_long_with_prefix("RESET")
             valid_till_date = datetime.datetime.now() + datetime.timedelta(1.0)  # valid for 1 day (24 hours)
             #daos.email_dao.send(acc.account_email, "Test", f"Reset password for UID: {reset_guid}  VALID_TILL: {str(valid_till_date)}")
-            daos.auth_request_dao_instance.insert_row(reset_guid, "request_reset_password", acc.tenant_uid, acc.account_uid, acc.account_email, reset_guid, valid_till_date)
+            event_notification_uid = None
+            daos.auth_request_dao_instance.insert_row(reset_guid, "request_reset_password", acc.tenant_uid, acc.account_uid, acc.account_email, reset_guid, valid_till_date, None, None, None, 0, 0, None, None, event_notification_uid)
         return ResponseSession.ok(session, {"status": "OK"})
 
     def reset_check(self, session: RequestSession, account_uid: str, reset_guid: str) -> ResponseSession:
