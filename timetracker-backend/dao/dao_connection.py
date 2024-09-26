@@ -187,6 +187,7 @@ class DaoConnections(DaoConnectionsBase):
             raise Exception("Must specify env 'JDBC_USER_FILE")
         if not db_pass_file:
             raise Exception("Must specify env 'JDBC_PASS_FILE")
+        logging.info(f"Opening USER and PASSWORD from files: {db_user_file} {db_pass_file}")
         with open(db_user_file, 'rt') as f:
             db_user = f.read()
         with open(db_pass_file, 'rt') as f:

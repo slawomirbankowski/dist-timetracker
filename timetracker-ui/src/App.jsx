@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <h1>TimeTracker UI</h1>
+      <h1>TimeTracker UI :) </h1>
     </>
   )
 }
