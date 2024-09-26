@@ -1,5 +1,7 @@
-# dist-timetracker
-Planning 
-pip install psycopg2
-pip install pyliquibase
-pip install flask
+cd ./backend
+docker build -t timetracker .
+
+cd ./timetracker-ui
+docker image build -t timetracker-ui:0.0.1 .
+
+

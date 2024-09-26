@@ -50,6 +50,8 @@ var/
 .installed.cfg
 *.egg
 
+frontend/node_modules
+
 # Secrets
 secrets/
 *.secret
