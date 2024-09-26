@@ -27,8 +27,8 @@ replay_pid*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-dto/__pycache__/
-dao/__pycache__/
+backend/dto/__pycache__/
+backend/dao/__pycache__/
 **/__pycache__/
 *.py[cod]
 
