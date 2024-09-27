@@ -2,6 +2,7 @@ name: timetracker
 
 services:
 
+  # Reverse Proxy / Dispatcher - connects all internal endpoints and resources into one
   proxy:
     image: "nginx:1.26"
     networks:
@@ -14,12 +15,15 @@ services:
       gui:
         condition: service_healthy
 
+  # React.js UI application
   gui:
     image: "timetracker-ui:1.0.0"
     environment:
       - APP_HOST=${APP_HOST}
     networks:
       - timetracker
+    ports:
+      - 8090:8090
     secrets:
       - db_server_user
       - db_server_pass
@@ -32,6 +36,7 @@ services:
       interval: 10s
       retries: 10
 
+  # Backend application with REST endpoints
   app:
     image: "timetracker:1.0.0"
     environment:
@@ -43,6 +48,8 @@ services:
       - JDBC_DRIVER=${JDBC_DRIVER}
     networks:
       - timetracker
+    ports:
+      - 8001:8000
     secrets:
       - db_server_user
       - db_server_pass
@@ -90,7 +97,7 @@ services:
       timeout: 30s
       retries: 50
     restart: always
-  
+
 networks:
   timetracker:
     driver: bridge
