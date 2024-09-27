@@ -4,6 +4,38 @@ docker run --hostname=66bc1309b649 --user=elasticsearch:root --env=discovery.typ
 
 docker run --hostname=0c5a56dbba6d --mac-address=02:42:ac:11:00:03 --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --env=GOSU_VERSION=1.17 --env=REDIS_VERSION=7.2.3 --env=REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-7.2.3.tar.gz --env=REDIS_DOWNLOAD_SHA=3e2b196d6eb4ddb9e743088bfc2915ccbb42d40f5a8a3edd8cb69c716ec34be7 --volume=/data --workdir=/data -p 6379:6379 --restart=no --runtime=runc -d redis
 
+curl https://repo1.maven.org/maven2/org/postgresql/postgresql/${POSTGRES_DRIVER_VERSION}/postgresql-${POSTGRES_DRIVER_VERSION}.jar > /driver/postgresql.jar
+
+docker build -t timetracker .
+set $env:POSTGRES_DRIVER_VERSION=42.7.3
+
+docker build -t timetracker .
+docker build -t timetracker:1.0.0 .
+
+docker-compose -f .\docker-compose.yaml up
+docker-compose -f .\docker-compose.yaml start
+set $env:APP_HOST=localhost
+set $env:POSTGRES_USER=timetracker
+set $env:POSTGRES_DB=timetracker
+
+
+ALTER ROLE timetracker SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN REPLICATION NOBYPASSRLS;
+
+docker-compose -f .\docker-compose.yaml up
+
+
+
+cd ./backend
+docker build -t timetracker .
+
+cd ./timetracker-ui
+docker build -t timetracker-ui .
+
+
+docker run -p 8090:8090 -d timetracker-ui
+
+$ curl localhost:8000/api/v1/service/ping
+
 
 --------------------------------------------------------------------------------------------
 - base_model - add types to columns - DONE
