@@ -2,65 +2,46 @@ name: timetracker
 
 services:
 
-  # Reverse Proxy / Dispatcher - connects all internal endpoints and resources into one
-  proxy:
-    image: "nginx:1.26"
-    networks:
-      - timetracker
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - 8000:80
-    depends_on:
-      gui:
-        condition: service_healthy
-
-  # React.js UI application
-  gui:
-    image: "timetracker-ui:1.0.0"
+  # ZooKeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      - APP_HOST=${APP_HOST}
-    networks:
-      - timetracker
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 8090:8090
-    secrets:
-      - db_server_user
-      - db_server_pass
-    depends_on:
-      app:
-        condition: service_started
-    healthcheck:
-      test: ["CMD", "curl", "localhost:8090", "localhost:8090"]
-      start_period: 3s
-      interval: 10s
-      retries: 10
+      - 2181:2181
 
-  # Backend application with REST endpoints
-  app:
-    image: "timetracker:1.0.0"
-    environment:
-      - JDBC_HOST=${DB_HOST}
-      - JDBC_NAME=${DB_NAME}
-      - JDBC_URL=jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
-      - JDBC_USER_FILE=/run/secrets/db_server_user
-      - JDBC_PASS_FILE=/run/secrets/db_server_pass
-      - JDBC_DRIVER=${JDBC_DRIVER}
-    networks:
-      - timetracker
-    ports:
-      - 8001:8000
-    secrets:
-      - db_server_user
-      - db_server_pass
-    healthcheck:
-      test: ["CMD", "curl", "localhost:8000", "localhost:8000/api/v1/service/ping"]
-      start_period: 3s
-      interval: 10s
-      retries: 10
+  # Kafka queue for events
+  kafka1:
+    image: confluentinc/cp-kafka:latest
     depends_on:
-      db:
-        condition: service_started
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://kafka1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # Kafka queue for events
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 9093:9092
+      - 29093:29092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://kafka2:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   # App DB
   db:
@@ -98,6 +79,145 @@ services:
       retries: 50
     restart: always
 
+  # Elasticsearch for searching
+  elasticsearch:
+    image: elasticsearch:8.5.3
+    environment:
+      - ELASTIC_PASSWORD=elastic
+      - PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - ELASTIC_CONTAINER=true
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - timetracker
+    healthcheck:
+      test: ["CMD", "curl",  "--fail" , "http://elasticsearch:9200/_cluster/health?wait_for_status=green&timeout=1s", "||", "exit", "1"]
+      interval: 30s
+      timeout: 30s
+      retries: 50
+    restart: always
+
+  # Backend application with REST endpoints
+  app1:
+    image: "timetracker:1.0.0"
+    environment:
+      - JDBC_HOST=${DB_HOST}
+      - JDBC_NAME=${DB_NAME}
+      - JDBC_URL=jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+      - JDBC_USER_FILE=/run/secrets/db_server_user
+      - JDBC_PASS_FILE=/run/secrets/db_server_pass
+      - JDBC_DRIVER=${JDBC_DRIVER}
+    networks:
+      - timetracker
+    ports:
+      - 8001:8000
+    secrets:
+      - db_server_user
+      - db_server_pass
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8000/api/v1/service/ping"]
+      start_period: 3s
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka1:
+        condition: service_started
+      kafka2:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+
+  # Backend application with REST endpoints
+  app2:
+    image: "timetracker:1.0.0"
+    environment:
+      - JDBC_HOST=${DB_HOST}
+      - JDBC_NAME=${DB_NAME}
+      - JDBC_URL=jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+      - JDBC_USER_FILE=/run/secrets/db_server_user
+      - JDBC_PASS_FILE=/run/secrets/db_server_pass
+      - JDBC_DRIVER=${JDBC_DRIVER}
+    networks:
+      - timetracker
+    ports:
+      - 8002:8000
+    secrets:
+      - db_server_user
+      - db_server_pass
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8000/api/v1/service/ping"]
+      start_period: 3s
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka1:
+        condition: service_started
+      kafka2:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+
+  # React.js UI application
+  gui:
+    image: "timetracker-ui:1.0.0"
+    environment:
+      - APP_HOST=${APP_HOST}
+    networks:
+      - timetracker
+    ports:
+      - 8090:8090
+    secrets:
+      - db_server_user
+      - db_server_pass
+    depends_on:
+      app1:
+        condition: service_started
+      app2:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8090", "localhost:8090"]
+      start_period: 3s
+      interval: 10s
+      retries: 10
+
+  # Reverse Proxy / Dispatcher - connects all internal endpoints and resources into one
+  proxy:
+    image: "nginx:1.26"
+    networks:
+      - timetracker
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8000:80
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka1:
+        condition: service_started
+      kafka2:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+      gui:
+        condition: service_started
+      app1:
+        condition: service_started
+      app2:
+        condition: service_started
+
 networks:
   timetracker:
     driver: bridge
@@ -110,3 +230,5 @@ secrets:
     file: "pg-server-pass.secret"
   db_server_user:
     file: "pg-server-user.secret"
+  elasticsearch_pass:
+    file: "elasticsearch-pass.secret"
