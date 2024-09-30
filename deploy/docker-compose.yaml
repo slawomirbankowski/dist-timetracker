@@ -99,8 +99,11 @@ services:
     restart: always
 
   # Backend application with REST endpoints
-  app1:
+  app:
     image: "timetracker:1.0.0"
+    deploy:
+      mode: replicated
+      replicas: 2
     environment:
       - JDBC_HOST=${DB_HOST}
       - JDBC_NAME=${DB_NAME}
@@ -112,41 +115,6 @@ services:
       - timetracker
     ports:
       - 8001:8000
-    secrets:
-      - db_server_user
-      - db_server_pass
-    healthcheck:
-      test: ["CMD", "curl", "http://localhost:8000/api/v1/service/ping"]
-      start_period: 3s
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    depends_on:
-      db:
-        condition: service_started
-      redis:
-        condition: service_started
-      kafka1:
-        condition: service_started
-      kafka2:
-        condition: service_started
-      elasticsearch:
-        condition: service_started
-
-  # Backend application with REST endpoints
-  app2:
-    image: "timetracker:1.0.0"
-    environment:
-      - JDBC_HOST=${DB_HOST}
-      - JDBC_NAME=${DB_NAME}
-      - JDBC_URL=jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
-      - JDBC_USER_FILE=/run/secrets/db_server_user
-      - JDBC_PASS_FILE=/run/secrets/db_server_pass
-      - JDBC_DRIVER=${JDBC_DRIVER}
-    networks:
-      - timetracker
-    ports:
-      - 8002:8000
     secrets:
       - db_server_user
       - db_server_pass
@@ -181,9 +149,7 @@ services:
       - db_server_user
       - db_server_pass
     depends_on:
-      app1:
-        condition: service_started
-      app2:
+      app:
         condition: service_started
     healthcheck:
       test: ["CMD", "curl", "localhost:8090", "localhost:8090"]
@@ -213,9 +179,7 @@ services:
         condition: service_started
       gui:
         condition: service_started
-      app1:
-        condition: service_started
-      app2:
+      app:
         condition: service_started
 
 networks:
