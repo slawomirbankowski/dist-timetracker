@@ -7,7 +7,11 @@ $ docker build -t timetracker:0.0.1 .
    e.g. `postgres`
    2. `pg-server-pass.secret` - containing password used by postgres user,
    e.g. `password123`
-   
+   3. `elasticsearch-pass.secret` - containing password used by Elasticsearch,
+   e.g. `password123`
+   4. `redis-pass.secret` - containing password used by Redis,
+   e.g. `password123`
+
    The whole contents of these files will be used, including
    any trailing newlines.
 3. Run `docker-compose up`
