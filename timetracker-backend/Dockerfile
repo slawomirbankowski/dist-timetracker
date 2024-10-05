@@ -6,6 +6,8 @@ RUN apt-get update && \
     mkdir /driver && \
     curl https://repo1.maven.org/maven2/org/postgresql/postgresql/${POSTGRES_DRIVER_VERSION}/postgresql-${POSTGRES_DRIVER_VERSION}.jar > /driver/postgresql.jar
 
+RUN apt-get install net-tools
+
 FROM python:3.11-slim
 
 RUN groupadd -g 1337 timetracker && \

@@ -1,8 +1,4 @@
-1. Inside the root directory run
-```shell
-$ docker build -t timetracker:0.0.1 .
-```
-2. Inside `deploy` directory create the following files:
+1. Inside `deploy` directory create the following files:
    1. `pg-server-user.secret` - containing user used by postgres server,
    e.g. `postgres`
    2. `pg-server-pass.secret` - containing password used by postgres user,
@@ -14,6 +10,19 @@ $ docker build -t timetracker:0.0.1 .
 
    The whole contents of these files will be used, including
    any trailing newlines.
+
+
+2. Inside the deploy directory run
+
+```shell
+cd ../timetracker-backend
+docker build -t timetracker:1.1.0 .
+cd ../timetracker-ui
+docker build -t timetracker-ui:1.0.0 .
+cd ../deploy
+docker-compose up
+
+```
 3. Run `docker-compose up`
 
 After startup the timetracker API will be available
